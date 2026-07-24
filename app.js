@@ -384,6 +384,11 @@ document.getElementById("status-impressora").selectedIndex = 0;
 }
 
 window.excluirImpressora = function (id) {
+
+    if (!confirm("Tem certeza que deseja excluir esta impressora?")) {
+        return;
+    }
+
     impressoras = impressoras.filter(function (imp) {
         return imp.id !== id;
     });
@@ -396,17 +401,4 @@ window.excluirImpressora = function (id) {
     }
 };
 
-window.excluirImpressora = function (id) {
-    impressoras = impressoras.filter(function (imp) {
-        return imp.id !== id;
-    });
-
-    salvarImpressoras();
-    mostrarImpressoras();
-
-    if (totalImpressoras) {
-        totalImpressoras.textContent = impressoras.length;
-    }
-};
-
-});
+   
