@@ -388,3 +388,18 @@ window.excluirImpressora = function (id) {
         totalImpressoras.textContent = impressoras.length;
     }
 };
+
+window.excluirImpressora = function (id) {
+    impressoras = impressoras.filter(function (imp) {
+        return imp.id !== id;
+    });
+
+    salvarImpressoras();
+    mostrarImpressoras();
+
+    if (totalImpressoras) {
+        totalImpressoras.textContent = impressoras.length;
+    }
+};
+
+});
