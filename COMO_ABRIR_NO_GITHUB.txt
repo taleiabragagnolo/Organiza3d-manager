@@ -1,0 +1,15 @@
+ORGANIZA 3D MANAGER — PACOTE PARA GITHUB
+
+1. Descompacte o arquivo Organiza3DManager_GitHub.zip.
+2. Crie um repositório novo e vazio no GitHub.
+3. Abra a opção de adicionar/enviar arquivos.
+4. Selecione todo o conteúdo da pasta descompactada.
+5. Confirme o envio para a branch main.
+6. Vá em Settings > Pages.
+7. Em Build and deployment, selecione GitHub Actions.
+8. Aguarde a publicação automática.
+
+IMPORTANTE:
+- Envie os arquivos para a raiz do repositório.
+- Não envie a pasta externa Organiza3DManager_GitHub como uma única subpasta.
+- A pasta oculta .github precisa ser enviada, pois contém a publicação automática.
