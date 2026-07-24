@@ -1672,4 +1672,257 @@ window.excluirFilamento = function (id) {
     atualizarTotalFilamentos();
 };
 
+// =========================
+// DASHBOARD COMPLETO
+// =========================
+
+const botaoAtualizarDashboardCompleto =
+    document.getElementById("atualizar-dashboard");
+
+const menuDashboard =
+    document.querySelector('[data-pagina="dashboard"]');
+
+function contarEncomendasDashboard(status) {
+    return encomendas.filter(
+        function (encomenda) {
+            return encomenda.status === status;
+        }
+    ).length;
+}
+
+function calcularEncomendasAtrasadas() {
+    const hoje = obterDataHoje();
+
+    return encomendas.filter(
+        function (encomenda) {
+            const statusEncerrado =
+                encomenda.status === "Entregue" ||
+                encomenda.status === "Cancelada" ||
+                encomenda.status === "Finalizada";
+
+            return (
+                encomenda.dataEntrega &&
+                encomenda.dataEntrega < hoje &&
+                !statusEncerrado
+            );
+        }
+    ).length;
+}
+
+function atualizarAlertasDashboard() {
+    const campoAlertas =
+        document.getElementById("dashboard-alertas");
+
+    if (!campoAlertas) {
+        return;
+    }
+
+    const alertas = [];
+
+    const encomendasAtrasadas =
+        calcularEncomendasAtrasadas();
+
+    if (produtos.length === 0) {
+        alertas.push(
+            "Nenhum produto cadastrado."
+        );
+    }
+
+    if (clientes.length === 0) {
+        alertas.push(
+            "Nenhum cliente cadastrado."
+        );
+    }
+
+    if (filamentos.length === 0) {
+        alertas.push(
+            "Nenhum filamento cadastrado."
+        );
+    }
+
+    if (impressoras.length === 0) {
+        alertas.push(
+            "Nenhuma impressora cadastrada."
+        );
+    }
+
+    if (encomendasAtrasadas > 0) {
+        alertas.push(
+            `${encomendasAtrasadas} encomenda(s) atrasada(s).`
+        );
+    }
+
+    const impressorasManutencao =
+        impressoras.filter(
+            function (impressora) {
+                return impressora.status ===
+                    "Em manutenção";
+            }
+        ).length;
+
+    if (impressorasManutencao > 0) {
+        alertas.push(
+            `${impressorasManutencao} impressora(s) em manutenção.`
+        );
+    }
+
+    if (alertas.length === 0) {
+        campoAlertas.innerHTML =
+            "<p>Nenhum aviso no momento.</p>";
+
+        return;
+    }
+
+    campoAlertas.innerHTML = alertas
+        .map(function (alerta) {
+            return `
+                <p>
+                    ⚠️ ${escaparTexto(alerta)}
+                </p>
+            `;
+        })
+        .join("");
+}
+
+function atualizarDashboardCompleto() {
+    atualizarDashboard();
+
+    const campoClientes =
+        document.getElementById("total-clientes");
+
+    const campoEncomendas =
+        document.getElementById("total-encomendas");
+
+    const campoFilamentos =
+        document.getElementById("total-filamentos");
+
+    const campoImpressoras =
+        document.getElementById("total-impressoras");
+
+    const campoAguardando =
+        document.getElementById("dashboard-aguardando");
+
+    const campoProducao =
+        document.getElementById("dashboard-producao");
+
+    const campoFinalizadas =
+        document.getElementById("dashboard-finalizadas");
+
+    const campoEntregues =
+        document.getElementById("dashboard-entregues");
+
+    const campoAtrasadas =
+        document.getElementById("dashboard-atrasadas");
+
+    const campoSaldo =
+        document.getElementById(
+            "dashboard-saldo-financeiro"
+        );
+
+    if (campoClientes) {
+        campoClientes.textContent =
+            clientes.length;
+    }
+
+    if (campoEncomendas) {
+        campoEncomendas.textContent =
+            encomendas.length;
+    }
+
+    if (campoFilamentos) {
+        campoFilamentos.textContent =
+            filamentos.length;
+    }
+
+    if (campoImpressoras) {
+        campoImpressoras.textContent =
+            impressoras.length;
+    }
+
+    if (campoAguardando) {
+        campoAguardando.textContent =
+            contarEncomendasDashboard(
+                "Aguardando"
+            );
+    }
+
+    if (campoProducao) {
+        campoProducao.textContent =
+            contarEncomendasDashboard(
+                "Em produção"
+            );
+    }
+
+    if (campoFinalizadas) {
+        campoFinalizadas.textContent =
+            contarEncomendasDashboard(
+                "Finalizada"
+            );
+    }
+
+    if (campoEntregues) {
+        campoEntregues.textContent =
+            contarEncomendasDashboard(
+                "Entregue"
+            );
+    }
+
+    if (campoAtrasadas) {
+        campoAtrasadas.textContent =
+            calcularEncomendasAtrasadas();
+    }
+
+    const entradasDashboard =
+        lancamentosFinanceiros
+            .filter(function (lancamento) {
+                return lancamento.tipo === "Entrada";
+            })
+            .reduce(function (total, lancamento) {
+                return total +
+                    Number(lancamento.valor);
+            }, 0);
+
+    const despesasDashboard =
+        lancamentosFinanceiros
+            .filter(function (lancamento) {
+                return lancamento.tipo === "Despesa";
+            })
+            .reduce(function (total, lancamento) {
+                return total +
+                    Number(lancamento.valor);
+            }, 0);
+
+    if (campoSaldo) {
+        campoSaldo.textContent =
+            formatarDinheiro(
+                entradasDashboard -
+                despesasDashboard
+            );
+    }
+
+    atualizarAlertasDashboard();
+}
+
+if (menuDashboard) {
+    menuDashboard.addEventListener(
+        "click",
+        atualizarDashboardCompleto
+    );
+}
+
+if (botaoAtualizarDashboardCompleto) {
+    botaoAtualizarDashboardCompleto.addEventListener(
+        "click",
+        function () {
+            atualizarDashboardCompleto();
+
+            alert(
+                "Dashboard atualizado com sucesso!"
+            );
+        }
+    );
+}
+
+atualizarDashboardCompleto();
+
 });

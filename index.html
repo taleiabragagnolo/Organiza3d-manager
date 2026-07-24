@@ -71,49 +71,113 @@
 
             <section id="dashboard" class="pagina ativa">
 
-                <h2>Visão geral</h2>
+    <h2>Visão geral</h2>
 
-                <div class="cards">
+    <p>
+        Acompanhe os principais números da Organiza 3D.
+    </p>
 
-                    <div class="card">
-                        <span>💰 Faturamento</span>
-                        <strong id="total-faturamento">R$ 0,00</strong>
-                    </div>
+    <h3>Resumo geral</h3>
 
-                    <div class="card">
-                        <span>📦 Produtos</span>
-                        <strong id="total-produtos">0</strong>
-                    </div>
+    <div class="cards">
 
+        <div class="card">
+            <span>💰 Faturamento estimado</span>
+            <strong id="total-faturamento">
+                R$ 0,00
+            </strong>
+        </div>
 
-                    <div class="card">
-    <span>👥 Clientes</span>
-    <strong id="total-clientes">0</strong>
-</div>
+        <div class="card">
+            <span>📈 Lucro estimado</span>
+            <strong id="total-lucro">
+                R$ 0,00
+            </strong>
+        </div>
 
-                    <div class="card">
-                        <span>🖨️ Impressoras</span>
-                        <strong id="total-impressoras">0</strong>
-                    </div>
+        <div class="card">
+            <span>📊 Saldo financeiro</span>
+            <strong id="dashboard-saldo-financeiro">
+                R$ 0,00
+            </strong>
+        </div>
 
-                    <div class="card">
-                        <span>🧵 Filamentos</span>
-                        <strong id="total-filamentos">0</strong>
-                    </div>
+        <div class="card">
+            <span>📦 Produtos</span>
+            <strong id="total-produtos">0</strong>
+        </div>
 
-                    <div class="card">
-                        <span>📋 Encomendas</span>
-                        <strong id="total-encomendas">0</strong>
-                    </div>
+        <div class="card">
+            <span>👥 Clientes</span>
+            <strong id="total-clientes">0</strong>
+        </div>
 
-                    <div class="card">
-                        <span>📈 Lucro</span>
-                        <strong id="total-lucro">R$ 0,00</strong>
-                    </div>
+        <div class="card">
+            <span>📋 Encomendas</span>
+            <strong id="total-encomendas">0</strong>
+        </div>
 
-                </div>
+        <div class="card">
+            <span>🧵 Filamentos</span>
+            <strong id="total-filamentos">0</strong>
+        </div>
 
-            </section>
+        <div class="card">
+            <span>🖨️ Impressoras</span>
+            <strong id="total-impressoras">0</strong>
+        </div>
+
+    </div>
+
+    <h3>Situação das encomendas</h3>
+
+    <div class="cards">
+
+        <div class="card">
+            <span>⏳ Aguardando</span>
+            <strong id="dashboard-aguardando">0</strong>
+        </div>
+
+        <div class="card">
+            <span>⚙️ Em produção</span>
+            <strong id="dashboard-producao">0</strong>
+        </div>
+
+        <div class="card">
+            <span>✅ Finalizadas</span>
+            <strong id="dashboard-finalizadas">0</strong>
+        </div>
+
+        <div class="card">
+            <span>📦 Entregues</span>
+            <strong id="dashboard-entregues">0</strong>
+        </div>
+
+        <div class="card">
+            <span>⚠️ Atrasadas</span>
+            <strong id="dashboard-atrasadas">0</strong>
+        </div>
+
+    </div>
+
+    <h3>Avisos importantes</h3>
+
+    <div
+        id="dashboard-alertas"
+        class="formulario">
+
+        <p>Nenhum aviso no momento.</p>
+
+    </div>
+
+    <button
+        id="atualizar-dashboard"
+        class="botao-principal"
+        type="button">
+        Atualizar Dashboard
+    </button>
+
+</section>
 
             <section id="produtos" class="pagina">
 
