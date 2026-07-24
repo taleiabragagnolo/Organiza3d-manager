@@ -373,6 +373,13 @@ if (botaoSalvarImpressora) {
         }
 
                alert("Impressora cadastrada com sucesso!");
+
+document.getElementById("nome-impressora").value = "";
+document.getElementById("modelo-impressora").value = "";
+document.getElementById("serie-impressora").value = "";
+document.getElementById("data-compra-impressora").value = "";
+document.getElementById("valor-impressora").value = "";
+document.getElementById("status-impressora").selectedIndex = 0;
     });
 }
 
