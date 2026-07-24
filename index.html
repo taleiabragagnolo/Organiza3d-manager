@@ -85,6 +85,12 @@
                         <strong id="total-produtos">0</strong>
                     </div>
 
+
+                    <<div class="card">
+    <span>👥 Clientes</span>
+    <strong id="total-clientes">0</strong>
+</div>
+
                     <div class="card">
                         <span>🖨️ Impressoras</span>
                         <strong id="total-impressoras">0</strong>
@@ -239,9 +245,87 @@
             </section>
 
             <section id="clientes" class="pagina">
-                <h2>Clientes</h2>
-                <p>Este módulo será criado nas próximas etapas.</p>
-            </section>
+
+    <h2>Cadastro de Clientes</h2>
+
+    <p>Cadastre e acompanhe os clientes da empresa.</p>
+
+    <div class="formulario">
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="nome-cliente">Nome do cliente</label>
+
+                <input
+                    type="text"
+                    id="nome-cliente"
+                    placeholder="Ex.: Maria da Silva">
+            </div>
+
+            <div class="campo">
+                <label for="telefone-cliente">Telefone</label>
+
+                <input
+                    type="tel"
+                    id="telefone-cliente"
+                    placeholder="Ex.: (11) 99999-9999">
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="email-cliente">E-mail</label>
+
+                <input
+                    type="email"
+                    id="email-cliente"
+                    placeholder="Ex.: cliente@email.com">
+            </div>
+
+            <div class="campo">
+                <label for="cidade-cliente">Cidade</label>
+
+                <input
+                    type="text"
+                    id="cidade-cliente"
+                    placeholder="Ex.: São Paulo">
+            </div>
+
+        </div>
+
+        <div class="campo campo-completo">
+
+            <label for="observacoes-cliente">Observações</label>
+
+            <textarea
+                id="observacoes-cliente"
+                rows="3"
+                placeholder="Preferências, endereço ou outras informações."
+            ></textarea>
+
+        </div>
+
+        <button
+            id="salvar-cliente"
+            class="botao-principal"
+            type="button">
+            Salvar Cliente
+        </button>
+
+    </div>
+
+    <h3>Clientes cadastrados</h3>
+
+    <div id="lista-clientes">
+        <p>Nenhum cliente cadastrado.</p>
+    </div>
+
+</section>
+
+
 
             <section id="encomendas" class="pagina">
                 <h2>Encomendas</h2>
