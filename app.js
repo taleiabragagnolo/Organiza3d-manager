@@ -305,6 +305,13 @@ function mostrarImpressoras() {
 <p><strong>Compra:</strong> ${imp.dataCompra}</p>
 <p><strong>Valor:</strong> R$ ${imp.valor}</p>
 <p><strong>Status:</strong> ${imp.status}</p>
+
+<button
+    type="button"
+    class="botao-excluir"
+    onclick="excluirImpressora(${imp.id})">
+    Excluir
+</button>
             </div>
         `;
     }).join("");
@@ -369,4 +376,15 @@ if (botaoSalvarImpressora) {
     });
 }
 
-});
+window.excluirImpressora = function (id) {
+    impressoras = impressoras.filter(function (imp) {
+        return imp.id !== id;
+    });
+
+    salvarImpressoras();
+    mostrarImpressoras();
+
+    if (totalImpressoras) {
+        totalImpressoras.textContent = impressoras.length;
+    }
+};
