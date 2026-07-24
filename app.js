@@ -400,7 +400,6 @@ window.excluirImpressora = function (id) {
         totalImpressoras.textContent = impressoras.length;
     };
 
-
 // =========================
 // FILAMENTOS
 // =========================
