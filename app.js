@@ -372,7 +372,7 @@ if (botaoSalvarImpressora) {
             totalImpressoras.textContent = impressoras.length;
         }
 
-        alert("Impressora cadastrada com sucesso!");
+               alert("Impressora cadastrada com sucesso!");
     });
 }
 
