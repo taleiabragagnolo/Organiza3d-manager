@@ -399,6 +399,20 @@ window.excluirImpressora = function (id) {
     if (totalImpressoras) {
         totalImpressoras.textContent = impressoras.length;
     }
+
+    // =========================
+// FILAMENTOS
+// =========================
+
+let filamentos = JSON.parse(
+    localStorage.getItem("organiza3d_filamentos")
+) || [];
+
+const botaoSalvarFilamento =
+    document.getElementById("salvar-filamento");
+
+const listaFilamentos =
+    document.getElementById("lista-filamentos");
 };
 
    
