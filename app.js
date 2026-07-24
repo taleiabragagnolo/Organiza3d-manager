@@ -413,6 +413,65 @@ const botaoSalvarFilamento =
 
 const listaFilamentos =
     document.getElementById("lista-filamentos");
+
+    function salvarFilamentos() {
+    localStorage.setItem(
+        "organiza3d_filamentos",
+        JSON.stringify(filamentos)
+    );
+}
+function mostrarFilamentos() {
+    if (!listaFilamentos) return;
+
+    if (filamentos.length === 0) {
+        listaFilamentos.innerHTML =
+            "<p>Nenhum filamento cadastrado.</p>";
+        return;
+    }
+
+    listaFilamentos.innerHTML = filamentos.map(function (filamento) {
+        return `
+            <div class="card-item">
+                <h4>${filamento.material}</h4>
+                <p><strong>Cor:</strong> ${filamento.cor}</p>
+            </div>
+        `;
+    }).join("");
+}
+
+mostrarFilamentos();
+if (botaoSalvarFilamento) {
+    botaoSalvarFilamento.addEventListener("click", function () {
+        const material = document
+            .getElementById("material-filamento")
+            .value
+            .trim();
+
+        const cor = document
+            .getElementById("cor-filamento")
+            .value
+            .trim();
+
+        if (!material || !cor) {
+            alert("Informe o material e a cor do filamento.");
+            return;
+        }
+
+        const filamento = {
+            id: Date.now(),
+            material: material,
+            cor: cor
+        };
+
+        filamentos.push(filamento);
+        salvarFilamentos();
+        mostrarFilamentos();
+
+        alert("Filamento cadastrado com sucesso!");
+    });
+}
+
+
 };
 
    
