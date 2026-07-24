@@ -415,12 +415,22 @@ const botaoSalvarFilamento =
 const listaFilamentos =
     document.getElementById("lista-filamentos");
 
-    function salvarFilamentos() {
+const totalFilamentos =
+    document.getElementById("total-filamentos");
+
+function salvarFilamentos() {
     localStorage.setItem(
         "organiza3d_filamentos",
         JSON.stringify(filamentos)
     );
 }
+
+function atualizarTotalFilamentos() {
+    if (totalFilamentos) {
+        totalFilamentos.textContent = filamentos.length;
+    }
+}
+
 function mostrarFilamentos() {
     if (!listaFilamentos) return;
 
@@ -430,46 +440,97 @@ function mostrarFilamentos() {
         return;
     }
 
-    listaFilamentos.innerHTML = filamentos.map(function (filamento) {
-        return `
-            <div class="card-item">
-                <h4>${filamento.material}</h4>
-                <p><strong>Cor:</strong> ${filamento.cor}</p>
-            </div>
-        `;
-    }).join("");
+    listaFilamentos.innerHTML = filamentos
+        .map(function (filamento) {
+            return `
+                <div class="card-item">
+                    <h4>${filamento.material}</h4>
+
+                    <p>
+                        <strong>Cor:</strong>
+                        ${filamento.cor}
+                    </p>
+
+                    <button
+                        type="button"
+                        class="botao-excluir"
+                        onclick="excluirFilamento(${filamento.id})">
+                        Excluir
+                    </button>
+                </div>
+            `;
+        })
+        .join("");
 }
 
 mostrarFilamentos();
-
+atualizarTotalFilamentos();
 if (botaoSalvarFilamento) {
-    botaoSalvarFilamento.addEventListener("click", function () {
-        const material = document
-            .getElementById("material-filamento")
-            .value
-            .trim();
+    botaoSalvarFilamento.addEventListener(
+        "click",
+        function () {
+            const material = document
+                .getElementById("material-filamento")
+                .value
+                .trim();
 
-        const cor = document
-            .getElementById("cor-filamento")
-            .value
-            .trim();
+            const cor = document
+                .getElementById("cor-filamento")
+                .value
+                .trim();
 
-        if (!material || !cor) {
-            alert("Informe o material e a cor do filamento.");
-            return;
+            if (!material || !cor) {
+                alert(
+                    "Informe o material e a cor do filamento."
+                );
+                return;
+            }
+
+            const filamento = {
+                id: Date.now(),
+                material: material,
+                cor: cor
+            };
+
+            filamentos.push(filamento);
+
+            salvarFilamentos();
+            mostrarFilamentos();
+            atualizarTotalFilamentos();
+
+            document.getElementById(
+                "material-filamento"
+            ).value = "";
+
+            document.getElementById(
+                "cor-filamento"
+            ).value = "";
+
+            alert(
+                "Filamento cadastrado com sucesso!"
+            );
         }
-
-        const filamento = {
-            id: Date.now(),
-            material: material,
-            cor: cor
-        };
-
-        filamentos.push(filamento);
-        salvarFilamentos();
-        mostrarFilamentos();
-
-        alert("Filamento cadastrado com sucesso!");
-    });
+    );
 }
+
+window.excluirFilamento = function (id) {
+    const confirmar = confirm(
+        "Tem certeza que deseja excluir este filamento?"
+    );
+
+    if (!confirmar) {
+        return;
+    }
+
+    filamentos = filamentos.filter(
+        function (filamento) {
+            return filamento.id !== id;
+        }
+    );
+
+    salvarFilamentos();
+    mostrarFilamentos();
+    atualizarTotalFilamentos();
+};
+
 });
