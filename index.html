@@ -254,9 +254,79 @@
             </section>
 
             <section id="impressoras" class="pagina">
-                <h2>Impressoras</h2>
-                <p>Este módulo será criado nas próximas etapas.</p>
-            </section>
+
+<h2>Cadastro de Impressoras</h2>
+<p>Cadastre e acompanhe todas as impressoras da empresa.</p>
+
+<div class="formulario">
+
+<div class="linha">
+
+<div class="campo">
+<label>Nome da impressora</label>
+<input type="text" id="nome-impressora" placeholder="Ex: Bambu Lab A1">
+</div>
+
+<div class="campo">
+<label>Modelo</label>
+<select id="modelo-impressora">
+<option>Bambu Lab A1</option>
+<option>Bambu Lab P1S</option>
+<option>Bambu Lab X1 Carbon</option>
+<option>Creality K1</option>
+<option>Outro</option>
+</select>
+</div>
+
+</div>
+
+<div class="linha">
+
+<div class="campo">
+<label>Número de Série</label>
+<input type="text" id="serie-impressora">
+</div>
+
+<div class="campo">
+<label>Data da Compra</label>
+<input type="date" id="data-compra-impressora">
+</div>
+
+</div>
+
+<div class="linha">
+
+<div class="campo">
+<label>Valor Pago</label>
+<input type="number" id="valor-impressora">
+</div>
+
+<div class="campo">
+<label>Status</label>
+<select id="status-impressora">
+<option>Ativa</option>
+<option>Em manutenção</option>
+<option>Desativada</option>
+</select>
+</div>
+
+</div>
+
+<button id="salvar-impressora">
+Salvar Impressora
+</button>
+
+</div>
+
+<h3>Impressoras cadastradas</h3>
+
+<div id="lista-impressoras">
+
+<p>Nenhuma impressora cadastrada.</p>
+
+</div>
+
+</section>
 
             <section id="financeiro" class="pagina">
                 <h2>Financeiro</h2>

@@ -183,6 +183,8 @@
             botao.addEventListener("click", function () {
                 excluirProduto(Number(botao.dataset.id));
             });
+        
+        
         });
     }
 
