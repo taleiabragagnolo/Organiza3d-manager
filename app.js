@@ -265,4 +265,104 @@
         elemento.textContent = texto || "";
         return elemento.innerHTML;
     }
+// =========================
+// IMPRESSORAS
+// =========================
+
+let impressoras = JSON.parse(
+    localStorage.getItem("organiza3d_impressoras")
+) || [];
+
+const botaoSalvarImpressora =
+    document.getElementById("salvar-impressora");
+
+const listaImpressoras =
+    document.getElementById("lista-impressoras");
+
+function salvarImpressoras() {
+    localStorage.setItem(
+        "organiza3d_impressoras",
+        JSON.stringify(impressoras)
+    );
+}
+
+function mostrarImpressoras() {
+
+    if (!listaImpressoras) return;
+
+    if (impressoras.length === 0) {
+        listaImpressoras.innerHTML =
+            "<p>Nenhuma impressora cadastrada.</p>";
+        return;
+    }
+
+    listaImpressoras.innerHTML = impressoras.map(function (imp) {
+        return `
+            <div class="card-item">
+                <h4>${imp.nome}</h4>
+                <p><strong>Modelo:</strong> ${imp.modelo}</p>
+                <p><strong>Tecnologia:</strong> ${imp.tecnologia}</p>
+                <p><strong>Status:</strong> ${imp.status}</p>
+            </div>
+        `;
+    }).join("");
+
+
+}
+mostrarImpressoras();
+
+const totalImpressoras =
+    document.getElementById("total-impressoras");
+
+if (totalImpressoras) {
+    totalImpressoras.textContent = impressoras.length;
+}
+
+if (botaoSalvarImpressora) {
+    botaoSalvarImpressora.addEventListener("click", function () {
+        const nome = document
+            .getElementById("nome-impressora")
+            .value
+            .trim();
+
+        const modelo = document
+            .getElementById("modelo-impressora")
+            .value
+            .trim();
+
+        if (!nome) {
+            alert("Informe o nome da impressora.");
+            return;
+        }
+
+        const impressora = {
+            id: Date.now(),
+            nome: nome,
+            modelo: modelo,
+            tecnologia: document.getElementById(
+                "tecnologia-impressora"
+            ).value,
+            bico: document.getElementById(
+                "bico-impressora"
+            ).value,
+            volume: document.getElementById(
+                "volume-impressora"
+            ).value.trim(),
+            status: document.getElementById(
+                "status-impressora"
+            ).value
+        };
+
+        impressoras.push(impressora);
+        salvarImpressoras();
+        mostrarImpressoras();
+
+        if (totalImpressoras) {
+            totalImpressoras.textContent = impressoras.length;
+        }
+
+        alert("Impressora cadastrada com sucesso!");
+    });
+}
+
 });
