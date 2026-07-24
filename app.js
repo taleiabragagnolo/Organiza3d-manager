@@ -583,7 +583,310 @@ window.excluirImpressora = function (id) {
     totalImpressoras.textContent = impressoras.length;
 }
 };
+// =========================
+// FINANCEIRO
+// =========================
 
+let lancamentosFinanceiros = JSON.parse(
+    localStorage.getItem("organiza3d_financeiro")
+) || [];
+
+const botaoSalvarLancamento =
+    document.getElementById("salvar-lancamento");
+
+const listaLancamentos =
+    document.getElementById("lista-lancamentos");
+
+const totalEntradasFinanceiro =
+    document.getElementById(
+        "financeiro-total-entradas"
+    );
+
+const totalDespesasFinanceiro =
+    document.getElementById(
+        "financeiro-total-despesas"
+    );
+
+const saldoFinanceiro =
+    document.getElementById("financeiro-saldo");
+
+const campoDataLancamento =
+    document.getElementById("data-lancamento");
+
+function salvarLancamentosFinanceiros() {
+    localStorage.setItem(
+        "organiza3d_financeiro",
+        JSON.stringify(lancamentosFinanceiros)
+    );
+}
+
+function formatarDataFinanceiro(data) {
+    if (!data) {
+        return "Não informada";
+    }
+
+    const partes = data.split("-");
+
+    if (partes.length !== 3) {
+        return data;
+    }
+
+    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+}
+
+function obterDataHojeFinanceiro() {
+    const hoje = new Date();
+
+    const ano = hoje.getFullYear();
+
+    const mes = String(
+        hoje.getMonth() + 1
+    ).padStart(2, "0");
+
+    const dia = String(
+        hoje.getDate()
+    ).padStart(2, "0");
+
+    return `${ano}-${mes}-${dia}`;
+}
+
+function atualizarResumoFinanceiro() {
+    const entradas = lancamentosFinanceiros
+        .filter(function (lancamento) {
+            return lancamento.tipo === "Entrada";
+        })
+        .reduce(function (total, lancamento) {
+            return total + Number(lancamento.valor);
+        }, 0);
+
+    const despesas = lancamentosFinanceiros
+        .filter(function (lancamento) {
+            return lancamento.tipo === "Despesa";
+        })
+        .reduce(function (total, lancamento) {
+            return total + Number(lancamento.valor);
+        }, 0);
+
+    const saldo = entradas - despesas;
+
+    if (totalEntradasFinanceiro) {
+        totalEntradasFinanceiro.textContent =
+            formatarDinheiro(entradas);
+    }
+
+    if (totalDespesasFinanceiro) {
+        totalDespesasFinanceiro.textContent =
+            formatarDinheiro(despesas);
+    }
+
+    if (saldoFinanceiro) {
+        saldoFinanceiro.textContent =
+            formatarDinheiro(saldo);
+    }
+}
+
+function mostrarLancamentosFinanceiros() {
+    if (!listaLancamentos) {
+        return;
+    }
+
+    if (lancamentosFinanceiros.length === 0) {
+        listaLancamentos.innerHTML =
+            "<p>Nenhum lançamento cadastrado.</p>";
+
+        return;
+    }
+
+    const lancamentosOrdenados =
+        [...lancamentosFinanceiros].sort(
+            function (a, b) {
+                return new Date(b.data) -
+                    new Date(a.data);
+            }
+        );
+
+    listaLancamentos.innerHTML =
+        lancamentosOrdenados
+            .map(function (lancamento) {
+                return `
+                    <div class="card-item">
+
+                        <h4>
+                            ${escaparTexto(
+                                lancamento.descricao
+                            )}
+                        </h4>
+
+                        <p>
+                            <strong>Tipo:</strong>
+                            ${escaparTexto(
+                                lancamento.tipo
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Categoria:</strong>
+                            ${escaparTexto(
+                                lancamento.categoria
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Data:</strong>
+                            ${formatarDataFinanceiro(
+                                lancamento.data
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Valor:</strong>
+                            ${formatarDinheiro(
+                                lancamento.valor
+                            )}
+                        </p>
+
+                        <button
+                            type="button"
+                            class="botao-excluir"
+                            onclick="excluirLancamentoFinanceiro(
+                                ${lancamento.id}
+                            )">
+                            Excluir
+                        </button>
+
+                    </div>
+                `;
+            })
+            .join("");
+}
+
+mostrarLancamentosFinanceiros();
+atualizarResumoFinanceiro();
+
+if (
+    campoDataLancamento &&
+    !campoDataLancamento.value
+) {
+    campoDataLancamento.value =
+        obterDataHojeFinanceiro();
+}
+
+if (botaoSalvarLancamento) {
+    botaoSalvarLancamento.addEventListener(
+        "click",
+        function () {
+            const tipo = document
+                .getElementById("tipo-lancamento")
+                .value;
+
+            const categoria = document
+                .getElementById(
+                    "categoria-lancamento"
+                )
+                .value;
+
+            const descricao = document
+                .getElementById(
+                    "descricao-lancamento"
+                )
+                .value
+                .trim();
+
+            const valor = Number(
+                document.getElementById(
+                    "valor-lancamento"
+                ).value
+            );
+
+            const data = document
+                .getElementById("data-lancamento")
+                .value;
+
+            if (!categoria) {
+                alert("Selecione uma categoria.");
+                return;
+            }
+
+            if (!descricao) {
+                alert("Informe a descrição.");
+                return;
+            }
+
+            if (!valor || valor <= 0) {
+                alert("Informe um valor válido.");
+                return;
+            }
+
+            if (!data) {
+                alert("Informe a data.");
+                return;
+            }
+
+            const lancamento = {
+                id: Date.now(),
+                tipo: tipo,
+                categoria: categoria,
+                descricao: descricao,
+                valor: valor,
+                data: data
+            };
+
+            lancamentosFinanceiros.push(
+                lancamento
+            );
+
+            salvarLancamentosFinanceiros();
+            mostrarLancamentosFinanceiros();
+            atualizarResumoFinanceiro();
+
+            document.getElementById(
+                "tipo-lancamento"
+            ).selectedIndex = 0;
+
+            document.getElementById(
+                "categoria-lancamento"
+            ).selectedIndex = 0;
+
+            document.getElementById(
+                "descricao-lancamento"
+            ).value = "";
+
+            document.getElementById(
+                "valor-lancamento"
+            ).value = "";
+
+            document.getElementById(
+                "data-lancamento"
+            ).value = obterDataHojeFinanceiro();
+
+            alert(
+                "Lançamento cadastrado com sucesso!"
+            );
+        }
+    );
+}
+
+window.excluirLancamentoFinanceiro =
+    function (id) {
+        const confirmar = confirm(
+            "Tem certeza que deseja excluir este lançamento?"
+        );
+
+        if (!confirmar) {
+            return;
+        }
+
+        lancamentosFinanceiros =
+            lancamentosFinanceiros.filter(
+                function (lancamento) {
+                    return lancamento.id !== id;
+                }
+            );
+
+        salvarLancamentosFinanceiros();
+        mostrarLancamentosFinanceiros();
+        atualizarResumoFinanceiro();
+    };
 // =========================
 // ENCOMENDAS
 // =========================
