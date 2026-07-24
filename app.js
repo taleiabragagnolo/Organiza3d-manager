@@ -428,7 +428,7 @@ function salvarFilamentos() {
 function atualizarTotalFilamentos() {
     if (totalFilamentos) {
         totalFilamentos.textContent = filamentos.length;
-    }
+    };
 }
 
 function mostrarFilamentos() {
