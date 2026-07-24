@@ -397,8 +397,9 @@ window.excluirImpressora = function (id) {
     mostrarImpressoras();
 
     if (totalImpressoras) {
-        totalImpressoras.textContent = impressoras.length;
-    };
+    totalImpressoras.textContent = impressoras.length;
+}
+};
 
 // =========================
 // FILAMENTOS
