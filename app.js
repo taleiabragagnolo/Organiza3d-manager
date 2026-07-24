@@ -469,7 +469,7 @@ if (botaoSalvarFilamento) {
         mostrarFilamentos();
 
         alert("Filamento cadastrado com sucesso!");
-    });
+    
 });
 
    
