@@ -441,6 +441,7 @@ function mostrarFilamentos() {
 }
 
 mostrarFilamentos();
+
 if (botaoSalvarFilamento) {
     botaoSalvarFilamento.addEventListener("click", function () {
         const material = document
@@ -469,7 +470,5 @@ if (botaoSalvarFilamento) {
         mostrarFilamentos();
 
         alert("Filamento cadastrado com sucesso!");
-    
-});
-
-   
+    });
+}
