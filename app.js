@@ -335,7 +335,6 @@ if (botaoSalvarImpressora) {
             return;
         }
 
-        const impressora = {
             const impressora = {
     id: Date.now(),
     nome: nome,
