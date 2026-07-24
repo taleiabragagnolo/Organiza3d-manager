@@ -398,7 +398,7 @@ window.excluirImpressora = function (id) {
 
     if (totalImpressoras) {
         totalImpressoras.textContent = impressoras.length;
-    }
+    };
 
 
 // =========================
@@ -428,7 +428,7 @@ function salvarFilamentos() {
 function atualizarTotalFilamentos() {
     if (totalFilamentos) {
         totalFilamentos.textContent = filamentos.length;
-    };
+    }
 }
 
 function mostrarFilamentos() {
