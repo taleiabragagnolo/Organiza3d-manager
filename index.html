@@ -328,9 +328,109 @@
 
 
             <section id="encomendas" class="pagina">
-                <h2>Encomendas</h2>
-                <p>Este módulo será criado nas próximas etapas.</p>
-            </section>
+
+    <h2>Cadastro de Encomendas</h2>
+
+    <p>Cadastre e acompanhe os pedidos dos clientes.</p>
+
+    <div class="formulario">
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="cliente-encomenda">Cliente</label>
+
+                <select id="cliente-encomenda">
+                    <option value="">Selecione o cliente</option>
+                </select>
+            </div>
+
+            <div class="campo">
+                <label for="produto-encomenda">Produto</label>
+
+                <select id="produto-encomenda">
+                    <option value="">Selecione o produto</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="quantidade-encomenda">Quantidade</label>
+
+                <input
+                    type="number"
+                    id="quantidade-encomenda"
+                    min="1"
+                    value="1">
+            </div>
+
+            <div class="campo">
+                <label for="valor-total-encomenda">Valor total</label>
+
+                <input
+                    type="number"
+                    id="valor-total-encomenda"
+                    step="0.01"
+                    readonly>
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="data-pedido-encomenda">Data do pedido</label>
+
+                <input
+                    type="date"
+                    id="data-pedido-encomenda">
+            </div>
+
+            <div class="campo">
+                <label for="data-entrega-encomenda">
+                    Previsão de entrega
+                </label>
+
+                <input
+                    type="date"
+                    id="data-entrega-encomenda">
+            </div>
+
+        </div>
+
+        <div class="campo campo-completo">
+
+            <label for="status-encomenda">Status</label>
+
+            <select id="status-encomenda">
+                <option value="Aguardando">Aguardando</option>
+                <option value="Em produção">Em produção</option>
+                <option value="Finalizada">Finalizada</option>
+                <option value="Entregue">Entregue</option>
+                <option value="Cancelada">Cancelada</option>
+            </select>
+
+        </div>
+
+        <button
+            id="salvar-encomenda"
+            class="botao-principal"
+            type="button">
+            Salvar Encomenda
+        </button>
+
+    </div>
+
+    <h3>Encomendas cadastradas</h3>
+
+    <div id="lista-encomendas">
+        <p>Nenhuma encomenda cadastrada.</p>
+    </div>
+
+</section>
 
             <section id="filamentos" class="pagina">
                 <h2>Cadastro de Filamentos</h2>

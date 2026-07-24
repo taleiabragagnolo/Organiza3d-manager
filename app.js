@@ -585,6 +585,406 @@ window.excluirImpressora = function (id) {
 };
 
 // =========================
+// ENCOMENDAS
+// =========================
+
+let encomendas = JSON.parse(
+    localStorage.getItem("organiza3d_encomendas")
+) || [];
+
+const botaoSalvarEncomenda =
+    document.getElementById("salvar-encomenda");
+
+const listaEncomendas =
+    document.getElementById("lista-encomendas");
+
+const totalEncomendas =
+    document.getElementById("total-encomendas");
+
+const campoClienteEncomenda =
+    document.getElementById("cliente-encomenda");
+
+const campoProdutoEncomenda =
+    document.getElementById("produto-encomenda");
+
+const campoQuantidadeEncomenda =
+    document.getElementById("quantidade-encomenda");
+
+const campoValorTotalEncomenda =
+    document.getElementById("valor-total-encomenda");
+
+const campoDataPedidoEncomenda =
+    document.getElementById("data-pedido-encomenda");
+
+const menuEncomendas =
+    document.querySelector('[data-pagina="encomendas"]');
+
+function salvarEncomendas() {
+    localStorage.setItem(
+        "organiza3d_encomendas",
+        JSON.stringify(encomendas)
+    );
+}
+
+function atualizarTotalEncomendas() {
+    if (totalEncomendas) {
+        totalEncomendas.textContent = encomendas.length;
+    }
+}
+
+function obterDataHoje() {
+    const hoje = new Date();
+
+    const ano = hoje.getFullYear();
+
+    const mes = String(
+        hoje.getMonth() + 1
+    ).padStart(2, "0");
+
+    const dia = String(
+        hoje.getDate()
+    ).padStart(2, "0");
+
+    return `${ano}-${mes}-${dia}`;
+}
+
+function formatarDataEncomenda(data) {
+    if (!data) {
+        return "Não informada";
+    }
+
+    const partes = data.split("-");
+
+    if (partes.length !== 3) {
+        return data;
+    }
+
+    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+}
+
+function atualizarOpcoesEncomendas() {
+    if (campoClienteEncomenda) {
+        campoClienteEncomenda.innerHTML =
+            '<option value="">Selecione o cliente</option>';
+
+        clientes.forEach(function (cliente) {
+            campoClienteEncomenda.innerHTML += `
+                <option value="${cliente.id}">
+                    ${escaparTexto(cliente.nome)}
+                </option>
+            `;
+        });
+    }
+
+    if (campoProdutoEncomenda) {
+        campoProdutoEncomenda.innerHTML =
+            '<option value="">Selecione o produto</option>';
+
+        produtos.forEach(function (produto) {
+            campoProdutoEncomenda.innerHTML += `
+                <option value="${produto.id}">
+                    ${escaparTexto(produto.nome)}
+                    — ${formatarDinheiro(produto.preco)}
+                </option>
+            `;
+        });
+    }
+}
+
+function calcularValorEncomenda() {
+    if (
+        !campoProdutoEncomenda ||
+        !campoQuantidadeEncomenda ||
+        !campoValorTotalEncomenda
+    ) {
+        return;
+    }
+
+    const produtoId = Number(
+        campoProdutoEncomenda.value
+    );
+
+    const quantidade = Number(
+        campoQuantidadeEncomenda.value
+    ) || 0;
+
+    const produtoEncontrado = produtos.find(
+        function (produto) {
+            return produto.id === produtoId;
+        }
+    );
+
+    if (!produtoEncontrado || quantidade <= 0) {
+        campoValorTotalEncomenda.value = "";
+        return;
+    }
+
+    const valorTotal =
+        Number(produtoEncontrado.preco || 0) *
+        quantidade;
+
+    campoValorTotalEncomenda.value =
+        valorTotal.toFixed(2);
+}
+
+function mostrarEncomendas() {
+    if (!listaEncomendas) {
+        return;
+    }
+
+    if (encomendas.length === 0) {
+        listaEncomendas.innerHTML =
+            "<p>Nenhuma encomenda cadastrada.</p>";
+
+        return;
+    }
+
+    listaEncomendas.innerHTML = encomendas
+        .map(function (encomenda) {
+            return `
+                <div class="card-item">
+
+                    <h4>
+                        ${escaparTexto(encomenda.produtoNome)}
+                    </h4>
+
+                    <p>
+                        <strong>Cliente:</strong>
+                        ${escaparTexto(encomenda.clienteNome)}
+                    </p>
+
+                    <p>
+                        <strong>Quantidade:</strong>
+                        ${encomenda.quantidade}
+                    </p>
+
+                    <p>
+                        <strong>Data do pedido:</strong>
+                        ${formatarDataEncomenda(
+                            encomenda.dataPedido
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>Previsão de entrega:</strong>
+                        ${formatarDataEncomenda(
+                            encomenda.dataEntrega
+                        )}
+                    </p>
+
+                    <p>
+                        <strong>Status:</strong>
+                        ${escaparTexto(encomenda.status)}
+                    </p>
+
+                    <p>
+                        <strong>Valor total:</strong>
+                        ${formatarDinheiro(
+                            encomenda.valorTotal
+                        )}
+                    </p>
+
+                    <button
+                        type="button"
+                        class="botao-excluir"
+                        onclick="excluirEncomenda(${encomenda.id})">
+                        Excluir
+                    </button>
+
+                </div>
+            `;
+        })
+        .join("");
+}
+
+atualizarOpcoesEncomendas();
+mostrarEncomendas();
+atualizarTotalEncomendas();
+
+if (
+    campoDataPedidoEncomenda &&
+    !campoDataPedidoEncomenda.value
+) {
+    campoDataPedidoEncomenda.value =
+        obterDataHoje();
+}
+
+if (menuEncomendas) {
+    menuEncomendas.addEventListener(
+        "click",
+        function () {
+            atualizarOpcoesEncomendas();
+            calcularValorEncomenda();
+        }
+    );
+}
+
+if (campoProdutoEncomenda) {
+    campoProdutoEncomenda.addEventListener(
+        "change",
+        calcularValorEncomenda
+    );
+}
+
+if (campoQuantidadeEncomenda) {
+    campoQuantidadeEncomenda.addEventListener(
+        "input",
+        calcularValorEncomenda
+    );
+}
+
+if (botaoSalvarEncomenda) {
+    botaoSalvarEncomenda.addEventListener(
+        "click",
+        function () {
+            const clienteId = Number(
+                document.getElementById(
+                    "cliente-encomenda"
+                ).value
+            );
+
+            const produtoId = Number(
+                document.getElementById(
+                    "produto-encomenda"
+                ).value
+            );
+
+            const quantidade = Number(
+                document.getElementById(
+                    "quantidade-encomenda"
+                ).value
+            );
+
+            const dataPedido = document
+                .getElementById(
+                    "data-pedido-encomenda"
+                )
+                .value;
+
+            const dataEntrega = document
+                .getElementById(
+                    "data-entrega-encomenda"
+                )
+                .value;
+
+            const status = document
+                .getElementById(
+                    "status-encomenda"
+                )
+                .value;
+
+            const clienteEncontrado = clientes.find(
+                function (cliente) {
+                    return cliente.id === clienteId;
+                }
+            );
+
+            const produtoEncontrado = produtos.find(
+                function (produto) {
+                    return produto.id === produtoId;
+                }
+            );
+
+            if (!clienteEncontrado) {
+                alert("Selecione um cliente.");
+                return;
+            }
+
+            if (!produtoEncontrado) {
+                alert("Selecione um produto.");
+                return;
+            }
+
+            if (!quantidade || quantidade <= 0) {
+                alert("Informe uma quantidade válida.");
+                return;
+            }
+
+            if (!dataPedido) {
+                alert("Informe a data do pedido.");
+                return;
+            }
+
+            if (!dataEntrega) {
+                alert("Informe a previsão de entrega.");
+                return;
+            }
+
+            const valorUnitario =
+                Number(produtoEncontrado.preco) || 0;
+
+            const valorTotal =
+                valorUnitario * quantidade;
+
+            const encomenda = {
+                id: Date.now(),
+                clienteId: clienteEncontrado.id,
+                clienteNome: clienteEncontrado.nome,
+                produtoId: produtoEncontrado.id,
+                produtoNome: produtoEncontrado.nome,
+                quantidade: quantidade,
+                dataPedido: dataPedido,
+                dataEntrega: dataEntrega,
+                status: status,
+                valorUnitario: valorUnitario,
+                valorTotal: valorTotal
+            };
+
+            encomendas.push(encomenda);
+
+            salvarEncomendas();
+            mostrarEncomendas();
+            atualizarTotalEncomendas();
+
+            atualizarOpcoesEncomendas();
+
+            document.getElementById(
+                "quantidade-encomenda"
+            ).value = 1;
+
+            document.getElementById(
+                "data-pedido-encomenda"
+            ).value = obterDataHoje();
+
+            document.getElementById(
+                "data-entrega-encomenda"
+            ).value = "";
+
+            document.getElementById(
+                "status-encomenda"
+            ).selectedIndex = 0;
+
+            document.getElementById(
+                "valor-total-encomenda"
+            ).value = "";
+
+            alert("Encomenda cadastrada com sucesso!");
+        }
+    );
+}
+
+window.excluirEncomenda = function (id) {
+    const confirmar = confirm(
+        "Tem certeza que deseja excluir esta encomenda?"
+    );
+
+    if (!confirmar) {
+        return;
+    }
+
+    encomendas = encomendas.filter(
+        function (encomenda) {
+            return encomenda.id !== id;
+        }
+    );
+
+    salvarEncomendas();
+    mostrarEncomendas();
+    atualizarTotalEncomendas();
+};
+
+
+// =========================
 // FILAMENTOS
 // =========================
 
