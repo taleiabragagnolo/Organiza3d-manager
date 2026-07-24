@@ -470,6 +470,6 @@ if (botaoSalvarFilamento) {
 
         alert("Filamento cadastrado com sucesso!");
     });
-
+});
 
    
