@@ -301,8 +301,10 @@ function mostrarImpressoras() {
             <div class="card-item">
                 <h4>${imp.nome}</h4>
                 <p><strong>Modelo:</strong> ${imp.modelo}</p>
-                <p><strong>Tecnologia:</strong> ${imp.tecnologia}</p>
-                <p><strong>Status:</strong> ${imp.status}</p>
+<p><strong>Série:</strong> ${imp.serie}</p>
+<p><strong>Compra:</strong> ${imp.dataCompra}</p>
+<p><strong>Valor:</strong> R$ ${imp.valor}</p>
+<p><strong>Status:</strong> ${imp.status}</p>
             </div>
         `;
     }).join("");
