@@ -336,22 +336,25 @@ if (botaoSalvarImpressora) {
         }
 
         const impressora = {
-            id: Date.now(),
-            nome: nome,
-            modelo: modelo,
-            tecnologia: document.getElementById(
-                "tecnologia-impressora"
-            ).value,
-            bico: document.getElementById(
-                "bico-impressora"
-            ).value,
-            volume: document.getElementById(
-                "volume-impressora"
-            ).value.trim(),
-            status: document.getElementById(
-                "status-impressora"
-            ).value
-        };
+            const impressora = {
+    id: Date.now(),
+    nome: nome,
+    modelo: modelo,
+    serie: document.getElementById(
+        "serie-impressora"
+    ).value.trim(),
+    dataCompra: document.getElementById(
+        "data-compra-impressora"
+    ).value,
+    valor: Number(
+        document.getElementById(
+            "valor-impressora"
+        ).value
+    ) || 0,
+    status: document.getElementById(
+        "status-impressora"
+    ).value
+};
 
         impressoras.push(impressora);
         salvarImpressoras();
