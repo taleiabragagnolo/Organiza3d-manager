@@ -1306,55 +1306,152 @@ window.excluirImpressora = function (id) {
 }
 };
 // =========================
-// FINANCEIRO
+// FINANCEIRO 2.0
 // =========================
 
-let lancamentosFinanceiros = JSON.parse(
-    localStorage.getItem("organiza3d_financeiro")
-) || [];
+let lancamentosFinanceiros = [];
+
+try {
+    lancamentosFinanceiros =
+        JSON.parse(
+            localStorage.getItem(
+                "organiza3d_financeiro"
+            )
+        ) || [];
+} catch (erro) {
+    console.error(
+        "Não foi possível carregar os lançamentos financeiros.",
+        erro
+    );
+
+    lancamentosFinanceiros = [];
+}
+
+// =========================
+// ELEMENTOS DO FINANCEIRO
+// =========================
 
 const botaoSalvarLancamento =
-    document.getElementById("salvar-lancamento");
+    document.getElementById(
+        "salvar-lancamento"
+    );
+
+const botaoLimparFormularioLancamento =
+    document.getElementById(
+        "limpar-formulario-lancamento"
+    );
 
 const listaLancamentos =
-    document.getElementById("lista-lancamentos");
-
-const totalEntradasFinanceiro =
     document.getElementById(
-        "financeiro-total-entradas"
+        "lista-lancamentos"
     );
 
-const totalDespesasFinanceiro =
+const campoTipoLancamento =
     document.getElementById(
-        "financeiro-total-despesas"
+        "tipo-lancamento"
     );
 
-const saldoFinanceiro =
-    document.getElementById("financeiro-saldo");
+const campoCategoriaLancamento =
+    document.getElementById(
+        "categoria-lancamento"
+    );
+
+const campoDescricaoLancamento =
+    document.getElementById(
+        "descricao-lancamento"
+    );
+
+const campoValorLancamento =
+    document.getElementById(
+        "valor-lancamento"
+    );
 
 const campoDataLancamento =
-    document.getElementById("data-lancamento");
+    document.getElementById(
+        "data-lancamento"
+    );
+
+const campoFormaPagamentoLancamento =
+    document.getElementById(
+        "forma-pagamento-lancamento"
+    );
+
+const campoSituacaoLancamento =
+    document.getElementById(
+        "situacao-lancamento"
+    );
+
+const campoValorPagoLancamento =
+    document.getElementById(
+        "valor-pago-lancamento"
+    );
+
+const campoEncomendaLancamento =
+    document.getElementById(
+        "encomenda-lancamento"
+    );
+
+const campoOrigemLancamento =
+    document.getElementById(
+        "origem-lancamento"
+    );
+
+const campoObservacoesLancamento =
+    document.getElementById(
+        "observacoes-lancamento"
+    );
+
+const filtroTipoFinanceiro =
+    document.getElementById(
+        "filtro-tipo-financeiro"
+    );
+
+const filtroSituacaoFinanceiro =
+    document.getElementById(
+        "filtro-situacao-financeiro"
+    );
+
+const filtroDataInicialFinanceiro =
+    document.getElementById(
+        "filtro-data-inicial-financeiro"
+    );
+
+const filtroDataFinalFinanceiro =
+    document.getElementById(
+        "filtro-data-final-financeiro"
+    );
+
+const botaoAplicarFiltrosFinanceiro =
+    document.getElementById(
+        "aplicar-filtros-financeiro"
+    );
+
+const botaoLimparFiltrosFinanceiro =
+    document.getElementById(
+        "limpar-filtros-financeiro"
+    );
+
+const menuFinanceiro =
+    document.querySelector(
+        '[data-pagina="financeiro"]'
+    );
+
+// =========================
+// ARMAZENAMENTO
+// =========================
 
 function salvarLancamentosFinanceiros() {
     localStorage.setItem(
         "organiza3d_financeiro",
-        JSON.stringify(lancamentosFinanceiros)
+        JSON.stringify(
+            lancamentosFinanceiros
+        )
     );
 }
 
-function formatarDataFinanceiro(data) {
-    if (!data) {
-        return "Não informada";
-    }
-
-    const partes = data.split("-");
-
-    if (partes.length !== 3) {
-        return data;
-    }
-
-    return `${partes[2]}/${partes[1]}/${partes[0]}`;
-}
+// =========================
+// DATA
+// =========================
 
 function obterDataHojeFinanceiro() {
     const hoje = new Date();
@@ -1372,243 +1469,412 @@ function obterDataHojeFinanceiro() {
     return `${ano}-${mes}-${dia}`;
 }
 
-function atualizarResumoFinanceiro() {
-    const entradas = lancamentosFinanceiros
-        .filter(function (lancamento) {
-            return lancamento.tipo === "Entrada";
-        })
-        .reduce(function (total, lancamento) {
-            return total + Number(lancamento.valor);
-        }, 0);
-
-    const despesas = lancamentosFinanceiros
-        .filter(function (lancamento) {
-            return lancamento.tipo === "Despesa";
-        })
-        .reduce(function (total, lancamento) {
-            return total + Number(lancamento.valor);
-        }, 0);
-
-    const saldo = entradas - despesas;
-
-    if (totalEntradasFinanceiro) {
-        totalEntradasFinanceiro.textContent =
-            formatarDinheiro(entradas);
+function formatarDataFinanceiro(data) {
+    if (!data) {
+        return "Não informada";
     }
 
-    if (totalDespesasFinanceiro) {
-        totalDespesasFinanceiro.textContent =
-            formatarDinheiro(despesas);
+    const partes = data.split("-");
+
+    if (partes.length !== 3) {
+        return data;
     }
 
-    if (saldoFinanceiro) {
-        saldoFinanceiro.textContent =
-            formatarDinheiro(saldo);
-    }
+    return (
+        `${partes[2]}/` +
+        `${partes[1]}/` +
+        `${partes[0]}`
+    );
 }
 
-function mostrarLancamentosFinanceiros() {
-    if (!listaLancamentos) {
-        return;
-    }
+// =========================
+// NORMALIZAÇÃO
+// =========================
 
-    if (lancamentosFinanceiros.length === 0) {
-        listaLancamentos.innerHTML =
-            "<p>Nenhum lançamento cadastrado.</p>";
+function normalizarLancamentosFinanceiros() {
+    lancamentosFinanceiros =
+        lancamentosFinanceiros.map(
+            function (lancamento, indice) {
+                const valor = Number(
+                    lancamento.valor || 0
+                );
 
-        return;
-    }
+                let valorPago;
 
-    const lancamentosOrdenados =
-        [...lancamentosFinanceiros].sort(
-            function (a, b) {
-                return new Date(b.data) -
-                    new Date(a.data);
+                if (
+                    lancamento.valorPago ===
+                    undefined
+                ) {
+                    valorPago =
+                        lancamento.situacao ===
+                            "Pendente"
+                            ? 0
+                            : valor;
+                } else {
+                    valorPago = Number(
+                        lancamento.valorPago || 0
+                    );
+                }
+
+                valorPago = Math.max(
+                    0,
+                    Math.min(
+                        valor,
+                        valorPago
+                    )
+                );
+
+                let situacao =
+                    lancamento.situacao;
+
+                if (
+                    ![
+                        "Pago",
+                        "Pendente",
+                        "Parcial"
+                    ].includes(situacao)
+                ) {
+                    if (
+                        valor > 0 &&
+                        valorPago >= valor
+                    ) {
+                        situacao = "Pago";
+                    } else if (
+                        valorPago > 0
+                    ) {
+                        situacao = "Parcial";
+                    } else {
+                        situacao = "Pendente";
+                    }
+                }
+
+                if (valorPago >= valor && valor > 0) {
+                    situacao = "Pago";
+                } else if (valorPago > 0) {
+                    situacao = "Parcial";
+                } else {
+                    situacao = "Pendente";
+                }
+
+                return {
+                    id:
+                        lancamento.id ||
+                        Date.now() + indice,
+
+                    tipo:
+                        lancamento.tipo ===
+                            "Despesa"
+                            ? "Despesa"
+                            : "Entrada",
+
+                    categoria:
+                        lancamento.categoria ||
+                        "Outros",
+
+                    descricao:
+                        lancamento.descricao ||
+                        "Lançamento sem descrição",
+
+                    valor:
+                        valor,
+
+                    data:
+                        lancamento.data ||
+                        obterDataHojeFinanceiro(),
+
+                    formaPagamento:
+                        lancamento.formaPagamento ||
+                        "",
+
+                    situacao:
+                        situacao,
+
+                    valorPago:
+                        valorPago,
+
+                    encomendaId:
+                        lancamento.encomendaId ||
+                        null,
+
+                    encomendaDescricao:
+                        lancamento
+                            .encomendaDescricao ||
+                        "",
+
+                    origem:
+                        lancamento.origem ||
+                        "Manual",
+
+                    observacoes:
+                        lancamento.observacoes ||
+                        "",
+
+                    automatico:
+                        Boolean(
+                            lancamento.automatico
+                        )
+                };
             }
         );
 
-    listaLancamentos.innerHTML =
-        lancamentosOrdenados
-            .map(function (lancamento) {
-                return `
-                    <div class="card-item">
-
-                        <h4>
-                            ${escaparTexto(
-                                lancamento.descricao
-                            )}
-                        </h4>
-
-                        <p>
-                            <strong>Tipo:</strong>
-                            ${escaparTexto(
-                                lancamento.tipo
-                            )}
-                        </p>
-
-                        <p>
-                            <strong>Categoria:</strong>
-                            ${escaparTexto(
-                                lancamento.categoria
-                            )}
-                        </p>
-
-                        <p>
-                            <strong>Data:</strong>
-                            ${formatarDataFinanceiro(
-                                lancamento.data
-                            )}
-                        </p>
-
-                        <p>
-                            <strong>Valor:</strong>
-                            ${formatarDinheiro(
-                                lancamento.valor
-                            )}
-                        </p>
-
-                        <button
-                            type="button"
-                            class="botao-excluir"
-                            onclick="excluirLancamentoFinanceiro(
-                                ${lancamento.id}
-                            )">
-                            Excluir
-                        </button>
-
-                    </div>
-                `;
-            })
-            .join("");
+    salvarLancamentosFinanceiros();
 }
 
-mostrarLancamentosFinanceiros();
-atualizarResumoFinanceiro();
+// =========================
+// CÁLCULOS
+// =========================
 
-if (
-    campoDataLancamento &&
-    !campoDataLancamento.value
+function obterValorRealizadoLancamento(
+    lancamento
 ) {
-    campoDataLancamento.value =
-        obterDataHojeFinanceiro();
+    return Math.max(
+        0,
+        Number(
+            lancamento.valorPago || 0
+        )
+    );
 }
 
-if (botaoSalvarLancamento) {
-    botaoSalvarLancamento.addEventListener(
+function obterValorPendenteLancamento(
+    lancamento
+) {
+    const valor = Number(
+        lancamento.valor || 0
+    );
+
+    const valorPago = Number(
+        lancamento.valorPago || 0
+    );
+
+    return Math.max(
+        0,
+        valor - valorPago
+    );
+}
+
+// =========================
+// RESUMO FINANCEIRO
+// =========================
+
+function atualizarResumoFinanceiro() {
+    let totalEntradas = 0;
+    let totalDespesas = 0;
+    let entradasPendentes = 0;
+    let despesasPendentes = 0;
+
+    lancamentosFinanceiros.forEach(
+        function (lancamento) {
+            const valorRealizado =
+                obterValorRealizadoLancamento(
+                    lancamento
+                );
+
+            const valorPendente =
+                obterValorPendenteLancamento(
+                    lancamento
+                );
+
+            if (
+                lancamento.tipo ===
+                "Entrada"
+            ) {
+                totalEntradas +=
+                    valorRealizado;
+
+                entradasPendentes +=
+                    valorPendente;
+            }
+
+            if (
+                lancamento.tipo ===
+                "Despesa"
+            ) {
+                totalDespesas +=
+                    valorRealizado;
+
+                despesasPendentes +=
+                    valorPendente;
+            }
+        }
+    );
+
+    const saldo =
+        totalEntradas - totalDespesas;
+
+    const totalPendente =
+        entradasPendentes +
+        despesasPendentes;
+
+    const campoTotalEntradas =
+        document.getElementById(
+            "financeiro-total-entradas"
+        );
+
+    const campoTotalDespesas =
+        document.getElementById(
+            "financeiro-total-despesas"
+        );
+
+    const campoSaldo =
+        document.getElementById(
+            "financeiro-saldo"
+        );
+
+    const campoTotalPendente =
+        document.getElementById(
+            "financeiro-total-pendente"
+        );
+
+    const campoEntradasPendentes =
+        document.getElementById(
+            "financeiro-entradas-pendentes"
+        );
+
+    const campoDespesasPendentes =
+        document.getElementById(
+            "financeiro-despesas-pendentes"
+        );
+
+    if (campoTotalEntradas) {
+        campoTotalEntradas.textContent =
+            formatarDinheiro(
+                totalEntradas
+            );
+    }
+
+    if (campoTotalDespesas) {
+        campoTotalDespesas.textContent =
+            formatarDinheiro(
+                totalDespesas
+            );
+    }
+
+    if (campoSaldo) {
+        campoSaldo.textContent =
+            formatarDinheiro(
+                saldo
+            );
+    }
+
+    if (campoTotalPendente) {
+        campoTotalPendente.textContent =
+            formatarDinheiro(
+                totalPendente
+            );
+    }
+
+    if (campoEntradasPendentes) {
+        campoEntradasPendentes.textContent =
+            formatarDinheiro(
+                entradasPendentes
+            );
+    }
+
+    if (campoDespesasPendentes) {
+        campoDespesasPendentes.textContent =
+            formatarDinheiro(
+                despesasPendentes
+            );
+    }
+}
+
+// =========================
+// ENCOMENDAS DISPONÍVEIS
+// =========================
+
+function atualizarOpcoesEncomendasFinanceiro() {
+    if (!campoEncomendaLancamento) {
+        return;
+    }
+
+    const encomendaSelecionada =
+        campoEncomendaLancamento.value;
+
+    campoEncomendaLancamento.innerHTML =
+        `
+            <option value="">
+                Nenhuma encomenda vinculada
+            </option>
+        `;
+
+    if (
+        typeof encomendas === "undefined" ||
+        !Array.isArray(encomendas)
+    ) {
+        return;
+    }
+
+    encomendas.forEach(
+        function (encomenda) {
+            campoEncomendaLancamento
+                .innerHTML += `
+                    <option value="${encomenda.id}">
+                        ${escaparTexto(
+                            encomenda.clienteNome
+                        )}
+                        —
+                        ${escaparTexto(
+                            encomenda.produtoNome
+                        )}
+                        —
+                        ${formatarDinheiro(
+                            encomenda.valorTotal
+                        )}
+                    </option>
+                `;
+        }
+    );
+
+    campoEncomendaLancamento.value =
+        encomendaSelecionada;
+}
+
+// =========================
+// FORMULÁRIO INICIAL
+// =========================
+
+function prepararFormularioFinanceiro() {
+    if (
+        campoDataLancamento &&
+        !campoDataLancamento.value
+    ) {
+        campoDataLancamento.value =
+            obterDataHojeFinanceiro();
+    }
+
+    atualizarOpcoesEncomendasFinanceiro();
+}
+
+// =========================
+// ABERTURA DO MÓDULO
+// =========================
+
+if (menuFinanceiro) {
+    menuFinanceiro.addEventListener(
         "click",
         function () {
-            const tipo = document
-                .getElementById("tipo-lancamento")
-                .value;
-
-            const categoria = document
-                .getElementById(
-                    "categoria-lancamento"
-                )
-                .value;
-
-            const descricao = document
-                .getElementById(
-                    "descricao-lancamento"
-                )
-                .value
-                .trim();
-
-            const valor = Number(
-                document.getElementById(
-                    "valor-lancamento"
-                ).value
-            );
-
-            const data = document
-                .getElementById("data-lancamento")
-                .value;
-
-            if (!categoria) {
-                alert("Selecione uma categoria.");
-                return;
-            }
-
-            if (!descricao) {
-                alert("Informe a descrição.");
-                return;
-            }
-
-            if (!valor || valor <= 0) {
-                alert("Informe um valor válido.");
-                return;
-            }
-
-            if (!data) {
-                alert("Informe a data.");
-                return;
-            }
-
-            const lancamento = {
-                id: Date.now(),
-                tipo: tipo,
-                categoria: categoria,
-                descricao: descricao,
-                valor: valor,
-                data: data
-            };
-
-            lancamentosFinanceiros.push(
-                lancamento
-            );
-
-            salvarLancamentosFinanceiros();
-            mostrarLancamentosFinanceiros();
+            atualizarOpcoesEncomendasFinanceiro();
             atualizarResumoFinanceiro();
-
-            document.getElementById(
-                "tipo-lancamento"
-            ).selectedIndex = 0;
-
-            document.getElementById(
-                "categoria-lancamento"
-            ).selectedIndex = 0;
-
-            document.getElementById(
-                "descricao-lancamento"
-            ).value = "";
-
-            document.getElementById(
-                "valor-lancamento"
-            ).value = "";
-
-            document.getElementById(
-                "data-lancamento"
-            ).value = obterDataHojeFinanceiro();
-
-            alert(
-                "Lançamento cadastrado com sucesso!"
-            );
         }
     );
 }
 
-window.excluirLancamentoFinanceiro =
-    function (id) {
-        const confirmar = confirm(
-            "Tem certeza que deseja excluir este lançamento?"
-        );
+// =========================
+// INICIALIZAÇÃO
+// =========================
 
-        if (!confirmar) {
-            return;
-        }
+normalizarLancamentosFinanceiros();
+prepararFormularioFinanceiro();
+atualizarResumoFinanceiro();
 
-        lancamentosFinanceiros =
-            lancamentosFinanceiros.filter(
-                function (lancamento) {
-                    return lancamento.id !== id;
-                }
-            );
+if (
+    listaLancamentos &&
+    lancamentosFinanceiros.length === 0
+) {
+    listaLancamentos.innerHTML =
+        "<p>Nenhum lançamento cadastrado.</p>";
+}
 
-        salvarLancamentosFinanceiros();
-        mostrarLancamentosFinanceiros();
-        atualizarResumoFinanceiro();
-    };
 // =========================
 // RELATÓRIOS
 // =========================
