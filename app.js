@@ -2425,8 +2425,9 @@ if (menuFinanceiro) {
 // =========================
 
 normalizarLancamentosFinanceiros();
-prepararFormularioFinanceiro();
+// prepararFormularioFinanceiro();
 mostrarLancamentosFinanceiros();
+
 
 
 // =========================
@@ -4022,9 +4023,11 @@ window.excluirEncomenda =
 // =========================
 
 normalizarEncomendasAntigas();
-atualizarOpcoesEncomendas();
 mostrarEncomendas();
+atualizarOpcoesEncomendas();
 limparFormularioEncomenda();
+
+prepararFormularioFinanceiro();
 
 
 // =========================
