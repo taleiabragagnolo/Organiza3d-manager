@@ -442,7 +442,70 @@
             </div>
 
         </div>
+<div class="linha">
 
+    <div class="campo">
+        <label for="encomenda-filamento">
+            Filamento utilizado
+        </label>
+
+        <select id="encomenda-filamento">
+            <option value="">
+                Nenhum filamento selecionado
+            </option>
+        </select>
+
+        <small>
+            O sistema mostrará o material, a cor e o peso disponível.
+        </small>
+    </div>
+
+    <div class="campo">
+        <label for="encomenda-consumo-filamento">
+            Consumo de filamento
+        </label>
+
+        <input
+            type="number"
+            id="encomenda-consumo-filamento"
+            min="0"
+            step="1"
+            placeholder="Ex.: 125">
+
+        <small>
+            Informe a quantidade utilizada em gramas.
+        </small>
+    </div>
+
+</div>
+
+<div class="linha">
+
+    <div class="campo">
+        <label for="encomenda-filamento-disponivel">
+            Peso disponível
+        </label>
+
+        <input
+            type="text"
+            id="encomenda-filamento-disponivel"
+            value="Nenhum filamento selecionado"
+            readonly>
+    </div>
+
+    <div class="campo">
+        <label for="encomenda-filamento-restante">
+            Peso após a encomenda
+        </label>
+
+        <input
+            type="text"
+            id="encomenda-filamento-restante"
+            value="0 g"
+            readonly>
+    </div>
+
+</div>
         <div class="linha">
 
             <div class="campo">
