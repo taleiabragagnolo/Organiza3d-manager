@@ -2394,7 +2394,7 @@ window.excluirFilamento =
 normalizarFilamentosAntigos();
 mostrarFilamentos();
 limparFormularioFilamento();
-};
+
 
 // =========================
 // DASHBOARD COMPLETO
