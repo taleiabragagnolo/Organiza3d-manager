@@ -2244,23 +2244,22 @@ if (botaoSalvarFilamento) {
             limparFormularioFilamento();
 
             if (
-                typeof atualizarDashboardCompleto ===
-                "function"
-            ) {
-                atualizarDashboardCompleto();
-            }
+    typeof atualizarDashboardCompleto ===
+    "function"
+) {
+    atualizarDashboardCompleto();
+}
 
-            if (
+if (
     typeof atualizarRelatorios ===
     "function"
 ) {
     atualizarRelatorios();
 }
-            }
 
-            alert(
-                "Filamento cadastrado com sucesso!"
-            );
+alert(
+    "Filamento cadastrado com sucesso!"
+);
         }
     );
 }
