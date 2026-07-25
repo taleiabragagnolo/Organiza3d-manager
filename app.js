@@ -2426,15 +2426,7 @@ if (menuFinanceiro) {
 
 normalizarLancamentosFinanceiros();
 prepararFormularioFinanceiro();
-atualizarResumoFinanceiro();
-
-if (
-    listaLancamentos &&
-    lancamentosFinanceiros.length === 0
-) {
-    listaLancamentos.innerHTML =
-        "<p>Nenhum lançamento cadastrado.</p>";
-}
+mostrarLancamentosFinanceiros();
 
 
 // =========================
