@@ -497,29 +497,256 @@
 </section>
 
             <section id="filamentos" class="pagina">
-                <h2>Cadastro de Filamentos</h2>
 
-    
-    <p>Cadastre e acompanhe os filamentos disponíveis.</p>
+    <h2>Filamentos 2.0</h2>
 
-    
+    <p>
+        Controle o estoque, o consumo e a situação de cada rolo de filamento.
+    </p>
+
+    <h3>Resumo do estoque</h3>
+
+    <div class="cards">
+
+        <div class="card">
+            <span>🧵 Total de rolos</span>
+            <strong id="filamentos-total-rolos">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>📦 Novos</span>
+            <strong id="filamentos-total-novos">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>⚙️ Em uso</span>
+            <strong id="filamentos-total-em-uso">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>⚠️ Baixo estoque</span>
+            <strong id="filamentos-total-baixo">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>✅ Finalizados</span>
+            <strong id="filamentos-total-finalizados">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>⚖️ Peso disponível</span>
+            <strong id="filamentos-peso-disponivel">
+                0 g
+            </strong>
+        </div>
+
+    </div>
+
+    <h3>Cadastrar filamento</h3>
+
     <div class="formulario">
+
         <div class="linha">
+
             <div class="campo">
-                <label>Material</label>
+                <label for="filamento-fabricante">
+                    Fabricante
+                </label>
+
                 <input
                     type="text"
-                    id="material-filamento"
-                    placeholder="Ex: PLA">
+                    id="filamento-fabricante"
+                    placeholder="Ex.: Voolt3D">
             </div>
 
             <div class="campo">
-                <label>Cor</label>
+                <label for="filamento-material">
+                    Material
+                </label>
+
+                <select id="filamento-material">
+                    <option value="">
+                        Selecione
+                    </option>
+
+                    <option value="PLA">
+                        PLA
+                    </option>
+
+                    <option value="PLA+">
+                        PLA+
+                    </option>
+
+                    <option value="PETG">
+                        PETG
+                    </option>
+
+                    <option value="ABS">
+                        ABS
+                    </option>
+
+                    <option value="ASA">
+                        ASA
+                    </option>
+
+                    <option value="TPU">
+                        TPU
+                    </option>
+
+                    <option value="Nylon">
+                        Nylon
+                    </option>
+
+                    <option value="Outro">
+                        Outro
+                    </option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="filamento-cor">
+                    Cor
+                </label>
+
                 <input
                     type="text"
-                    id="cor-filamento"
-                    placeholder="Ex: Preto">
+                    id="filamento-cor"
+                    placeholder="Ex.: Preto">
             </div>
+
+            <div class="campo">
+                <label for="filamento-peso-inicial">
+                    Peso inicial do rolo
+                </label>
+
+                <input
+                    type="number"
+                    id="filamento-peso-inicial"
+                    min="1"
+                    step="1"
+                    placeholder="Ex.: 1000">
+
+                <small>
+                    Informe o peso do filamento em gramas.
+                </small>
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="filamento-peso-restante">
+                    Peso restante
+                </label>
+
+                <input
+                    type="number"
+                    id="filamento-peso-restante"
+                    min="0"
+                    step="1"
+                    placeholder="Ex.: 1000">
+
+                <small>
+                    Em um rolo novo, normalmente é igual ao peso inicial.
+                </small>
+            </div>
+
+            <div class="campo">
+                <label for="filamento-percentual">
+                    Percentual restante
+                </label>
+
+                <input
+                    type="text"
+                    id="filamento-percentual"
+                    value="0%"
+                    readonly>
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="filamento-valor">
+                    Valor pago
+                </label>
+
+                <input
+                    type="number"
+                    id="filamento-valor"
+                    min="0"
+                    step="0.01"
+                    placeholder="Ex.: 89,90">
+            </div>
+
+            <div class="campo">
+                <label for="filamento-data-compra">
+                    Data da compra
+                </label>
+
+                <input
+                    type="date"
+                    id="filamento-data-compra">
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="filamento-fornecedor">
+                    Fornecedor
+                </label>
+
+                <input
+                    type="text"
+                    id="filamento-fornecedor"
+                    placeholder="Opcional">
+            </div>
+
+            <div class="campo">
+                <label for="filamento-status">
+                    Status
+                </label>
+
+                <input
+                    type="text"
+                    id="filamento-status"
+                    value="Novo"
+                    readonly>
+
+                <small>
+                    O status será definido automaticamente pelo sistema.
+                </small>
+            </div>
+
+        </div>
+
+        <div class="campo">
+            <label for="filamento-observacoes">
+                Observações
+            </label>
+
+            <textarea
+                id="filamento-observacoes"
+                rows="3"
+                placeholder="Informações adicionais sobre o filamento"></textarea>
         </div>
 
         <button
@@ -528,85 +755,26 @@
             type="button">
             Salvar Filamento
         </button>
+
+        <button
+            id="limpar-formulario-filamento"
+            type="button">
+            Limpar Formulário
+        </button>
+
     </div>
 
-    <div id="lista-filamentos"></div>
-            </section>
+    <h3>Filamentos cadastrados</h3>
 
-            <section id="impressoras" class="pagina">
+    <div id="lista-filamentos">
 
-<h2>Cadastro de Impressoras</h2>
-<p>Cadastre e acompanhe todas as impressoras da empresa.</p>
+        <p>
+            Nenhum filamento cadastrado.
+        </p>
 
-<div class="formulario">
+    </div>
 
-<div class="linha">
-
-<div class="campo">
-<label>Nome da impressora</label>
-<input type="text" id="nome-impressora" placeholder="Ex: Bambu Lab A1">
-</div>
-
-<div class="campo">
-<label>Modelo</label>
-<select id="modelo-impressora">
-<option>Bambu Lab A1</option>
-<option>Bambu Lab P1S</option>
-<option>Bambu Lab X1 Carbon</option>
-<option>Creality K1</option>
-<option>Outro</option>
-</select>
-</div>
-
-</div>
-
-<div class="linha">
-
-<div class="campo">
-<label>Número de Série</label>
-<input type="text" id="serie-impressora">
-</div>
-
-<div class="campo">
-<label>Data da Compra</label>
-<input type="date" id="data-compra-impressora">
-</div>
-
-</div>
-
-<div class="linha">
-
-<div class="campo">
-<label>Valor Pago</label>
-<input type="number" id="valor-impressora">
-</div>
-
-<div class="campo">
-<label>Status</label>
-<select id="status-impressora">
-<option>Ativa</option>
-<option>Em manutenção</option>
-<option>Desativada</option>
-</select>
-</div>
-</div>
-
-<button
-    id="salvar-impressora"
-    class="botao-principal"
-    type="button">
-    Salvar Impressora
-</button>
-
-</div>
-
-<h3>Impressoras cadastradas</h3>
-
-<div id="lista-impressoras">
-
-<p>Nenhuma impressora cadastrada.</p>
-
-</div>
+</section>
 
 </section>
 
