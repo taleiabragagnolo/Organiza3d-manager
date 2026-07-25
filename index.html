@@ -1386,6 +1386,369 @@
 
 </section>
 
+<section id="relatorios" class="pagina">
+
+    <h2>Relatórios 2.0</h2>
+
+    <p>
+        Analise os principais dados da empresa,
+        acompanhe o desempenho e identifique
+        pontos que precisam de atenção.
+    </p>
+
+    <div class="linha">
+
+        <div class="campo">
+            <label for="relatorio-periodo-inicial">
+                Data inicial
+            </label>
+
+            <input
+                type="date"
+                id="relatorio-periodo-inicial">
+        </div>
+
+        <div class="campo">
+            <label for="relatorio-periodo-final">
+                Data final
+            </label>
+
+            <input
+                type="date"
+                id="relatorio-periodo-final">
+        </div>
+
+    </div>
+
+    <button
+        id="atualizar-relatorios"
+        class="botao-principal"
+        type="button">
+        Atualizar Relatórios
+    </button>
+
+    <button
+        id="limpar-periodo-relatorios"
+        type="button">
+        Limpar Período
+    </button>
+
+    <h3>Visão geral</h3>
+
+    <div class="cards">
+
+        <div class="card">
+            <span>📦 Produtos</span>
+
+            <strong id="relatorio-produtos">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>👥 Clientes</span>
+
+            <strong id="relatorio-clientes">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>📋 Encomendas</span>
+
+            <strong id="relatorio-encomendas">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>🧵 Filamentos</span>
+
+            <strong id="relatorio-filamentos">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>🖨️ Impressoras</span>
+
+            <strong id="relatorio-impressoras">
+                0
+            </strong>
+        </div>
+
+    </div>
+
+    <h3>Situação das encomendas</h3>
+
+    <div class="cards">
+
+        <div class="card">
+            <span>⏳ Aguardando</span>
+
+            <strong id="relatorio-aguardando">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>⚙️ Em produção</span>
+
+            <strong id="relatorio-producao">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>✅ Finalizadas</span>
+
+            <strong id="relatorio-finalizadas">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>📦 Entregues</span>
+
+            <strong id="relatorio-entregues">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>❌ Canceladas</span>
+
+            <strong id="relatorio-canceladas">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>⚠️ Atrasadas</span>
+
+            <strong id="relatorio-atrasadas">
+                0
+            </strong>
+        </div>
+
+    </div>
+
+    <h3>Resultado financeiro</h3>
+
+    <div class="cards">
+
+        <div class="card">
+            <span>💰 Entradas realizadas</span>
+
+            <strong id="relatorio-entradas">
+                R$ 0,00
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>💸 Despesas realizadas</span>
+
+            <strong id="relatorio-despesas">
+                R$ 0,00
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>📊 Saldo realizado</span>
+
+            <strong id="relatorio-saldo">
+                R$ 0,00
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>📥 Entradas pendentes</span>
+
+            <strong id="relatorio-entradas-pendentes">
+                R$ 0,00
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>📤 Despesas pendentes</span>
+
+            <strong id="relatorio-despesas-pendentes">
+                R$ 0,00
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>🧾 Valor das encomendas</span>
+
+            <strong id="relatorio-valor-encomendas">
+                R$ 0,00
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>💳 Recebido em encomendas</span>
+
+            <strong id="relatorio-valor-recebido">
+                R$ 0,00
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>⏳ A receber</span>
+
+            <strong id="relatorio-valor-a-receber">
+                R$ 0,00
+            </strong>
+        </div>
+
+    </div>
+
+    <h3>Indicadores de desempenho</h3>
+
+    <div class="cards">
+
+        <div class="card">
+            <span>🧾 Ticket médio</span>
+
+            <strong id="relatorio-ticket-medio">
+                R$ 0,00
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>🏆 Produto mais vendido</span>
+
+            <strong id="relatorio-produto-mais-vendido">
+                Nenhum
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>🌟 Melhor cliente</span>
+
+            <strong id="relatorio-melhor-cliente">
+                Nenhum
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>🧵 Maior estoque</span>
+
+            <strong id="relatorio-maior-estoque">
+                Nenhum
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>⚠️ Filamentos com estoque baixo</span>
+
+            <strong id="relatorio-filamentos-baixos">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>🖨️ Impressoras ativas</span>
+
+            <strong id="relatorio-impressoras-ativas">
+                0
+            </strong>
+        </div>
+
+    </div>
+
+    <h3>Últimos registros</h3>
+
+    <div class="cards">
+
+        <div class="card">
+            <span>👤 Último cliente</span>
+
+            <strong id="relatorio-ultimo-cliente">
+                Nenhum
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>📋 Última encomenda</span>
+
+            <strong id="relatorio-ultima-encomenda">
+                Nenhuma
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>💰 Último lançamento</span>
+
+            <strong id="relatorio-ultimo-lancamento">
+                Nenhum
+            </strong>
+        </div>
+
+    </div>
+
+    <h3>Detalhamento</h3>
+
+    <div class="formulario">
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="tipo-detalhamento-relatorio">
+                    Exibir detalhes de
+                </label>
+
+                <select id="tipo-detalhamento-relatorio">
+
+                    <option value="encomendas">
+                        Encomendas
+                    </option>
+
+                    <option value="financeiro">
+                        Financeiro
+                    </option>
+
+                    <option value="produtos">
+                        Produtos
+                    </option>
+
+                    <option value="clientes">
+                        Clientes
+                    </option>
+
+                    <option value="filamentos">
+                        Filamentos
+                    </option>
+
+                    <option value="impressoras">
+                        Impressoras
+                    </option>
+
+                </select>
+            </div>
+
+        </div>
+
+        <button
+            id="gerar-detalhamento-relatorio"
+            class="botao-principal"
+            type="button">
+            Gerar Detalhamento
+        </button>
+
+    </div>
+
+    <div id="lista-detalhamento-relatorio">
+
+        <p>
+            Selecione uma opção para visualizar
+            o detalhamento.
+        </p>
+
+    </div>
+
+</section>
+
         </main>
 
     </div>
