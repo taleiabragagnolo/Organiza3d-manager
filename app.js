@@ -6110,10 +6110,7 @@ if (menuDashboard) {
 
     menuDashboard.addEventListener(
         "click",
-        atualizarDashboardCompleto
-    );
-
-}
+        atualizarDashboardCompleto);}
 
 if (botaoAtualizarDashboardCompleto) {
 
