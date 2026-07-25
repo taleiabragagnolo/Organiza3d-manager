@@ -541,29 +541,97 @@
 
 
 
-            <section id="encomendas" class="pagina">
+           <section id="encomendas" class="pagina">
 
-    <h2>Cadastro de Encomendas</h2>
+    <h2>Encomendas 2.0</h2>
 
-    <p>Cadastre e acompanhe os pedidos dos clientes.</p>
+    <p>
+        Cadastre pedidos, acompanhe prazos,
+        pagamentos e o andamento da produção.
+    </p>
+
+    <h3>Resumo das encomendas</h3>
+
+    <div class="cards">
+
+        <div class="card">
+            <span>📋 Total</span>
+            <strong id="encomendas-total">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>⏳ Aguardando</span>
+            <strong id="encomendas-aguardando">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>⚙️ Em produção</span>
+            <strong id="encomendas-em-producao">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>✅ Finalizadas</span>
+            <strong id="encomendas-finalizadas">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>📦 Entregues</span>
+            <strong id="encomendas-entregues">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>⚠️ Atrasadas</span>
+            <strong id="encomendas-atrasadas">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>💰 Valor total</span>
+            <strong id="encomendas-valor-total">
+                R$ 0,00
+            </strong>
+        </div>
+
+    </div>
+
+    <h3>Cadastrar encomenda</h3>
 
     <div class="formulario">
 
         <div class="linha">
 
             <div class="campo">
-                <label for="cliente-encomenda">Cliente</label>
+                <label for="cliente-encomenda">
+                    Cliente
+                </label>
 
                 <select id="cliente-encomenda">
-                    <option value="">Selecione o cliente</option>
+                    <option value="">
+                        Selecione o cliente
+                    </option>
                 </select>
             </div>
 
             <div class="campo">
-                <label for="produto-encomenda">Produto</label>
+                <label for="produto-encomenda">
+                    Produto
+                </label>
 
                 <select id="produto-encomenda">
-                    <option value="">Selecione o produto</option>
+                    <option value="">
+                        Selecione o produto
+                    </option>
                 </select>
             </div>
 
@@ -572,94 +640,76 @@
         <div class="linha">
 
             <div class="campo">
-                <label for="quantidade-encomenda">Quantidade</label>
+                <label for="quantidade-encomenda">
+                    Quantidade
+                </label>
 
                 <input
                     type="number"
                     id="quantidade-encomenda"
                     min="1"
+                    step="1"
                     value="1">
             </div>
 
             <div class="campo">
-                <label for="valor-total-encomenda">Valor total</label>
+                <label for="valor-unitario-encomenda">
+                    Valor unitário
+                </label>
 
                 <input
-                    type="number"
-                    id="valor-total-encomenda"
-                    step="0.01"
+                    type="text"
+                    id="valor-unitario-encomenda"
+                    value="R$ 0,00"
                     readonly>
             </div>
 
         </div>
-<div class="linha">
 
-    <div class="campo">
-        <label for="encomenda-filamento">
-            Filamento utilizado
-        </label>
-
-        <select id="encomenda-filamento">
-            <option value="">
-                Nenhum filamento selecionado
-            </option>
-        </select>
-
-        <small>
-            O sistema mostrará o material, a cor e o peso disponível.
-        </small>
-    </div>
-
-    <div class="campo">
-        <label for="encomenda-consumo-filamento">
-            Consumo de filamento
-        </label>
-
-        <input
-            type="number"
-            id="encomenda-consumo-filamento"
-            min="0"
-            step="1"
-            placeholder="Ex.: 125">
-
-        <small>
-            Informe a quantidade utilizada em gramas.
-        </small>
-    </div>
-
-</div>
-
-<div class="linha">
-
-    <div class="campo">
-        <label for="encomenda-filamento-disponivel">
-            Peso disponível
-        </label>
-
-        <input
-            type="text"
-            id="encomenda-filamento-disponivel"
-            value="Nenhum filamento selecionado"
-            readonly>
-    </div>
-
-    <div class="campo">
-        <label for="encomenda-filamento-restante">
-            Peso após a encomenda
-        </label>
-
-        <input
-            type="text"
-            id="encomenda-filamento-restante"
-            value="0 g"
-            readonly>
-    </div>
-
-</div>
         <div class="linha">
 
             <div class="campo">
-                <label for="data-pedido-encomenda">Data do pedido</label>
+                <label for="valor-total-encomenda">
+                    Valor total
+                </label>
+
+                <input
+                    type="text"
+                    id="valor-total-encomenda"
+                    value="R$ 0,00"
+                    readonly>
+            </div>
+
+            <div class="campo">
+                <label for="prioridade-encomenda">
+                    Prioridade
+                </label>
+
+                <select id="prioridade-encomenda">
+
+                    <option value="Normal">
+                        Normal
+                    </option>
+
+                    <option value="Alta">
+                        Alta
+                    </option>
+
+                    <option value="Urgente">
+                        Urgente
+                    </option>
+
+                </select>
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="data-pedido-encomenda">
+                    Data do pedido
+                </label>
 
                 <input
                     type="date"
@@ -678,18 +728,192 @@
 
         </div>
 
-        <div class="campo campo-completo">
+        <div class="linha">
 
-            <label for="status-encomenda">Status</label>
+            <div class="campo">
+                <label for="status-encomenda">
+                    Status
+                </label>
 
-            <select id="status-encomenda">
-                <option value="Aguardando">Aguardando</option>
-                <option value="Em produção">Em produção</option>
-                <option value="Finalizada">Finalizada</option>
-                <option value="Entregue">Entregue</option>
-                <option value="Cancelada">Cancelada</option>
-            </select>
+                <select id="status-encomenda">
 
+                    <option value="Aguardando">
+                        Aguardando
+                    </option>
+
+                    <option value="Em produção">
+                        Em produção
+                    </option>
+
+                    <option value="Finalizada">
+                        Finalizada
+                    </option>
+
+                    <option value="Entregue">
+                        Entregue
+                    </option>
+
+                    <option value="Cancelada">
+                        Cancelada
+                    </option>
+
+                </select>
+            </div>
+
+            <div class="campo">
+                <label for="pagamento-encomenda">
+                    Forma de pagamento
+                </label>
+
+                <select id="pagamento-encomenda">
+
+                    <option value="">
+                        Selecione
+                    </option>
+
+                    <option value="Pix">
+                        Pix
+                    </option>
+
+                    <option value="Dinheiro">
+                        Dinheiro
+                    </option>
+
+                    <option value="Cartão de crédito">
+                        Cartão de crédito
+                    </option>
+
+                    <option value="Cartão de débito">
+                        Cartão de débito
+                    </option>
+
+                    <option value="Transferência">
+                        Transferência
+                    </option>
+
+                    <option value="Outro">
+                        Outro
+                    </option>
+
+                </select>
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="situacao-pagamento-encomenda">
+                    Situação do pagamento
+                </label>
+
+                <select id="situacao-pagamento-encomenda">
+
+                    <option value="Pendente">
+                        Pendente
+                    </option>
+
+                    <option value="Parcial">
+                        Parcial
+                    </option>
+
+                    <option value="Pago">
+                        Pago
+                    </option>
+
+                </select>
+            </div>
+
+            <div class="campo">
+                <label for="valor-pago-encomenda">
+                    Valor pago
+                </label>
+
+                <input
+                    type="number"
+                    id="valor-pago-encomenda"
+                    min="0"
+                    step="0.01"
+                    placeholder="Ex.: 50,00">
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="encomenda-filamento">
+                    Filamento utilizado
+                </label>
+
+                <select id="encomenda-filamento">
+                    <option value="">
+                        Nenhum filamento selecionado
+                    </option>
+                </select>
+
+                <small>
+                    Serão mostrados o material,
+                    a cor e o peso disponível.
+                </small>
+            </div>
+
+            <div class="campo">
+                <label for="encomenda-consumo-filamento">
+                    Consumo de filamento
+                </label>
+
+                <input
+                    type="number"
+                    id="encomenda-consumo-filamento"
+                    min="0"
+                    step="1"
+                    placeholder="Ex.: 125">
+
+                <small>
+                    Informe o consumo em gramas.
+                </small>
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="encomenda-filamento-disponivel">
+                    Peso disponível
+                </label>
+
+                <input
+                    type="text"
+                    id="encomenda-filamento-disponivel"
+                    value="Nenhum filamento selecionado"
+                    readonly>
+            </div>
+
+            <div class="campo">
+                <label for="encomenda-filamento-restante">
+                    Peso após a encomenda
+                </label>
+
+                <input
+                    type="text"
+                    id="encomenda-filamento-restante"
+                    value="0 g"
+                    readonly>
+            </div>
+
+        </div>
+
+        <div class="campo">
+            <label for="observacoes-encomenda">
+                Observações
+            </label>
+
+            <textarea
+                id="observacoes-encomenda"
+                rows="3"
+                placeholder="Detalhes da personalização, cor, medidas ou outras informações"></textarea>
         </div>
 
         <button
@@ -699,295 +923,24 @@
             Salvar Encomenda
         </button>
 
-    </div>
-
-    <h3>Encomendas cadastradas</h3>
-
-    <div id="lista-encomendas">
-        <p>Nenhuma encomenda cadastrada.</p>
-    </div>
-
-</section>
-
-            <section id="filamentos" class="pagina">
-
-    <h2>Filamentos 2.0</h2>
-
-    <p>
-        Controle o estoque, o consumo e a situação de cada rolo de filamento.
-    </p>
-
-    <h3>Resumo do estoque</h3>
-
-    <div class="cards">
-
-        <div class="card">
-            <span>🧵 Total de rolos</span>
-            <strong id="filamentos-total-rolos">
-                0
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>📦 Novos</span>
-            <strong id="filamentos-total-novos">
-                0
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>⚙️ Em uso</span>
-            <strong id="filamentos-total-em-uso">
-                0
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>⚠️ Baixo estoque</span>
-            <strong id="filamentos-total-baixo">
-                0
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>✅ Finalizados</span>
-            <strong id="filamentos-total-finalizados">
-                0
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>⚖️ Peso disponível</span>
-            <strong id="filamentos-peso-disponivel">
-                0 g
-            </strong>
-        </div>
-
-    </div>
-
-    <h3>Cadastrar filamento</h3>
-
-    <div class="formulario">
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="filamento-fabricante">
-                    Fabricante
-                </label>
-
-                <input
-                    type="text"
-                    id="filamento-fabricante"
-                    placeholder="Ex.: Voolt3D">
-            </div>
-
-            <div class="campo">
-                <label for="filamento-material">
-                    Material
-                </label>
-
-                <select id="filamento-material">
-                    <option value="">
-                        Selecione
-                    </option>
-
-                    <option value="PLA">
-                        PLA
-                    </option>
-
-                    <option value="PLA+">
-                        PLA+
-                    </option>
-
-                    <option value="PETG">
-                        PETG
-                    </option>
-
-                    <option value="ABS">
-                        ABS
-                    </option>
-
-                    <option value="ASA">
-                        ASA
-                    </option>
-
-                    <option value="TPU">
-                        TPU
-                    </option>
-
-                    <option value="Nylon">
-                        Nylon
-                    </option>
-
-                    <option value="Outro">
-                        Outro
-                    </option>
-                </select>
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="filamento-cor">
-                    Cor
-                </label>
-
-                <input
-                    type="text"
-                    id="filamento-cor"
-                    placeholder="Ex.: Preto">
-            </div>
-
-            <div class="campo">
-                <label for="filamento-peso-inicial">
-                    Peso inicial do rolo
-                </label>
-
-                <input
-                    type="number"
-                    id="filamento-peso-inicial"
-                    min="1"
-                    step="1"
-                    placeholder="Ex.: 1000">
-
-                <small>
-                    Informe o peso do filamento em gramas.
-                </small>
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="filamento-peso-restante">
-                    Peso restante
-                </label>
-
-                <input
-                    type="number"
-                    id="filamento-peso-restante"
-                    min="0"
-                    step="1"
-                    placeholder="Ex.: 1000">
-
-                <small>
-                    Em um rolo novo, normalmente é igual ao peso inicial.
-                </small>
-            </div>
-
-            <div class="campo">
-                <label for="filamento-percentual">
-                    Percentual restante
-                </label>
-
-                <input
-                    type="text"
-                    id="filamento-percentual"
-                    value="0%"
-                    readonly>
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="filamento-valor">
-                    Valor pago
-                </label>
-
-                <input
-                    type="number"
-                    id="filamento-valor"
-                    min="0"
-                    step="0.01"
-                    placeholder="Ex.: 89,90">
-            </div>
-
-            <div class="campo">
-                <label for="filamento-data-compra">
-                    Data da compra
-                </label>
-
-                <input
-                    type="date"
-                    id="filamento-data-compra">
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="filamento-fornecedor">
-                    Fornecedor
-                </label>
-
-                <input
-                    type="text"
-                    id="filamento-fornecedor"
-                    placeholder="Opcional">
-            </div>
-
-            <div class="campo">
-                <label for="filamento-status">
-                    Status
-                </label>
-
-                <input
-                    type="text"
-                    id="filamento-status"
-                    value="Novo"
-                    readonly>
-
-                <small>
-                    O status será definido automaticamente pelo sistema.
-                </small>
-            </div>
-
-        </div>
-
-        <div class="campo">
-            <label for="filamento-observacoes">
-                Observações
-            </label>
-
-            <textarea
-                id="filamento-observacoes"
-                rows="3"
-                placeholder="Informações adicionais sobre o filamento"></textarea>
-        </div>
-
         <button
-            id="salvar-filamento"
-            class="botao-principal"
-            type="button">
-            Salvar Filamento
-        </button>
-
-        <button
-            id="limpar-formulario-filamento"
+            id="limpar-formulario-encomenda"
             type="button">
             Limpar Formulário
         </button>
 
     </div>
 
-    <h3>Filamentos cadastrados</h3>
+    <h3>Encomendas cadastradas</h3>
 
-    <div id="lista-filamentos">
+    <div id="lista-encomendas">
 
         <p>
-            Nenhum filamento cadastrado.
+            Nenhuma encomenda cadastrada.
         </p>
 
     </div>
 
-</section>
 
 </section>
 
