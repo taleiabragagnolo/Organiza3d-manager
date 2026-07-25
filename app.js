@@ -4886,6 +4886,335 @@ limparFormularioFilamento();
 // RELATÓRIOS
 // =========================
 
+// =========================
+// RELATÓRIOS 2.0
+// =========================
+
+const botaoAtualizarRelatorios =
+    document.getElementById(
+        "atualizar-relatorios"
+    );
+
+const botaoLimparPeriodoRelatorios =
+    document.getElementById(
+        "limpar-periodo-relatorios"
+    );
+
+const botaoGerarDetalhamentoRelatorio =
+    document.getElementById(
+        "gerar-detalhamento-relatorio"
+    );
+
+const campoPeriodoInicialRelatorio =
+    document.getElementById(
+        "relatorio-periodo-inicial"
+    );
+
+const campoPeriodoFinalRelatorio =
+    document.getElementById(
+        "relatorio-periodo-final"
+    );
+
+const campoTipoDetalhamentoRelatorio =
+    document.getElementById(
+        "tipo-detalhamento-relatorio"
+    );
+
+const listaDetalhamentoRelatorio =
+    document.getElementById(
+        "lista-detalhamento-relatorio"
+    );
+
+const menuRelatorios =
+    document.querySelector(
+        '[data-pagina="relatorios"]'
+    );
+
+// =========================
+// FILTRO POR PERÍODO
+// =========================
+
+function dataEstaNoPeriodoRelatorio(data) {
+    if (!data) {
+        return false;
+    }
+
+    const dataInicial =
+        campoPeriodoInicialRelatorio
+            ? campoPeriodoInicialRelatorio.value
+            : "";
+
+    const dataFinal =
+        campoPeriodoFinalRelatorio
+            ? campoPeriodoFinalRelatorio.value
+            : "";
+
+    if (
+        dataInicial &&
+        data < dataInicial
+    ) {
+        return false;
+    }
+
+    if (
+        dataFinal &&
+        data > dataFinal
+    ) {
+        return false;
+    }
+
+    return true;
+}
+
+function periodoRelatorioEstaAtivo() {
+    const dataInicial =
+        campoPeriodoInicialRelatorio
+            ? campoPeriodoInicialRelatorio.value
+            : "";
+
+    const dataFinal =
+        campoPeriodoFinalRelatorio
+            ? campoPeriodoFinalRelatorio.value
+            : "";
+
+    return Boolean(
+        dataInicial || dataFinal
+    );
+}
+
+function filtrarEncomendasRelatorio() {
+    if (
+        typeof encomendas === "undefined" ||
+        !Array.isArray(encomendas)
+    ) {
+        return [];
+    }
+
+    if (!periodoRelatorioEstaAtivo()) {
+        return [...encomendas];
+    }
+
+    return encomendas.filter(
+        function (encomenda) {
+            return dataEstaNoPeriodoRelatorio(
+                encomenda.dataPedido
+            );
+        }
+    );
+}
+
+function filtrarLancamentosRelatorio() {
+    if (
+        !Array.isArray(
+            lancamentosFinanceiros
+        )
+    ) {
+        return [];
+    }
+
+    if (!periodoRelatorioEstaAtivo()) {
+        return [
+            ...lancamentosFinanceiros
+        ];
+    }
+
+    return lancamentosFinanceiros.filter(
+        function (lancamento) {
+            return dataEstaNoPeriodoRelatorio(
+                lancamento.data
+            );
+        }
+    );
+}
+
+// =========================
+// ENCOMENDAS POR STATUS
+// =========================
+
+function contarEncomendasRelatorioPorStatus(
+    lista,
+    status
+) {
+    return lista.filter(
+        function (encomenda) {
+            return encomenda.status === status;
+        }
+    ).length;
+}
+
+function contarEncomendasAtrasadasRelatorio(
+    lista
+) {
+    return lista.filter(
+        function (encomenda) {
+            if (
+                typeof encomendaEstaAtrasada ===
+                "function"
+            ) {
+                return encomendaEstaAtrasada(
+                    encomenda
+                );
+            }
+
+            return false;
+        }
+    ).length;
+}
+
+// =========================
+// CÁLCULOS FINANCEIROS
+// =========================
+
+function calcularResumoFinanceiroRelatorio(
+    lista
+) {
+    let entradas = 0;
+    let despesas = 0;
+    let entradasPendentes = 0;
+    let despesasPendentes = 0;
+
+    lista.forEach(
+        function (lancamento) {
+            const valorRealizado =
+                typeof obterValorRealizadoLancamento ===
+                    "function"
+                    ? obterValorRealizadoLancamento(
+                        lancamento
+                    )
+                    : Number(
+                        lancamento.valorPago || 0
+                    );
+
+            const valorPendente =
+                typeof obterValorPendenteLancamento ===
+                    "function"
+                    ? obterValorPendenteLancamento(
+                        lancamento
+                    )
+                    : Math.max(
+                        0,
+                        Number(
+                            lancamento.valor || 0
+                        ) -
+                        Number(
+                            lancamento.valorPago || 0
+                        )
+                    );
+
+            if (
+                lancamento.tipo === "Entrada"
+            ) {
+                entradas += valorRealizado;
+                entradasPendentes +=
+                    valorPendente;
+            }
+
+            if (
+                lancamento.tipo === "Despesa"
+            ) {
+                despesas += valorRealizado;
+                despesasPendentes +=
+                    valorPendente;
+            }
+        }
+    );
+
+    return {
+        entradas: entradas,
+        despesas: despesas,
+        saldo:
+            entradas - despesas,
+        entradasPendentes:
+            entradasPendentes,
+        despesasPendentes:
+            despesasPendentes
+    };
+}
+
+// =========================
+// ENCOMENDAS FINANCEIRAS
+// =========================
+
+function calcularResumoEncomendasRelatorio(
+    lista
+) {
+    let valorTotal = 0;
+    let valorRecebido = 0;
+    let valorAReceber = 0;
+
+    lista.forEach(
+        function (encomenda) {
+            if (
+                encomenda.status ===
+                "Cancelada"
+            ) {
+                return;
+            }
+
+            const total =
+                Number(
+                    encomenda.valorTotal || 0
+                );
+
+            const recebido =
+                Math.min(
+                    total,
+                    Math.max(
+                        0,
+                        Number(
+                            encomenda.valorPago || 0
+                        )
+                    )
+                );
+
+            valorTotal += total;
+            valorRecebido += recebido;
+            valorAReceber +=
+                Math.max(
+                    0,
+                    total - recebido
+                );
+        }
+    );
+
+    const ticketMedio =
+        lista.length > 0
+            ? valorTotal / lista.length
+            : 0;
+
+    return {
+        valorTotal: valorTotal,
+        valorRecebido: valorRecebido,
+        valorAReceber: valorAReceber,
+        ticketMedio: ticketMedio
+    };
+}
+
+// =========================
+// ATUALIZAÇÃO DE CAMPOS
+// =========================
+
+function definirTextoRelatorio(
+    id,
+    valor
+) {
+    const campo =
+        document.getElementById(id);
+
+    if (campo) {
+        campo.textContent = valor;
+    }
+}
+
+function definirDinheiroRelatorio(
+    id,
+    valor
+) {
+    definirTextoRelatorio(
+        id,
+        formatarDinheiro(valor)
+    );
+}
 
 // =========================
 // DASHBOARD COMPLETO
