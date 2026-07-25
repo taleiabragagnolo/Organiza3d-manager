@@ -181,131 +181,281 @@
 
             <section id="produtos" class="pagina">
 
-                <div class="titulo-pagina">
-                    <div>
-                        <h2>Cadastro de produtos</h2>
-                        <p>Cadastre e acompanhe os produtos da sua loja.</p>
-                    </div>
+    <h2>Produtos 2.0</h2>
 
-                    <button id="botao-novo-produto" class="botao-principal">
-                        + Novo produto
-                    </button>
-                </div>
+    <p>
+        Cadastre os produtos, acompanhe o estoque
+        e calcule automaticamente a margem de lucro.
+    </p>
 
-                <form id="formulario-produto" class="formulario">
+    <h3>Resumo dos produtos</h3>
 
-                    <div class="campo">
-                        <label for="nome-produto">Nome do produto</label>
-                        <input
-                            type="text"
-                            id="nome-produto"
-                            placeholder="Ex.: Nossa Senhora das Graças"
-                            required
-                        >
-                    </div>
+    <div class="cards">
 
-                    <div class="campo">
-                        <label for="categoria-produto">Categoria</label>
-                        <select id="categoria-produto" required>
-                            <option value="">Selecione</option>
-                            <option value="Decoração">Decoração</option>
-                            <option value="Religioso">Religioso</option>
-                            <option value="Infantil">Infantil</option>
-                            <option value="Organização">Organização</option>
-                            <option value="Chaveiro">Chaveiro</option>
-                            <option value="Personalizado">Personalizado</option>
-                            <option value="Outro">Outro</option>
-                        </select>
-                    </div>
+        <div class="card">
+            <span>📦 Total de produtos</span>
+            <strong id="produtos-total">
+                0
+            </strong>
+        </div>
 
-                    <div class="campo">
-                        <label for="peso-produto">Peso em gramas</label>
-                        <input
-                            type="number"
-                            id="peso-produto"
-                            min="0"
-                            step="0.01"
-                            placeholder="Ex.: 120"
-                        >
-                    </div>
+        <div class="card">
+            <span>✅ Disponíveis</span>
+            <strong id="produtos-disponiveis">
+                0
+            </strong>
+        </div>
 
-                    <div class="campo">
-                        <label for="tempo-produto">Tempo de impressão</label>
-                        <input
-                            type="text"
-                            id="tempo-produto"
-                            placeholder="Ex.: 4 horas e 30 minutos"
-                        >
-                    </div>
+        <div class="card">
+            <span>⚠️ Estoque baixo</span>
+            <strong id="produtos-estoque-baixo">
+                0
+            </strong>
+        </div>
 
-                    <div class="campo">
-                        <label for="custo-produto">Custo de produção</label>
-                        <input
-                            type="number"
-                            id="custo-produto"
-                            min="0"
-                            step="0.01"
-                            placeholder="Ex.: 12,50"
-                        >
-                    </div>
+        <div class="card">
+            <span>❌ Sem estoque</span>
+            <strong id="produtos-sem-estoque">
+                0
+            </strong>
+        </div>
 
-                    <div class="campo">
-                        <label for="preco-produto">Preço de venda</label>
-                        <input
-                            type="number"
-                            id="preco-produto"
-                            min="0"
-                            step="0.01"
-                            placeholder="Ex.: 40,00"
-                            required
-                        >
-                    </div>
+        <div class="card">
+            <span>💰 Valor em estoque</span>
+            <strong id="produtos-valor-estoque">
+                R$ 0,00
+            </strong>
+        </div>
 
-                    <div class="campo">
-                        <label for="estoque-produto">Quantidade em estoque</label>
-                        <input
-                            type="number"
-                            id="estoque-produto"
-                            min="0"
-                            value="0"
-                        >
-                    </div>
+    </div>
 
-                    <div class="campo campo-completo">
-                        <label for="observacoes-produto">Observações</label>
-                        <textarea
-                            id="observacoes-produto"
-                            rows="4"
-                            placeholder="Cores, tamanhos, acabamento ou outras informações."
-                        ></textarea>
-                    </div>
+    <h3>Cadastrar produto</h3>
 
-                    <div class="acoes-formulario campo-completo">
+    <div class="formulario">
 
-                        <button type="submit" class="botao-principal">
-                            Salvar produto
-                        </button>
+        <div class="linha">
 
-                        <button type="reset" class="botao-secundario">
-                            Limpar
-                        </button>
+            <div class="campo">
+                <label for="produto-nome">
+                    Nome do produto
+                </label>
 
-                    </div>
+                <input
+                    type="text"
+                    id="produto-nome"
+                    placeholder="Ex.: Vaso decorativo">
+            </div>
 
-                </form>
+            <div class="campo">
+                <label for="produto-categoria">
+                    Categoria
+                </label>
 
-                <div class="lista-produtos">
+                <select id="produto-categoria">
 
-                    <h3>Produtos cadastrados</h3>
+                    <option value="">
+                        Selecione
+                    </option>
 
-                    <div id="produtos-vazio" class="mensagem-vazia">
-                        Nenhum produto cadastrado.
-                    </div>
+                    <option value="Decoração">
+                        Decoração
+                    </option>
 
-                    <div id="tabela-produtos"></div>
+                    <option value="Brinquedos">
+                        Brinquedos
+                    </option>
 
-                </div>
+                    <option value="Utilidades">
+                        Utilidades
+                    </option>
 
+                    <option value="Organização">
+                        Organização
+                    </option>
+
+                    <option value="Personalizados">
+                        Personalizados
+                    </option>
+
+                    <option value="Peças técnicas">
+                        Peças técnicas
+                    </option>
+
+                    <option value="Outros">
+                        Outros
+                    </option>
+
+                </select>
+            </div>
+
+        </div>
+
+        <div class="campo">
+            <label for="produto-descricao">
+                Descrição
+            </label>
+
+            <textarea
+                id="produto-descricao"
+                rows="3"
+                placeholder="Descreva o produto"></textarea>
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="produto-custo">
+                    Custo de produção
+                </label>
+
+                <input
+                    type="number"
+                    id="produto-custo"
+                    min="0"
+                    step="0.01"
+                    placeholder="Ex.: 12,50">
+            </div>
+
+            <div class="campo">
+                <label for="produto-preco">
+                    Preço de venda
+                </label>
+
+                <input
+                    type="number"
+                    id="produto-preco"
+                    min="0"
+                    step="0.01"
+                    placeholder="Ex.: 35,00">
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="produto-lucro">
+                    Lucro por unidade
+                </label>
+
+                <input
+                    type="text"
+                    id="produto-lucro"
+                    value="R$ 0,00"
+                    readonly>
+            </div>
+
+            <div class="campo">
+                <label for="produto-margem">
+                    Margem de lucro
+                </label>
+
+                <input
+                    type="text"
+                    id="produto-margem"
+                    value="0%"
+                    readonly>
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="produto-estoque">
+                    Quantidade em estoque
+                </label>
+
+                <input
+                    type="number"
+                    id="produto-estoque"
+                    min="0"
+                    step="1"
+                    placeholder="Ex.: 10">
+            </div>
+
+            <div class="campo">
+                <label for="produto-estoque-minimo">
+                    Estoque mínimo
+                </label>
+
+                <input
+                    type="number"
+                    id="produto-estoque-minimo"
+                    min="0"
+                    step="1"
+                    placeholder="Ex.: 3">
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="produto-status">
+                    Status
+                </label>
+
+                <input
+                    type="text"
+                    id="produto-status"
+                    value="Sem estoque"
+                    readonly>
+
+                <small>
+                    O status será definido automaticamente.
+                </small>
+            </div>
+
+            <div class="campo">
+                <label for="produto-data-cadastro">
+                    Data de cadastro
+                </label>
+
+                <input
+                    type="date"
+                    id="produto-data-cadastro">
+            </div>
+
+        </div>
+
+        <div class="campo">
+            <label for="produto-observacoes">
+                Observações
+            </label>
+
+            <textarea
+                id="produto-observacoes"
+                rows="3"
+                placeholder="Informações adicionais"></textarea>
+        </div>
+
+        <button
+            id="salvar-produto"
+            class="botao-principal"
+            type="button">
+            Salvar Produto
+        </button>
+
+        <button
+            id="limpar-formulario-produto"
+            type="button">
+            Limpar Formulário
+        </button>
+
+    </div>
+
+    <h3>Produtos cadastrados</h3>
+
+    <div id="lista-produtos">
+
+        <p>
+            Nenhum produto cadastrado.
+        </p>
+
+    </div>
+
+</section>
             </section>
 
             <section id="clientes" class="pagina">
