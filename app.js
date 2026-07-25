@@ -2422,13 +2422,11 @@ if (menuFinanceiro) {
 
 // =========================
 // INICIALIZAÇÃO
-// =========================
+// ========================
 
 normalizarLancamentosFinanceiros();
 // prepararFormularioFinanceiro();
 mostrarLancamentosFinanceiros();
-
-
 
 // =========================
 // ENCOMENDAS 2.0
