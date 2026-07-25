@@ -2251,10 +2251,11 @@ if (botaoSalvarFilamento) {
             }
 
             if (
-                typeof atualizarRelatorios ===
-                
-            ) {
-                atualizarRelatorios();
+    typeof atualizarRelatorios ===
+    "function"
+) {
+    atualizarRelatorios();
+}
             }
 
             alert(
