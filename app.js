@@ -2252,7 +2252,7 @@ if (botaoSalvarFilamento) {
 
             if (
                 typeof atualizarRelatorios ===
-                "function"
+                
             ) {
                 atualizarRelatorios();
             }
