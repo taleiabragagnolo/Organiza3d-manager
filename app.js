@@ -2,7 +2,7 @@
     const botoesMenu = document.querySelectorAll(".menu-item");
     const paginas = document.querySelectorAll(".pagina");
 
-    // =========================
+// =========================
 // PRODUTOS 2.0
 // =========================
 
@@ -561,14 +561,433 @@ function mostrarProdutos() {
                         : "Nenhuma";
 
                 return `
-                    <div
+                    <div class="card-item">
 
-    function escaparTexto(texto) {
-        const elemento = document.createElement("div");
-        elemento.textContent = texto || "";
-        return elemento.innerHTML;
+                        <h4>
+                            ${escaparTexto(produto.nome)}
+                        </h4>
+
+                        <p>
+                            <strong>Categoria:</strong>
+                            ${escaparTexto(
+                                produto.categoria
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Descrição:</strong>
+                            ${descricao}
+                        </p>
+
+                        <p>
+                            <strong>Custo:</strong>
+                            ${formatarDinheiro(
+                                produto.custo
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Preço de venda:</strong>
+                            ${formatarDinheiro(
+                                produto.preco
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Lucro por unidade:</strong>
+                            ${formatarDinheiro(
+                                produto.lucro
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Margem:</strong>
+                            ${Number(
+                                produto.margem || 0
+                            ).toLocaleString(
+                                "pt-BR",
+                                {
+                                    maximumFractionDigits: 1
+                                }
+                            )}%
+                        </p>
+
+                        <p>
+                            <strong>Estoque:</strong>
+                            ${Number(
+                                produto.estoque || 0
+                            )} unidade(s)
+                        </p>
+
+                        <p>
+                            <strong>Estoque mínimo:</strong>
+                            ${Number(
+                                produto.estoqueMinimo || 0
+                            )} unidade(s)
+                        </p>
+
+                        <p>
+                            <strong>Status:</strong>
+                            ${escaparTexto(
+                                produto.status
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Data de cadastro:</strong>
+                            ${formatarDataProduto(
+                                produto.dataCadastro
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Observações:</strong>
+                            ${observacoes}
+                        </p>
+
+                        <button
+                            type="button"
+                            class="botao-principal"
+                            onclick="atualizarEstoqueProduto(
+                                ${produto.id}
+                            )">
+                            Atualizar Estoque
+                        </button>
+
+                        <button
+                            type="button"
+                            class="botao-excluir"
+                            onclick="excluirProduto(
+                                ${produto.id}
+                            )">
+                            Excluir
+                        </button>
+
+                    </div>
+                `;
+            })
+            .join("");
+
+    atualizarResumoProdutos();
+    atualizarDashboard();
+}
+
+function limparFormularioProduto() {
+    if (campoProdutoNome) {
+        campoProdutoNome.value = "";
     }
 
+    if (campoProdutoCategoria) {
+        campoProdutoCategoria.value = "";
+    }
+
+    if (campoProdutoDescricao) {
+        campoProdutoDescricao.value = "";
+    }
+
+    if (campoProdutoCusto) {
+        campoProdutoCusto.value = "";
+    }
+
+    if (campoProdutoPreco) {
+        campoProdutoPreco.value = "";
+    }
+
+    if (campoProdutoLucro) {
+        campoProdutoLucro.value = "R$ 0,00";
+    }
+
+    if (campoProdutoMargem) {
+        campoProdutoMargem.value = "0%";
+    }
+
+    if (campoProdutoEstoque) {
+        campoProdutoEstoque.value = "";
+    }
+
+    if (campoProdutoEstoqueMinimo) {
+        campoProdutoEstoqueMinimo.value = "";
+    }
+
+    if (campoProdutoStatus) {
+        campoProdutoStatus.value = "Sem estoque";
+    }
+
+    if (campoProdutoDataCadastro) {
+        campoProdutoDataCadastro.value =
+            obterDataHojeProduto();
+    }
+
+    if (campoProdutoObservacoes) {
+        campoProdutoObservacoes.value = "";
+    }
+}
+
+[
+    campoProdutoCusto,
+    campoProdutoPreco,
+    campoProdutoEstoque,
+    campoProdutoEstoqueMinimo
+].forEach(function (campo) {
+    if (campo) {
+        campo.addEventListener(
+            "input",
+            atualizarCalculosFormularioProduto
+        );
+    }
+});
+
+if (botaoSalvarProduto) {
+    botaoSalvarProduto.addEventListener(
+        "click",
+        function () {
+            const nome =
+                campoProdutoNome.value.trim();
+
+            const categoria =
+                campoProdutoCategoria.value;
+
+            const descricao =
+                campoProdutoDescricao.value.trim();
+
+            const custo =
+                Number(campoProdutoCusto.value);
+
+            const preco =
+                Number(campoProdutoPreco.value);
+
+            const estoque =
+                Number(campoProdutoEstoque.value);
+
+            const estoqueMinimo =
+                Number(
+                    campoProdutoEstoqueMinimo.value
+                );
+
+            const dataCadastro =
+                campoProdutoDataCadastro.value;
+
+            const observacoes =
+                campoProdutoObservacoes
+                    .value
+                    .trim();
+
+            if (!nome) {
+                alert("Informe o nome do produto.");
+                return;
+            }
+
+            if (!categoria) {
+                alert("Selecione uma categoria.");
+                return;
+            }
+
+            if (
+                Number.isNaN(custo) ||
+                custo < 0
+            ) {
+                alert("Informe um custo válido.");
+                return;
+            }
+
+            if (
+                Number.isNaN(preco) ||
+                preco <= 0
+            ) {
+                alert(
+                    "Informe um preço de venda válido."
+                );
+                return;
+            }
+
+            if (preco < custo) {
+                const confirmar = confirm(
+                    "O preço de venda é menor que o custo. Deseja salvar mesmo assim?"
+                );
+
+                if (!confirmar) {
+                    return;
+                }
+            }
+
+            if (
+                Number.isNaN(estoque) ||
+                estoque < 0 ||
+                !Number.isInteger(estoque)
+            ) {
+                alert(
+                    "Informe uma quantidade de estoque válida."
+                );
+                return;
+            }
+
+            if (
+                Number.isNaN(estoqueMinimo) ||
+                estoqueMinimo < 0 ||
+                !Number.isInteger(
+                    estoqueMinimo
+                )
+            ) {
+                alert(
+                    "Informe um estoque mínimo válido."
+                );
+                return;
+            }
+
+            const lucro =
+                calcularLucroProduto(
+                    custo,
+                    preco
+                );
+
+            const margem =
+                calcularMargemProduto(
+                    custo,
+                    preco
+                );
+
+            const status =
+                definirStatusProduto(
+                    estoque,
+                    estoqueMinimo
+                );
+
+            const novoProduto = {
+                id: Date.now(),
+                nome: nome,
+                categoria: categoria,
+                descricao: descricao,
+                custo: custo,
+                preco: preco,
+                lucro: lucro,
+                margem: margem,
+                estoque: estoque,
+                estoqueMinimo: estoqueMinimo,
+                status: status,
+                dataCadastro: dataCadastro,
+                observacoes: observacoes
+            };
+
+            produtos.push(novoProduto);
+
+            salvarProdutos();
+            mostrarProdutos();
+            limparFormularioProduto();
+
+            if (
+                typeof atualizarOpcoesEncomendas ===
+                "function"
+            ) {
+                atualizarOpcoesEncomendas();
+            }
+
+            alert(
+                "Produto cadastrado com sucesso!"
+            );
+        }
+    );
+}
+
+if (botaoLimparFormularioProduto) {
+    botaoLimparFormularioProduto.addEventListener(
+        "click",
+        limparFormularioProduto
+    );
+}
+
+window.atualizarEstoqueProduto =
+    function (id) {
+        const produto = produtos.find(
+            function (item) {
+                return item.id === id;
+            }
+        );
+
+        if (!produto) {
+            alert("Produto não encontrado.");
+            return;
+        }
+
+        const resposta = prompt(
+            `Informe a nova quantidade em estoque de ${produto.nome}:`,
+            produto.estoque
+        );
+
+        if (resposta === null) {
+            return;
+        }
+
+        const novaQuantidade =
+            Number(resposta.trim());
+
+        if (
+            Number.isNaN(novaQuantidade) ||
+            novaQuantidade < 0 ||
+            !Number.isInteger(novaQuantidade)
+        ) {
+            alert(
+                "Informe uma quantidade inteira válida."
+            );
+            return;
+        }
+
+        produto.estoque = novaQuantidade;
+
+        produto.status =
+            definirStatusProduto(
+                produto.estoque,
+                produto.estoqueMinimo
+            );
+
+        salvarProdutos();
+        mostrarProdutos();
+
+        alert(
+            "Estoque atualizado com sucesso!"
+        );
+    };
+
+window.excluirProduto =
+    function (id) {
+        const produtoEncontrado =
+            produtos.find(
+                function (produto) {
+                    return produto.id === id;
+                }
+            );
+
+        if (!produtoEncontrado) {
+            return;
+        }
+
+        const confirmar = confirm(
+            `Deseja excluir o produto "${produtoEncontrado.nome}"?`
+        );
+
+        if (!confirmar) {
+            return;
+        }
+
+        produtos = produtos.filter(
+            function (produto) {
+                return produto.id !== id;
+            }
+        );
+
+        salvarProdutos();
+        mostrarProdutos();
+
+        if (
+            typeof atualizarOpcoesEncomendas ===
+            "function"
+        ) {
+            atualizarOpcoesEncomendas();
+        }
+    };
+
+normalizarProdutosAntigos();
+mostrarProdutos();
+limparFormularioProduto();
     
 // =========================
 // CLIENTES
