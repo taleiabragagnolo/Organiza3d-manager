@@ -946,9 +946,15 @@
 
             <section id="financeiro" class="pagina">
 
-    <h2>Controle Financeiro</h2>
+    <h2>Financeiro 2.0</h2>
 
-    <p>Registre entradas e despesas da empresa.</p>
+    <p>
+        Registre entradas e despesas,
+        acompanhe pagamentos e controle
+        o saldo do negócio.
+    </p>
+
+    <h3>Resumo financeiro</h3>
 
     <div class="cards">
 
@@ -973,7 +979,30 @@
             </strong>
         </div>
 
+        <div class="card">
+            <span>⏳ Valores pendentes</span>
+            <strong id="financeiro-total-pendente">
+                R$ 0,00
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>📥 Entradas pendentes</span>
+            <strong id="financeiro-entradas-pendentes">
+                R$ 0,00
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>📤 Despesas pendentes</span>
+            <strong id="financeiro-despesas-pendentes">
+                R$ 0,00
+            </strong>
+        </div>
+
     </div>
+
+    <h3>Novo lançamento</h3>
 
     <div class="formulario">
 
@@ -981,12 +1010,19 @@
 
             <div class="campo">
                 <label for="tipo-lancamento">
-                    Tipo de lançamento
+                    Tipo
                 </label>
 
                 <select id="tipo-lancamento">
-                    <option value="Entrada">Entrada</option>
-                    <option value="Despesa">Despesa</option>
+
+                    <option value="Entrada">
+                        Entrada
+                    </option>
+
+                    <option value="Despesa">
+                        Despesa
+                    </option>
+
                 </select>
             </div>
 
@@ -996,15 +1032,51 @@
                 </label>
 
                 <select id="categoria-lancamento">
-                    <option value="">Selecione</option>
-                    <option value="Venda">Venda</option>
-                    <option value="Filamento">Filamento</option>
-                    <option value="Manutenção">Manutenção</option>
-                    <option value="Equipamento">Equipamento</option>
-                    <option value="Embalagem">Embalagem</option>
-                    <option value="Transporte">Transporte</option>
-                    <option value="Energia">Energia</option>
-                    <option value="Outros">Outros</option>
+
+                    <option value="">
+                        Selecione uma categoria
+                    </option>
+
+                    <option value="Venda">
+                        Venda
+                    </option>
+
+                    <option value="Filamento">
+                        Filamento
+                    </option>
+
+                    <option value="Manutenção">
+                        Manutenção
+                    </option>
+
+                    <option value="Energia">
+                        Energia elétrica
+                    </option>
+
+                    <option value="Embalagem">
+                        Embalagem
+                    </option>
+
+                    <option value="Frete">
+                        Frete
+                    </option>
+
+                    <option value="Equipamentos">
+                        Equipamentos
+                    </option>
+
+                    <option value="Serviços">
+                        Serviços
+                    </option>
+
+                    <option value="Impostos">
+                        Impostos
+                    </option>
+
+                    <option value="Outros">
+                        Outros
+                    </option>
+
                 </select>
             </div>
 
@@ -1020,7 +1092,7 @@
                 <input
                     type="text"
                     id="descricao-lancamento"
-                    placeholder="Ex.: Venda de encomenda">
+                    placeholder="Ex.: Venda de suporte personalizado">
             </div>
 
             <div class="campo">
@@ -1038,14 +1110,158 @@
 
         </div>
 
+        <div class="linha">
+
+            <div class="campo">
+                <label for="data-lancamento">
+                    Data
+                </label>
+
+                <input
+                    type="date"
+                    id="data-lancamento">
+            </div>
+
+            <div class="campo">
+                <label for="forma-pagamento-lancamento">
+                    Forma de pagamento
+                </label>
+
+                <select id="forma-pagamento-lancamento">
+
+                    <option value="">
+                        Selecione
+                    </option>
+
+                    <option value="Pix">
+                        Pix
+                    </option>
+
+                    <option value="Dinheiro">
+                        Dinheiro
+                    </option>
+
+                    <option value="Cartão de crédito">
+                        Cartão de crédito
+                    </option>
+
+                    <option value="Cartão de débito">
+                        Cartão de débito
+                    </option>
+
+                    <option value="Transferência">
+                        Transferência
+                    </option>
+
+                    <option value="Boleto">
+                        Boleto
+                    </option>
+
+                    <option value="Outro">
+                        Outro
+                    </option>
+
+                </select>
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="situacao-lancamento">
+                    Situação
+                </label>
+
+                <select id="situacao-lancamento">
+
+                    <option value="Pago">
+                        Pago
+                    </option>
+
+                    <option value="Pendente">
+                        Pendente
+                    </option>
+
+                    <option value="Parcial">
+                        Parcial
+                    </option>
+
+                </select>
+            </div>
+
+            <div class="campo">
+                <label for="valor-pago-lancamento">
+                    Valor pago
+                </label>
+
+                <input
+                    type="number"
+                    id="valor-pago-lancamento"
+                    min="0"
+                    step="0.01"
+                    placeholder="Ex.: 100,00">
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="encomenda-lancamento">
+                    Encomenda vinculada
+                </label>
+
+                <select id="encomenda-lancamento">
+
+                    <option value="">
+                        Nenhuma encomenda vinculada
+                    </option>
+
+                </select>
+            </div>
+
+            <div class="campo">
+                <label for="origem-lancamento">
+                    Origem
+                </label>
+
+                <select id="origem-lancamento">
+
+                    <option value="Manual">
+                        Manual
+                    </option>
+
+                    <option value="Encomenda">
+                        Encomenda
+                    </option>
+
+                    <option value="Filamento">
+                        Filamento
+                    </option>
+
+                    <option value="Impressora">
+                        Impressora
+                    </option>
+
+                    <option value="Outro">
+                        Outro
+                    </option>
+
+                </select>
+            </div>
+
+        </div>
+
         <div class="campo">
-            <label for="data-lancamento">
-                Data
+            <label for="observacoes-lancamento">
+                Observações
             </label>
 
-            <input
-                type="date"
-                id="data-lancamento">
+            <textarea
+                id="observacoes-lancamento"
+                rows="3"
+                placeholder="Informações adicionais sobre o lançamento"></textarea>
         </div>
 
         <button
@@ -1055,153 +1271,118 @@
             Salvar Lançamento
         </button>
 
+        <button
+            id="limpar-formulario-lancamento"
+            type="button">
+            Limpar Formulário
+        </button>
+
+    </div>
+
+    <h3>Filtros</h3>
+
+    <div class="formulario">
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="filtro-tipo-financeiro">
+                    Tipo
+                </label>
+
+                <select id="filtro-tipo-financeiro">
+
+                    <option value="">
+                        Todos
+                    </option>
+
+                    <option value="Entrada">
+                        Entradas
+                    </option>
+
+                    <option value="Despesa">
+                        Despesas
+                    </option>
+
+                </select>
+            </div>
+
+            <div class="campo">
+                <label for="filtro-situacao-financeiro">
+                    Situação
+                </label>
+
+                <select id="filtro-situacao-financeiro">
+
+                    <option value="">
+                        Todas
+                    </option>
+
+                    <option value="Pago">
+                        Pago
+                    </option>
+
+                    <option value="Pendente">
+                        Pendente
+                    </option>
+
+                    <option value="Parcial">
+                        Parcial
+                    </option>
+
+                </select>
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="filtro-data-inicial-financeiro">
+                    Data inicial
+                </label>
+
+                <input
+                    type="date"
+                    id="filtro-data-inicial-financeiro">
+            </div>
+
+            <div class="campo">
+                <label for="filtro-data-final-financeiro">
+                    Data final
+                </label>
+
+                <input
+                    type="date"
+                    id="filtro-data-final-financeiro">
+            </div>
+
+        </div>
+
+        <button
+            id="aplicar-filtros-financeiro"
+            class="botao-principal"
+            type="button">
+            Aplicar Filtros
+        </button>
+
+        <button
+            id="limpar-filtros-financeiro"
+            type="button">
+            Limpar Filtros
+        </button>
+
     </div>
 
     <h3>Lançamentos cadastrados</h3>
 
     <div id="lista-lancamentos">
-        <p>Nenhum lançamento cadastrado.</p>
-    </div>
-
-</section>
-
-            <section id="relatorios" class="pagina">
-
-    <h2>Relatórios Gerais</h2>
-
-    <p>
-        Acompanhe um resumo atualizado de todas as áreas da empresa.
-    </p>
-
-    <h3>Cadastros</h3>
-
-    <div class="cards">
-
-        <div class="card">
-            <span>📦 Produtos</span>
-            <strong id="relatorio-produtos">0</strong>
-        </div>
-
-        <div class="card">
-            <span>👥 Clientes</span>
-            <strong id="relatorio-clientes">0</strong>
-        </div>
-
-        <div class="card">
-            <span>📋 Encomendas</span>
-            <strong id="relatorio-encomendas">0</strong>
-        </div>
-
-        <div class="card">
-            <span>🧵 Filamentos</span>
-            <strong id="relatorio-filamentos">0</strong>
-        </div>
-
-        <div class="card">
-            <span>🖨️ Impressoras</span>
-            <strong id="relatorio-impressoras">0</strong>
-        </div>
-
-    </div>
-
-    <h3>Resumo das encomendas</h3>
-
-    <div class="cards">
-
-        <div class="card">
-            <span>⏳ Aguardando</span>
-            <strong id="relatorio-aguardando">0</strong>
-        </div>
-
-        <div class="card">
-            <span>⚙️ Em produção</span>
-            <strong id="relatorio-producao">0</strong>
-        </div>
-
-        <div class="card">
-            <span>✅ Finalizadas</span>
-            <strong id="relatorio-finalizadas">0</strong>
-        </div>
-
-        <div class="card">
-            <span>📦 Entregues</span>
-            <strong id="relatorio-entregues">0</strong>
-        </div>
-
-        <div class="card">
-            <span>❌ Canceladas</span>
-            <strong id="relatorio-canceladas">0</strong>
-        </div>
-
-    </div>
-
-    <h3>Resumo financeiro</h3>
-
-    <div class="cards">
-
-        <div class="card">
-            <span>💰 Entradas</span>
-            <strong id="relatorio-entradas">
-                R$ 0,00
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>💸 Despesas</span>
-            <strong id="relatorio-despesas">
-                R$ 0,00
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>📊 Saldo</span>
-            <strong id="relatorio-saldo">
-                R$ 0,00
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>🧾 Valor das encomendas</span>
-            <strong id="relatorio-valor-encomendas">
-                R$ 0,00
-            </strong>
-        </div>
-
-    </div>
-
-    <h3>Informações adicionais</h3>
-
-    <div id="resumo-relatorios" class="formulario">
 
         <p>
-            <strong>Produto com maior estoque:</strong>
-            <span id="relatorio-maior-estoque">
-                Nenhum produto cadastrado
-            </span>
-        </p>
-
-        <p>
-            <strong>Último cliente cadastrado:</strong>
-            <span id="relatorio-ultimo-cliente">
-                Nenhum cliente cadastrado
-            </span>
-        </p>
-
-        <p>
-            <strong>Última encomenda:</strong>
-            <span id="relatorio-ultima-encomenda">
-                Nenhuma encomenda cadastrada
-            </span>
+            Nenhum lançamento cadastrado.
         </p>
 
     </div>
-
-    <button
-        id="atualizar-relatorios"
-        class="botao-principal"
-        type="button">
-        Atualizar Relatórios
-    </button>
 
 </section>
 
