@@ -5625,16 +5625,52 @@ function atualizarIndicadoresRelatorios() {
 }
 
 // =========================
-// DASHBOARD COMPLETO
+// DASHBOARD 2.0
 // =========================
 
 const botaoAtualizarDashboardCompleto =
-    document.getElementById("atualizar-dashboard");
+    document.getElementById(
+        "atualizar-dashboard"
+    );
 
 const menuDashboard =
-    document.querySelector('[data-pagina="dashboard"]');
+    document.querySelector(
+        '[data-pagina="dashboard"]'
+    );
 
-function contarEncomendasDashboard(status) {
+// =========================
+// FUNÇÕES AUXILIARES
+// =========================
+
+function definirTextoDashboard(
+    id,
+    valor
+) {
+    const campo =
+        document.getElementById(id);
+
+    if (campo) {
+        campo.textContent = valor;
+    }
+}
+
+function definirDinheiroDashboard(
+    id,
+    valor
+) {
+    definirTextoDashboard(
+        id,
+        formatarDinheiro(valor)
+    );
+}
+
+function contarEncomendasDashboard(
+    status
+) {
+    if (!Array.isArray(encomendas)) {
+        return 0;
+    }
+
     return encomendas.filter(
         function (encomenda) {
             return encomenda.status === status;
@@ -5642,239 +5678,190 @@ function contarEncomendasDashboard(status) {
     ).length;
 }
 
-function calcularEncomendasAtrasadas() {
-    const hoje = obterDataHoje();
+function calcularEncomendasAtrasadasDashboard() {
+    if (!Array.isArray(encomendas)) {
+        return 0;
+    }
 
     return encomendas.filter(
         function (encomenda) {
-            const statusEncerrado =
-                encomenda.status === "Entregue" ||
-                encomenda.status === "Cancelada" ||
-                encomenda.status === "Finalizada";
+            if (
+                typeof encomendaEstaAtrasada ===
+                "function"
+            ) {
+                return encomendaEstaAtrasada(
+                    encomenda
+                );
+            }
 
-            return (
+            const hoje =
+                typeof obterDataHoje ===
+                    "function"
+                    ? obterDataHoje()
+                    : new Date()
+                        .toISOString()
+                        .split("T")[0];
+
+            const encerrada = [
+                "Finalizada",
+                "Entregue",
+                "Cancelada"
+            ].includes(encomenda.status);
+
+            return Boolean(
                 encomenda.dataEntrega &&
                 encomenda.dataEntrega < hoje &&
-                !statusEncerrado
+                !encerrada
             );
         }
     ).length;
 }
 
-function atualizarAlertasDashboard() {
-    const campoAlertas =
-        document.getElementById("dashboard-alertas");
+// =========================
+// RESUMO FINANCEIRO
+// =========================
 
-    if (!campoAlertas) {
-        return;
+function calcularFinanceiroDashboard() {
+    let entradas = 0;
+    let despesas = 0;
+    let entradasPendentes = 0;
+    let despesasPendentes = 0;
+
+    if (
+        !Array.isArray(
+            lancamentosFinanceiros
+        )
+    ) {
+        return {
+            entradas: 0,
+            despesas: 0,
+            saldo: 0,
+            entradasPendentes: 0,
+            despesasPendentes: 0
+        };
     }
 
-    const alertas = [];
+    lancamentosFinanceiros.forEach(
+        function (lancamento) {
+            const realizado =
+                typeof obterValorRealizadoLancamento ===
+                    "function"
+                    ? obterValorRealizadoLancamento(
+                        lancamento
+                    )
+                    : Number(
+                        lancamento.valorPago || 0
+                    );
 
-    const encomendasAtrasadas =
-        calcularEncomendasAtrasadas();
+            const pendente =
+                typeof obterValorPendenteLancamento ===
+                    "function"
+                    ? obterValorPendenteLancamento(
+                        lancamento
+                    )
+                    : Math.max(
+                        0,
+                        Number(
+                            lancamento.valor || 0
+                        ) -
+                        Number(
+                            lancamento.valorPago || 0
+                        )
+                    );
 
-    if (produtos.length === 0) {
-        alertas.push(
-            "Nenhum produto cadastrado."
-        );
-    }
-
-    if (clientes.length === 0) {
-        alertas.push(
-            "Nenhum cliente cadastrado."
-        );
-    }
-
-    if (filamentos.length === 0) {
-        alertas.push(
-            "Nenhum filamento cadastrado."
-        );
-    }
-
-    if (impressoras.length === 0) {
-        alertas.push(
-            "Nenhuma impressora cadastrada."
-        );
-    }
-
-    if (encomendasAtrasadas > 0) {
-        alertas.push(
-            `${encomendasAtrasadas} encomenda(s) atrasada(s).`
-        );
-    }
-
-    const impressorasManutencao =
-        impressoras.filter(
-            function (impressora) {
-                return impressora.status ===
-                    "Em manutenção";
+            if (
+                lancamento.tipo === "Entrada"
+            ) {
+                entradas += realizado;
+                entradasPendentes += pendente;
             }
-        ).length;
 
-    if (impressorasManutencao > 0) {
-        alertas.push(
-            `${impressorasManutencao} impressora(s) em manutenção.`
-        );
-    }
-
-    if (alertas.length === 0) {
-        campoAlertas.innerHTML =
-            "<p>Nenhum aviso no momento.</p>";
-
-        return;
-    }
-
-    campoAlertas.innerHTML = alertas
-        .map(function (alerta) {
-            return `
-                <p>
-                    ⚠️ ${escaparTexto(alerta)}
-                </p>
-            `;
-        })
-        .join("");
-}
-
-function atualizarDashboardCompleto() {
-    atualizarDashboard();
-
-    const campoClientes =
-        document.getElementById("total-clientes");
-
-    const campoEncomendas =
-        document.getElementById("total-encomendas");
-
-    const campoFilamentos =
-        document.getElementById("total-filamentos");
-
-    const campoImpressoras =
-        document.getElementById("total-impressoras");
-
-    const campoAguardando =
-        document.getElementById("dashboard-aguardando");
-
-    const campoProducao =
-        document.getElementById("dashboard-producao");
-
-    const campoFinalizadas =
-        document.getElementById("dashboard-finalizadas");
-
-    const campoEntregues =
-        document.getElementById("dashboard-entregues");
-
-    const campoAtrasadas =
-        document.getElementById("dashboard-atrasadas");
-
-    const campoSaldo =
-        document.getElementById(
-            "dashboard-saldo-financeiro"
-        );
-
-    if (campoClientes) {
-        campoClientes.textContent =
-            clientes.length;
-    }
-
-    if (campoEncomendas) {
-        campoEncomendas.textContent =
-            encomendas.length;
-    }
-
-    if (campoFilamentos) {
-        campoFilamentos.textContent =
-            filamentos.length;
-    }
-
-    if (campoImpressoras) {
-        campoImpressoras.textContent =
-            impressoras.length;
-    }
-
-    if (campoAguardando) {
-        campoAguardando.textContent =
-            contarEncomendasDashboard(
-                "Aguardando"
-            );
-    }
-
-    if (campoProducao) {
-        campoProducao.textContent =
-            contarEncomendasDashboard(
-                "Em produção"
-            );
-    }
-
-    if (campoFinalizadas) {
-        campoFinalizadas.textContent =
-            contarEncomendasDashboard(
-                "Finalizada"
-            );
-    }
-
-    if (campoEntregues) {
-        campoEntregues.textContent =
-            contarEncomendasDashboard(
-                "Entregue"
-            );
-    }
-
-    if (campoAtrasadas) {
-        campoAtrasadas.textContent =
-            calcularEncomendasAtrasadas();
-    }
-
-    const entradasDashboard =
-        lancamentosFinanceiros
-            .filter(function (lancamento) {
-                return lancamento.tipo === "Entrada";
-            })
-            .reduce(function (total, lancamento) {
-                return total +
-                    Number(lancamento.valor);
-            }, 0);
-
-    const despesasDashboard =
-        lancamentosFinanceiros
-            .filter(function (lancamento) {
-                return lancamento.tipo === "Despesa";
-            })
-            .reduce(function (total, lancamento) {
-                return total +
-                    Number(lancamento.valor);
-            }, 0);
-
-    if (campoSaldo) {
-        campoSaldo.textContent =
-            formatarDinheiro(
-                entradasDashboard -
-                despesasDashboard
-            );
-    }
-
-    atualizarAlertasDashboard();
-}
-
-if (menuDashboard) {
-    menuDashboard.addEventListener(
-        "click",
-        atualizarDashboardCompleto
-    );
-}
-
-if (botaoAtualizarDashboardCompleto) {
-    botaoAtualizarDashboardCompleto.addEventListener(
-        "click",
-        function () {
-            atualizarDashboardCompleto();
-
-            alert(
-                "Dashboard atualizado com sucesso!"
-            );
+            if (
+                lancamento.tipo === "Despesa"
+            ) {
+                despesas += realizado;
+                despesasPendentes += pendente;
+            }
         }
     );
+
+    return {
+        entradas: entradas,
+        despesas: despesas,
+        saldo: entradas - despesas,
+        entradasPendentes:
+            entradasPendentes,
+        despesasPendentes:
+            despesasPendentes
+    };
 }
 
-atualizarDashboardCompleto();
+// =========================
+// RESUMO DAS ENCOMENDAS
+// =========================
+
+function calcularEncomendasDashboard() {
+    let valorTotal = 0;
+    let valorRecebido = 0;
+    let valorPendente = 0;
+    let quantidadeValida = 0;
+
+    if (!Array.isArray(encomendas)) {
+        return {
+            valorTotal: 0,
+            valorRecebido: 0,
+            valorPendente: 0,
+            ticketMedio: 0
+        };
+    }
+
+    encomendas.forEach(
+        function (encomenda) {
+            if (
+                encomenda.status ===
+                "Cancelada"
+            ) {
+                return;
+            }
+
+            const total =
+                Number(
+                    encomenda.valorTotal || 0
+                );
+
+            const recebido =
+                Math.max(
+                    0,
+                    Math.min(
+                        total,
+                        Number(
+                            encomenda.valorPago || 0
+                        )
+                    )
+                );
+
+            valorTotal += total;
+            valorRecebido += recebido;
+            valorPendente +=
+                Math.max(
+                    0,
+                    total - recebido
+                );
+
+            quantidadeValida += 1;
+        }
+    );
+
+    return {
+        valorTotal: valorTotal,
+        valorRecebido: valorRecebido,
+        valorPendente: valorPendente,
+        ticketMedio:
+            quantidadeValida > 0
+                ? valorTotal /
+                    quantidadeValida
+                : 0
+    };
+}
 
 });
