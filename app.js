@@ -5864,4 +5864,227 @@ function calcularEncomendasDashboard() {
     };
 }
 
+// =========================
+// ALERTAS DO DASHBOARD
+// =========================
+
+function atualizarAlertasDashboard() {
+
+    const campoAlertas =
+        document.getElementById(
+            "dashboard-alertas"
+        );
+
+    if (!campoAlertas) {
+        return;
+    }
+
+    const alertas = [];
+
+    const encomendasAtrasadas =
+        calcularEncomendasAtrasadasDashboard();
+
+    const produtosEstoqueBaixo =
+        Array.isArray(produtos)
+            ? produtos.filter(
+                function (produto) {
+                    return (
+                        produto.status ===
+                        "Estoque baixo"
+                    );
+                }
+            ).length
+            : 0;
+
+    const produtosSemEstoque =
+        Array.isArray(produtos)
+            ? produtos.filter(
+                function (produto) {
+                    return (
+                        produto.status ===
+                        "Sem estoque"
+                    );
+                }
+            ).length
+            : 0;
+
+    const impressorasManutencao =
+        Array.isArray(impressoras)
+            ? impressoras.filter(
+                function (impressora) {
+                    return (
+                        impressora.status ===
+                        "Em manutenção"
+                    );
+                }
+            ).length
+            : 0;
+
+    const filamentosCriticos =
+        typeof filamentos !== "undefined" &&
+        Array.isArray(filamentos)
+            ? filamentos.filter(
+                function (filamento) {
+                    return [
+                        "Baixo",
+                        "Crítico",
+                        "Esgotado"
+                    ].includes(
+                        filamento.status
+                    );
+                }
+            ).length
+            : 0;
+
+    const financeiro =
+        calcularFinanceiroDashboard();
+
+    if (
+        Array.isArray(produtos) &&
+        produtos.length === 0
+    ) {
+        alertas.push(
+            "Nenhum produto cadastrado."
+        );
+    }
+
+    if (
+        Array.isArray(clientes) &&
+        clientes.length === 0
+    ) {
+        alertas.push(
+            "Nenhum cliente cadastrado."
+        );
+    }
+
+    if (
+        Array.isArray(impressoras) &&
+        impressoras.length === 0
+    ) {
+        alertas.push(
+            "Nenhuma impressora cadastrada."
+        );
+    }
+
+    if (
+        typeof filamentos !== "undefined" &&
+        Array.isArray(filamentos) &&
+        filamentos.length === 0
+    ) {
+        alertas.push(
+            "Nenhum filamento cadastrado."
+        );
+    }
+
+    if (encomendasAtrasadas > 0) {
+        alertas.push(
+            `${encomendasAtrasadas} encomenda(s) atrasada(s).`
+        );
+    }
+
+    if (produtosEstoqueBaixo > 0) {
+        alertas.push(
+            `${produtosEstoqueBaixo} produto(s) com estoque baixo.`
+        );
+    }
+
+    if (produtosSemEstoque > 0) {
+        alertas.push(
+            `${produtosSemEstoque} produto(s) sem estoque.`
+        );
+    }
+
+    if (impressorasManutencao > 0) {
+        alertas.push(
+            `${impressorasManutencao} impressora(s) em manutenção.`
+        );
+    }
+
+    if (filamentosCriticos > 0) {
+        alertas.push(
+            `${filamentosCriticos} filamento(s) com nível crítico ou baixo.`
+        );
+    }
+
+    if (financeiro.entradasPendentes > 0) {
+        alertas.push(
+            `Há ${formatarDinheiro(
+                financeiro.entradasPendentes
+            )} em entradas pendentes.`
+        );
+    }
+
+    if (financeiro.despesasPendentes > 0) {
+        alertas.push(
+            `Há ${formatarDinheiro(
+                financeiro.despesasPendentes
+            )} em despesas pendentes.`
+        );
+    }
+
+    if (financeiro.saldo < 0) {
+        alertas.push(
+            `O saldo financeiro está negativo em ${formatarDinheiro(
+                Math.abs(financeiro.saldo)
+            )}.`
+        );
+    }
+
+    if (alertas.length === 0) {
+        campoAlertas.innerHTML =
+            "<p>Nenhum aviso no momento.</p>";
+
+        return;
+    }
+
+    campoAlertas.innerHTML =
+        alertas
+            .map(function (alerta) {
+                return `
+                    <p>
+                        ⚠️ ${escaparTexto(alerta)}
+                    </p>
+                `;
+            })
+            .join("");
+
+}
+
+// =========================
+// EVENTOS
+// =========================
+
+if (menuDashboard) {
+
+    menuDashboard.addEventListener(
+        "click",
+        atualizarDashboardCompleto
+    );
+
+}
+
+if (botaoAtualizarDashboardCompleto) {
+
+    botaoAtualizarDashboardCompleto
+        .addEventListener(
+            "click",
+            function () {
+
+                atualizarDashboardCompleto();
+
+                alert(
+                    "Dashboard atualizado com sucesso!"
+                );
+
+            }
+        );
+
+}
+
+// =========================
+// INICIALIZAÇÃO
+// =========================
+
+atualizarDashboardCompleto();
+
 });
