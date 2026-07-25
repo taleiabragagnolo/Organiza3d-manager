@@ -1779,6 +1779,567 @@ function atualizarResumoFinanceiro() {
 }
 
 // =========================
+// LISTAGEM
+// =========================
+
+function mostrarLancamentosFinanceiros(
+    listaPersonalizada
+) {
+    if (!listaLancamentos) {
+        return;
+    }
+
+    const lista =
+        Array.isArray(listaPersonalizada)
+            ? listaPersonalizada
+            : lancamentosFinanceiros;
+
+    if (lista.length === 0) {
+        listaLancamentos.innerHTML =
+            "<p>Nenhum lançamento cadastrado.</p>";
+
+        atualizarResumoFinanceiro();
+        return;
+    }
+
+    const lancamentosOrdenados =
+        [...lista].sort(
+            function (a, b) {
+                const dataA =
+                    a.data || "";
+
+                const dataB =
+                    b.data || "";
+
+                if (dataA === dataB) {
+                    return Number(b.id) -
+                        Number(a.id);
+                }
+
+                return dataB.localeCompare(
+                    dataA
+                );
+            }
+        );
+
+    listaLancamentos.innerHTML =
+        lancamentosOrdenados
+            .map(function (lancamento) {
+                const valor =
+                    Number(
+                        lancamento.valor || 0
+                    );
+
+                const valorPago =
+                    Number(
+                        lancamento.valorPago || 0
+                    );
+
+                const valorPendente =
+                    obterValorPendenteLancamento(
+                        lancamento
+                    );
+
+                const formaPagamento =
+                    lancamento.formaPagamento
+                        ? escaparTexto(
+                            lancamento
+                                .formaPagamento
+                        )
+                        : "Não informada";
+
+                const encomenda =
+                    lancamento
+                        .encomendaDescricao
+                        ? escaparTexto(
+                            lancamento
+                                .encomendaDescricao
+                        )
+                        : "Nenhuma";
+
+                const observacoes =
+                    lancamento.observacoes
+                        ? escaparTexto(
+                            lancamento
+                                .observacoes
+                        )
+                        : "Nenhuma";
+
+                return `
+                    <div class="card-item">
+
+                        <h4>
+                            ${escaparTexto(
+                                lancamento.descricao
+                            )}
+                        </h4>
+
+                        <p>
+                            <strong>Tipo:</strong>
+                            ${escaparTexto(
+                                lancamento.tipo
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Categoria:</strong>
+                            ${escaparTexto(
+                                lancamento.categoria
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Data:</strong>
+                            ${formatarDataFinanceiro(
+                                lancamento.data
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Valor:</strong>
+                            ${formatarDinheiro(
+                                valor
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Situação:</strong>
+                            ${escaparTexto(
+                                lancamento.situacao
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Valor pago:</strong>
+                            ${formatarDinheiro(
+                                valorPago
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Valor pendente:</strong>
+                            ${formatarDinheiro(
+                                valorPendente
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Forma de pagamento:</strong>
+                            ${formaPagamento}
+                        </p>
+
+                        <p>
+                            <strong>Origem:</strong>
+                            ${escaparTexto(
+                                lancamento.origem
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Encomenda vinculada:</strong>
+                            ${encomenda}
+                        </p>
+
+                        <p>
+                            <strong>Observações:</strong>
+                            ${observacoes}
+                        </p>
+
+                        <button
+                            type="button"
+                            class="botao-excluir"
+                            onclick="excluirLancamentoFinanceiro(
+                                ${lancamento.id}
+                            )">
+                            Excluir
+                        </button>
+
+                    </div>
+                `;
+            })
+            .join("");
+
+    atualizarResumoFinanceiro();
+}
+
+// =========================
+// FORMULÁRIO
+// =========================
+
+function limparFormularioFinanceiro() {
+    if (campoTipoLancamento) {
+        campoTipoLancamento.value =
+            "Entrada";
+    }
+
+    if (campoCategoriaLancamento) {
+        campoCategoriaLancamento.value =
+            "";
+    }
+
+    if (campoDescricaoLancamento) {
+        campoDescricaoLancamento.value =
+            "";
+    }
+
+    if (campoValorLancamento) {
+        campoValorLancamento.value =
+            "";
+    }
+
+    if (campoDataLancamento) {
+        campoDataLancamento.value =
+            obterDataHojeFinanceiro();
+    }
+
+    if (
+        campoFormaPagamentoLancamento
+    ) {
+        campoFormaPagamentoLancamento
+            .value = "";
+    }
+
+    if (campoSituacaoLancamento) {
+        campoSituacaoLancamento.value =
+            "Pago";
+    }
+
+    if (campoValorPagoLancamento) {
+        campoValorPagoLancamento.value =
+            "";
+    }
+
+    if (campoEncomendaLancamento) {
+        campoEncomendaLancamento.value =
+            "";
+    }
+
+    if (campoOrigemLancamento) {
+        campoOrigemLancamento.value =
+            "Manual";
+    }
+
+    if (campoObservacoesLancamento) {
+        campoObservacoesLancamento.value =
+            "";
+    }
+}
+
+function ajustarValorPagoFinanceiro() {
+    if (
+        !campoSituacaoLancamento ||
+        !campoValorPagoLancamento ||
+        !campoValorLancamento
+    ) {
+        return;
+    }
+
+    const valor =
+        Number(
+            campoValorLancamento.value || 0
+        );
+
+    const situacao =
+        campoSituacaoLancamento.value;
+
+    if (situacao === "Pago") {
+        campoValorPagoLancamento.value =
+            valor > 0
+                ? valor
+                : "";
+    }
+
+    if (situacao === "Pendente") {
+        campoValorPagoLancamento.value =
+            0;
+    }
+}
+
+// =========================
+// CADASTRO
+// =========================
+
+if (botaoSalvarLancamento) {
+    botaoSalvarLancamento.addEventListener(
+        "click",
+        function () {
+            const tipo =
+                campoTipoLancamento
+                    ? campoTipoLancamento.value
+                    : "Entrada";
+
+            const categoria =
+                campoCategoriaLancamento
+                    ? campoCategoriaLancamento
+                        .value
+                    : "";
+
+            const descricao =
+                campoDescricaoLancamento
+                    ? campoDescricaoLancamento
+                        .value
+                        .trim()
+                    : "";
+
+            const valor =
+                campoValorLancamento
+                    ? Number(
+                        campoValorLancamento
+                            .value
+                    )
+                    : 0;
+
+            const data =
+                campoDataLancamento
+                    ? campoDataLancamento.value
+                    : "";
+
+            const formaPagamento =
+                campoFormaPagamentoLancamento
+                    ? campoFormaPagamentoLancamento
+                        .value
+                    : "";
+
+            let situacao =
+                campoSituacaoLancamento
+                    ? campoSituacaoLancamento
+                        .value
+                    : "Pendente";
+
+            let valorPago =
+                campoValorPagoLancamento
+                    ? Number(
+                        campoValorPagoLancamento
+                            .value || 0
+                    )
+                    : 0;
+
+            const encomendaId =
+                campoEncomendaLancamento &&
+                campoEncomendaLancamento.value
+                    ? Number(
+                        campoEncomendaLancamento
+                            .value
+                    )
+                    : null;
+
+            const origem =
+                campoOrigemLancamento
+                    ? campoOrigemLancamento
+                        .value
+                    : "Manual";
+
+            const observacoes =
+                campoObservacoesLancamento
+                    ? campoObservacoesLancamento
+                        .value
+                        .trim()
+                    : "";
+
+            if (!categoria) {
+                alert(
+                    "Selecione uma categoria."
+                );
+                return;
+            }
+
+            if (!descricao) {
+                alert(
+                    "Informe a descrição."
+                );
+                return;
+            }
+
+            if (
+                Number.isNaN(valor) ||
+                valor <= 0
+            ) {
+                alert(
+                    "Informe um valor válido."
+                );
+                return;
+            }
+
+            if (!data) {
+                alert(
+                    "Informe a data."
+                );
+                return;
+            }
+
+            if (
+                Number.isNaN(valorPago) ||
+                valorPago < 0
+            ) {
+                alert(
+                    "Informe um valor pago válido."
+                );
+                return;
+            }
+
+            if (valorPago > valor) {
+                alert(
+                    "O valor pago não pode ser maior que o valor do lançamento."
+                );
+                return;
+            }
+
+            if (situacao === "Pago") {
+                valorPago = valor;
+            }
+
+            if (situacao === "Pendente") {
+                valorPago = 0;
+            }
+
+            if (
+                valorPago > 0 &&
+                valorPago < valor
+            ) {
+                situacao = "Parcial";
+            }
+
+            if (valorPago >= valor) {
+                situacao = "Pago";
+            }
+
+            if (valorPago === 0) {
+                situacao = "Pendente";
+            }
+
+            let encomendaDescricao = "";
+
+            if (
+                campoEncomendaLancamento &&
+                campoEncomendaLancamento
+                    .selectedIndex >= 0
+            ) {
+                const opcaoSelecionada =
+                    campoEncomendaLancamento
+                        .options[
+                            campoEncomendaLancamento
+                                .selectedIndex
+                        ];
+
+                if (
+                    opcaoSelecionada &&
+                    encomendaId
+                ) {
+                    encomendaDescricao =
+                        opcaoSelecionada
+                            .textContent
+                            .trim();
+                }
+            }
+
+            const novoLancamento = {
+                id: Date.now(),
+                tipo: tipo,
+                categoria: categoria,
+                descricao: descricao,
+                valor: valor,
+                data: data,
+                formaPagamento:
+                    formaPagamento,
+                situacao: situacao,
+                valorPago: valorPago,
+                encomendaId:
+                    encomendaId,
+                encomendaDescricao:
+                    encomendaDescricao,
+                origem: origem,
+                observacoes:
+                    observacoes,
+                automatico: false
+            };
+
+            lancamentosFinanceiros.push(
+                novoLancamento
+            );
+
+            salvarLancamentosFinanceiros();
+            mostrarLancamentosFinanceiros();
+            limparFormularioFinanceiro();
+
+            alert(
+                "Lançamento cadastrado com sucesso!"
+            );
+        }
+    );
+}
+
+if (
+    botaoLimparFormularioLancamento
+) {
+    botaoLimparFormularioLancamento
+        .addEventListener(
+            "click",
+            limparFormularioFinanceiro
+        );
+}
+
+if (campoSituacaoLancamento) {
+    campoSituacaoLancamento
+        .addEventListener(
+            "change",
+            ajustarValorPagoFinanceiro
+        );
+}
+
+if (campoValorLancamento) {
+    campoValorLancamento
+        .addEventListener(
+            "input",
+            function () {
+                if (
+                    campoSituacaoLancamento &&
+                    campoSituacaoLancamento
+                        .value === "Pago"
+                ) {
+                    ajustarValorPagoFinanceiro();
+                }
+            }
+        );
+}
+
+// =========================
+// EXCLUSÃO
+// =========================
+
+window.excluirLancamentoFinanceiro =
+    function (id) {
+        const lancamento =
+            lancamentosFinanceiros.find(
+                function (item) {
+                    return item.id === id;
+                }
+            );
+
+        if (!lancamento) {
+            return;
+        }
+
+        const confirmar = confirm(
+            `Deseja excluir o lançamento "${lancamento.descricao}"?`
+        );
+
+        if (!confirmar) {
+            return;
+        }
+
+        lancamentosFinanceiros =
+            lancamentosFinanceiros.filter(
+                function (item) {
+                    return item.id !== id;
+                }
+            );
+
+        salvarLancamentosFinanceiros();
+        mostrarLancamentosFinanceiros();
+    };
+
+
+// =========================
 // ENCOMENDAS DISPONÍVEIS
 // =========================
 
@@ -1875,258 +2436,6 @@ if (
         "<p>Nenhum lançamento cadastrado.</p>";
 }
 
-// =========================
-// RELATÓRIOS
-// =========================
-
-const botaoAtualizarRelatorios =
-    document.getElementById("atualizar-relatorios");
-
-const menuRelatorios =
-    document.querySelector('[data-pagina="relatorios"]');
-
-function contarEncomendasPorStatus(status) {
-    return encomendas.filter(
-        function (encomenda) {
-            return encomenda.status === status;
-        }
-    ).length;
-}
-
-function atualizarRelatorios() {
-    const campoProdutos =
-        document.getElementById("relatorio-produtos");
-
-    const campoClientes =
-        document.getElementById("relatorio-clientes");
-
-    const campoEncomendas =
-        document.getElementById("relatorio-encomendas");
-
-    const campoFilamentos =
-        document.getElementById("relatorio-filamentos");
-
-    const campoImpressoras =
-        document.getElementById("relatorio-impressoras");
-
-    const campoAguardando =
-        document.getElementById("relatorio-aguardando");
-
-    const campoProducao =
-        document.getElementById("relatorio-producao");
-
-    const campoFinalizadas =
-        document.getElementById("relatorio-finalizadas");
-
-    const campoEntregues =
-        document.getElementById("relatorio-entregues");
-
-    const campoCanceladas =
-        document.getElementById("relatorio-canceladas");
-
-    const campoEntradas =
-        document.getElementById("relatorio-entradas");
-
-    const campoDespesas =
-        document.getElementById("relatorio-despesas");
-
-    const campoSaldo =
-        document.getElementById("relatorio-saldo");
-
-    const campoValorEncomendas =
-        document.getElementById(
-            "relatorio-valor-encomendas"
-        );
-
-    const campoMaiorEstoque =
-        document.getElementById(
-            "relatorio-maior-estoque"
-        );
-
-    const campoUltimoCliente =
-        document.getElementById(
-            "relatorio-ultimo-cliente"
-        );
-
-    const campoUltimaEncomenda =
-        document.getElementById(
-            "relatorio-ultima-encomenda"
-        );
-
-    if (campoProdutos) {
-        campoProdutos.textContent = produtos.length;
-    }
-
-    if (campoClientes) {
-        campoClientes.textContent = clientes.length;
-    }
-
-    if (campoEncomendas) {
-        campoEncomendas.textContent = encomendas.length;
-    }
-
-    if (campoFilamentos) {
-        campoFilamentos.textContent = filamentos.length;
-    }
-
-    if (campoImpressoras) {
-        campoImpressoras.textContent = impressoras.length;
-    }
-
-    if (campoAguardando) {
-        campoAguardando.textContent =
-            contarEncomendasPorStatus("Aguardando");
-    }
-
-    if (campoProducao) {
-        campoProducao.textContent =
-            contarEncomendasPorStatus("Em produção");
-    }
-
-    if (campoFinalizadas) {
-        campoFinalizadas.textContent =
-            contarEncomendasPorStatus("Finalizada");
-    }
-
-    if (campoEntregues) {
-        campoEntregues.textContent =
-            contarEncomendasPorStatus("Entregue");
-    }
-
-    if (campoCanceladas) {
-        campoCanceladas.textContent =
-            contarEncomendasPorStatus("Cancelada");
-    }
-
-    const totalEntradasRelatorio =
-        lancamentosFinanceiros
-            .filter(function (lancamento) {
-                return lancamento.tipo === "Entrada";
-            })
-            .reduce(function (total, lancamento) {
-                return total + Number(lancamento.valor);
-            }, 0);
-
-    const totalDespesasRelatorio =
-        lancamentosFinanceiros
-            .filter(function (lancamento) {
-                return lancamento.tipo === "Despesa";
-            })
-            .reduce(function (total, lancamento) {
-                return total + Number(lancamento.valor);
-            }, 0);
-
-    const saldoRelatorio =
-        totalEntradasRelatorio -
-        totalDespesasRelatorio;
-
-    const valorTotalEncomendas =
-        encomendas.reduce(
-            function (total, encomenda) {
-                if (encomenda.status === "Cancelada") {
-                    return total;
-                }
-
-                return total +
-                    Number(encomenda.valorTotal || 0);
-            },
-            0
-        );
-
-    if (campoEntradas) {
-        campoEntradas.textContent =
-            formatarDinheiro(totalEntradasRelatorio);
-    }
-
-    if (campoDespesas) {
-        campoDespesas.textContent =
-            formatarDinheiro(totalDespesasRelatorio);
-    }
-
-    if (campoSaldo) {
-        campoSaldo.textContent =
-            formatarDinheiro(saldoRelatorio);
-    }
-
-    if (campoValorEncomendas) {
-        campoValorEncomendas.textContent =
-            formatarDinheiro(valorTotalEncomendas);
-    }
-
-    if (campoMaiorEstoque) {
-        if (produtos.length === 0) {
-            campoMaiorEstoque.textContent =
-                "Nenhum produto cadastrado";
-        } else {
-            const produtoMaiorEstoque =
-                produtos.reduce(
-                    function (maior, produto) {
-                        if (
-                            Number(produto.estoque) >
-                            Number(maior.estoque)
-                        ) {
-                            return produto;
-                        }
-
-                        return maior;
-                    }
-                );
-
-            campoMaiorEstoque.textContent =
-                `${produtoMaiorEstoque.nome} — ` +
-                `${produtoMaiorEstoque.estoque} unidade(s)`;
-        }
-    }
-
-    if (campoUltimoCliente) {
-        if (clientes.length === 0) {
-            campoUltimoCliente.textContent =
-                "Nenhum cliente cadastrado";
-        } else {
-            const ultimoCliente =
-                clientes[clientes.length - 1];
-
-            campoUltimoCliente.textContent =
-                ultimoCliente.nome;
-        }
-    }
-
-    if (campoUltimaEncomenda) {
-        if (encomendas.length === 0) {
-            campoUltimaEncomenda.textContent =
-                "Nenhuma encomenda cadastrada";
-        } else {
-            const ultimaEncomenda =
-                encomendas[encomendas.length - 1];
-
-            campoUltimaEncomenda.textContent =
-                `${ultimaEncomenda.produtoNome} — ` +
-                `${ultimaEncomenda.clienteNome}`;
-        }
-    }
-}
-
-if (menuRelatorios) {
-    menuRelatorios.addEventListener(
-        "click",
-        atualizarRelatorios
-    );
-}
-
-if (botaoAtualizarRelatorios) {
-    botaoAtualizarRelatorios.addEventListener(
-        "click",
-        function () {
-            atualizarRelatorios();
-
-            alert(
-                "Relatórios atualizados com sucesso!"
-            );
-        }
-    );
-}
-
-atualizarRelatorios();
 
 // =========================
 // ENCOMENDAS 2.0
@@ -4580,6 +4889,11 @@ window.excluirFilamento =
 normalizarFilamentosAntigos();
 mostrarFilamentos();
 limparFormularioFilamento();
+
+// =========================
+// RELATÓRIOS
+// =========================
+
 
 // =========================
 // DASHBOARD COMPLETO
