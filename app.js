@@ -5217,6 +5217,140 @@ function definirDinheiroRelatorio(
 }
 
 // =========================
+// INDICADORES PRINCIPAIS
+// =========================
+
+function atualizarIndicadoresRelatorios() {
+    const encomendasRelatorio =
+        filtrarEncomendasRelatorio();
+
+    const lancamentosRelatorio =
+        filtrarLancamentosRelatorio();
+
+    const resumoFinanceiro =
+        calcularResumoFinanceiroRelatorio(
+            lancamentosRelatorio
+        );
+
+    const resumoEncomendas =
+        calcularResumoEncomendasRelatorio(
+            encomendasRelatorio
+        );
+
+    definirTextoRelatorio(
+        "relatorio-total-produtos",
+        Array.isArray(produtos)
+            ? produtos.length
+            : 0
+    );
+
+    definirTextoRelatorio(
+        "relatorio-total-clientes",
+        Array.isArray(clientes)
+            ? clientes.length
+            : 0
+    );
+
+    definirTextoRelatorio(
+        "relatorio-total-impressoras",
+        Array.isArray(impressoras)
+            ? impressoras.length
+            : 0
+    );
+
+    definirTextoRelatorio(
+        "relatorio-total-encomendas",
+        encomendasRelatorio.length
+    );
+
+    definirTextoRelatorio(
+        "relatorio-encomendas-aguardando",
+        contarEncomendasRelatorioPorStatus(
+            encomendasRelatorio,
+            "Aguardando"
+        )
+    );
+
+    definirTextoRelatorio(
+        "relatorio-encomendas-producao",
+        contarEncomendasRelatorioPorStatus(
+            encomendasRelatorio,
+            "Em produção"
+        )
+    );
+
+    definirTextoRelatorio(
+        "relatorio-encomendas-finalizadas",
+        contarEncomendasRelatorioPorStatus(
+            encomendasRelatorio,
+            "Finalizada"
+        )
+    );
+
+    definirTextoRelatorio(
+        "relatorio-encomendas-entregues",
+        contarEncomendasRelatorioPorStatus(
+            encomendasRelatorio,
+            "Entregue"
+        )
+    );
+
+    definirTextoRelatorio(
+        "relatorio-encomendas-atrasadas",
+        contarEncomendasAtrasadasRelatorio(
+            encomendasRelatorio
+        )
+    );
+
+    definirDinheiroRelatorio(
+        "relatorio-valor-encomendas",
+        resumoEncomendas.valorTotal
+    );
+
+    definirDinheiroRelatorio(
+        "relatorio-valor-recebido",
+        resumoEncomendas.valorRecebido
+    );
+
+    definirDinheiroRelatorio(
+        "relatorio-valor-a-receber",
+        resumoEncomendas.valorAReceber
+    );
+
+    definirDinheiroRelatorio(
+        "relatorio-ticket-medio",
+        resumoEncomendas.ticketMedio
+    );
+
+    definirDinheiroRelatorio(
+        "relatorio-total-entradas",
+        resumoFinanceiro.entradas
+    );
+
+    definirDinheiroRelatorio(
+        "relatorio-total-despesas",
+        resumoFinanceiro.despesas
+    );
+
+    definirDinheiroRelatorio(
+        "relatorio-saldo",
+        resumoFinanceiro.saldo
+    );
+
+    definirDinheiroRelatorio(
+        "relatorio-entradas-pendentes",
+        resumoFinanceiro
+            .entradasPendentes
+    );
+
+    definirDinheiroRelatorio(
+        "relatorio-despesas-pendentes",
+        resumoFinanceiro
+            .despesasPendentes
+    );
+}
+
+// =========================
 // DASHBOARD COMPLETO
 // =========================
 
