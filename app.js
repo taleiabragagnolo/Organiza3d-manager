@@ -2394,7 +2394,6 @@ window.excluirFilamento =
 normalizarFilamentosAntigos();
 mostrarFilamentos();
 limparFormularioFilamento();
-
 };
 
 // =========================
