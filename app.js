@@ -5220,6 +5220,280 @@ function definirDinheiroRelatorio(
 // INDICADORES PRINCIPAIS
 // =========================
 
+
+// =========================
+// DETALHAMENTO
+// =========================
+
+function atualizarDetalhamentoRelatorio() {
+
+    if (!listaDetalhamentoRelatorio) {
+        return;
+    }
+
+    const tipo =
+        campoTipoDetalhamentoRelatorio
+            ? campoTipoDetalhamentoRelatorio.value
+            : "geral";
+
+    switch (tipo) {
+
+        case "produtos":
+            mostrarDetalhamentoProdutos();
+            break;
+
+        case "clientes":
+            mostrarDetalhamentoClientes();
+            break;
+
+        case "encomendas":
+            mostrarDetalhamentoEncomendas();
+            break;
+
+        case "financeiro":
+            mostrarDetalhamentoFinanceiro();
+            break;
+
+        case "filamentos":
+            mostrarDetalhamentoFilamentos();
+            break;
+
+        case "impressoras":
+            mostrarDetalhamentoImpressoras();
+            break;
+
+        default:
+            mostrarResumoGeralRelatorio();
+    }
+
+}
+
+// =========================
+// RESUMO GERAL
+// =========================
+
+function mostrarResumoGeralRelatorio() {
+
+    const resumoFinanceiro =
+        calcularResumoFinanceiroRelatorio(
+            filtrarLancamentosRelatorio()
+        );
+
+    const resumoEncomendas =
+        calcularResumoEncomendasRelatorio(
+            filtrarEncomendasRelatorio()
+        );
+
+    listaDetalhamentoRelatorio.innerHTML = `
+
+        <div class="card-item">
+
+            <h4>Resumo Geral</h4>
+
+            <p><strong>Produtos:</strong> ${produtos.length}</p>
+
+            <p><strong>Clientes:</strong> ${clientes.length}</p>
+
+            <p><strong>Impressoras:</strong> ${impressoras.length}</p>
+
+            <p><strong>Encomendas:</strong> ${encomendas.length}</p>
+
+            <p><strong>Entradas:</strong> ${formatarDinheiro(resumoFinanceiro.entradas)}</p>
+
+            <p><strong>Despesas:</strong> ${formatarDinheiro(resumoFinanceiro.despesas)}</p>
+
+            <p><strong>Saldo:</strong> ${formatarDinheiro(resumoFinanceiro.saldo)}</p>
+
+            <p><strong>Valor das encomendas:</strong> ${formatarDinheiro(resumoEncomendas.valorTotal)}</p>
+
+        </div>
+
+    `;
+
+}
+
+// =========================
+// PRODUTOS
+// =========================
+
+function mostrarDetalhamentoProdutos() {
+
+    listaDetalhamentoRelatorio.innerHTML =
+        produtos.map(function(produto){
+
+            return `
+
+                <div class="card-item">
+
+                    <h4>${escaparTexto(produto.nome)}</h4>
+
+                    <p>Categoria: ${escaparTexto(produto.categoria)}</p>
+
+                    <p>Estoque: ${produto.estoque}</p>
+
+                    <p>Status: ${escaparTexto(produto.status)}</p>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+}
+
+// =========================
+// CLIENTES
+// =========================
+
+function mostrarDetalhamentoClientes(){
+
+    listaDetalhamentoRelatorio.innerHTML =
+        clientes.map(function(cliente){
+
+            return `
+
+                <div class="card-item">
+
+                    <h4>${escaparTexto(cliente.nome)}</h4>
+
+                    <p>${escaparTexto(cliente.cidade || "Não informada")}</p>
+
+                    <p>${escaparTexto(cliente.telefone || "-")}</p>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+}
+
+// =========================
+// ENCOMENDAS
+// =========================
+
+function mostrarDetalhamentoEncomendas(){
+
+    const lista =
+        filtrarEncomendasRelatorio();
+
+    listaDetalhamentoRelatorio.innerHTML =
+        lista.map(function(encomenda){
+
+            return `
+
+                <div class="card-item">
+
+                    <h4>${escaparTexto(encomenda.clienteNome)}</h4>
+
+                    <p>${escaparTexto(encomenda.produtoNome)}</p>
+
+                    <p>${escaparTexto(encomenda.status)}</p>
+
+                    <p>${formatarDinheiro(encomenda.valorTotal)}</p>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+}
+
+// =========================
+// FINANCEIRO
+// =========================
+
+function mostrarDetalhamentoFinanceiro(){
+
+    const lista =
+        filtrarLancamentosRelatorio();
+
+    listaDetalhamentoRelatorio.innerHTML =
+        lista.map(function(item){
+
+            return `
+
+                <div class="card-item">
+
+                    <h4>${escaparTexto(item.descricao)}</h4>
+
+                    <p>${escaparTexto(item.tipo)}</p>
+
+                    <p>${escaparTexto(item.situacao)}</p>
+
+                    <p>${formatarDinheiro(item.valor)}</p>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+}
+
+// =========================
+// FILAMENTOS
+// =========================
+
+function mostrarDetalhamentoFilamentos(){
+
+    if (typeof filamentos === "undefined"){
+
+        listaDetalhamentoRelatorio.innerHTML =
+            "<p>Nenhum dado disponível.</p>";
+
+        return;
+    }
+
+    listaDetalhamentoRelatorio.innerHTML =
+        filamentos.map(function(f){
+
+            return `
+
+                <div class="card-item">
+
+                    <h4>${escaparTexto(f.material)}</h4>
+
+                    <p>${escaparTexto(f.cor)}</p>
+
+                    <p>${Number(f.pesoRestante || 0)} g</p>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+}
+
+// =========================
+// IMPRESSORAS
+// =========================
+
+function mostrarDetalhamentoImpressoras(){
+
+    listaDetalhamentoRelatorio.innerHTML =
+        impressoras.map(function(imp){
+
+            return `
+
+                <div class="card-item">
+
+                    <h4>${escaparTexto(imp.nome)}</h4>
+
+                    <p>${escaparTexto(imp.modelo)}</p>
+
+                    <p>${escaparTexto(imp.status)}</p>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+}
+
 function atualizarIndicadoresRelatorios() {
     const encomendasRelatorio =
         filtrarEncomendasRelatorio();
