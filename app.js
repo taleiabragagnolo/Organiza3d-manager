@@ -5861,7 +5861,7 @@ function calcularFinanceiroDashboard() {
 // =========================
 
 function atualizarDashboardCompleto() {
-}
+
     const financeiro =
         calcularFinanceiroDashboard();
 
