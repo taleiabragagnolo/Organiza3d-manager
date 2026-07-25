@@ -2,263 +2,566 @@
     const botoesMenu = document.querySelectorAll(".menu-item");
     const paginas = document.querySelectorAll(".pagina");
 
-    const formularioProduto = document.getElementById("formulario-produto");
-    const botaoNovoProduto = document.getElementById("botao-novo-produto");
-    const tabelaProdutos = document.getElementById("tabela-produtos");
-    const mensagemVazia = document.getElementById("produtos-vazio");
-    const totalProdutos = document.getElementById("total-produtos");
+    // =========================
+// PRODUTOS 2.0
+// =========================
 
-    let produtos = carregarProdutos();
+let produtos = JSON.parse(
+    localStorage.getItem("organiza3d_produtos")
+) || [];
 
-    iniciarMenu();
-    mostrarProdutos();
-    atualizarDashboard();
+const botaoSalvarProduto =
+    document.getElementById("salvar-produto");
 
-    function iniciarMenu() {
-        botoesMenu.forEach(function (botao) {
-            botao.addEventListener("click", function () {
-                const paginaEscolhida = botao.dataset.pagina;
+const botaoLimparFormularioProduto =
+    document.getElementById(
+        "limpar-formulario-produto"
+    );
 
-                botoesMenu.forEach(function (item) {
-                    item.classList.remove("ativo");
-                });
+const listaProdutos =
+    document.getElementById("lista-produtos");
 
-                paginas.forEach(function (pagina) {
-                    pagina.classList.remove("ativa");
-                });
+const campoProdutoNome =
+    document.getElementById("produto-nome");
+
+const campoProdutoCategoria =
+    document.getElementById("produto-categoria");
+
+const campoProdutoDescricao =
+    document.getElementById("produto-descricao");
+
+const campoProdutoCusto =
+    document.getElementById("produto-custo");
+
+const campoProdutoPreco =
+    document.getElementById("produto-preco");
+
+const campoProdutoLucro =
+    document.getElementById("produto-lucro");
+
+const campoProdutoMargem =
+    document.getElementById("produto-margem");
+
+const campoProdutoEstoque =
+    document.getElementById("produto-estoque");
+
+const campoProdutoEstoqueMinimo =
+    document.getElementById(
+        "produto-estoque-minimo"
+    );
+
+const campoProdutoStatus =
+    document.getElementById("produto-status");
+
+const campoProdutoDataCadastro =
+    document.getElementById(
+        "produto-data-cadastro"
+    );
+
+const campoProdutoObservacoes =
+    document.getElementById(
+        "produto-observacoes"
+    );
+
+// =========================
+// MENU
+// =========================
+
+iniciarMenu();
+
+function iniciarMenu() {
+    botoesMenu.forEach(function (botao) {
+        botao.addEventListener(
+            "click",
+            function () {
+                const paginaEscolhida =
+                    botao.dataset.pagina;
+
+                botoesMenu.forEach(
+                    function (item) {
+                        item.classList.remove(
+                            "ativo"
+                        );
+                    }
+                );
+
+                paginas.forEach(
+                    function (pagina) {
+                        pagina.classList.remove(
+                            "ativa"
+                        );
+                    }
+                );
 
                 botao.classList.add("ativo");
 
-                const pagina = document.getElementById(paginaEscolhida);
+                const pagina =
+                    document.getElementById(
+                        paginaEscolhida
+                    );
 
                 if (pagina) {
                     pagina.classList.add("ativa");
                 }
-            });
-        });
-    }
-
-    if (botaoNovoProduto) {
-        botaoNovoProduto.addEventListener("click", function () {
-            const campoNome = document.getElementById("nome-produto");
-
-            formularioProduto.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
-
-            campoNome.focus();
-        });
-    }
-
-    if (formularioProduto) {
-        formularioProduto.addEventListener("submit", function (evento) {
-            evento.preventDefault();
-
-            const produto = {
-                id: Date.now(),
-                nome: document.getElementById("nome-produto").value.trim(),
-                categoria: document.getElementById("categoria-produto").value,
-                peso: document.getElementById("peso-produto").value,
-                tempo: document.getElementById("tempo-produto").value.trim(),
-                custo: Number(
-                    document.getElementById("custo-produto").value
-                ) || 0,
-                preco: Number(
-                    document.getElementById("preco-produto").value
-                ) || 0,
-                estoque: Number(
-                    document.getElementById("estoque-produto").value
-                    ) || 0,
-                observacoes: document
-                    .getElementById("observacoes-produto")
-                    .value
-                    .trim()
-            };
-
-            if (!produto.nome || !produto.categoria || produto.preco <= 0) {
-                alert("Preencha o nome, a categoria e o preço de venda.");
-                return;
             }
-
-            produtos.push(produto);
-            salvarProdutos();
-
-            formularioProduto.reset();
-            document.getElementById("estoque-produto").value = 0;
-
-            mostrarProdutos();
-            atualizarDashboard();
-
-            alert("Produto cadastrado com sucesso!");
-        });
-    }
-
-    function carregarProdutos() {
-        const produtosSalvos = localStorage.getItem(
-            "organiza3d_produtos"
         );
+    });
+}
 
-        if (!produtosSalvos) {
-            return [];
-        }
+// =========================
+// FUNÇÕES GERAIS
+// =========================
 
-        try {
-            return JSON.parse(produtosSalvos);
-        } catch (erro) {
-            console.error("Não foi possível carregar os produtos.", erro);
-            return [];
-        }
-    }
-
-    function salvarProdutos() {
-        localStorage.setItem(
-            "organiza3d_produtos",
-            JSON.stringify(produtos)
-        );
-    }
-
-    function mostrarProdutos() {
-        if (!tabelaProdutos || !mensagemVazia) {
-            return;
-        }
-
-        tabelaProdutos.innerHTML = "";
-
-        if (produtos.length === 0) {
-            mensagemVazia.style.display = "block";
-            return;
-        }
-
-        mensagemVazia.style.display = "none";
-
-        const tabela = document.createElement("table");
-        tabela.className = "tabela";
-
-        tabela.innerHTML = `
-            <thead>
-                <tr>
-                    <th>Produto</th>
-                    <th>Categoria</th>
-                    <th>Custo</th>
-                    <th>Preço</th>
-                    <th>Estoque</th>
-                    <th>Ação</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        `;
-
-        const corpoTabela = tabela.querySelector("tbody");
-
-        produtos.forEach(function (produto) {
-            const linha = document.createElement("tr");
-
-            linha.innerHTML = `
-                <td>${escaparTexto(produto.nome)}</td>
-                <td>${escaparTexto(produto.categoria)}</td>
-                <td>${formatarDinheiro(produto.custo)}</td>
-                <td>${formatarDinheiro(produto.preco)}</td>
-                <td>${produto.estoque}</td>
-                <td>
-                    <button
-                        class="botao-excluir"
-                        data-id="${produto.id}"
-                        type="button"
-                    >
-                        Excluir
-                    </button>
-                </td>
-            `;
-
-            corpoTabela.appendChild(linha);
-        });
-
-        tabelaProdutos.appendChild(tabela);
-
-        const botoesExcluir =
-            tabelaProdutos.querySelectorAll(".botao-excluir");
-
-        botoesExcluir.forEach(function (botao) {
-            botao.addEventListener("click", function () {
-                excluirProduto(Number(botao.dataset.id));
-            });
-        
-        
-        });
-    }
-
-    function excluirProduto(id) {
-        const produtoEncontrado = produtos.find(function (produto) {
-            return produto.id === id;
-        });
-
-        if (!produtoEncontrado) {
-            return;
-        }
-
-        const confirmar = confirm(
-            `Deseja excluir o produto "${produtoEncontrado.nome}"?`
-        );
-
-        if (!confirmar) {
-            return;
-        }
-
-        produtos = produtos.filter(function (produto) {
-            return produto.id !== id;
-        });
-
-        salvarProdutos();
-        mostrarProdutos();
-        atualizarDashboard();
-    }
-
-    function atualizarDashboard() {
-        if (totalProdutos) {
-            totalProdutos.textContent = produtos.length;
-        }
-
-        const faturamentoEstimado = produtos.reduce(
-            function (total, produto) {
-                return total + produto.preco * produto.estoque;
-            },
-            0
-        );
-
-        const custoEstoque = produtos.reduce(
-            function (total, produto) {
-                return total + produto.custo * produto.estoque;
-            },
-            0
-        );
-
-        const lucroEstimado =
-            faturamentoEstimado - custoEstoque;
-
-        const campoFaturamento =
-            document.getElementById("total-faturamento");
-
-        const campoLucro =
-            document.getElementById("total-lucro");
-
-        if (campoFaturamento) {
-            campoFaturamento.textContent =
-                formatarDinheiro(faturamentoEstimado);
-        }
-
-        if (campoLucro) {
-            campoLucro.textContent =
-                formatarDinheiro(lucroEstimado);
-        }
-    }
-
-    function formatarDinheiro(valor) {
-        return Number(valor || 0).toLocaleString("pt-BR", {
+function formatarDinheiro(valor) {
+    return Number(valor || 0).toLocaleString(
+        "pt-BR",
+        {
             style: "currency",
             currency: "BRL"
-        });
+        }
+    );
+}
+
+function escaparTexto(texto) {
+    const elemento =
+        document.createElement("div");
+
+    elemento.textContent =
+        texto === undefined ||
+        texto === null
+            ? ""
+            : String(texto);
+
+    return elemento.innerHTML;
+}
+
+// =========================
+// FUNÇÕES DOS PRODUTOS
+// =========================
+
+function salvarProdutos() {
+    localStorage.setItem(
+        "organiza3d_produtos",
+        JSON.stringify(produtos)
+    );
+}
+
+function formatarDataProduto(data) {
+    if (!data) {
+        return "Não informada";
     }
+
+    const partes = data.split("-");
+
+    if (partes.length !== 3) {
+        return data;
+    }
+
+    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+}
+
+function obterDataHojeProduto() {
+    const hoje = new Date();
+
+    const ano = hoje.getFullYear();
+
+    const mes = String(
+        hoje.getMonth() + 1
+    ).padStart(2, "0");
+
+    const dia = String(
+        hoje.getDate()
+    ).padStart(2, "0");
+
+    return `${ano}-${mes}-${dia}`;
+}
+
+function calcularLucroProduto(
+    custo,
+    preco
+) {
+    return Number(preco || 0) -
+        Number(custo || 0);
+}
+
+function calcularMargemProduto(
+    custo,
+    preco
+) {
+    const precoVenda =
+        Number(preco || 0);
+
+    if (precoVenda <= 0) {
+        return 0;
+    }
+
+    const lucro =
+        calcularLucroProduto(
+            custo,
+            precoVenda
+        );
+
+    return (lucro / precoVenda) * 100;
+}
+
+function definirStatusProduto(
+    estoque,
+    estoqueMinimo
+) {
+    const quantidade =
+        Number(estoque || 0);
+
+    const minimo =
+        Number(estoqueMinimo || 0);
+
+    if (quantidade <= 0) {
+        return "Sem estoque";
+    }
+
+    if (quantidade <= minimo) {
+        return "Estoque baixo";
+    }
+
+    return "Disponível";
+}
+
+function atualizarCalculosFormularioProduto() {
+    const custo = Number(
+        campoProdutoCusto
+            ? campoProdutoCusto.value || 0
+            : 0
+    );
+
+    const preco = Number(
+        campoProdutoPreco
+            ? campoProdutoPreco.value || 0
+            : 0
+    );
+
+    const estoque = Number(
+        campoProdutoEstoque
+            ? campoProdutoEstoque.value || 0
+            : 0
+    );
+
+    const estoqueMinimo = Number(
+        campoProdutoEstoqueMinimo
+            ? campoProdutoEstoqueMinimo.value || 0
+            : 0
+    );
+
+    const lucro =
+        calcularLucroProduto(
+            custo,
+            preco
+        );
+
+    const margem =
+        calcularMargemProduto(
+            custo,
+            preco
+        );
+
+    const status =
+        definirStatusProduto(
+            estoque,
+            estoqueMinimo
+        );
+
+    if (campoProdutoLucro) {
+        campoProdutoLucro.value =
+            formatarDinheiro(lucro);
+    }
+
+    if (campoProdutoMargem) {
+        campoProdutoMargem.value =
+            `${margem.toLocaleString(
+                "pt-BR",
+                {
+                    maximumFractionDigits: 1
+                }
+            )}%`;
+    }
+
+    if (campoProdutoStatus) {
+        campoProdutoStatus.value =
+            status;
+    }
+}
+
+function atualizarResumoProdutos() {
+    const campoTotal =
+        document.getElementById(
+            "produtos-total"
+        );
+
+    const campoDisponiveis =
+        document.getElementById(
+            "produtos-disponiveis"
+        );
+
+    const campoEstoqueBaixo =
+        document.getElementById(
+            "produtos-estoque-baixo"
+        );
+
+    const campoSemEstoque =
+        document.getElementById(
+            "produtos-sem-estoque"
+        );
+
+    const campoValorEstoque =
+        document.getElementById(
+            "produtos-valor-estoque"
+        );
+
+    const disponiveis =
+        produtos.filter(
+            function (produto) {
+                return produto.status ===
+                    "Disponível";
+            }
+        ).length;
+
+    const estoqueBaixo =
+        produtos.filter(
+            function (produto) {
+                return produto.status ===
+                    "Estoque baixo";
+            }
+        ).length;
+
+    const semEstoque =
+        produtos.filter(
+            function (produto) {
+                return produto.status ===
+                    "Sem estoque";
+            }
+        ).length;
+
+    const valorEmEstoque =
+        produtos.reduce(
+            function (total, produto) {
+                return total +
+                    Number(
+                        produto.preco || 0
+                    ) *
+                    Number(
+                        produto.estoque || 0
+                    );
+            },
+            0
+        );
+
+    if (campoTotal) {
+        campoTotal.textContent =
+            produtos.length;
+    }
+
+    if (campoDisponiveis) {
+        campoDisponiveis.textContent =
+            disponiveis;
+    }
+
+    if (campoEstoqueBaixo) {
+        campoEstoqueBaixo.textContent =
+            estoqueBaixo;
+    }
+
+    if (campoSemEstoque) {
+        campoSemEstoque.textContent =
+            semEstoque;
+    }
+
+    if (campoValorEstoque) {
+        campoValorEstoque.textContent =
+            formatarDinheiro(
+                valorEmEstoque
+            );
+    }
+}
+
+function atualizarDashboard() {
+    const totalProdutosDashboard =
+        document.getElementById(
+            "total-produtos"
+        );
+
+    const campoFaturamento =
+        document.getElementById(
+            "total-faturamento"
+        );
+
+    const campoLucro =
+        document.getElementById(
+            "total-lucro"
+        );
+
+    const faturamentoEstimado =
+        produtos.reduce(
+            function (total, produto) {
+                return total +
+                    Number(
+                        produto.preco || 0
+                    ) *
+                    Number(
+                        produto.estoque || 0
+                    );
+            },
+            0
+        );
+
+    const custoEstoque =
+        produtos.reduce(
+            function (total, produto) {
+                return total +
+                    Number(
+                        produto.custo || 0
+                    ) *
+                    Number(
+                        produto.estoque || 0
+                    );
+            },
+            0
+        );
+
+    const lucroEstimado =
+        faturamentoEstimado -
+        custoEstoque;
+
+    if (totalProdutosDashboard) {
+        totalProdutosDashboard.textContent =
+            produtos.length;
+    }
+
+    if (campoFaturamento) {
+        campoFaturamento.textContent =
+            formatarDinheiro(
+                faturamentoEstimado
+            );
+    }
+
+    if (campoLucro) {
+        campoLucro.textContent =
+            formatarDinheiro(
+                lucroEstimado
+            );
+    }
+}
+
+function normalizarProdutosAntigos() {
+    produtos = produtos.map(
+        function (produto, indice) {
+            const custo = Number(
+                produto.custo || 0
+            );
+
+            const preco = Number(
+                produto.preco ||
+                produto.valor ||
+                0
+            );
+
+            const estoque = Number(
+                produto.estoque ||
+                produto.quantidade ||
+                0
+            );
+
+            const estoqueMinimo = Number(
+                produto.estoqueMinimo || 0
+            );
+
+            return {
+                id:
+                    produto.id ||
+                    Date.now() + indice,
+
+                nome:
+                    produto.nome || "",
+
+                categoria:
+                    produto.categoria ||
+                    "Outros",
+
+                descricao:
+                    produto.descricao || "",
+
+                custo:
+                    custo,
+
+                preco:
+                    preco,
+
+                lucro:
+                    calcularLucroProduto(
+                        custo,
+                        preco
+                    ),
+
+                margem:
+                    calcularMargemProduto(
+                        custo,
+                        preco
+                    ),
+
+                estoque:
+                    estoque,
+
+                estoqueMinimo:
+                    estoqueMinimo,
+
+                status:
+                    definirStatusProduto(
+                        estoque,
+                        estoqueMinimo
+                    ),
+
+                dataCadastro:
+                    produto.dataCadastro || "",
+
+                observacoes:
+                    produto.observacoes || ""
+            };
+        }
+    );
+
+    salvarProdutos();
+}
+
+function mostrarProdutos() {
+    if (!listaProdutos) {
+        return;
+    }
+
+    if (produtos.length === 0) {
+        listaProdutos.innerHTML =
+            "<p>Nenhum produto cadastrado.</p>";
+
+        atualizarResumoProdutos();
+        atualizarDashboard();
+        return;
+    }
+
+    listaProdutos.innerHTML =
+        produtos
+            .map(function (produto) {
+                const descricao =
+                    produto.descricao
+                        ? escaparTexto(
+                            produto.descricao
+                        )
+                        : "Não informada";
+
+                const observacoes =
+                    produto.observacoes
+                        ? escaparTexto(
+                            produto.observacoes
+                        )
+                        : "Nenhuma";
+
+                return `
+                    <div
 
     function escaparTexto(texto) {
         const elemento = document.createElement("div");
