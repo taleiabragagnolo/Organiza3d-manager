@@ -3018,7 +3018,461 @@ window.excluirImpressora =
         );
 
     };
-    
+  // =========================
+// PEÇAS
+// =========================
+
+const botaoSalvarPeca =
+    document.getElementById(
+        "salvar-peca"
+    );
+
+const botaoLimparFormularioPeca =
+    document.getElementById(
+        "limpar-formulario-peca"
+    );
+
+const listaPecas =
+    document.getElementById(
+        "lista-pecas"
+    );
+
+
+// =========================
+// CÁLCULO DO VALOR UNITÁRIO
+// =========================
+
+function atualizarValorUnitarioPeca() {
+
+    const quantidade =
+        obterNumeroCampoEquipamentos(
+            "peca-quantidade"
+        );
+
+    const valorTotal =
+        obterNumeroCampoEquipamentos(
+            "peca-valor-total"
+        );
+
+    const valorUnitario =
+        quantidade > 0
+            ? valorTotal / quantidade
+            : 0;
+
+    definirValorCampoEquipamentos(
+        "peca-valor-unitario",
+        formatarDinheiro(
+            valorUnitario
+        )
+    );
+
+}
+
+
+[
+    "peca-quantidade",
+    "peca-valor-total"
+].forEach(
+    function (id) {
+
+        const campo =
+            document.getElementById(id);
+
+        if (campo) {
+
+            campo.addEventListener(
+                "input",
+                atualizarValorUnitarioPeca
+            );
+
+        }
+
+    }
+);
+
+
+// =========================
+// RESUMO DAS PEÇAS
+// =========================
+
+function atualizarResumoPecas() {
+
+    const quantidadeTotal =
+        pecasEquipamentos.reduce(
+            function (total, peca) {
+
+                return total +
+                    Number(
+                        peca.quantidadeAtual || 0
+                    );
+
+            },
+            0
+        );
+
+
+    const estoqueBaixo =
+        pecasEquipamentos.filter(
+            function (peca) {
+
+                return (
+                    Number(
+                        peca.quantidadeAtual || 0
+                    ) <=
+
+                    Number(
+                        peca.estoqueMinimo || 0
+                    )
+                );
+
+            }
+        ).length;
+
+
+    const valorEstoque =
+        pecasEquipamentos.reduce(
+            function (total, peca) {
+
+                return total +
+
+                    Number(
+                        peca.quantidadeAtual || 0
+                    ) *
+
+                    Number(
+                        peca.valorUnitario || 0
+                    );
+
+            },
+            0
+        );
+
+
+    definirTextoEquipamentos(
+        "equipamentos-total-pecas",
+        pecasEquipamentos.length
+    );
+
+
+    definirTextoEquipamentos(
+        "equipamentos-pecas-quantidade",
+        quantidadeTotal.toLocaleString(
+            "pt-BR"
+        )
+    );
+
+
+    definirTextoEquipamentos(
+        "equipamentos-pecas-estoque-baixo",
+        estoqueBaixo
+    );
+
+
+    definirTextoEquipamentos(
+        "equipamentos-pecas-valor-estoque",
+        formatarDinheiro(
+            valorEstoque
+        )
+    );
+
+}
+
+
+// =========================
+// MOSTRAR PEÇAS
+// =========================
+
+function mostrarPecasEquipamentos() {
+
+    if (!listaPecas) {
+
+        atualizarResumoPecas();
+
+        return;
+
+    }
+
+
+    if (pecasEquipamentos.length === 0) {
+
+        listaPecas.innerHTML =
+            "<p>Nenhuma peça cadastrada.</p>";
+
+
+        atualizarResumoPecas();
+
+
+        if (
+            typeof atualizarOpcoesEquipamentos ===
+            "function"
+        ) {
+
+            atualizarOpcoesEquipamentos();
+
+        }
+
+        return;
+
+    }
+
+
+    listaPecas.innerHTML =
+        pecasEquipamentos.map(
+            function (peca) {
+
+                const quantidadeAtual =
+                    Number(
+                        peca.quantidadeAtual || 0
+                    );
+
+
+                const estoqueMinimo =
+                    Number(
+                        peca.estoqueMinimo || 0
+                    );
+
+
+                const estoqueBaixo =
+                    quantidadeAtual <=
+                    estoqueMinimo;
+
+
+                const valorAtualEstoque =
+                    quantidadeAtual *
+
+                    Number(
+                        peca.valorUnitario || 0
+                    );
+
+
+                return `
+                    <div class="card-item">
+
+                        <h4>
+                            ${escaparTexto(
+                                peca.nome
+                            )}
+                        </h4>
+
+                        <p>
+                            <strong>
+                                Categoria:
+                            </strong>
+
+                            ${escaparTexto(
+                                peca.categoria
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Marca:
+                            </strong>
+
+                            ${escaparTexto(
+                                peca.marca ||
+                                "Não informada"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Código:
+                            </strong>
+
+                            ${escaparTexto(
+                                peca.codigo ||
+                                "Não informado"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Estoque atual:
+                            </strong>
+
+                            ${quantidadeAtual}
+                            unidade(s)
+                        </p>
+
+                        <p>
+                            <strong>
+                                Estoque mínimo:
+                            </strong>
+
+                            ${estoqueMinimo}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Situação:
+                            </strong>
+
+                            ${
+                                estoqueBaixo
+                                    ? "⚠️ Estoque baixo"
+                                    : "✅ Estoque suficiente"
+                            }
+                        </p>
+
+                        <p>
+                            <strong>
+                                Valor unitário:
+                            </strong>
+
+                            ${formatarDinheiro(
+                                peca.valorUnitario
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Valor atual em estoque:
+                            </strong>
+
+                            ${formatarDinheiro(
+                                valorAtualEstoque
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Data da compra:
+                            </strong>
+
+                            ${formatarDataEquipamentos(
+                                peca.dataCompra
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Fornecedor:
+                            </strong>
+
+                            ${escaparTexto(
+                                peca.fornecedor ||
+                                "Não informado"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Compatibilidade:
+                            </strong>
+
+                            ${escaparTexto(
+                                peca.compatibilidade ||
+                                "Não informada"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Observações:
+                            </strong>
+
+                            ${escaparTexto(
+                                peca.observacoes ||
+                                "Nenhuma"
+                            )}
+                        </p>
+
+                        <button
+                            type="button"
+                            class="botao-principal"
+                            onclick="editarPecaEquipamento(${peca.id})">
+
+                            Editar
+
+                        </button>
+
+                        <button
+                            type="button"
+                            onclick="adicionarEstoquePeca(${peca.id})">
+
+                            Adicionar estoque
+
+                        </button>
+
+                        <button
+                            type="button"
+                            class="botao-excluir"
+                            onclick="excluirPecaEquipamento(${peca.id})">
+
+                            Excluir
+
+                        </button>
+
+                    </div>
+                `;
+
+            }
+        ).join("");
+
+
+    atualizarResumoPecas();
+
+
+    if (
+        typeof atualizarOpcoesEquipamentos ===
+        "function"
+    ) {
+
+        atualizarOpcoesEquipamentos();
+
+    }
+
+}
+
+
+// =========================
+// LIMPAR FORMULÁRIO DE PEÇAS
+// =========================
+
+function limparFormularioPeca() {
+
+    pecaEmEdicaoId = null;
+
+
+    [
+        "peca-nome",
+        "peca-categoria",
+        "peca-marca",
+        "peca-codigo",
+        "peca-quantidade",
+        "peca-estoque-minimo",
+        "peca-valor-total",
+        "peca-data-compra",
+        "peca-fornecedor",
+        "peca-compatibilidade",
+        "peca-observacoes"
+    ].forEach(
+        function (id) {
+
+            definirValorCampoEquipamentos(
+                id,
+                ""
+            );
+
+        }
+    );
+
+
+    definirValorCampoEquipamentos(
+        "peca-valor-unitario",
+        "R$ 0,00"
+    );
+
+
+    if (botaoSalvarPeca) {
+
+        botaoSalvarPeca.textContent =
+            "Salvar Peça";
+
+    }
+
+}  
 // =========================
 // FINANCEIRO 2.0
 // =========================
