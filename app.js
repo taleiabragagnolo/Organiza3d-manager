@@ -13432,29 +13432,7 @@ const campoSenha = document.getElementById("login-senha");
 const botaoEntrar = document.getElementById("entrar-sistema");
 const mensagemLogin = document.getElementById("mensagem-login");
 
-let usuarioSistema =
-    JSON.parse(localStorage.getItem("usuarioAdministrador")) || null;
 
-if (!usuarioSistema) {
-
-    const usuario = prompt("Crie o usuário administrador:");
-
-    const senha = prompt("Crie a senha do administrador:");
-
-    usuarioSistema = {
-        usuario,
-        senha
-    };
-
-    localStorage.setItem(
-        "usuarioAdministrador",
-        JSON.stringify(usuarioSistema)
-    );
-
-    alert("Administrador criado com sucesso!");
-}
-
-function abrirSistema() {
 
     telaLogin.style.display = "none";
 
