@@ -5,15 +5,24 @@
 }
 
 :root {
-    --cor-principal: #7c3aed;
-    --cor-principal-escura: #5b21b6;
-    --cor-fundo: #f5f3ff;
-    --cor-branca: #ffffff;
-    --cor-texto: #2d2438;
-    --cor-texto-claro: #756d80;
-    --cor-borda: #e7e1ef;
-    --cor-menu: #20172d;
-    --sombra: 0 8px 24px rgba(50, 35, 70, 0.1);
+    /* CORES DA LOGO ORGANIZA 3D */
+
+    --cor-principal: #958e76;
+    --cor-principal-escura: #664f38;
+    --cor-principal-clara: #d9c5b5;
+    --cor-rose: #cb9f8b;
+    --cor-rose-escura: #a97865;
+    --cor-fundo: #f8f3ed;
+    --cor-branca: #fffdf9;
+    --cor-texto: #4f3d2d;
+    --cor-texto-claro: #81684e;
+    --cor-borda: #e3d5c8;
+    --cor-menu: #5b4938;
+    --cor-aviso: #fff1dc;
+    --cor-perigo: #b85c5c;
+    --cor-sucesso: #71856c;
+
+    --sombra: 0 8px 24px rgba(102, 79, 56, 0.12);
 }
 
 body {
