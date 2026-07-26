@@ -1170,31 +1170,251 @@ window.excluirCliente = function (id) {
     atualizarTotalClientes();
 };
 // =========================
-// EQUIPAMENTOS
-// ANTIGO MÓDULO IMPRESSORAS
+// EQUIPAMENTOS 2.0
 // =========================
 
-let impressoras = [];
+let impressoras = carregarListaEquipamentos(
+    "organiza3d_impressoras"
+);
 
-try {
-    impressoras =
-        JSON.parse(
-            localStorage.getItem(
-                "organiza3d_impressoras"
-            )
-        ) || [];
-} catch (erro) {
-    console.error(
-        "Não foi possível carregar as impressoras.",
-        erro
+let pecasEquipamentos = carregarListaEquipamentos(
+    "organiza3d_pecas"
+);
+
+let lubrificantesEquipamentos = carregarListaEquipamentos(
+    "organiza3d_lubrificantes"
+);
+
+let manutencoesEquipamentos = carregarListaEquipamentos(
+    "organiza3d_manutencoes"
+);
+
+let registrosHorasEquipamentos = carregarListaEquipamentos(
+    "organiza3d_horas_equipamentos"
+);
+
+let diarioEquipamentos = carregarListaEquipamentos(
+    "organiza3d_diario_equipamentos"
+);
+
+let impressoraEmEdicaoId = null;
+let pecaEmEdicaoId = null;
+let lubrificanteEmEdicaoId = null;
+let manutencaoEmEdicaoId = null;
+
+function carregarListaEquipamentos(chave) {
+    try {
+        const dados = JSON.parse(
+            localStorage.getItem(chave)
+        );
+
+        return Array.isArray(dados)
+            ? dados
+            : [];
+    } catch (erro) {
+        console.error(
+            `Não foi possível carregar ${chave}.`,
+            erro
+        );
+
+        return [];
+    }
+}
+
+function salvarListaEquipamentos(
+    chave,
+    lista
+) {
+    localStorage.setItem(
+        chave,
+        JSON.stringify(lista)
+    );
+}
+
+function obterDataHojeEquipamentos() {
+    const hoje = new Date();
+
+    const ano = hoje.getFullYear();
+
+    const mes = String(
+        hoje.getMonth() + 1
+    ).padStart(2, "0");
+
+    const dia = String(
+        hoje.getDate()
+    ).padStart(2, "0");
+
+    return `${ano}-${mes}-${dia}`;
+}
+
+function formatarDataEquipamentos(data) {
+    if (!data) {
+        return "Não informada";
+    }
+
+    const partes = data.split("-");
+
+    if (partes.length !== 3) {
+        return data;
+    }
+
+    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+}
+
+function formatarHorasEquipamentos(horas) {
+    const total = Number(horas || 0);
+
+    const sinal = total < 0
+        ? "-"
+        : "";
+
+    const valorAbsoluto = Math.abs(total);
+
+    let horasInteiras = Math.floor(
+        valorAbsoluto
     );
 
-    impressoras = [];
+    let minutos = Math.round(
+        (valorAbsoluto - horasInteiras) * 60
+    );
+
+    if (minutos >= 60) {
+        horasInteiras += 1;
+        minutos = 0;
+    }
+
+    if (minutos === 0) {
+        return `${sinal}${horasInteiras}h`;
+    }
+
+    return `${sinal}${horasInteiras}h ${minutos}min`;
+}
+
+function definirTextoEquipamentos(
+    id,
+    valor
+) {
+    const campo = document.getElementById(id);
+
+    if (campo) {
+        campo.textContent = valor;
+    }
+}
+
+function obterNumeroCampoEquipamentos(id) {
+    const campo = document.getElementById(id);
+
+    if (!campo) {
+        return 0;
+    }
+
+    return Number(
+        String(campo.value || "0")
+            .replace(",", ".")
+    );
+}
+
+function obterTextoCampoEquipamentos(id) {
+    const campo = document.getElementById(id);
+
+    return campo
+        ? campo.value.trim()
+        : "";
+}
+
+function definirValorCampoEquipamentos(
+    id,
+    valor
+) {
+    const campo = document.getElementById(id);
+
+    if (campo) {
+        campo.value = valor;
+    }
+}
+
+function obterTotalHorasImpressora(impressora) {
+    return Math.max(
+        0,
+        Number(impressora.horasIniciais || 0) +
+        Number(impressora.horasProducoes || 0) +
+        Number(impressora.horasAjustes || 0)
+    );
+}
+
+function salvarImpressoras() {
+    salvarListaEquipamentos(
+        "organiza3d_impressoras",
+        impressoras
+    );
+}
+
+function salvarPecasEquipamentos() {
+    salvarListaEquipamentos(
+        "organiza3d_pecas",
+        pecasEquipamentos
+    );
+}
+
+function salvarLubrificantesEquipamentos() {
+    salvarListaEquipamentos(
+        "organiza3d_lubrificantes",
+        lubrificantesEquipamentos
+    );
+}
+
+function salvarManutencoesEquipamentos() {
+    salvarListaEquipamentos(
+        "organiza3d_manutencoes",
+        manutencoesEquipamentos
+    );
+}
+
+function salvarRegistrosHorasEquipamentos() {
+    salvarListaEquipamentos(
+        "organiza3d_horas_equipamentos",
+        registrosHorasEquipamentos
+    );
+}
+
+function salvarDiarioEquipamentos() {
+    salvarListaEquipamentos(
+        "organiza3d_diario_equipamentos",
+        diarioEquipamentos
+    );
+}
+
+function registrarDiarioEquipamento(dados) {
+    diarioEquipamentos.push({
+        id: Date.now() + Math.random(),
+
+        data:
+            dados.data ||
+            obterDataHojeEquipamentos(),
+
+        impressoraId:
+            dados.impressoraId || null,
+
+        impressoraNome:
+            dados.impressoraNome || "Geral",
+
+        tipo:
+            dados.tipo || "Outro",
+
+        titulo:
+            dados.titulo || "Ocorrência",
+
+        descricao:
+            dados.descricao || ""
+    });
+
+    salvarDiarioEquipamentos();
+    mostrarDiarioEquipamentos();
 }
 
 
 // =========================
-// ELEMENTOS DAS ABAS
+// ABAS
 // =========================
 
 const botoesAbasEquipamentos =
@@ -1207,9 +1427,400 @@ const conteudosAbasEquipamentos =
         ".conteudo-aba-equipamento"
     );
 
+function abrirAbaEquipamento(idAba) {
+    conteudosAbasEquipamentos.forEach(
+        function (conteudo) {
+            const ativa =
+                conteudo.id === idAba;
+
+            conteudo.hidden = !ativa;
+
+            conteudo.classList.toggle(
+                "ativo",
+                ativa
+            );
+        }
+    );
+
+    botoesAbasEquipamentos.forEach(
+        function (botao) {
+            const ativo =
+                botao.dataset.abaEquipamento ===
+                idAba;
+
+            botao.classList.toggle(
+                "botao-principal",
+                ativo
+            );
+        }
+    );
+}
+
+botoesAbasEquipamentos.forEach(
+    function (botao) {
+        botao.addEventListener(
+            "click",
+            function () {
+                abrirAbaEquipamento(
+                    botao.dataset.abaEquipamento
+                );
+            }
+        );
+    }
+);
+
 
 // =========================
-// ELEMENTOS DO FORMULÁRIO
+// NORMALIZAÇÃO DOS DADOS
+// =========================
+
+function normalizarDadosEquipamentos() {
+    impressoras = impressoras.map(
+        function (impressora, indice) {
+            return {
+                id:
+                    impressora.id ||
+                    Date.now() + indice,
+
+                nome:
+                    impressora.nome || "",
+
+                marca:
+                    impressora.marca || "",
+
+                modelo:
+                    impressora.modelo || "",
+
+                serie:
+                    impressora.serie || "",
+
+                dataCompra:
+                    impressora.dataCompra || "",
+
+                valor:
+                    Number(
+                        impressora.valor || 0
+                    ),
+
+                status:
+                    impressora.status || "Ativa",
+
+                horasIniciais:
+                    Number(
+                        impressora.horasIniciais ??
+                        impressora.horasUso ??
+                        impressora.horas ??
+                        0
+                    ),
+
+                horasProducoes:
+                    Number(
+                        impressora.horasProducoes || 0
+                    ),
+
+                horasAjustes:
+                    Number(
+                        impressora.horasAjustes || 0
+                    ),
+
+                ultimaManutencao:
+                    impressora.ultimaManutencao || "",
+
+                proximaManutencao:
+                    impressora.proximaManutencao || "",
+
+                proximasHorasManutencao:
+                    Number(
+                        impressora.proximasHorasManutencao ||
+                        0
+                    ),
+
+                observacoes:
+                    impressora.observacoes || ""
+            };
+        }
+    );
+
+    pecasEquipamentos = pecasEquipamentos.map(
+        function (peca, indice) {
+            const quantidadeInicial = Number(
+                peca.quantidadeInicial ??
+                peca.quantidadeComprada ??
+                peca.quantidade ??
+                0
+            );
+
+            const quantidadeAtual = Number(
+                peca.quantidadeAtual ??
+                peca.quantidade ??
+                quantidadeInicial
+            );
+
+            return {
+                id:
+                    peca.id ||
+                    Date.now() + indice + 1000,
+
+                nome:
+                    peca.nome || "",
+
+                categoria:
+                    peca.categoria || "Outro",
+
+                marca:
+                    peca.marca || "",
+
+                codigo:
+                    peca.codigo || "",
+
+                quantidadeInicial:
+                    quantidadeInicial,
+
+                quantidadeAtual:
+                    quantidadeAtual,
+
+                estoqueMinimo:
+                    Number(
+                        peca.estoqueMinimo || 0
+                    ),
+
+                valorTotal:
+                    Number(
+                        peca.valorTotal || 0
+                    ),
+
+                valorUnitario:
+                    Number(
+                        peca.valorUnitario ||
+                        (
+                            quantidadeInicial > 0
+                                ? Number(
+                                    peca.valorTotal || 0
+                                ) / quantidadeInicial
+                                : 0
+                        )
+                    ),
+
+                dataCompra:
+                    peca.dataCompra || "",
+
+                fornecedor:
+                    peca.fornecedor || "",
+
+                compatibilidade:
+                    peca.compatibilidade || "",
+
+                observacoes:
+                    peca.observacoes || ""
+            };
+        }
+    );
+
+    lubrificantesEquipamentos =
+        lubrificantesEquipamentos.map(
+            function (item, indice) {
+                const quantidadeInicial = Number(
+                    item.quantidadeInicial ??
+                    item.quantidadeComprada ??
+                    item.quantidade ??
+                    0
+                );
+
+                const quantidadeAtual = Number(
+                    item.quantidadeAtual ??
+                    item.quantidade ??
+                    quantidadeInicial
+                );
+
+                return {
+                    id:
+                        item.id ||
+                        Date.now() + indice + 2000,
+
+                    nome:
+                        item.nome || "",
+
+                    tipo:
+                        item.tipo || "Outro",
+
+                    marca:
+                        item.marca || "",
+
+                    unidade:
+                        item.unidade || "Unidade",
+
+                    quantidadeInicial:
+                        quantidadeInicial,
+
+                    quantidadeAtual:
+                        quantidadeAtual,
+
+                    estoqueMinimo:
+                        Number(
+                            item.estoqueMinimo || 0
+                        ),
+
+                    valorTotal:
+                        Number(
+                            item.valorTotal || 0
+                        ),
+
+                    valorUnitario:
+                        Number(
+                            item.valorUnitario ||
+                            (
+                                quantidadeInicial > 0
+                                    ? Number(
+                                        item.valorTotal || 0
+                                    ) / quantidadeInicial
+                                    : 0
+                            )
+                        ),
+
+                    dataCompra:
+                        item.dataCompra || "",
+
+                    fornecedor:
+                        item.fornecedor || "",
+
+                    aplicacao:
+                        item.aplicacao || "",
+
+                    observacoes:
+                        item.observacoes || ""
+                };
+            }
+        );
+
+    manutencoesEquipamentos =
+        manutencoesEquipamentos.map(
+            function (item, indice) {
+                return {
+                    id:
+                        item.id ||
+                        Date.now() + indice + 3000,
+
+                    impressoraId:
+                        item.impressoraId || null,
+
+                    impressoraNome:
+                        item.impressoraNome || "",
+
+                    tipo:
+                        item.tipo || "Outra",
+
+                    data:
+                        item.data || "",
+
+                    horasImpressora:
+                        Number(
+                            item.horasImpressora || 0
+                        ),
+
+                    descricao:
+                        item.descricao || "",
+
+                    pecaId:
+                        item.pecaId || null,
+
+                    pecaNome:
+                        item.pecaNome || "",
+
+                    quantidadePeca:
+                        Number(
+                            item.quantidadePeca || 0
+                        ),
+
+                    custoPeca:
+                        Number(
+                            item.custoPeca || 0
+                        ),
+
+                    lubrificanteId:
+                        item.lubrificanteId || null,
+
+                    lubrificanteNome:
+                        item.lubrificanteNome || "",
+
+                    quantidadeLubrificante:
+                        Number(
+                            item.quantidadeLubrificante || 0
+                        ),
+
+                    custoLubrificante:
+                        Number(
+                            item.custoLubrificante || 0
+                        ),
+
+                    custoServico:
+                        Number(
+                            item.custoServico || 0
+                        ),
+
+                    custoTotal:
+                        Number(
+                            item.custoTotal || 0
+                        ),
+
+                    responsavel:
+                        item.responsavel || "",
+
+                    proximaData:
+                        item.proximaData || "",
+
+                    proximasHoras:
+                        Number(
+                            item.proximasHoras || 0
+                        ),
+
+                    observacoes:
+                        item.observacoes || ""
+                };
+            }
+        );
+
+    registrosHorasEquipamentos =
+        registrosHorasEquipamentos.map(
+            function (item, indice) {
+                return {
+                    id:
+                        item.id ||
+                        Date.now() + indice + 4000,
+
+                    impressoraId:
+                        item.impressoraId || null,
+
+                    impressoraNome:
+                        item.impressoraNome || "",
+
+                    data:
+                        item.data || "",
+
+                    horas:
+                        Number(
+                            item.horas || 0
+                        ),
+
+                    motivo:
+                        item.motivo || "Outro",
+
+                    observacoes:
+                        item.observacoes || "",
+
+                    origem:
+                        item.origem || "Manual"
+                };
+            }
+        );
+
+    salvarImpressoras();
+    salvarPecasEquipamentos();
+    salvarLubrificantesEquipamentos();
+    salvarManutencoesEquipamentos();
+    salvarRegistrosHorasEquipamentos();
+}
+// =========================
+// IMPRESSORAS
 // =========================
 
 const botaoSalvarImpressora =
@@ -1227,1153 +1838,1187 @@ const listaImpressoras =
         "lista-impressoras"
     );
 
-const campoNomeImpressora =
-    document.getElementById(
-        "nome-impressora"
-    );
-
-const campoMarcaImpressora =
-    document.getElementById(
-        "marca-impressora"
-    );
-
-const campoModeloImpressora =
-    document.getElementById(
-        "modelo-impressora"
-    );
-
-const campoSerieImpressora =
-    document.getElementById(
-        "serie-impressora"
-    );
-
-const campoDataCompraImpressora =
-    document.getElementById(
-        "data-compra-impressora"
-    );
-
-const campoValorImpressora =
-    document.getElementById(
-        "valor-impressora"
-    );
-
-const campoStatusImpressora =
-    document.getElementById(
-        "status-impressora"
-    );
-
-const campoHorasIniciaisImpressora =
-    document.getElementById(
-        "horas-iniciais-impressora"
-    );
-
-const campoUltimaManutencaoImpressora =
-    document.getElementById(
-        "ultima-manutencao-impressora"
-    );
-
-const campoProximaManutencaoImpressora =
-    document.getElementById(
-        "proxima-manutencao-impressora"
-    );
-
-const campoObservacoesImpressora =
-    document.getElementById(
-        "observacoes-impressora"
-    );
-
-
-// =========================
-// ELEMENTOS DOS RESUMOS
-// =========================
-
-const totalImpressorasDashboard =
-    document.getElementById(
-        "total-impressoras"
-    );
-
-const totalImpressorasEquipamentos =
-    document.getElementById(
-        "equipamentos-total-impressoras"
-    );
-
-const totalImpressorasAtivas =
-    document.getElementById(
-        "equipamentos-impressoras-ativas"
-    );
-
-const totalImpressorasManutencao =
-    document.getElementById(
-        "equipamentos-impressoras-manutencao"
-    );
-
-const totalHorasEquipamentos =
-    document.getElementById(
-        "equipamentos-total-horas"
-    );
-
-
-// =========================
-// FUNÇÕES DAS ABAS
-// =========================
-
-function abrirAbaEquipamento(
-    idAba
-) {
-    conteudosAbasEquipamentos.forEach(
-        function (conteudo) {
-            const abaAtiva =
-                conteudo.id === idAba;
-
-            conteudo.hidden =
-                !abaAtiva;
-
-            conteudo.classList.toggle(
-                "ativo",
-                abaAtiva
-            );
-        }
-    );
-
-    botoesAbasEquipamentos.forEach(
-        function (botao) {
-            const botaoAtivo =
-                botao.dataset
-                    .abaEquipamento ===
-                idAba;
-
-            botao.classList.toggle(
-                "botao-principal",
-                botaoAtivo
-            );
-        }
-    );
-}
-
-botoesAbasEquipamentos.forEach(
-    function (botao) {
-        botao.addEventListener(
-            "click",
-            function () {
-                const idAba =
-                    botao.dataset
-                        .abaEquipamento;
-
-                if (!idAba) {
-                    return;
-                }
-
-                abrirAbaEquipamento(
-                    idAba
-                );
-            }
-        );
-    }
-);
-
-
-// =========================
-// ARMAZENAMENTO
-// =========================
-
-function salvarImpressoras() {
-    localStorage.setItem(
-        "organiza3d_impressoras",
-        JSON.stringify(
-            impressoras
-        )
-    );
-}
-
-
-// =========================
-// DATA
-// =========================
-
-function formatarDataImpressora(
-    data
-) {
-    if (!data) {
-        return "Não informada";
-    }
-
-    const partes =
-        data.split("-");
-
-    if (partes.length !== 3) {
-        return data;
-    }
-
-    return (
-        `${partes[2]}/` +
-        `${partes[1]}/` +
-        `${partes[0]}`
-    );
-}
-
-
-// =========================
-// HORAS
-// =========================
-
-function formatarHorasImpressora(
-    horas
-) {
-    const totalHoras =
-        Math.max(
-            0,
-            Number(horas || 0)
-        );
-
-    const horasInteiras =
-        Math.floor(totalHoras);
-
-    const minutos =
-        Math.round(
-            (totalHoras - horasInteiras) *
-            60
-        );
-
-    if (minutos >= 60) {
-        return `${horasInteiras + 1}h`;
-    }
-
-    if (minutos <= 0) {
-        return `${horasInteiras}h`;
-    }
-
-    return (
-        `${horasInteiras}h ` +
-        `${minutos}min`
-    );
-}
-
-
-// =========================
-// NORMALIZAÇÃO
-// =========================
-
-function normalizarImpressorasAntigas() {
-    impressoras =
-        impressoras.map(
-            function (
-                impressora,
-                indice
-            ) {
-                const horasIniciais =
-                    Number(
-                        impressora
-                            .horasIniciais ??
-                        impressora
-                            .horasUso ??
-                        impressora
-                            .horas ??
-                        0
-                    );
-
-                const horasProducoes =
-                    Number(
-                        impressora
-                            .horasProducoes ??
-                        0
-                    );
-
-                const horasAjustes =
-                    Number(
-                        impressora
-                            .horasAjustes ??
-                        0
-                    );
-
-                return {
-                    id:
-                        impressora.id ||
-                        Date.now() +
-                        indice,
-
-                    nome:
-                        impressora.nome ||
-                        "",
-
-                    marca:
-                        impressora.marca ||
-                        "",
-
-                    modelo:
-                        impressora.modelo ||
-                        "",
-
-                    serie:
-                        impressora.serie ||
-                        "",
-
-                    dataCompra:
-                        impressora
-                            .dataCompra ||
-                        "",
-
-                    valor:
-                        Number(
-                            impressora
-                                .valor ||
-                            0
-                        ),
-
-                    status:
-                        impressora.status ||
-                        "Ativa",
-
-                    horasIniciais:
-                        Number.isNaN(
-                            horasIniciais
-                        )
-                            ? 0
-                            : Math.max(
-                                0,
-                                horasIniciais
-                            ),
-
-                    horasProducoes:
-                        Number.isNaN(
-                            horasProducoes
-                        )
-                            ? 0
-                            : Math.max(
-                                0,
-                                horasProducoes
-                            ),
-
-                    horasAjustes:
-                        Number.isNaN(
-                            horasAjustes
-                        )
-                            ? 0
-                            : horasAjustes,
-
-                    ultimaManutencao:
-                        impressora
-                            .ultimaManutencao ||
-                        "",
-
-                    proximaManutencao:
-                        impressora
-                            .proximaManutencao ||
-                        "",
-
-                    observacoes:
-                        impressora
-                            .observacoes ||
-                        ""
-                };
-            }
-        );
-
-    salvarImpressoras();
-}
-
-
-// =========================
-// CÁLCULO DAS HORAS
-// =========================
-
-function obterTotalHorasImpressora(
-    impressora
-) {
-    const horasIniciais =
-        Number(
-            impressora
-                .horasIniciais ||
-            0
-        );
-
-    const horasProducoes =
-        Number(
-            impressora
-                .horasProducoes ||
-            0
-        );
-
-    const horasAjustes =
-        Number(
-            impressora
-                .horasAjustes ||
-            0
-        );
-
-    return Math.max(
-        0,
-        horasIniciais +
-        horasProducoes +
-        horasAjustes
-    );
-}
-
-
-// =========================
-// RESUMO
-// =========================
 
 function atualizarResumoImpressoras() {
-    const impressorasAtivas =
-        impressoras.filter(
-            function (impressora) {
-                return (
-                    impressora.status ===
-                    "Ativa"
+
+    const ativas = impressoras.filter(
+        function (impressora) {
+
+            return impressora.status === "Ativa";
+
+        }
+    ).length;
+
+
+    const emManutencao = impressoras.filter(
+        function (impressora) {
+
+            return impressora.status ===
+                "Em manutenção";
+
+        }
+    ).length;
+
+
+    const totalHoras = impressoras.reduce(
+        function (total, impressora) {
+
+            return total +
+                obterTotalHorasImpressora(
+                    impressora
                 );
-            }
-        ).length;
 
-    const impressorasEmManutencao =
-        impressoras.filter(
-            function (impressora) {
-                return (
-                    impressora.status ===
-                    "Em manutenção"
-                );
-            }
-        ).length;
+        },
+        0
+    );
 
-    const totalHoras =
-        impressoras.reduce(
-            function (
-                total,
-                impressora
-            ) {
-                return (
-                    total +
-                    obterTotalHorasImpressora(
-                        impressora
-                    )
-                );
-            },
-            0
-        );
 
-    if (
-        totalImpressorasDashboard
-    ) {
-        totalImpressorasDashboard
-            .textContent =
-            impressoras.length;
-    }
+    definirTextoEquipamentos(
+        "total-impressoras",
+        impressoras.length
+    );
 
-    if (
-        totalImpressorasEquipamentos
-    ) {
-        totalImpressorasEquipamentos
-            .textContent =
-            impressoras.length;
-    }
 
-    if (
-        totalImpressorasAtivas
-    ) {
-        totalImpressorasAtivas
-            .textContent =
-            impressorasAtivas;
-    }
+    definirTextoEquipamentos(
+        "equipamentos-total-impressoras",
+        impressoras.length
+    );
 
-    if (
-        totalImpressorasManutencao
-    ) {
-        totalImpressorasManutencao
-            .textContent =
-            impressorasEmManutencao;
-    }
 
-    if (
-        totalHorasEquipamentos
-    ) {
-        totalHorasEquipamentos
-            .textContent =
-            formatarHorasImpressora(
-                totalHoras
-            );
-    }
+    definirTextoEquipamentos(
+        "equipamentos-impressoras-ativas",
+        ativas
+    );
 
-    const relatorioImpressoras =
-        document.getElementById(
-            "relatorio-impressoras"
-        );
 
-    const relatorioImpressorasAtivas =
-        document.getElementById(
-            "relatorio-impressoras-ativas"
-        );
+    definirTextoEquipamentos(
+        "equipamentos-impressoras-manutencao",
+        emManutencao
+    );
 
-    if (relatorioImpressoras) {
-        relatorioImpressoras
-            .textContent =
-            impressoras.length;
-    }
 
-    if (
-        relatorioImpressorasAtivas
-    ) {
-        relatorioImpressorasAtivas
-            .textContent =
-            impressorasAtivas;
-    }
+    definirTextoEquipamentos(
+        "equipamentos-total-horas",
+        formatarHorasEquipamentos(
+            totalHoras
+        )
+    );
+
+
+    definirTextoEquipamentos(
+        "relatorio-impressoras",
+        impressoras.length
+    );
+
+
+    definirTextoEquipamentos(
+        "relatorio-impressoras-ativas",
+        ativas
+    );
+
 }
 
 
-// =========================
-// LISTAGEM
-// =========================
-
 function mostrarImpressoras() {
+
     if (!listaImpressoras) {
+
         atualizarResumoImpressoras();
+
         return;
+
     }
 
+
     if (impressoras.length === 0) {
+
         listaImpressoras.innerHTML =
             "<p>Nenhuma impressora cadastrada.</p>";
 
+
         atualizarResumoImpressoras();
+
+
+        if (
+            typeof atualizarOpcoesEquipamentos ===
+            "function"
+        ) {
+
+            atualizarOpcoesEquipamentos();
+
+        }
+
         return;
+
     }
+
 
     listaImpressoras.innerHTML =
-        impressoras
-            .map(
-                function (
-                    impressora
-                ) {
-                    const totalHoras =
-                        obterTotalHorasImpressora(
-                            impressora
-                        );
+        impressoras.map(
+            function (impressora) {
 
-                    const marca =
-                        impressora.marca
-                            ? escaparTexto(
-                                impressora
-                                    .marca
-                            )
-                            : "Não informada";
-
-                    const modelo =
-                        impressora.modelo
-                            ? escaparTexto(
-                                impressora
-                                    .modelo
-                            )
-                            : "Não informado";
-
-                    const serie =
-                        impressora.serie
-                            ? escaparTexto(
-                                impressora
-                                    .serie
-                            )
-                            : "Não informado";
-
-                    const observacoes =
+                const horasTotais =
+                    obterTotalHorasImpressora(
                         impressora
-                            .observacoes
-                            ? escaparTexto(
-                                impressora
-                                    .observacoes
-                            )
-                            : "Nenhuma";
+                    );
 
-                    return `
-                        <div class="card-item">
 
-                            <h4>
-                                ${escaparTexto(
-                                    impressora.nome
-                                )}
-                            </h4>
+                const proximaManutencaoHoras =
+                    Number(
+                        impressora
+                            .proximasHorasManutencao ||
+                        0
+                    );
 
-                            <p>
-                                <strong>Marca:</strong>
-                                ${marca}
-                            </p>
 
-                            <p>
-                                <strong>Modelo:</strong>
-                                ${modelo}
-                            </p>
+                let avisoManutencao = "";
 
-                            <p>
-                                <strong>Número de série:</strong>
-                                ${serie}
-                            </p>
 
-                            <p>
-                                <strong>Data da compra:</strong>
-                                ${formatarDataImpressora(
-                                    impressora
-                                        .dataCompra
-                                )}
-                            </p>
+                if (
+                    proximaManutencaoHoras > 0 &&
+                    horasTotais >=
+                        proximaManutencaoHoras
+                ) {
 
-                            <p>
-                                <strong>Valor pago:</strong>
-                                ${formatarDinheiro(
-                                    impressora.valor
-                                )}
-                            </p>
-
-                            <p>
-                                <strong>Status:</strong>
-                                ${escaparTexto(
-                                    impressora.status
-                                )}
-                            </p>
-
-                            <p>
-                                <strong>Horas iniciais:</strong>
-                                ${formatarHorasImpressora(
-                                    impressora
-                                        .horasIniciais
-                                )}
-                            </p>
-
-                            <p>
-                                <strong>Horas das produções:</strong>
-                                ${formatarHorasImpressora(
-                                    impressora
-                                        .horasProducoes
-                                )}
-                            </p>
-
-                            <p>
-                                <strong>Ajustes de horas:</strong>
-                                ${formatarHorasImpressora(
-                                    impressora
-                                        .horasAjustes
-                                )}
-                            </p>
-
-                            <p>
-                                <strong>Total de horas:</strong>
-                                ${formatarHorasImpressora(
-                                    totalHoras
-                                )}
-                            </p>
-
-                            <p>
-                                <strong>Última manutenção:</strong>
-                                ${formatarDataImpressora(
-                                    impressora
-                                        .ultimaManutencao
-                                )}
-                            </p>
-
-                            <p>
-                                <strong>Próxima manutenção:</strong>
-                                ${formatarDataImpressora(
-                                    impressora
-                                        .proximaManutencao
-                                )}
-                            </p>
-
-                            <p>
-                                <strong>Observações:</strong>
-                                ${observacoes}
-                            </p>
-
-                            <button
-                                type="button"
-                                class="botao-principal"
-                                onclick="ajustarHorasImpressora(
-                                    ${impressora.id}
-                                )">
-                                Adicionar horas
-                            </button>
-
-                            <button
-                                type="button"
-                                class="botao-principal"
-                                onclick="alterarStatusImpressora(
-                                    ${impressora.id}
-                                )">
-                                Alterar status
-                            </button>
-
-                            <button
-                                type="button"
-                                class="botao-excluir"
-                                onclick="excluirImpressora(
-                                    ${impressora.id}
-                                )">
-                                Excluir
-                            </button>
-
-                        </div>
+                    avisoManutencao = `
+                        <p>
+                            <strong>
+                                ⚠️ Manutenção por horas:
+                            </strong>
+                            Vencida
+                        </p>
                     `;
+
+                } else if (
+                    proximaManutencaoHoras > 0
+                ) {
+
+                    const horasRestantes =
+                        proximaManutencaoHoras -
+                        horasTotais;
+
+
+                    avisoManutencao = `
+                        <p>
+                            <strong>
+                                Próxima manutenção em:
+                            </strong>
+
+                            ${formatarHorasEquipamentos(
+                                horasRestantes
+                            )}
+                        </p>
+                    `;
+
                 }
-            )
-            .join("");
+
+
+                return `
+                    <div class="card-item">
+
+                        <h4>
+                            ${escaparTexto(
+                                impressora.nome
+                            )}
+                        </h4>
+
+                        <p>
+                            <strong>Marca:</strong>
+
+                            ${escaparTexto(
+                                impressora.marca ||
+                                "Não informada"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Modelo:</strong>
+
+                            ${escaparTexto(
+                                impressora.modelo ||
+                                "Não informado"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Número de série:
+                            </strong>
+
+                            ${escaparTexto(
+                                impressora.serie ||
+                                "Não informado"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Data da compra:
+                            </strong>
+
+                            ${formatarDataEquipamentos(
+                                impressora.dataCompra
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Valor pago:
+                            </strong>
+
+                            ${formatarDinheiro(
+                                impressora.valor
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Status:</strong>
+
+                            ${escaparTexto(
+                                impressora.status
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Horas iniciais:
+                            </strong>
+
+                            ${formatarHorasEquipamentos(
+                                impressora
+                                    .horasIniciais
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Horas de produções:
+                            </strong>
+
+                            ${formatarHorasEquipamentos(
+                                impressora
+                                    .horasProducoes
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Ajustes manuais:
+                            </strong>
+
+                            ${formatarHorasEquipamentos(
+                                impressora
+                                    .horasAjustes
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Total de horas:
+                            </strong>
+
+                            ${formatarHorasEquipamentos(
+                                horasTotais
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Última manutenção:
+                            </strong>
+
+                            ${formatarDataEquipamentos(
+                                impressora
+                                    .ultimaManutencao
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Próxima manutenção:
+                            </strong>
+
+                            ${formatarDataEquipamentos(
+                                impressora
+                                    .proximaManutencao
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Próxima manutenção
+                                por horas:
+                            </strong>
+
+                            ${
+                                proximaManutencaoHoras > 0
+                                    ? formatarHorasEquipamentos(
+                                        proximaManutencaoHoras
+                                    )
+                                    : "Não informada"
+                            }
+                        </p>
+
+                        ${avisoManutencao}
+
+                        <p>
+                            <strong>
+                                Observações:
+                            </strong>
+
+                            ${escaparTexto(
+                                impressora.observacoes ||
+                                "Nenhuma"
+                            )}
+                        </p>
+
+                        <button
+                            type="button"
+                            class="botao-principal"
+                            onclick="editarImpressora(${impressora.id})">
+
+                            Editar
+
+                        </button>
+
+                        <button
+                            type="button"
+                            onclick="alterarStatusImpressora(${impressora.id})">
+
+                            Alterar Status
+
+                        </button>
+
+                        <button
+                            type="button"
+                            class="botao-excluir"
+                            onclick="excluirImpressora(${impressora.id})">
+
+                            Excluir
+
+                        </button>
+
+                    </div>
+                `;
+
+            }
+        ).join("");
+
 
     atualizarResumoImpressoras();
+
+
+    if (
+        typeof atualizarOpcoesEquipamentos ===
+        "function"
+    ) {
+
+        atualizarOpcoesEquipamentos();
+
+    }
+
 }
 
-
-// =========================
-// LIMPEZA DO FORMULÁRIO
-// =========================
 
 function limparFormularioImpressora() {
-    if (campoNomeImpressora) {
-        campoNomeImpressora.value =
-            "";
+
+    impressoraEmEdicaoId = null;
+
+
+    definirValorCampoEquipamentos(
+        "nome-impressora",
+        ""
+    );
+
+
+    definirValorCampoEquipamentos(
+        "marca-impressora",
+        ""
+    );
+
+
+    definirValorCampoEquipamentos(
+        "modelo-impressora",
+        ""
+    );
+
+
+    definirValorCampoEquipamentos(
+        "serie-impressora",
+        ""
+    );
+
+
+    definirValorCampoEquipamentos(
+        "data-compra-impressora",
+        ""
+    );
+
+
+    definirValorCampoEquipamentos(
+        "valor-impressora",
+        ""
+    );
+
+
+    definirValorCampoEquipamentos(
+        "status-impressora",
+        "Ativa"
+    );
+
+
+    definirValorCampoEquipamentos(
+        "horas-iniciais-impressora",
+        ""
+    );
+
+
+    definirValorCampoEquipamentos(
+        "ultima-manutencao-impressora",
+        ""
+    );
+
+
+    definirValorCampoEquipamentos(
+        "proxima-manutencao-impressora",
+        ""
+    );
+
+
+    definirValorCampoEquipamentos(
+        "observacoes-impressora",
+        ""
+    );
+
+
+    if (botaoSalvarImpressora) {
+
+        botaoSalvarImpressora.textContent =
+            "Salvar Impressora";
+
     }
 
-    if (campoMarcaImpressora) {
-        campoMarcaImpressora.value =
-            "";
-    }
-
-    if (campoModeloImpressora) {
-        campoModeloImpressora.value =
-            "";
-    }
-
-    if (campoSerieImpressora) {
-        campoSerieImpressora.value =
-            "";
-    }
-
-    if (
-        campoDataCompraImpressora
-    ) {
-        campoDataCompraImpressora
-            .value = "";
-    }
-
-    if (campoValorImpressora) {
-        campoValorImpressora.value =
-            "";
-    }
-
-    if (campoStatusImpressora) {
-        campoStatusImpressora.value =
-            "Ativa";
-    }
-
-    if (
-        campoHorasIniciaisImpressora
-    ) {
-        campoHorasIniciaisImpressora
-            .value = "";
-    }
-
-    if (
-        campoUltimaManutencaoImpressora
-    ) {
-        campoUltimaManutencaoImpressora
-            .value = "";
-    }
-
-    if (
-        campoProximaManutencaoImpressora
-    ) {
-        campoProximaManutencaoImpressora
-            .value = "";
-    }
-
-    if (
-        campoObservacoesImpressora
-    ) {
-        campoObservacoesImpressora
-            .value = "";
-    }
 }
 
 
-// =========================
-// CADASTRO
-// =========================
-
 if (botaoSalvarImpressora) {
-    botaoSalvarImpressora
-        .addEventListener(
-            "click",
-            function () {
-                const nome =
-                    campoNomeImpressora
-                        ? campoNomeImpressora
-                            .value
-                            .trim()
-                        : "";
 
-                const marca =
-                    campoMarcaImpressora
-                        ? campoMarcaImpressora
-                            .value
-                            .trim()
-                        : "";
+    botaoSalvarImpressora.addEventListener(
+        "click",
+        function () {
 
-                const modelo =
-                    campoModeloImpressora
-                        ? campoModeloImpressora
-                            .value
-                            .trim()
-                        : "";
+            const nome =
+                obterTextoCampoEquipamentos(
+                    "nome-impressora"
+                );
 
-                const serie =
-                    campoSerieImpressora
-                        ? campoSerieImpressora
-                            .value
-                            .trim()
-                        : "";
 
-                const dataCompra =
-                    campoDataCompraImpressora
-                        ? campoDataCompraImpressora
-                            .value
-                        : "";
+            const marca =
+                obterTextoCampoEquipamentos(
+                    "marca-impressora"
+                );
 
-                const valor =
-                    campoValorImpressora
-                        ? Number(
-                            campoValorImpressora
-                                .value || 0
-                        )
-                        : 0;
 
-                const status =
-                    campoStatusImpressora
-                        ? campoStatusImpressora
-                            .value
-                        : "Ativa";
+            const modelo =
+                obterTextoCampoEquipamentos(
+                    "modelo-impressora"
+                );
 
-                const horasIniciais =
-                    campoHorasIniciaisImpressora
-                        ? Number(
-                            campoHorasIniciaisImpressora
-                                .value || 0
-                        )
-                        : 0;
 
-                const ultimaManutencao =
-                    campoUltimaManutencaoImpressora
-                        ? campoUltimaManutencaoImpressora
-                            .value
-                        : "";
+            const serie =
+                obterTextoCampoEquipamentos(
+                    "serie-impressora"
+                );
 
-                const proximaManutencao =
-                    campoProximaManutencaoImpressora
-                        ? campoProximaManutencaoImpressora
-                            .value
-                        : "";
 
-                const observacoes =
-                    campoObservacoesImpressora
-                        ? campoObservacoesImpressora
-                            .value
-                            .trim()
-                        : "";
+            const dataCompra =
+                obterTextoCampoEquipamentos(
+                    "data-compra-impressora"
+                );
 
-                if (!nome) {
-                    alert(
-                        "Informe o nome da impressora."
-                    );
-                    return;
-                }
 
-                if (!marca) {
-                    alert(
-                        "Informe a marca da impressora."
-                    );
-                    return;
-                }
+            const valor =
+                obterNumeroCampoEquipamentos(
+                    "valor-impressora"
+                );
 
-                if (!modelo) {
-                    alert(
-                        "Selecione o modelo da impressora."
-                    );
-                    return;
-                }
 
-                if (
-                    Number.isNaN(valor) ||
-                    valor < 0
-                ) {
-                    alert(
-                        "Informe um valor pago válido."
-                    );
-                    return;
-                }
+            const status =
+                obterTextoCampoEquipamentos(
+                    "status-impressora"
+                ) || "Ativa";
 
-                if (
-                    Number.isNaN(
-                        horasIniciais
-                    ) ||
-                    horasIniciais < 0
-                ) {
-                    alert(
-                        "Informe uma quantidade válida de horas iniciais."
-                    );
-                    return;
-                }
 
-                if (
-                    ultimaManutencao &&
-                    proximaManutencao &&
-                    proximaManutencao <
+            const horasIniciais =
+                obterNumeroCampoEquipamentos(
+                    "horas-iniciais-impressora"
+                );
+
+
+            const ultimaManutencao =
+                obterTextoCampoEquipamentos(
+                    "ultima-manutencao-impressora"
+                );
+
+
+            const proximaManutencao =
+                obterTextoCampoEquipamentos(
+                    "proxima-manutencao-impressora"
+                );
+
+
+            const observacoes =
+                obterTextoCampoEquipamentos(
+                    "observacoes-impressora"
+                );
+
+
+            if (!nome) {
+
+                alert(
+                    "Informe o nome da impressora."
+                );
+
+                return;
+
+            }
+
+
+            if (!marca) {
+
+                alert(
+                    "Informe a marca da impressora."
+                );
+
+                return;
+
+            }
+
+
+            if (!modelo) {
+
+                alert(
+                    "Informe o modelo da impressora."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                Number.isNaN(valor) ||
+                valor < 0
+            ) {
+
+                alert(
+                    "Informe um valor pago válido."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                Number.isNaN(horasIniciais) ||
+                horasIniciais < 0
+            ) {
+
+                alert(
+                    "Informe uma quantidade válida de horas iniciais."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                ultimaManutencao &&
+                proximaManutencao &&
+                proximaManutencao <
                     ultimaManutencao
-                ) {
-                    alert(
-                        "A próxima manutenção não pode ser anterior à última manutenção."
+            ) {
+
+                alert(
+                    "A próxima manutenção não pode ser anterior à última manutenção."
+                );
+
+                return;
+
+            }
+
+
+            const estavaEditando =
+                impressoraEmEdicaoId !== null;
+
+
+            if (estavaEditando) {
+
+                const impressora =
+                    impressoras.find(
+                        function (item) {
+
+                            return item.id ===
+                                impressoraEmEdicaoId;
+
+                        }
                     );
+
+
+                if (!impressora) {
+
+                    alert(
+                        "Impressora não encontrada."
+                    );
+
                     return;
+
                 }
+
+
+                impressora.nome = nome;
+
+                impressora.marca = marca;
+
+                impressora.modelo = modelo;
+
+                impressora.serie = serie;
+
+                impressora.dataCompra =
+                    dataCompra;
+
+                impressora.valor = valor;
+
+                impressora.status = status;
+
+                impressora.horasIniciais =
+                    horasIniciais;
+
+                impressora.ultimaManutencao =
+                    ultimaManutencao;
+
+                impressora.proximaManutencao =
+                    proximaManutencao;
+
+                impressora.observacoes =
+                    observacoes;
+
+
+                registrarDiarioEquipamento({
+
+                    impressoraId:
+                        impressora.id,
+
+                    impressoraNome:
+                        impressora.nome,
+
+                    tipo:
+                        "Cadastro",
+
+                    titulo:
+                        "Cadastro atualizado",
+
+                    descricao:
+                        "Os dados da impressora foram atualizados."
+
+                });
+
+            } else {
 
                 const novaImpressora = {
-                    id: Date.now(),
-                    nome: nome,
-                    marca: marca,
-                    modelo: modelo,
-                    serie: serie,
+
+                    id:
+                        Date.now(),
+
+                    nome:
+                        nome,
+
+                    marca:
+                        marca,
+
+                    modelo:
+                        modelo,
+
+                    serie:
+                        serie,
+
                     dataCompra:
                         dataCompra,
-                    valor: valor,
-                    status: status,
+
+                    valor:
+                        valor,
+
+                    status:
+                        status,
+
                     horasIniciais:
                         horasIniciais,
-                    horasProducoes: 0,
-                    horasAjustes: 0,
+
+                    horasProducoes:
+                        0,
+
+                    horasAjustes:
+                        0,
+
                     ultimaManutencao:
                         ultimaManutencao,
+
                     proximaManutencao:
                         proximaManutencao,
+
+                    proximasHorasManutencao:
+                        0,
+
                     observacoes:
                         observacoes
+
                 };
+
 
                 impressoras.push(
                     novaImpressora
                 );
 
-                salvarImpressoras();
-                mostrarImpressoras();
-                limparFormularioImpressora();
+
+                registrarDiarioEquipamento({
+
+                    impressoraId:
+                        novaImpressora.id,
+
+                    impressoraNome:
+                        novaImpressora.nome,
+
+                    tipo:
+                        "Cadastro",
+
+                    titulo:
+                        "Impressora cadastrada",
+
+                    descricao:
+                        `${novaImpressora.marca} ${novaImpressora.modelo}`
+
+                });
+
+            }
+
+
+            salvarImpressoras();
+
+            mostrarImpressoras();
+
+            limparFormularioImpressora();
+
+
+            if (estavaEditando) {
+
+                alert(
+                    "Impressora atualizada com sucesso!"
+                );
+
+            } else {
 
                 alert(
                     "Impressora cadastrada com sucesso!"
                 );
+
             }
-        );
+
+        }
+    );
+
 }
 
 
-// =========================
-// BOTÃO LIMPAR
-// =========================
+if (botaoLimparFormularioImpressora) {
 
-if (
-    botaoLimparFormularioImpressora
-) {
     botaoLimparFormularioImpressora
         .addEventListener(
             "click",
             limparFormularioImpressora
         );
+
 }
 
 
-// =========================
-// AJUSTE MANUAL DE HORAS
-// =========================
+window.editarImpressora = function (id) {
 
-window.ajustarHorasImpressora =
-    function (id) {
-        const impressora =
-            impressoras.find(
-                function (item) {
-                    return item.id === id;
-                }
-            );
+    const impressora =
+        impressoras.find(
+            function (item) {
 
-        if (!impressora) {
-            alert(
-                "Impressora não encontrada."
-            );
-            return;
-        }
+                return item.id === id;
 
-        const resposta =
-            prompt(
-                `Quantas horas deseja adicionar à impressora "${impressora.nome}"?\n\nUse número positivo para adicionar ou negativo para corrigir.`,
-                "1"
-            );
+            }
+        );
 
-        if (resposta === null) {
-            return;
-        }
 
-        const horas =
-            Number(
-                resposta
-                    .replace(",", ".")
-                    .trim()
-            );
-
-        if (
-            Number.isNaN(horas) ||
-            horas === 0
-        ) {
-            alert(
-                "Informe uma quantidade de horas válida."
-            );
-            return;
-        }
-
-        const totalAtual =
-            obterTotalHorasImpressora(
-                impressora
-            );
-
-        if (
-            totalAtual + horas < 0
-        ) {
-            alert(
-                "O ajuste não pode deixar o total de horas negativo."
-            );
-            return;
-        }
-
-        impressora.horasAjustes =
-            Number(
-                impressora
-                    .horasAjustes ||
-                0
-            ) + horas;
-
-        salvarImpressoras();
-        mostrarImpressoras();
+    if (!impressora) {
 
         alert(
-            "Horas atualizadas com sucesso!"
+            "Impressora não encontrada."
         );
-    };
+
+        return;
+
+    }
 
 
-// =========================
-// ALTERAR STATUS
-// =========================
+    impressoraEmEdicaoId = id;
+
+
+    definirValorCampoEquipamentos(
+        "nome-impressora",
+        impressora.nome
+    );
+
+
+    definirValorCampoEquipamentos(
+        "marca-impressora",
+        impressora.marca
+    );
+
+
+    definirValorCampoEquipamentos(
+        "modelo-impressora",
+        impressora.modelo
+    );
+
+
+    definirValorCampoEquipamentos(
+        "serie-impressora",
+        impressora.serie
+    );
+
+
+    definirValorCampoEquipamentos(
+        "data-compra-impressora",
+        impressora.dataCompra
+    );
+
+
+    definirValorCampoEquipamentos(
+        "valor-impressora",
+        impressora.valor
+    );
+
+
+    definirValorCampoEquipamentos(
+        "status-impressora",
+        impressora.status
+    );
+
+
+    definirValorCampoEquipamentos(
+        "horas-iniciais-impressora",
+        impressora.horasIniciais
+    );
+
+
+    definirValorCampoEquipamentos(
+        "ultima-manutencao-impressora",
+        impressora.ultimaManutencao
+    );
+
+
+    definirValorCampoEquipamentos(
+        "proxima-manutencao-impressora",
+        impressora.proximaManutencao
+    );
+
+
+    definirValorCampoEquipamentos(
+        "observacoes-impressora",
+        impressora.observacoes
+    );
+
+
+    if (botaoSalvarImpressora) {
+
+        botaoSalvarImpressora.textContent =
+            "Atualizar Impressora";
+
+    }
+
+
+    abrirAbaEquipamento(
+        "aba-impressoras"
+    );
+
+
+    const paginaEquipamentos =
+        document.getElementById(
+            "impressoras"
+        );
+
+
+    if (paginaEquipamentos) {
+
+        paginaEquipamentos.scrollIntoView({
+
+            behavior:
+                "smooth",
+
+            block:
+                "start"
+
+        });
+
+    }
+
+};
+
 
 window.alterarStatusImpressora =
     function (id) {
+
         const impressora =
             impressoras.find(
                 function (item) {
+
                     return item.id === id;
+
                 }
             );
 
+
         if (!impressora) {
+
             alert(
                 "Impressora não encontrada."
             );
+
             return;
+
         }
 
-        const novoStatus =
-            prompt(
-                "Digite o novo status:\n\nAtiva\nEm manutenção\nParada\nDesativada",
-                impressora.status
-            );
 
-        if (novoStatus === null) {
+        const resposta = prompt(
+
+            "Digite o novo status:\n\n" +
+            "Ativa\n" +
+            "Em manutenção\n" +
+            "Parada\n" +
+            "Desativada",
+
+            impressora.status
+
+        );
+
+
+        if (resposta === null) {
+
             return;
+
         }
+
 
         const statusPermitidos = [
+
             "Ativa",
+
             "Em manutenção",
+
             "Parada",
+
             "Desativada"
+
         ];
 
-        const statusEncontrado =
+
+        const novoStatus =
             statusPermitidos.find(
-                function (status) {
+                function (statusPermitido) {
+
                     return (
-                        status
+                        statusPermitido
                             .toLowerCase() ===
-                        novoStatus
+
+                        resposta
                             .trim()
                             .toLowerCase()
                     );
+
                 }
             );
 
-        if (!statusEncontrado) {
+
+        if (!novoStatus) {
+
             alert(
                 "Informe um status válido."
             );
+
             return;
+
         }
 
+
+        const statusAnterior =
+            impressora.status;
+
+
         impressora.status =
-            statusEncontrado;
+            novoStatus;
+
 
         salvarImpressoras();
+
         mostrarImpressoras();
+
+
+        registrarDiarioEquipamento({
+
+            impressoraId:
+                impressora.id,
+
+            impressoraNome:
+                impressora.nome,
+
+            tipo:
+                "Status",
+
+            titulo:
+                "Status alterado",
+
+            descricao:
+                `${statusAnterior} → ${novoStatus}`
+
+        });
+
 
         alert(
             "Status atualizado com sucesso!"
         );
+
     };
 
 
-// =========================
-// EXCLUSÃO
-// =========================
-
 window.excluirImpressora =
     function (id) {
+
         const impressora =
             impressoras.find(
                 function (item) {
+
                     return item.id === id;
+
                 }
             );
 
-        if (!impressora) {
-            return;
-        }
 
-        const confirmar =
-            confirm(
-                `Deseja excluir a impressora "${impressora.nome}"?`
+        if (!impressora) {
+
+            alert(
+                "Impressora não encontrada."
             );
 
-        if (!confirmar) {
             return;
+
         }
+
+
+        const possuiManutencoes =
+            manutencoesEquipamentos.some(
+                function (manutencao) {
+
+                    return manutencao
+                        .impressoraId === id;
+
+                }
+            );
+
+
+        const possuiRegistrosHoras =
+            registrosHorasEquipamentos.some(
+                function (registro) {
+
+                    return registro
+                        .impressoraId === id;
+
+                }
+            );
+
+
+        let mensagem =
+
+            `Deseja excluir a impressora "${impressora.nome}"?`;
+
+
+        if (
+            possuiManutencoes ||
+            possuiRegistrosHoras
+        ) {
+
+            mensagem +=
+
+                "\n\nAtenção: os registros antigos de manutenção e horas permanecerão no histórico.";
+
+        }
+
+
+        const confirmar =
+            confirm(mensagem);
+
+
+        if (!confirmar) {
+
+            return;
+
+        }
+
 
         impressoras =
             impressoras.filter(
                 function (item) {
+
                     return item.id !== id;
+
                 }
             );
 
+
+        if (
+            impressoraEmEdicaoId === id
+        ) {
+
+            limparFormularioImpressora();
+
+        }
+
+
         salvarImpressoras();
+
         mostrarImpressoras();
+
+
+        registrarDiarioEquipamento({
+
+            impressoraId:
+                id,
+
+            impressoraNome:
+                impressora.nome,
+
+            tipo:
+                "Cadastro",
+
+            titulo:
+                "Impressora excluída",
+
+            descricao:
+                "O cadastro da impressora foi removido."
+
+        });
+
+
+        alert(
+            "Impressora excluída com sucesso!"
+        );
+
     };
-
-
-// =========================
-// INICIALIZAÇÃO
-// =========================
-
-normalizarImpressorasAntigas();
-mostrarImpressoras();
-limparFormularioImpressora();
-abrirAbaEquipamento(
-    "aba-impressoras"
-);
-
+    
 // =========================
 // FINANCEIRO 2.0
 // =========================
