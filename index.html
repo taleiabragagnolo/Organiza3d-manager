@@ -11,7 +11,67 @@
 
 <body>
 
-    <div class="app">
+    <!-- ===================================== -->
+    <!-- LOGIN DO SISTEMA -->
+    <!-- ===================================== -->
+
+    <div id="tela-login">
+
+        <div class="login-card">
+
+            <div class="login-logo">
+
+                <h1>Organiza 3D</h1>
+
+                <p>Manager</p>
+
+            </div>
+
+            <h2>Acesso ao sistema</h2>
+
+            <div class="campo">
+
+                <label for="login-usuario">
+                    Usuário
+                </label>
+
+                <input
+                    type="text"
+                    id="login-usuario"
+                    autocomplete="username">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="login-senha">
+                    Senha
+                </label>
+
+                <input
+                    type="password"
+                    id="login-senha"
+                    autocomplete="current-password">
+
+            </div>
+
+            <button
+                id="entrar-sistema"
+                class="botao-principal"
+                type="button">
+
+                Entrar
+
+            </button>
+
+            <p id="mensagem-login"></p>
+
+        </div>
+
+    </div>
+
+    <div class="app" id="aplicativo" style="display:none;">
+        
 
         <aside class="menu-lateral">
 
