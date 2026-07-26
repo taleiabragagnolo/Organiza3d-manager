@@ -4687,6 +4687,2432 @@ function limparFormularioLubrificante() {
     }
 
 }
+// =========================
+// SALVAR LUBRIFICANTE
+// =========================
+
+if (botaoSalvarLubrificante) {
+
+    botaoSalvarLubrificante.addEventListener(
+        "click",
+        function () {
+
+            const nome =
+                obterTextoCampoEquipamentos(
+                    "lubrificante-nome"
+                );
+
+            const tipo =
+                obterTextoCampoEquipamentos(
+                    "lubrificante-tipo"
+                ) || "Outro";
+
+            const marca =
+                obterTextoCampoEquipamentos(
+                    "lubrificante-marca"
+                );
+
+            const unidade =
+                obterTextoCampoEquipamentos(
+                    "lubrificante-unidade"
+                ) || "Unidade";
+
+            const quantidade =
+                obterNumeroCampoEquipamentos(
+                    "lubrificante-quantidade"
+                );
+
+            const estoqueMinimo =
+                obterNumeroCampoEquipamentos(
+                    "lubrificante-estoque-minimo"
+                );
+
+            const valorTotal =
+                obterNumeroCampoEquipamentos(
+                    "lubrificante-valor-total"
+                );
+
+            const dataCompra =
+                obterTextoCampoEquipamentos(
+                    "lubrificante-data-compra"
+                );
+
+            const fornecedor =
+                obterTextoCampoEquipamentos(
+                    "lubrificante-fornecedor"
+                );
+
+            const aplicacao =
+                obterTextoCampoEquipamentos(
+                    "lubrificante-aplicacao"
+                );
+
+            const observacoes =
+                obterTextoCampoEquipamentos(
+                    "lubrificante-observacoes"
+                );
+
+
+            if (!nome) {
+
+                alert(
+                    "Informe o nome do lubrificante."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                Number.isNaN(quantidade) ||
+                quantidade < 0
+            ) {
+
+                alert(
+                    "Informe uma quantidade válida."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                Number.isNaN(estoqueMinimo) ||
+                estoqueMinimo < 0
+            ) {
+
+                alert(
+                    "Informe um estoque mínimo válido."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                Number.isNaN(valorTotal) ||
+                valorTotal < 0
+            ) {
+
+                alert(
+                    "Informe um valor total válido."
+                );
+
+                return;
+
+            }
+
+
+            const valorUnitario =
+                quantidade > 0
+                    ? valorTotal / quantidade
+                    : 0;
+
+
+            const estavaEditando =
+                lubrificanteEmEdicaoId !== null;
+
+
+            if (estavaEditando) {
+
+                const lubrificante =
+                    lubrificantesEquipamentos.find(
+                        function (item) {
+
+                            return item.id ===
+                                lubrificanteEmEdicaoId;
+
+                        }
+                    );
+
+
+                if (!lubrificante) {
+
+                    alert(
+                        "Lubrificante não encontrado."
+                    );
+
+                    return;
+
+                }
+
+
+                const quantidadeAnterior =
+                    Number(
+                        lubrificante.quantidadeAtual ||
+                        0
+                    );
+
+
+                lubrificante.nome =
+                    nome;
+
+                lubrificante.tipo =
+                    tipo;
+
+                lubrificante.marca =
+                    marca;
+
+                lubrificante.unidade =
+                    unidade;
+
+                lubrificante.quantidadeInicial =
+                    quantidade;
+
+                lubrificante.quantidadeAtual =
+                    quantidade;
+
+                lubrificante.estoqueMinimo =
+                    estoqueMinimo;
+
+                lubrificante.valorTotal =
+                    valorTotal;
+
+                lubrificante.valorUnitario =
+                    valorUnitario;
+
+                lubrificante.dataCompra =
+                    dataCompra;
+
+                lubrificante.fornecedor =
+                    fornecedor;
+
+                lubrificante.aplicacao =
+                    aplicacao;
+
+                lubrificante.observacoes =
+                    observacoes;
+
+
+                registrarDiarioEquipamento({
+
+                    tipo:
+                        "Estoque",
+
+                    titulo:
+                        "Lubrificante atualizado",
+
+                    descricao:
+                        `${nome}: estoque alterado de ${quantidadeAnterior} para ${quantidade} ${unidade}.`
+
+                });
+
+            } else {
+
+                const novoLubrificante = {
+
+                    id:
+                        Date.now(),
+
+                    nome:
+                        nome,
+
+                    tipo:
+                        tipo,
+
+                    marca:
+                        marca,
+
+                    unidade:
+                        unidade,
+
+                    quantidadeInicial:
+                        quantidade,
+
+                    quantidadeAtual:
+                        quantidade,
+
+                    estoqueMinimo:
+                        estoqueMinimo,
+
+                    valorTotal:
+                        valorTotal,
+
+                    valorUnitario:
+                        valorUnitario,
+
+                    dataCompra:
+                        dataCompra,
+
+                    fornecedor:
+                        fornecedor,
+
+                    aplicacao:
+                        aplicacao,
+
+                    observacoes:
+                        observacoes
+
+                };
+
+
+                lubrificantesEquipamentos.push(
+                    novoLubrificante
+                );
+
+
+                registrarDiarioEquipamento({
+
+                    tipo:
+                        "Estoque",
+
+                    titulo:
+                        "Lubrificante cadastrado",
+
+                    descricao:
+                        `${novoLubrificante.nome}: ${novoLubrificante.quantidadeAtual} ${novoLubrificante.unidade} adicionado(s) ao estoque.`
+
+                });
+
+            }
+
+
+            salvarLubrificantesEquipamentos();
+
+            mostrarLubrificantesEquipamentos();
+
+            limparFormularioLubrificante();
+
+
+            if (estavaEditando) {
+
+                alert(
+                    "Lubrificante atualizado com sucesso!"
+                );
+
+            } else {
+
+                alert(
+                    "Lubrificante cadastrado com sucesso!"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+// =========================
+// BOTÃO LIMPAR FORMULÁRIO
+// =========================
+
+if (botaoLimparFormularioLubrificante) {
+
+    botaoLimparFormularioLubrificante
+        .addEventListener(
+            "click",
+            limparFormularioLubrificante
+        );
+
+}
+
+
+// =========================
+// EDITAR LUBRIFICANTE
+// =========================
+
+window.editarLubrificanteEquipamento =
+    function (id) {
+
+        const lubrificante =
+            lubrificantesEquipamentos.find(
+                function (item) {
+
+                    return item.id === id;
+
+                }
+            );
+
+
+        if (!lubrificante) {
+
+            alert(
+                "Lubrificante não encontrado."
+            );
+
+            return;
+
+        }
+
+
+        lubrificanteEmEdicaoId = id;
+
+
+        definirValorCampoEquipamentos(
+            "lubrificante-nome",
+            lubrificante.nome
+        );
+
+
+        definirValorCampoEquipamentos(
+            "lubrificante-tipo",
+            lubrificante.tipo
+        );
+
+
+        definirValorCampoEquipamentos(
+            "lubrificante-marca",
+            lubrificante.marca
+        );
+
+
+        definirValorCampoEquipamentos(
+            "lubrificante-unidade",
+            lubrificante.unidade
+        );
+
+
+        definirValorCampoEquipamentos(
+            "lubrificante-quantidade",
+            lubrificante.quantidadeAtual
+        );
+
+
+        definirValorCampoEquipamentos(
+            "lubrificante-estoque-minimo",
+            lubrificante.estoqueMinimo
+        );
+
+
+        definirValorCampoEquipamentos(
+            "lubrificante-valor-total",
+            lubrificante.valorTotal
+        );
+
+
+        definirValorCampoEquipamentos(
+            "lubrificante-data-compra",
+            lubrificante.dataCompra
+        );
+
+
+        definirValorCampoEquipamentos(
+            "lubrificante-fornecedor",
+            lubrificante.fornecedor
+        );
+
+
+        definirValorCampoEquipamentos(
+            "lubrificante-aplicacao",
+            lubrificante.aplicacao
+        );
+
+
+        definirValorCampoEquipamentos(
+            "lubrificante-observacoes",
+            lubrificante.observacoes
+        );
+
+
+        atualizarValorUnitarioLubrificante();
+
+
+        if (botaoSalvarLubrificante) {
+
+            botaoSalvarLubrificante.textContent =
+                "Atualizar Lubrificante";
+
+        }
+
+
+        abrirAbaEquipamento(
+            "aba-lubrificantes"
+        );
+
+
+        const abaLubrificantes =
+            document.getElementById(
+                "aba-lubrificantes"
+            );
+
+
+        if (abaLubrificantes) {
+
+            abaLubrificantes.scrollIntoView({
+
+                behavior:
+                    "smooth",
+
+                block:
+                    "start"
+
+            });
+
+        }
+
+    };
+// =========================
+// ADICIONAR ESTOQUE DE LUBRIFICANTE
+// =========================
+
+window.adicionarEstoqueLubrificante =
+    function (id) {
+
+        const lubrificante =
+            lubrificantesEquipamentos.find(
+                function (item) {
+                    return item.id === id;
+                }
+            );
+
+        if (!lubrificante) {
+            alert("Lubrificante não encontrado.");
+            return;
+        }
+
+        const respostaQuantidade = prompt(
+            `Quanto deseja adicionar ao estoque de "${lubrificante.nome}"?`,
+            "1"
+        );
+
+        if (respostaQuantidade === null) {
+            return;
+        }
+
+        const quantidadeAdicionada = Number(
+            String(respostaQuantidade)
+                .replace(",", ".")
+        );
+
+        if (
+            Number.isNaN(quantidadeAdicionada) ||
+            quantidadeAdicionada <= 0
+        ) {
+            alert("Informe uma quantidade válida.");
+            return;
+        }
+
+        const respostaValor = prompt(
+            "Qual foi o valor total desta compra?",
+            "0"
+        );
+
+        if (respostaValor === null) {
+            return;
+        }
+
+        const valorCompra = Number(
+            String(respostaValor)
+                .replace(",", ".")
+        );
+
+        if (
+            Number.isNaN(valorCompra) ||
+            valorCompra < 0
+        ) {
+            alert("Informe um valor válido.");
+            return;
+        }
+
+        const quantidadeAnterior =
+            Number(
+                lubrificante.quantidadeAtual || 0
+            );
+
+        const valorAnterior =
+            quantidadeAnterior *
+            Number(
+                lubrificante.valorUnitario || 0
+            );
+
+        const novaQuantidade =
+            quantidadeAnterior +
+            quantidadeAdicionada;
+
+        const novoValorEstoque =
+            valorAnterior +
+            valorCompra;
+
+        const novoValorUnitario =
+            novaQuantidade > 0
+                ? novoValorEstoque /
+                  novaQuantidade
+                : 0;
+
+        lubrificante.quantidadeAtual =
+            novaQuantidade;
+
+        lubrificante.quantidadeInicial =
+            Number(
+                lubrificante.quantidadeInicial || 0
+            ) + quantidadeAdicionada;
+
+        lubrificante.valorTotal =
+            Number(
+                lubrificante.valorTotal || 0
+            ) + valorCompra;
+
+        lubrificante.valorUnitario =
+            novoValorUnitario;
+
+        salvarLubrificantesEquipamentos();
+
+        mostrarLubrificantesEquipamentos();
+
+        registrarDiarioEquipamento({
+
+            tipo: "Estoque",
+
+            titulo:
+                "Entrada de lubrificante",
+
+            descricao:
+                `${quantidadeAdicionada} ${lubrificante.unidade} adicionados ao estoque de ${lubrificante.nome}.`
+
+        });
+
+        alert(
+            "Estoque atualizado com sucesso!"
+        );
+
+    };
+
+
+// =========================
+// EXCLUIR LUBRIFICANTE
+// =========================
+
+window.excluirLubrificanteEquipamento =
+    function (id) {
+
+        const lubrificante =
+            lubrificantesEquipamentos.find(
+                function (item) {
+                    return item.id === id;
+                }
+            );
+
+        if (!lubrificante) {
+            alert(
+                "Lubrificante não encontrado."
+            );
+            return;
+        }
+
+        const foiUtilizado =
+            manutencoesEquipamentos.some(
+                function (manutencao) {
+
+                    return (
+                        manutencao.lubrificanteId ===
+                        id
+                    );
+
+                }
+            );
+
+        let mensagem =
+            `Deseja excluir o lubrificante "${lubrificante.nome}"?`;
+
+        if (foiUtilizado) {
+
+            mensagem +=
+                "\n\nEsse lubrificante já foi utilizado em manutenções. O histórico será preservado.";
+
+        }
+
+        if (!confirm(mensagem)) {
+            return;
+        }
+
+        lubrificantesEquipamentos =
+            lubrificantesEquipamentos.filter(
+                function (item) {
+
+                    return item.id !== id;
+
+                }
+            );
+
+        if (
+            lubrificanteEmEdicaoId === id
+        ) {
+
+            limparFormularioLubrificante();
+
+        }
+
+        salvarLubrificantesEquipamentos();
+
+        mostrarLubrificantesEquipamentos();
+
+        registrarDiarioEquipamento({
+
+            tipo:
+                "Estoque",
+
+            titulo:
+                "Lubrificante excluído",
+
+            descricao:
+                `${lubrificante.nome} removido do cadastro.`
+
+        });
+
+        alert(
+            "Lubrificante excluído com sucesso!"
+        );
+
+    };
+
+
+// =========================
+// ATUALIZAÇÃO DAS OPÇÕES
+// =========================
+
+function atualizarOpcoesEquipamentos() {
+
+    atualizarSelectImpressoras();
+
+    atualizarSelectPecas();
+
+    atualizarSelectLubrificantes();
+
+}
+// =========================
+// MANUTENÇÕES
+// PARTE 7A
+// =========================
+
+const botaoSalvarManutencao =
+    document.getElementById(
+        "salvar-manutencao"
+    );
+
+const botaoLimparFormularioManutencao =
+    document.getElementById(
+        "limpar-formulario-manutencao"
+    );
+
+const listaManutencoes =
+    document.getElementById(
+        "lista-manutencoes"
+    );
+
+
+// =========================
+// ATUALIZAR SELECTS
+// =========================
+
+function atualizarSelectImpressoras() {
+
+    const campos = [
+        document.getElementById(
+            "manutencao-impressora"
+        ),
+        document.getElementById(
+            "horas-impressora"
+        ),
+        document.getElementById(
+            "diario-impressora"
+        )
+    ];
+
+
+    campos.forEach(
+        function (campo) {
+
+            if (!campo) {
+                return;
+            }
+
+
+            const valorAtual =
+                campo.value;
+
+
+            campo.innerHTML =
+                '<option value="">Selecione uma impressora</option>';
+
+
+            impressoras.forEach(
+                function (impressora) {
+
+                    const opcao =
+                        document.createElement(
+                            "option"
+                        );
+
+
+                    opcao.value =
+                        impressora.id;
+
+
+                    opcao.textContent =
+                        `${impressora.nome} — ${impressora.modelo || "Modelo não informado"}`;
+
+
+                    campo.appendChild(
+                        opcao
+                    );
+
+                }
+            );
+
+
+            if (
+                valorAtual &&
+                impressoras.some(
+                    function (impressora) {
+
+                        return String(
+                            impressora.id
+                        ) ===
+                        String(valorAtual);
+
+                    }
+                )
+            ) {
+
+                campo.value =
+                    valorAtual;
+
+            }
+
+        }
+    );
+
+}
+
+
+function atualizarSelectPecas() {
+
+    const campo =
+        document.getElementById(
+            "manutencao-peca"
+        );
+
+
+    if (!campo) {
+        return;
+    }
+
+
+    const valorAtual =
+        campo.value;
+
+
+    campo.innerHTML =
+        '<option value="">Nenhuma peça utilizada</option>';
+
+
+    pecasEquipamentos.forEach(
+        function (peca) {
+
+            const opcao =
+                document.createElement(
+                    "option"
+                );
+
+
+            opcao.value =
+                peca.id;
+
+
+            opcao.textContent =
+                `${peca.nome} — estoque: ${Number(
+                    peca.quantidadeAtual || 0
+                )}`;
+
+
+            if (
+                Number(
+                    peca.quantidadeAtual || 0
+                ) <= 0
+            ) {
+
+                opcao.disabled =
+                    true;
+
+            }
+
+
+            campo.appendChild(
+                opcao
+            );
+
+        }
+    );
+
+
+    if (
+        valorAtual &&
+        pecasEquipamentos.some(
+            function (peca) {
+
+                return String(peca.id) ===
+                    String(valorAtual);
+
+            }
+        )
+    ) {
+
+        campo.value =
+            valorAtual;
+
+    }
+
+}
+
+
+function atualizarSelectLubrificantes() {
+
+    const campo =
+        document.getElementById(
+            "manutencao-lubrificante"
+        );
+
+
+    if (!campo) {
+        return;
+    }
+
+
+    const valorAtual =
+        campo.value;
+
+
+    campo.innerHTML =
+        '<option value="">Nenhum lubrificante utilizado</option>';
+
+
+    lubrificantesEquipamentos.forEach(
+        function (lubrificante) {
+
+            const opcao =
+                document.createElement(
+                    "option"
+                );
+
+
+            opcao.value =
+                lubrificante.id;
+
+
+            opcao.textContent =
+                `${lubrificante.nome} — estoque: ${Number(
+                    lubrificante.quantidadeAtual || 0
+                ).toLocaleString(
+                    "pt-BR",
+                    {
+                        maximumFractionDigits: 2
+                    }
+                )} ${lubrificante.unidade}`;
+
+
+            if (
+                Number(
+                    lubrificante.quantidadeAtual ||
+                    0
+                ) <= 0
+            ) {
+
+                opcao.disabled =
+                    true;
+
+            }
+
+
+            campo.appendChild(
+                opcao
+            );
+
+        }
+    );
+
+
+    if (
+        valorAtual &&
+        lubrificantesEquipamentos.some(
+            function (lubrificante) {
+
+                return String(
+                    lubrificante.id
+                ) ===
+                String(valorAtual);
+
+            }
+        )
+    ) {
+
+        campo.value =
+            valorAtual;
+
+    }
+
+}
+
+
+// =========================
+// RESUMO DAS MANUTENÇÕES
+// =========================
+
+function atualizarResumoManutencoes() {
+
+    const preventivas =
+        manutencoesEquipamentos.filter(
+            function (manutencao) {
+
+                return manutencao.tipo ===
+                    "Preventiva";
+
+            }
+        ).length;
+
+
+    const corretivas =
+        manutencoesEquipamentos.filter(
+            function (manutencao) {
+
+                return manutencao.tipo ===
+                    "Corretiva";
+
+            }
+        ).length;
+
+
+    const custoTotal =
+        manutencoesEquipamentos.reduce(
+            function (total, manutencao) {
+
+                return total +
+                    Number(
+                        manutencao.custoTotal || 0
+                    );
+
+            },
+            0
+        );
+
+
+    definirTextoEquipamentos(
+        "equipamentos-total-manutencoes",
+        manutencoesEquipamentos.length
+    );
+
+
+    definirTextoEquipamentos(
+        "equipamentos-manutencoes-preventivas",
+        preventivas
+    );
+
+
+    definirTextoEquipamentos(
+        "equipamentos-manutencoes-corretivas",
+        corretivas
+    );
+
+
+    definirTextoEquipamentos(
+        "equipamentos-manutencoes-custo",
+        formatarDinheiro(
+            custoTotal
+        )
+    );
+
+}
+
+
+// =========================
+// MOSTRAR MANUTENÇÕES
+// =========================
+
+function mostrarManutencoesEquipamentos() {
+
+    if (!listaManutencoes) {
+
+        atualizarResumoManutencoes();
+
+        return;
+
+    }
+
+
+    if (
+        manutencoesEquipamentos.length === 0
+    ) {
+
+        listaManutencoes.innerHTML =
+            "<p>Nenhuma manutenção registrada.</p>";
+
+
+        atualizarResumoManutencoes();
+
+        return;
+
+    }
+
+
+    const manutencoesOrdenadas =
+        [...manutencoesEquipamentos].sort(
+            function (a, b) {
+
+                return String(
+                    b.data || ""
+                ).localeCompare(
+                    String(a.data || "")
+                );
+
+            }
+        );
+
+
+    listaManutencoes.innerHTML =
+        manutencoesOrdenadas.map(
+            function (manutencao) {
+
+                let itensUtilizados =
+                    "Nenhum item do estoque utilizado";
+
+
+                const itens = [];
+
+
+                if (manutencao.pecaNome) {
+
+                    itens.push(
+                        `${manutencao.quantidadePeca} unidade(s) de ${escaparTexto(
+                            manutencao.pecaNome
+                        )}`
+                    );
+
+                }
+
+
+                if (
+                    manutencao.lubrificanteNome
+                ) {
+
+                    itens.push(
+                        `${Number(
+                            manutencao
+                                .quantidadeLubrificante ||
+                            0
+                        ).toLocaleString(
+                            "pt-BR",
+                            {
+                                maximumFractionDigits: 2
+                            }
+                        )} de ${escaparTexto(
+                            manutencao
+                                .lubrificanteNome
+                        )}`
+                    );
+
+                }
+
+
+                if (itens.length > 0) {
+
+                    itensUtilizados =
+                        itens.join(" + ");
+
+                }
+
+
+                return `
+                    <div class="card-item">
+
+                        <h4>
+                            ${escaparTexto(
+                                manutencao.tipo
+                            )} —
+                            ${escaparTexto(
+                                manutencao.impressoraNome
+                            )}
+                        </h4>
+
+                        <p>
+                            <strong>Data:</strong>
+
+                            ${formatarDataEquipamentos(
+                                manutencao.data
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Horas da impressora:
+                            </strong>
+
+                            ${formatarHorasEquipamentos(
+                                manutencao
+                                    .horasImpressora
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Serviço realizado:
+                            </strong>
+
+                            ${escaparTexto(
+                                manutencao.descricao ||
+                                "Não informado"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Materiais utilizados:
+                            </strong>
+
+                            ${itensUtilizados}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Custo das peças:
+                            </strong>
+
+                            ${formatarDinheiro(
+                                manutencao.custoPeca
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Custo dos lubrificantes:
+                            </strong>
+
+                            ${formatarDinheiro(
+                                manutencao
+                                    .custoLubrificante
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Serviço ou mão de obra:
+                            </strong>
+
+                            ${formatarDinheiro(
+                                manutencao.custoServico
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Custo total:
+                            </strong>
+
+                            ${formatarDinheiro(
+                                manutencao.custoTotal
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Responsável:
+                            </strong>
+
+                            ${escaparTexto(
+                                manutencao.responsavel ||
+                                "Não informado"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Próxima manutenção:
+                            </strong>
+
+                            ${formatarDataEquipamentos(
+                                manutencao.proximaData
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Próxima manutenção por horas:
+                            </strong>
+
+                            ${
+                                Number(
+                                    manutencao
+                                        .proximasHoras ||
+                                    0
+                                ) > 0
+
+                                    ? formatarHorasEquipamentos(
+                                        manutencao
+                                            .proximasHoras
+                                    )
+
+                                    : "Não informada"
+                            }
+                        </p>
+
+                        <p>
+                            <strong>
+                                Observações:
+                            </strong>
+
+                            ${escaparTexto(
+                                manutencao.observacoes ||
+                                "Nenhuma"
+                            )}
+                        </p>
+
+                        <button
+                            type="button"
+                            class="botao-excluir"
+                            onclick="excluirManutencaoEquipamento(${manutencao.id})">
+
+                            Excluir registro
+
+                        </button>
+
+                    </div>
+                `;
+
+            }
+        ).join("");
+
+
+    atualizarResumoManutencoes();
+
+}
+
+
+// =========================
+// PREENCHER HORAS DA IMPRESSORA
+// =========================
+
+const campoImpressoraManutencao =
+    document.getElementById(
+        "manutencao-impressora"
+    );
+
+
+if (campoImpressoraManutencao) {
+
+    campoImpressoraManutencao
+        .addEventListener(
+            "change",
+            function () {
+
+                const impressoraId =
+                    Number(
+                        campoImpressoraManutencao
+                            .value
+                    );
+
+
+                const impressora =
+                    impressoras.find(
+                        function (item) {
+
+                            return item.id ===
+                                impressoraId;
+
+                        }
+                    );
+
+
+                definirValorCampoEquipamentos(
+                    "manutencao-horas",
+                    impressora
+                        ? obterTotalHorasImpressora(
+                            impressora
+                        )
+                        : ""
+                );
+
+            }
+        );
+
+}
+
+
+// =========================
+// LIMPAR FORMULÁRIO
+// =========================
+
+function limparFormularioManutencao() {
+
+    manutencaoEmEdicaoId = null;
+
+
+    [
+        "manutencao-impressora",
+        "manutencao-tipo",
+        "manutencao-data",
+        "manutencao-horas",
+        "manutencao-descricao",
+        "manutencao-peca",
+        "manutencao-quantidade-peca",
+        "manutencao-lubrificante",
+        "manutencao-quantidade-lubrificante",
+        "manutencao-custo-servico",
+        "manutencao-responsavel",
+        "manutencao-proxima-data",
+        "manutencao-proximas-horas",
+        "manutencao-observacoes"
+    ].forEach(
+        function (id) {
+
+            definirValorCampoEquipamentos(
+                id,
+                ""
+            );
+
+        }
+    );
+
+
+    definirValorCampoEquipamentos(
+        "manutencao-tipo",
+        "Preventiva"
+    );
+
+
+    definirValorCampoEquipamentos(
+        "manutencao-data",
+        obterDataHojeEquipamentos()
+    );
+
+
+    definirValorCampoEquipamentos(
+        "manutencao-quantidade-peca",
+        "0"
+    );
+
+
+    definirValorCampoEquipamentos(
+        "manutencao-quantidade-lubrificante",
+        "0"
+    );
+
+
+    definirValorCampoEquipamentos(
+        "manutencao-custo-servico",
+        "0"
+    );
+
+
+    if (botaoSalvarManutencao) {
+
+        botaoSalvarManutencao.textContent =
+            "Registrar Manutenção";
+
+    }
+
+}
+
+
+if (botaoLimparFormularioManutencao) {
+
+    botaoLimparFormularioManutencao
+        .addEventListener(
+            "click",
+            limparFormularioManutencao
+        );
+
+}
+// =========================
+// LANÇAR DESPESA DE MANUTENÇÃO
+// =========================
+
+function lancarDespesaManutencaoFinanceiro(
+    manutencao
+) {
+
+    if (
+        typeof lancamentosFinanceiros ===
+        "undefined"
+    ) {
+
+        console.warn(
+            "O módulo Financeiro ainda não está disponível."
+        );
+
+        return null;
+
+    }
+
+
+    const custoTotal =
+        Number(
+            manutencao.custoTotal || 0
+        );
+
+
+    if (custoTotal <= 0) {
+
+        return null;
+
+    }
+
+
+    const lancamentoId =
+        Date.now() +
+        Math.random();
+
+
+    const novoLancamento = {
+
+        id:
+            lancamentoId,
+
+        tipo:
+            "Despesa",
+
+        categoria:
+            "Manutenção de equipamentos",
+
+        descricao:
+            `Manutenção ${manutencao.tipo.toLowerCase()} — ${manutencao.impressoraNome}`,
+
+        valor:
+            custoTotal,
+
+        data:
+            manutencao.data,
+
+        formaPagamento:
+            "Não informada",
+
+        situacao:
+            "Pago",
+
+        valorPago:
+            custoTotal,
+
+        encomenda:
+            "",
+
+        origem:
+            "Equipamentos",
+
+        observacoes:
+            `Lançamento automático referente à manutenção: ${manutencao.descricao || "serviço não informado"}.`,
+
+        manutencaoId:
+            manutencao.id
+    };
+
+
+    lancamentosFinanceiros.push(
+        novoLancamento
+    );
+
+
+    if (
+        typeof salvarLancamentosFinanceiros ===
+        "function"
+    ) {
+
+        salvarLancamentosFinanceiros();
+
+    }
+
+
+    if (
+        typeof mostrarLancamentosFinanceiros ===
+        "function"
+    ) {
+
+        mostrarLancamentosFinanceiros();
+
+    } else if (
+        typeof mostrarLancamentos ===
+        "function"
+    ) {
+
+        mostrarLancamentos();
+
+    }
+
+
+    if (
+        typeof atualizarResumoFinanceiro ===
+        "function"
+    ) {
+
+        atualizarResumoFinanceiro();
+
+    }
+
+
+    return lancamentoId;
+
+}
+
+
+// =========================
+// SALVAR MANUTENÇÃO
+// =========================
+
+if (botaoSalvarManutencao) {
+
+    botaoSalvarManutencao.addEventListener(
+        "click",
+        function () {
+
+            const impressoraId =
+                Number(
+                    obterTextoCampoEquipamentos(
+                        "manutencao-impressora"
+                    )
+                );
+
+
+            const tipo =
+                obterTextoCampoEquipamentos(
+                    "manutencao-tipo"
+                ) || "Preventiva";
+
+
+            const data =
+                obterTextoCampoEquipamentos(
+                    "manutencao-data"
+                );
+
+
+            const horasImpressora =
+                obterNumeroCampoEquipamentos(
+                    "manutencao-horas"
+                );
+
+
+            const descricao =
+                obterTextoCampoEquipamentos(
+                    "manutencao-descricao"
+                );
+
+
+            const pecaIdTexto =
+                obterTextoCampoEquipamentos(
+                    "manutencao-peca"
+                );
+
+
+            const pecaId =
+                pecaIdTexto
+                    ? Number(pecaIdTexto)
+                    : null;
+
+
+            const quantidadePeca =
+                obterNumeroCampoEquipamentos(
+                    "manutencao-quantidade-peca"
+                );
+
+
+            const lubrificanteIdTexto =
+                obterTextoCampoEquipamentos(
+                    "manutencao-lubrificante"
+                );
+
+
+            const lubrificanteId =
+                lubrificanteIdTexto
+                    ? Number(
+                        lubrificanteIdTexto
+                    )
+                    : null;
+
+
+            const quantidadeLubrificante =
+                obterNumeroCampoEquipamentos(
+                    "manutencao-quantidade-lubrificante"
+                );
+
+
+            const custoServico =
+                obterNumeroCampoEquipamentos(
+                    "manutencao-custo-servico"
+                );
+
+
+            const responsavel =
+                obterTextoCampoEquipamentos(
+                    "manutencao-responsavel"
+                );
+
+
+            const proximaData =
+                obterTextoCampoEquipamentos(
+                    "manutencao-proxima-data"
+                );
+
+
+            const proximasHoras =
+                obterNumeroCampoEquipamentos(
+                    "manutencao-proximas-horas"
+                );
+
+
+            const observacoes =
+                obterTextoCampoEquipamentos(
+                    "manutencao-observacoes"
+                );
+
+
+            const impressora =
+                impressoras.find(
+                    function (item) {
+
+                        return item.id ===
+                            impressoraId;
+
+                    }
+                );
+
+
+            if (!impressora) {
+
+                alert(
+                    "Selecione uma impressora."
+                );
+
+                return;
+
+            }
+
+
+            if (!data) {
+
+                alert(
+                    "Informe a data da manutenção."
+                );
+
+                return;
+
+            }
+
+
+            if (!descricao) {
+
+                alert(
+                    "Informe o serviço realizado."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                Number.isNaN(
+                    horasImpressora
+                ) ||
+                horasImpressora < 0
+            ) {
+
+                alert(
+                    "Informe uma quantidade válida de horas."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                Number.isNaN(
+                    custoServico
+                ) ||
+                custoServico < 0
+            ) {
+
+                alert(
+                    "Informe um custo de serviço válido."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                Number.isNaN(
+                    proximasHoras
+                ) ||
+                proximasHoras < 0
+            ) {
+
+                alert(
+                    "Informe uma quantidade válida para a próxima manutenção por horas."
+                );
+
+                return;
+
+            }
+
+
+            let peca = null;
+
+            let custoPeca = 0;
+
+
+            if (pecaId) {
+
+                peca =
+                    pecasEquipamentos.find(
+                        function (item) {
+
+                            return item.id ===
+                                pecaId;
+
+                        }
+                    );
+
+
+                if (!peca) {
+
+                    alert(
+                        "A peça selecionada não foi encontrada."
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    Number.isNaN(
+                        quantidadePeca
+                    ) ||
+                    quantidadePeca <= 0
+                ) {
+
+                    alert(
+                        "Informe a quantidade da peça utilizada."
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    quantidadePeca >
+                    Number(
+                        peca.quantidadeAtual ||
+                        0
+                    )
+                ) {
+
+                    alert(
+                        `Estoque insuficiente de ${peca.nome}.\n\nEstoque disponível: ${peca.quantidadeAtual}.`
+                    );
+
+                    return;
+
+                }
+
+
+                custoPeca =
+                    quantidadePeca *
+
+                    Number(
+                        peca.valorUnitario ||
+                        0
+                    );
+
+            } else if (
+                quantidadePeca > 0
+            ) {
+
+                alert(
+                    "Selecione a peça utilizada."
+                );
+
+                return;
+
+            }
+
+
+            let lubrificante = null;
+
+            let custoLubrificante = 0;
+
+
+            if (lubrificanteId) {
+
+                lubrificante =
+                    lubrificantesEquipamentos.find(
+                        function (item) {
+
+                            return item.id ===
+                                lubrificanteId;
+
+                        }
+                    );
+
+
+                if (!lubrificante) {
+
+                    alert(
+                        "O lubrificante selecionado não foi encontrado."
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    Number.isNaN(
+                        quantidadeLubrificante
+                    ) ||
+                    quantidadeLubrificante <= 0
+                ) {
+
+                    alert(
+                        "Informe a quantidade de lubrificante utilizada."
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    quantidadeLubrificante >
+                    Number(
+                        lubrificante
+                            .quantidadeAtual ||
+                        0
+                    )
+                ) {
+
+                    alert(
+                        `Estoque insuficiente de ${lubrificante.nome}.\n\nEstoque disponível: ${lubrificante.quantidadeAtual} ${lubrificante.unidade}.`
+                    );
+
+                    return;
+
+                }
+
+
+                custoLubrificante =
+                    quantidadeLubrificante *
+
+                    Number(
+                        lubrificante
+                            .valorUnitario ||
+                        0
+                    );
+
+            } else if (
+                quantidadeLubrificante > 0
+            ) {
+
+                alert(
+                    "Selecione o lubrificante utilizado."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                proximaData &&
+                proximaData < data
+            ) {
+
+                alert(
+                    "A próxima manutenção não pode ter uma data anterior à manutenção atual."
+                );
+
+                return;
+
+            }
+
+
+            const custoTotal =
+                custoPeca +
+                custoLubrificante +
+                custoServico;
+
+
+            const novaManutencao = {
+
+                id:
+                    Date.now() +
+                    Math.random(),
+
+                impressoraId:
+                    impressora.id,
+
+                impressoraNome:
+                    impressora.nome,
+
+                tipo:
+                    tipo,
+
+                data:
+                    data,
+
+                horasImpressora:
+                    horasImpressora,
+
+                descricao:
+                    descricao,
+
+                pecaId:
+                    peca
+                        ? peca.id
+                        : null,
+
+                pecaNome:
+                    peca
+                        ? peca.nome
+                        : "",
+
+                quantidadePeca:
+                    peca
+                        ? quantidadePeca
+                        : 0,
+
+                custoPeca:
+                    custoPeca,
+
+                lubrificanteId:
+                    lubrificante
+                        ? lubrificante.id
+                        : null,
+
+                lubrificanteNome:
+                    lubrificante
+                        ? lubrificante.nome
+                        : "",
+
+                quantidadeLubrificante:
+                    lubrificante
+                        ? quantidadeLubrificante
+                        : 0,
+
+                custoLubrificante:
+                    custoLubrificante,
+
+                custoServico:
+                    custoServico,
+
+                custoTotal:
+                    custoTotal,
+
+                responsavel:
+                    responsavel,
+
+                proximaData:
+                    proximaData,
+
+                proximasHoras:
+                    proximasHoras,
+
+                observacoes:
+                    observacoes,
+
+                lancamentoFinanceiroId:
+                    null
+            };
+
+
+            // Baixa da peça no estoque
+
+            if (peca) {
+
+                peca.quantidadeAtual =
+                    Number(
+                        peca.quantidadeAtual ||
+                        0
+                    ) -
+                    quantidadePeca;
+
+            }
+
+
+            // Baixa do lubrificante no estoque
+
+            if (lubrificante) {
+
+                lubrificante.quantidadeAtual =
+                    Number(
+                        lubrificante
+                            .quantidadeAtual ||
+                        0
+                    ) -
+                    quantidadeLubrificante;
+
+            }
+
+
+            // Atualiza os dados de manutenção
+            // da impressora
+
+            impressora.ultimaManutencao =
+                data;
+
+
+            if (proximaData) {
+
+                impressora.proximaManutencao =
+                    proximaData;
+
+            }
+
+
+            if (proximasHoras > 0) {
+
+                impressora
+                    .proximasHorasManutencao =
+                    proximasHoras;
+
+            }
+
+
+            if (
+                impressora.status ===
+                "Em manutenção"
+            ) {
+
+                impressora.status =
+                    "Ativa";
+
+            }
+
+
+            manutencoesEquipamentos.push(
+                novaManutencao
+            );
+
+
+            salvarImpressoras();
+
+            salvarPecasEquipamentos();
+
+            salvarLubrificantesEquipamentos();
+
+            salvarManutencoesEquipamentos();
+
+
+            novaManutencao
+                .lancamentoFinanceiroId =
+                lancarDespesaManutencaoFinanceiro(
+                    novaManutencao
+                );
+
+
+            salvarManutencoesEquipamentos();
+
+
+            registrarDiarioEquipamento({
+
+                data:
+                    data,
+
+                impressoraId:
+                    impressora.id,
+
+                impressoraNome:
+                    impressora.nome,
+
+                tipo:
+                    "Manutenção",
+
+                titulo:
+                    `${tipo} realizada`,
+
+                descricao:
+                    `${descricao}. Custo total: ${formatarDinheiro(
+                        custoTotal
+                    )}.`
+
+            });
+
+
+            mostrarImpressoras();
+
+            mostrarPecasEquipamentos();
+
+            mostrarLubrificantesEquipamentos();
+
+            mostrarManutencoesEquipamentos();
+
+            atualizarOpcoesEquipamentos();
+
+            limparFormularioManutencao();
+
+
+            alert(
+                custoTotal > 0
+
+                    ? "Manutenção registrada e despesa lançada no Financeiro!"
+
+                    : "Manutenção registrada com sucesso!"
+            );
+
+        }
+    );
+
+}
+
+
+// =========================
+// REMOVER DESPESA DA MANUTENÇÃO
+// =========================
+
+function removerDespesaManutencaoFinanceiro(
+    manutencao
+) {
+
+    if (
+        typeof lancamentosFinanceiros ===
+        "undefined"
+    ) {
+
+        return;
+
+    }
+
+
+    lancamentosFinanceiros =
+        lancamentosFinanceiros.filter(
+            function (lancamento) {
+
+                const mesmoId =
+                    manutencao
+                        .lancamentoFinanceiroId &&
+
+                    lancamento.id ===
+                    manutencao
+                        .lancamentoFinanceiroId;
+
+
+                const mesmaManutencao =
+                    lancamento.manutencaoId ===
+                    manutencao.id;
+
+
+                return !(
+                    mesmoId ||
+                    mesmaManutencao
+                );
+
+            }
+        );
+
+
+    if (
+        typeof salvarLancamentosFinanceiros ===
+        "function"
+    ) {
+
+        salvarLancamentosFinanceiros();
+
+    }
+
+
+    if (
+        typeof mostrarLancamentosFinanceiros ===
+        "function"
+    ) {
+
+        mostrarLancamentosFinanceiros();
+
+    } else if (
+        typeof mostrarLancamentos ===
+        "function"
+    ) {
+
+        mostrarLancamentos();
+
+    }
+
+
+    if (
+        typeof atualizarResumoFinanceiro ===
+        "function"
+    ) {
+
+        atualizarResumoFinanceiro();
+
+    }
+
+}
+
+
+// =========================
+// EXCLUIR MANUTENÇÃO
+// =========================
+
+window.excluirManutencaoEquipamento =
+    function (id) {
+
+        const manutencao =
+            manutencoesEquipamentos.find(
+                function (item) {
+
+                    return item.id === id;
+
+                }
+            );
+
+
+        if (!manutencao) {
+
+            alert(
+                "Manutenção não encontrada."
+            );
+
+            return;
+
+        }
+
+
+        const confirmar =
+            confirm(
+                "Deseja excluir este registro de manutenção?\n\nAs peças e os lubrificantes utilizados voltarão para o estoque. A despesa automática também será removida do Financeiro."
+            );
+
+
+        if (!confirmar) {
+
+            return;
+
+        }
+
+
+        if (manutencao.pecaId) {
+
+            const peca =
+                pecasEquipamentos.find(
+                    function (item) {
+
+                        return item.id ===
+                            manutencao.pecaId;
+
+                    }
+                );
+
+
+            if (peca) {
+
+                peca.quantidadeAtual =
+                    Number(
+                        peca.quantidadeAtual ||
+                        0
+                    ) +
+
+                    Number(
+                        manutencao
+                            .quantidadePeca ||
+                        0
+                    );
+
+            }
+
+        }
+
+
+        if (
+            manutencao.lubrificanteId
+        ) {
+
+            const lubrificante =
+                lubrificantesEquipamentos.find(
+                    function (item) {
+
+                        return item.id ===
+                            manutencao
+                                .lubrificanteId;
+
+                    }
+                );
+
+
+            if (lubrificante) {
+
+                lubrificante.quantidadeAtual =
+                    Number(
+                        lubrificante
+                            .quantidadeAtual ||
+                        0
+                    ) +
+
+                    Number(
+                        manutencao
+                            .quantidadeLubrificante ||
+                        0
+                    );
+
+            }
+
+        }
+
+
+        removerDespesaManutencaoFinanceiro(
+            manutencao
+        );
+
+
+        manutencoesEquipamentos =
+            manutencoesEquipamentos.filter(
+                function (item) {
+
+                    return item.id !== id;
+
+                }
+            );
+
+
+        salvarPecasEquipamentos();
+
+        salvarLubrificantesEquipamentos();
+
+        salvarManutencoesEquipamentos();
+
+
+        registrarDiarioEquipamento({
+
+            data:
+                obterDataHojeEquipamentos(),
+
+            impressoraId:
+                manutencao.impressoraId,
+
+            impressoraNome:
+                manutencao.impressoraNome,
+
+            tipo:
+                "Manutenção",
+
+            titulo:
+                "Registro de manutenção excluído",
+
+            descricao:
+                `A manutenção de ${formatarDataEquipamentos(
+                    manutencao.data
+                )} foi excluída e os materiais retornaram ao estoque.`
+
+        });
+
+
+        mostrarPecasEquipamentos();
+
+        mostrarLubrificantesEquipamentos();
+
+        mostrarManutencoesEquipamentos();
+
+        atualizarOpcoesEquipamentos();
+
+
+        alert(
+            "Manutenção excluída com sucesso!"
+        );
+
+    };
+
 
 // =========================
 // FINANCEIRO 2.0
