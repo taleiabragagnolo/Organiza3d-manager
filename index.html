@@ -1229,14 +1229,18 @@
 
     <p>
         Cadastre as impressoras e acompanhe peças,
-        lubrificantes, manutenções e horas de uso.
+        lubrificantes, manutenções, horas de uso e ocorrências.
     </p>
 
-    <div class="formulario">
+    <!-- ========================= -->
+    <!-- NAVEGAÇÃO DAS ABAS -->
+    <!-- ========================= -->
+
+    <div class="formulario equipamentos-navegacao">
 
         <h3>Áreas do módulo</h3>
 
-        <div class="linha">
+        <div class="botoes-abas-equipamentos">
 
             <button
                 type="button"
@@ -1258,10 +1262,6 @@
                 data-aba-equipamento="aba-lubrificantes">
                 🛢️ Lubrificantes
             </button>
-
-        </div>
-
-        <div class="linha">
 
             <button
                 type="button"
@@ -1289,7 +1289,9 @@
     </div>
 
 
+    <!-- ========================= -->
     <!-- ABA IMPRESSORAS -->
+    <!-- ========================= -->
 
     <div
         id="aba-impressoras"
@@ -1572,25 +1574,307 @@
     </div>
 
 
+    <!-- ========================= -->
     <!-- ABA PEÇAS -->
+    <!-- ========================= -->
 
     <div
         id="aba-pecas"
         class="conteudo-aba-equipamento"
         hidden>
 
-        <h3>Peças de manutenção</h3>
+        <h3>Resumo das peças</h3>
+
+        <div class="cards">
+
+            <div class="card">
+                <span>🔧 Peças cadastradas</span>
+                <strong id="equipamentos-total-pecas">
+                    0
+                </strong>
+            </div>
+
+            <div class="card">
+                <span>📦 Unidades em estoque</span>
+                <strong id="equipamentos-pecas-quantidade">
+                    0
+                </strong>
+            </div>
+
+            <div class="card">
+                <span>⚠️ Estoque baixo</span>
+                <strong id="equipamentos-pecas-estoque-baixo">
+                    0
+                </strong>
+            </div>
+
+            <div class="card">
+                <span>💰 Valor em estoque</span>
+                <strong id="equipamentos-pecas-valor-estoque">
+                    R$ 0,00
+                </strong>
+            </div>
+
+        </div>
+
+        <h3>Cadastrar peça</h3>
 
         <div class="formulario">
 
-            <p>
-                Nesta área serão cadastrados bicos, hotends,
-                correias, ventoinhas, tubos PTFE, placas,
-                sensores, motores e outras peças.
-            </p>
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="peca-nome">
+                        Nome da peça
+                    </label>
+
+                    <input
+                        type="text"
+                        id="peca-nome"
+                        placeholder="Ex.: Bico de impressão">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="peca-categoria">
+                        Categoria
+                    </label>
+
+                    <select id="peca-categoria">
+
+                        <option value="">
+                            Selecione
+                        </option>
+
+                        <option value="Bico">
+                            Bico
+                        </option>
+
+                        <option value="Hotend">
+                            Hotend
+                        </option>
+
+                        <option value="Correia">
+                            Correia
+                        </option>
+
+                        <option value="Ventoinha">
+                            Ventoinha
+                        </option>
+
+                        <option value="Tubo PTFE">
+                            Tubo PTFE
+                        </option>
+
+                        <option value="Placa">
+                            Placa
+                        </option>
+
+                        <option value="Sensor">
+                            Sensor
+                        </option>
+
+                        <option value="Motor">
+                            Motor
+                        </option>
+
+                        <option value="Engrenagem">
+                            Engrenagem
+                        </option>
+
+                        <option value="Parafuso">
+                            Parafuso
+                        </option>
+
+                        <option value="Outro">
+                            Outro
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="peca-marca">
+                        Marca ou fabricante
+                    </label>
+
+                    <input
+                        type="text"
+                        id="peca-marca"
+                        placeholder="Ex.: Bambu Lab">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="peca-codigo">
+                        Código ou referência
+                    </label>
+
+                    <input
+                        type="text"
+                        id="peca-codigo"
+                        placeholder="Ex.: FAH001">
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="peca-quantidade">
+                        Quantidade comprada
+                    </label>
+
+                    <input
+                        type="number"
+                        id="peca-quantidade"
+                        min="1"
+                        step="1"
+                        placeholder="Ex.: 5">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="peca-estoque-minimo">
+                        Estoque mínimo
+                    </label>
+
+                    <input
+                        type="number"
+                        id="peca-estoque-minimo"
+                        min="0"
+                        step="1"
+                        placeholder="Ex.: 1">
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="peca-valor-total">
+                        Valor total da compra
+                    </label>
+
+                    <input
+                        type="number"
+                        id="peca-valor-total"
+                        min="0"
+                        step="0.01"
+                        placeholder="Ex.: 75,00">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="peca-valor-unitario">
+                        Valor por unidade
+                    </label>
+
+                    <input
+                        type="text"
+                        id="peca-valor-unitario"
+                        value="R$ 0,00"
+                        readonly>
+
+                    <small>
+                        Calculado automaticamente.
+                    </small>
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="peca-data-compra">
+                        Data da compra
+                    </label>
+
+                    <input
+                        type="date"
+                        id="peca-data-compra">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="peca-fornecedor">
+                        Fornecedor
+                    </label>
+
+                    <input
+                        type="text"
+                        id="peca-fornecedor"
+                        placeholder="Ex.: Loja oficial Bambu Lab">
+
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="peca-compatibilidade">
+                    Compatibilidade
+                </label>
+
+                <input
+                    type="text"
+                    id="peca-compatibilidade"
+                    placeholder="Ex.: Bambu Lab A1 e A1 Mini">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="peca-observacoes">
+                    Observações
+                </label>
+
+                <textarea
+                    id="peca-observacoes"
+                    rows="3"
+                    placeholder="Lote, medidas, local de armazenamento ou outras informações"></textarea>
+
+            </div>
+
+            <button
+                id="salvar-peca"
+                class="botao-principal"
+                type="button">
+                Salvar Peça
+            </button>
+
+            <button
+                id="limpar-formulario-peca"
+                type="button">
+                Limpar Formulário
+            </button>
+
+        </div>
+
+        <h3>Peças cadastradas</h3>
+
+        <div id="lista-pecas">
 
             <p>
-                O cadastro de peças será desenvolvido na próxima etapa.
+                Nenhuma peça cadastrada.
             </p>
 
         </div>
@@ -1598,26 +1882,302 @@
     </div>
 
 
+    <!-- ========================= -->
     <!-- ABA LUBRIFICANTES -->
+    <!-- ========================= -->
 
     <div
         id="aba-lubrificantes"
         class="conteudo-aba-equipamento"
         hidden>
 
-        <h3>Lubrificantes e graxas</h3>
+        <h3>Resumo dos lubrificantes</h3>
+
+        <div class="cards">
+
+            <div class="card">
+                <span>🛢️ Produtos cadastrados</span>
+                <strong id="equipamentos-total-lubrificantes">
+                    0
+                </strong>
+            </div>
+
+            <div class="card">
+                <span>📦 Quantidade disponível</span>
+                <strong id="equipamentos-lubrificantes-quantidade">
+                    0
+                </strong>
+            </div>
+
+            <div class="card">
+                <span>⚠️ Estoque baixo</span>
+                <strong id="equipamentos-lubrificantes-estoque-baixo">
+                    0
+                </strong>
+            </div>
+
+            <div class="card">
+                <span>💰 Valor em estoque</span>
+                <strong id="equipamentos-lubrificantes-valor-estoque">
+                    R$ 0,00
+                </strong>
+            </div>
+
+        </div>
+
+        <h3>Cadastrar lubrificante ou produto</h3>
 
         <div class="formulario">
 
-            <p>
-                Nesta área serão cadastradas graxas, óleos,
-                produtos de limpeza e outros materiais utilizados
-                na manutenção dos equipamentos.
-            </p>
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="lubrificante-nome">
+                        Nome do produto
+                    </label>
+
+                    <input
+                        type="text"
+                        id="lubrificante-nome"
+                        placeholder="Ex.: Graxa lubrificante">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="lubrificante-tipo">
+                        Tipo
+                    </label>
+
+                    <select id="lubrificante-tipo">
+
+                        <option value="">
+                            Selecione
+                        </option>
+
+                        <option value="Graxa">
+                            Graxa
+                        </option>
+
+                        <option value="Óleo">
+                            Óleo
+                        </option>
+
+                        <option value="Produto de limpeza">
+                            Produto de limpeza
+                        </option>
+
+                        <option value="Álcool isopropílico">
+                            Álcool isopropílico
+                        </option>
+
+                        <option value="Adesivo">
+                            Adesivo
+                        </option>
+
+                        <option value="Outro">
+                            Outro
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="lubrificante-marca">
+                        Marca ou fabricante
+                    </label>
+
+                    <input
+                        type="text"
+                        id="lubrificante-marca"
+                        placeholder="Ex.: Bambu Lab">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="lubrificante-unidade">
+                        Unidade de controle
+                    </label>
+
+                    <select id="lubrificante-unidade">
+
+                        <option value="">
+                            Selecione
+                        </option>
+
+                        <option value="Unidade">
+                            Unidade
+                        </option>
+
+                        <option value="Grama">
+                            Grama
+                        </option>
+
+                        <option value="Mililitro">
+                            Mililitro
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="lubrificante-quantidade">
+                        Quantidade comprada
+                    </label>
+
+                    <input
+                        type="number"
+                        id="lubrificante-quantidade"
+                        min="0"
+                        step="0.01"
+                        placeholder="Ex.: 100">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="lubrificante-estoque-minimo">
+                        Estoque mínimo
+                    </label>
+
+                    <input
+                        type="number"
+                        id="lubrificante-estoque-minimo"
+                        min="0"
+                        step="0.01"
+                        placeholder="Ex.: 20">
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="lubrificante-valor-total">
+                        Valor total da compra
+                    </label>
+
+                    <input
+                        type="number"
+                        id="lubrificante-valor-total"
+                        min="0"
+                        step="0.01"
+                        placeholder="Ex.: 35,00">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="lubrificante-valor-unitario">
+                        Valor por unidade de controle
+                    </label>
+
+                    <input
+                        type="text"
+                        id="lubrificante-valor-unitario"
+                        value="R$ 0,00"
+                        readonly>
+
+                    <small>
+                        Calculado automaticamente.
+                    </small>
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="lubrificante-data-compra">
+                        Data da compra
+                    </label>
+
+                    <input
+                        type="date"
+                        id="lubrificante-data-compra">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="lubrificante-fornecedor">
+                        Fornecedor
+                    </label>
+
+                    <input
+                        type="text"
+                        id="lubrificante-fornecedor"
+                        placeholder="Ex.: Loja de manutenção">
+
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="lubrificante-aplicacao">
+                    Aplicação recomendada
+                </label>
+
+                <input
+                    type="text"
+                    id="lubrificante-aplicacao"
+                    placeholder="Ex.: Eixo X, eixo Y e trilhos">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="lubrificante-observacoes">
+                    Observações
+                </label>
+
+                <textarea
+                    id="lubrificante-observacoes"
+                    rows="3"
+                    placeholder="Validade, modo de uso, local de armazenamento ou outras informações"></textarea>
+
+            </div>
+
+            <button
+                id="salvar-lubrificante"
+                class="botao-principal"
+                type="button">
+                Salvar Lubrificante
+            </button>
+
+            <button
+                id="limpar-formulario-lubrificante"
+                type="button">
+                Limpar Formulário
+            </button>
+
+        </div>
+
+        <h3>Lubrificantes e produtos cadastrados</h3>
+
+        <div id="lista-lubrificantes">
 
             <p>
-                O cadastro de lubrificantes será desenvolvido
-                em uma próxima etapa.
+                Nenhum lubrificante cadastrado.
             </p>
 
         </div>
@@ -1625,25 +2185,336 @@
     </div>
 
 
+    <!-- ========================= -->
     <!-- ABA MANUTENÇÕES -->
+    <!-- ========================= -->
 
     <div
         id="aba-manutencoes"
         class="conteudo-aba-equipamento"
         hidden>
 
-        <h3>Manutenções</h3>
+        <h3>Resumo das manutenções</h3>
+
+        <div class="cards">
+
+            <div class="card">
+                <span>📅 Manutenções registradas</span>
+                <strong id="equipamentos-total-manutencoes">
+                    0
+                </strong>
+            </div>
+
+            <div class="card">
+                <span>🛡️ Preventivas</span>
+                <strong id="equipamentos-manutencoes-preventivas">
+                    0
+                </strong>
+            </div>
+
+            <div class="card">
+                <span>🧰 Corretivas</span>
+                <strong id="equipamentos-manutencoes-corretivas">
+                    0
+                </strong>
+            </div>
+
+            <div class="card">
+                <span>💰 Custo total</span>
+                <strong id="equipamentos-manutencoes-custo">
+                    R$ 0,00
+                </strong>
+            </div>
+
+        </div>
+
+        <h3>Registrar manutenção</h3>
 
         <div class="formulario">
 
-            <p>
-                Nesta área serão registradas manutenções preventivas
-                e corretivas realizadas em cada impressora.
-            </p>
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="manutencao-impressora">
+                        Impressora
+                    </label>
+
+                    <select id="manutencao-impressora">
+
+                        <option value="">
+                            Selecione a impressora
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="manutencao-tipo">
+                        Tipo de manutenção
+                    </label>
+
+                    <select id="manutencao-tipo">
+
+                        <option value="">
+                            Selecione
+                        </option>
+
+                        <option value="Preventiva">
+                            Preventiva
+                        </option>
+
+                        <option value="Corretiva">
+                            Corretiva
+                        </option>
+
+                        <option value="Limpeza">
+                            Limpeza
+                        </option>
+
+                        <option value="Calibração">
+                            Calibração
+                        </option>
+
+                        <option value="Troca de peça">
+                            Troca de peça
+                        </option>
+
+                        <option value="Lubrificação">
+                            Lubrificação
+                        </option>
+
+                        <option value="Outra">
+                            Outra
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="manutencao-data">
+                        Data da manutenção
+                    </label>
+
+                    <input
+                        type="date"
+                        id="manutencao-data">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="manutencao-horas-impressora">
+                        Horas da impressora
+                    </label>
+
+                    <input
+                        type="number"
+                        id="manutencao-horas-impressora"
+                        min="0"
+                        step="0.01"
+                        placeholder="Ex.: 500">
+
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="manutencao-descricao">
+                    Serviço realizado
+                </label>
+
+                <textarea
+                    id="manutencao-descricao"
+                    rows="3"
+                    placeholder="Descreva a limpeza, troca, ajuste ou reparo realizado"></textarea>
+
+            </div>
+
+            <h4>Material utilizado</h4>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="manutencao-peca">
+                        Peça utilizada
+                    </label>
+
+                    <select id="manutencao-peca">
+
+                        <option value="">
+                            Nenhuma peça utilizada
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="manutencao-quantidade-peca">
+                        Quantidade da peça
+                    </label>
+
+                    <input
+                        type="number"
+                        id="manutencao-quantidade-peca"
+                        min="0"
+                        step="1"
+                        value="0">
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="manutencao-lubrificante">
+                        Lubrificante utilizado
+                    </label>
+
+                    <select id="manutencao-lubrificante">
+
+                        <option value="">
+                            Nenhum lubrificante utilizado
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="manutencao-quantidade-lubrificante">
+                        Quantidade utilizada
+                    </label>
+
+                    <input
+                        type="number"
+                        id="manutencao-quantidade-lubrificante"
+                        min="0"
+                        step="0.01"
+                        value="0">
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="manutencao-custo-servico">
+                        Outros custos
+                    </label>
+
+                    <input
+                        type="number"
+                        id="manutencao-custo-servico"
+                        min="0"
+                        step="0.01"
+                        placeholder="Ex.: 50,00">
+
+                    <small>
+                        Mão de obra, frete ou serviço técnico.
+                    </small>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="manutencao-responsavel">
+                        Responsável
+                    </label>
+
+                    <input
+                        type="text"
+                        id="manutencao-responsavel"
+                        placeholder="Ex.: Proprietária ou assistência técnica">
+
+                </div>
+
+            </div>
+
+            <h4>Próxima manutenção</h4>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="manutencao-proxima-data">
+                        Próxima data prevista
+                    </label>
+
+                    <input
+                        type="date"
+                        id="manutencao-proxima-data">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="manutencao-proximas-horas">
+                        Próxima manutenção com quantas horas
+                    </label>
+
+                    <input
+                        type="number"
+                        id="manutencao-proximas-horas"
+                        min="0"
+                        step="0.01"
+                        placeholder="Ex.: 1000">
+
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="manutencao-observacoes">
+                    Observações
+                </label>
+
+                <textarea
+                    id="manutencao-observacoes"
+                    rows="3"
+                    placeholder="Problemas encontrados, recomendações ou informações adicionais"></textarea>
+
+            </div>
+
+            <button
+                id="salvar-manutencao"
+                class="botao-principal"
+                type="button">
+                Salvar Manutenção
+            </button>
+
+            <button
+                id="limpar-formulario-manutencao"
+                type="button">
+                Limpar Formulário
+            </button>
+
+        </div>
+
+        <h3>Histórico de manutenções</h3>
+
+        <div id="lista-manutencoes">
 
             <p>
-                Cada manutenção poderá utilizar peças e lubrificantes
-                cadastrados no estoque.
+                Nenhuma manutenção registrada.
             </p>
 
         </div>
@@ -1651,25 +2522,263 @@
     </div>
 
 
+    <!-- ========================= -->
     <!-- ABA HORAS DE USO -->
+    <!-- ========================= -->
 
     <div
         id="aba-horas"
         class="conteudo-aba-equipamento"
         hidden>
 
-        <h3>Horas de uso</h3>
+        <h3>Resumo das horas de uso</h3>
+
+        <div class="cards">
+
+            <div class="card">
+                <span>⏱️ Total acumulado</span>
+                <strong id="equipamentos-horas-total">
+                    0h
+                </strong>
+            </div>
+
+            <div class="card">
+                <span>📝 Registros manuais</span>
+                <strong id="equipamentos-horas-registros">
+                    0
+                </strong>
+            </div>
+
+            <div class="card">
+                <span>➕ Horas adicionadas</span>
+                <strong id="equipamentos-horas-adicionadas">
+                    0h
+                </strong>
+            </div>
+
+            <div class="card">
+                <span>🏭 Horas de produção</span>
+                <strong id="equipamentos-horas-producoes">
+                    0h
+                </strong>
+            </div>
+
+        </div>
+
+        <h3>Registrar horas manualmente</h3>
 
         <div class="formulario">
 
-            <p>
-                As horas serão somadas automaticamente pelas produções
-                cadastradas no aplicativo.
-            </p>
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="horas-impressora">
+                        Impressora
+                    </label>
+
+                    <select id="horas-impressora">
+
+                        <option value="">
+                            Selecione a impressora
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="horas-data">
+                        Data
+                    </label>
+
+                    <input
+                        type="date"
+                        id="horas-data">
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="horas-quantidade">
+                        Quantidade de horas
+                    </label>
+
+                    <input
+                        type="number"
+                        id="horas-quantidade"
+                        step="0.01"
+                        placeholder="Ex.: 3,5">
+
+                    <small>
+                        Use um valor positivo para adicionar ou negativo
+                        para corrigir horas.
+                    </small>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="horas-motivo">
+                        Motivo
+                    </label>
+
+                    <select id="horas-motivo">
+
+                        <option value="">
+                            Selecione
+                        </option>
+
+                        <option value="Impressão não cadastrada">
+                            Impressão não cadastrada
+                        </option>
+
+                        <option value="Teste">
+                            Teste
+                        </option>
+
+                        <option value="Calibração">
+                            Calibração
+                        </option>
+
+                        <option value="Manutenção">
+                            Manutenção
+                        </option>
+
+                        <option value="Correção de horas">
+                            Correção de horas
+                        </option>
+
+                        <option value="Outro">
+                            Outro
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="horas-observacoes">
+                    Observações
+                </label>
+
+                <textarea
+                    id="horas-observacoes"
+                    rows="3"
+                    placeholder="Explique o motivo do lançamento ou da correção"></textarea>
+
+            </div>
+
+            <button
+                id="salvar-registro-horas"
+                class="botao-principal"
+                type="button">
+                Salvar Registro de Horas
+            </button>
+
+            <button
+                id="limpar-formulario-horas"
+                type="button">
+                Limpar Formulário
+            </button>
+
+        </div>
+
+        <h3>Histórico de horas</h3>
+
+        <div class="formulario">
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="filtro-horas-impressora">
+                        Filtrar por impressora
+                    </label>
+
+                    <select id="filtro-horas-impressora">
+
+                        <option value="">
+                            Todas as impressoras
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="filtro-horas-motivo">
+                        Filtrar por motivo
+                    </label>
+
+                    <select id="filtro-horas-motivo">
+
+                        <option value="">
+                            Todos os motivos
+                        </option>
+
+                        <option value="Produção">
+                            Produção
+                        </option>
+
+                        <option value="Impressão não cadastrada">
+                            Impressão não cadastrada
+                        </option>
+
+                        <option value="Teste">
+                            Teste
+                        </option>
+
+                        <option value="Calibração">
+                            Calibração
+                        </option>
+
+                        <option value="Manutenção">
+                            Manutenção
+                        </option>
+
+                        <option value="Correção de horas">
+                            Correção de horas
+                        </option>
+
+                        <option value="Outro">
+                            Outro
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <button
+                id="aplicar-filtros-horas"
+                class="botao-principal"
+                type="button">
+                Aplicar Filtros
+            </button>
+
+            <button
+                id="limpar-filtros-horas"
+                type="button">
+                Limpar Filtros
+            </button>
+
+        </div>
+
+        <div id="lista-horas-equipamentos">
 
             <p>
-                Também será possível adicionar horas manualmente para
-                testes, calibrações ou impressões não cadastradas.
+                Nenhum registro de horas encontrado.
             </p>
 
         </div>
@@ -1677,7 +2786,9 @@
     </div>
 
 
+    <!-- ========================= -->
     <!-- ABA DIÁRIO -->
+    <!-- ========================= -->
 
     <div
         id="aba-diario"
@@ -1686,16 +2797,124 @@
 
         <h3>Diário dos equipamentos</h3>
 
+        <p>
+            O diário reúne automaticamente os cadastros, ajustes de horas,
+            manutenções, trocas de peças, lubrificações e outras ocorrências.
+        </p>
+
         <div class="formulario">
 
-            <p>
-                O diário mostrará em ordem de data tudo o que aconteceu
-                com cada impressora.
-            </p>
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="filtro-diario-impressora">
+                        Impressora
+                    </label>
+
+                    <select id="filtro-diario-impressora">
+
+                        <option value="">
+                            Todas as impressoras
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="filtro-diario-tipo">
+                        Tipo de ocorrência
+                    </label>
+
+                    <select id="filtro-diario-tipo">
+
+                        <option value="">
+                            Todas as ocorrências
+                        </option>
+
+                        <option value="Cadastro">
+                            Cadastro
+                        </option>
+
+                        <option value="Produção">
+                            Produção
+                        </option>
+
+                        <option value="Horas">
+                            Horas
+                        </option>
+
+                        <option value="Manutenção">
+                            Manutenção
+                        </option>
+
+                        <option value="Peça">
+                            Peça
+                        </option>
+
+                        <option value="Lubrificante">
+                            Lubrificante
+                        </option>
+
+                        <option value="Status">
+                            Status
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="filtro-diario-data-inicial">
+                        Data inicial
+                    </label>
+
+                    <input
+                        type="date"
+                        id="filtro-diario-data-inicial">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="filtro-diario-data-final">
+                        Data final
+                    </label>
+
+                    <input
+                        type="date"
+                        id="filtro-diario-data-final">
+
+                </div>
+
+            </div>
+
+            <button
+                id="aplicar-filtros-diario"
+                class="botao-principal"
+                type="button">
+                Aplicar Filtros
+            </button>
+
+            <button
+                id="limpar-filtros-diario"
+                type="button">
+                Limpar Filtros
+            </button>
+
+        </div>
+
+        <div id="lista-diario-equipamentos">
 
             <p>
-                Produções, ajustes de horas, manutenções, trocas de peças,
-                lubrificações e demais ocorrências ficarão registradas aqui.
+                Nenhuma ocorrência registrada.
             </p>
 
         </div>
