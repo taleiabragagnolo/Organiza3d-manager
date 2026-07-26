@@ -13419,58 +13419,7 @@ if (botaoAtualizarDashboardCompleto) {
 atualizarDashboardCompleto();
 });
 
-/* =======================================
-   SEGURANÇA 1.0
-======================================= */
 
-const telaLogin = document.getElementById("tela-login");
-const aplicativo = document.getElementById("aplicativo");
-
-const campoUsuario = document.getElementById("login-usuario");
-const campoSenha = document.getElementById("login-senha");
-
-const botaoEntrar = document.getElementById("entrar-sistema");
-const mensagemLogin = document.getElementById("mensagem-login");
-
-
-
-    telaLogin.style.display = "none";
-
-    aplicativo.style.display = "flex";
-
-}
-
-function validarLogin() {
-
-    mensagemLogin.textContent = "";
-
-    if (
-        campoUsuario.value === usuarioSistema.usuario &&
-        campoSenha.value === usuarioSistema.senha
-    ) {
-
-        abrirSistema();
-
-    } else {
-
-        mensagemLogin.textContent =
-            "Usuário ou senha incorretos.";
-
-    }
-
-}
-
-botaoEntrar.addEventListener("click", validarLogin);
-
-campoSenha.addEventListener("keydown", function (e) {
-
-    if (e.key === "Enter") {
-
-        validarLogin();
-
-    }
-
-});
 /* =======================================
    BOTÃO SAIR
 ======================================= */
