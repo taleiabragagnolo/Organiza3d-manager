@@ -14,6 +14,102 @@
     <!-- ===================================== -->
     <!-- LOGIN DO SISTEMA -->
     <!-- ===================================== -->
+<!-- ===================================== -->
+<!-- PRIMEIRO ACESSO -->
+<!-- ===================================== -->
+
+<div id="tela-primeiro-acesso" style="display: none;">
+
+    <div class="primeiro-acesso-card">
+
+        <div class="login-logo">
+
+            <h1>Organiza 3D</h1>
+
+            <p>Manager</p>
+
+        </div>
+
+        <h2>Bem-vindo!</h2>
+
+        <p class="primeiro-acesso-texto">
+            Este é o primeiro acesso ao sistema.
+            Crie agora o administrador principal.
+        </p>
+
+        <div class="campo">
+
+            <label for="cadastro-nome-administrador">
+                Nome do administrador
+            </label>
+
+            <input
+                type="text"
+                id="cadastro-nome-administrador"
+                placeholder="Digite seu nome"
+                autocomplete="name">
+
+        </div>
+
+        <div class="campo">
+
+            <label for="cadastro-usuario-administrador">
+                Usuário
+            </label>
+
+            <input
+                type="text"
+                id="cadastro-usuario-administrador"
+                placeholder="Crie um usuário"
+                autocomplete="username">
+
+        </div>
+
+        <div class="campo">
+
+            <label for="cadastro-senha-administrador">
+                Senha
+            </label>
+
+            <input
+                type="password"
+                id="cadastro-senha-administrador"
+                placeholder="Crie uma senha"
+                autocomplete="new-password">
+
+            <small>
+                Use pelo menos 6 caracteres.
+            </small>
+
+        </div>
+
+        <div class="campo">
+
+            <label for="cadastro-confirmar-senha">
+                Confirmar senha
+            </label>
+
+            <input
+                type="password"
+                id="cadastro-confirmar-senha"
+                placeholder="Digite a senha novamente"
+                autocomplete="new-password">
+
+        </div>
+
+        <button
+            id="criar-administrador"
+            class="botao-principal"
+            type="button">
+
+            Criar administrador
+
+        </button>
+
+        <p id="mensagem-primeiro-acesso"></p>
+
+    </div>
+
 
     <div id="tela-login">
 

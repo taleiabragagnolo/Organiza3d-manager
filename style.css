@@ -564,3 +564,106 @@ button {
     </button>
 
 </div>
+/* ===================================== */
+/* TELA DE PRIMEIRO ACESSO */
+/* ===================================== */
+
+#tela-primeiro-acesso {
+    min-height: 100vh;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(102, 79, 56, 0.96),
+            rgba(149, 142, 118, 0.92),
+            rgba(203, 159, 139, 0.92)
+        );
+}
+
+.primeiro-acesso-card {
+    width: 100%;
+    max-width: 480px;
+    padding: 38px 34px;
+    border-radius: 22px;
+    background: #fffaf5;
+    box-shadow: 0 20px 60px rgba(74, 57, 42, 0.28);
+    border: 1px solid rgba(102, 79, 56, 0.15);
+}
+
+.primeiro-acesso-card h2 {
+    margin: 0 0 10px;
+    text-align: center;
+    color: #664f38;
+    font-size: 24px;
+}
+
+.primeiro-acesso-texto {
+    margin: 0 0 25px;
+    text-align: center;
+    color: #81684e;
+    line-height: 1.5;
+}
+
+.primeiro-acesso-card .campo {
+    margin-bottom: 17px;
+}
+
+.primeiro-acesso-card label {
+    display: block;
+    margin-bottom: 7px;
+    color: #664f38;
+    font-weight: bold;
+}
+
+.primeiro-acesso-card input {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #d9c5b5;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #4a392a;
+    font-size: 16px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.primeiro-acesso-card input:focus {
+    border-color: #958e76;
+    box-shadow: 0 0 0 3px rgba(149, 142, 118, 0.2);
+}
+
+.primeiro-acesso-card small {
+    display: block;
+    margin-top: 6px;
+    color: #81684e;
+}
+
+#criar-administrador {
+    width: 100%;
+    margin-top: 8px;
+    padding: 13px;
+}
+
+#mensagem-primeiro-acesso {
+    min-height: 22px;
+    margin: 16px 0 0;
+    text-align: center;
+    color: #b54242;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+@media (max-width: 500px) {
+
+    #tela-primeiro-acesso {
+        padding: 15px;
+    }
+
+    .primeiro-acesso-card {
+        padding: 30px 22px;
+        border-radius: 18px;
+    }
+}
