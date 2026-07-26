@@ -7850,7 +7850,7 @@ if (botaoSalvarAjusteHoras) {
 
             mostrarImpressoras();
 
-            atualizarResumoEquipamentos();
+            atualizarResumoHorasEquipamentos();
 
             limparFormularioAjusteHoras();
 
@@ -7873,7 +7873,7 @@ window.excluirAjusteHorasEquipamento =
     function (id) {
 
         const ajuste =
-            ajustesHorasEquipamentos.find(
+            registrosHorasEquipamentos.find(
                 function (item) {
 
                     return item.id === id;
@@ -7949,17 +7949,30 @@ window.excluirAjusteHorasEquipamento =
         }
 
 
-        ajustesHorasEquipamentos =
-            ajustesHorasEquipamentos.filter(
-                function (item) {
+        registrosHorasEquipamentos =
+    registrosHorasEquipamentos.filter(
+        function (item) {
 
-                    return item.id !== id;
+            return item.id !== id;
 
-                }
-            );
+        }
+    );
 
 
-        salvarAjustesHorasEquipamentos();
+if (impressora) {
+
+    impressora.horasAjustes =
+        Number(
+            impressora.horasAjustes || 0
+        ) -
+        Number(
+            ajuste.horas || 0
+        );
+
+}
+
+
+salvarRegistrosHorasEquipamentos();
 
         atualizarHorasDasImpressoras();
 
