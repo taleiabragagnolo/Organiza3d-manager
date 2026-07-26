@@ -5101,9 +5101,7 @@ prepararFormularioFinanceiro();
 // FILAMENTOS 2.0
 // =========================
 
-let filamentos = JSON.parse(
-    localStorage.getItem("organiza3d_filamentos")
-) || [];
+let filamentoEmEdicaoId = null;
 
 const botaoSalvarFilamento =
     document.getElementById("salvar-filamento");
