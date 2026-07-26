@@ -3474,6 +3474,1221 @@ function limparFormularioPeca() {
 
 }  
 // =========================
+// SALVAR PEÇA
+// =========================
+
+if (botaoSalvarPeca) {
+
+    botaoSalvarPeca.addEventListener(
+        "click",
+        function () {
+
+            const nome =
+                obterTextoCampoEquipamentos(
+                    "peca-nome"
+                );
+
+            const categoria =
+                obterTextoCampoEquipamentos(
+                    "peca-categoria"
+                ) || "Outro";
+
+            const marca =
+                obterTextoCampoEquipamentos(
+                    "peca-marca"
+                );
+
+            const codigo =
+                obterTextoCampoEquipamentos(
+                    "peca-codigo"
+                );
+
+            const quantidade =
+                obterNumeroCampoEquipamentos(
+                    "peca-quantidade"
+                );
+
+            const estoqueMinimo =
+                obterNumeroCampoEquipamentos(
+                    "peca-estoque-minimo"
+                );
+
+            const valorTotal =
+                obterNumeroCampoEquipamentos(
+                    "peca-valor-total"
+                );
+
+            const dataCompra =
+                obterTextoCampoEquipamentos(
+                    "peca-data-compra"
+                );
+
+            const fornecedor =
+                obterTextoCampoEquipamentos(
+                    "peca-fornecedor"
+                );
+
+            const compatibilidade =
+                obterTextoCampoEquipamentos(
+                    "peca-compatibilidade"
+                );
+
+            const observacoes =
+                obterTextoCampoEquipamentos(
+                    "peca-observacoes"
+                );
+
+
+            if (!nome) {
+
+                alert(
+                    "Informe o nome da peça."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                Number.isNaN(quantidade) ||
+                quantidade < 0
+            ) {
+
+                alert(
+                    "Informe uma quantidade válida."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                Number.isNaN(estoqueMinimo) ||
+                estoqueMinimo < 0
+            ) {
+
+                alert(
+                    "Informe um estoque mínimo válido."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                Number.isNaN(valorTotal) ||
+                valorTotal < 0
+            ) {
+
+                alert(
+                    "Informe um valor total válido."
+                );
+
+                return;
+
+            }
+
+
+            const valorUnitario =
+                quantidade > 0
+                    ? valorTotal / quantidade
+                    : 0;
+
+
+            const estavaEditando =
+                pecaEmEdicaoId !== null;
+
+
+            if (estavaEditando) {
+
+                const peca =
+                    pecasEquipamentos.find(
+                        function (item) {
+
+                            return item.id ===
+                                pecaEmEdicaoId;
+
+                        }
+                    );
+
+
+                if (!peca) {
+
+                    alert(
+                        "Peça não encontrada."
+                    );
+
+                    return;
+
+                }
+
+
+                const quantidadeAnterior =
+                    Number(
+                        peca.quantidadeAtual || 0
+                    );
+
+
+                peca.nome = nome;
+
+                peca.categoria = categoria;
+
+                peca.marca = marca;
+
+                peca.codigo = codigo;
+
+                peca.quantidadeInicial =
+                    quantidade;
+
+                peca.quantidadeAtual =
+                    quantidade;
+
+                peca.estoqueMinimo =
+                    estoqueMinimo;
+
+                peca.valorTotal =
+                    valorTotal;
+
+                peca.valorUnitario =
+                    valorUnitario;
+
+                peca.dataCompra =
+                    dataCompra;
+
+                peca.fornecedor =
+                    fornecedor;
+
+                peca.compatibilidade =
+                    compatibilidade;
+
+                peca.observacoes =
+                    observacoes;
+
+
+                registrarDiarioEquipamento({
+
+                    tipo:
+                        "Estoque",
+
+                    titulo:
+                        "Peça atualizada",
+
+                    descricao:
+                        `${nome}: estoque alterado de ${quantidadeAnterior} para ${quantidade}.`
+
+                });
+
+            } else {
+
+                const novaPeca = {
+
+                    id:
+                        Date.now(),
+
+                    nome:
+                        nome,
+
+                    categoria:
+                        categoria,
+
+                    marca:
+                        marca,
+
+                    codigo:
+                        codigo,
+
+                    quantidadeInicial:
+                        quantidade,
+
+                    quantidadeAtual:
+                        quantidade,
+
+                    estoqueMinimo:
+                        estoqueMinimo,
+
+                    valorTotal:
+                        valorTotal,
+
+                    valorUnitario:
+                        valorUnitario,
+
+                    dataCompra:
+                        dataCompra,
+
+                    fornecedor:
+                        fornecedor,
+
+                    compatibilidade:
+                        compatibilidade,
+
+                    observacoes:
+                        observacoes
+
+                };
+
+
+                pecasEquipamentos.push(
+                    novaPeca
+                );
+
+
+                registrarDiarioEquipamento({
+
+                    tipo:
+                        "Estoque",
+
+                    titulo:
+                        "Peça cadastrada",
+
+                    descricao:
+                        `${novaPeca.nome}: ${novaPeca.quantidadeAtual} unidade(s) adicionada(s) ao estoque.`
+
+                });
+
+            }
+
+
+            salvarPecasEquipamentos();
+
+            mostrarPecasEquipamentos();
+
+            limparFormularioPeca();
+
+
+            if (estavaEditando) {
+
+                alert(
+                    "Peça atualizada com sucesso!"
+                );
+
+            } else {
+
+                alert(
+                    "Peça cadastrada com sucesso!"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+// =========================
+// LIMPAR FORMULÁRIO
+// =========================
+
+if (botaoLimparFormularioPeca) {
+
+    botaoLimparFormularioPeca
+        .addEventListener(
+            "click",
+            limparFormularioPeca
+        );
+
+}
+
+
+// =========================
+// EDITAR PEÇA
+// =========================
+
+window.editarPecaEquipamento =
+    function (id) {
+
+        const peca =
+            pecasEquipamentos.find(
+                function (item) {
+
+                    return item.id === id;
+
+                }
+            );
+
+
+        if (!peca) {
+
+            alert(
+                "Peça não encontrada."
+            );
+
+            return;
+
+        }
+
+
+        pecaEmEdicaoId = id;
+
+
+        definirValorCampoEquipamentos(
+            "peca-nome",
+            peca.nome
+        );
+
+
+        definirValorCampoEquipamentos(
+            "peca-categoria",
+            peca.categoria
+        );
+
+
+        definirValorCampoEquipamentos(
+            "peca-marca",
+            peca.marca
+        );
+
+
+        definirValorCampoEquipamentos(
+            "peca-codigo",
+            peca.codigo
+        );
+
+
+        definirValorCampoEquipamentos(
+            "peca-quantidade",
+            peca.quantidadeAtual
+        );
+
+
+        definirValorCampoEquipamentos(
+            "peca-estoque-minimo",
+            peca.estoqueMinimo
+        );
+
+
+        definirValorCampoEquipamentos(
+            "peca-valor-total",
+            peca.valorTotal
+        );
+
+
+        definirValorCampoEquipamentos(
+            "peca-data-compra",
+            peca.dataCompra
+        );
+
+
+        definirValorCampoEquipamentos(
+            "peca-fornecedor",
+            peca.fornecedor
+        );
+
+
+        definirValorCampoEquipamentos(
+            "peca-compatibilidade",
+            peca.compatibilidade
+        );
+
+
+        definirValorCampoEquipamentos(
+            "peca-observacoes",
+            peca.observacoes
+        );
+
+
+        atualizarValorUnitarioPeca();
+
+
+        if (botaoSalvarPeca) {
+
+            botaoSalvarPeca.textContent =
+                "Atualizar Peça";
+
+        }
+
+
+        abrirAbaEquipamento(
+            "aba-pecas"
+        );
+
+
+        const abaPecas =
+            document.getElementById(
+                "aba-pecas"
+            );
+
+
+        if (abaPecas) {
+
+            abaPecas.scrollIntoView({
+
+                behavior:
+                    "smooth",
+
+                block:
+                    "start"
+
+            });
+
+        }
+
+    };
+
+
+// =========================
+// ADICIONAR ESTOQUE
+// =========================
+
+window.adicionarEstoquePeca =
+    function (id) {
+
+        const peca =
+            pecasEquipamentos.find(
+                function (item) {
+
+                    return item.id === id;
+
+                }
+            );
+
+
+        if (!peca) {
+
+            alert(
+                "Peça não encontrada."
+            );
+
+            return;
+
+        }
+
+
+        const respostaQuantidade =
+            prompt(
+
+                `Quantas unidades deseja adicionar ao estoque de "${peca.nome}"?`,
+
+                "1"
+
+            );
+
+
+        if (respostaQuantidade === null) {
+
+            return;
+
+        }
+
+
+        const quantidadeAdicionada =
+            Number(
+                String(respostaQuantidade)
+                    .replace(",", ".")
+            );
+
+
+        if (
+            Number.isNaN(
+                quantidadeAdicionada
+            ) ||
+            quantidadeAdicionada <= 0
+        ) {
+
+            alert(
+                "Informe uma quantidade maior que zero."
+            );
+
+            return;
+
+        }
+
+
+        const respostaValor =
+            prompt(
+
+                "Qual foi o valor total pago nesta nova compra?",
+
+                "0"
+
+            );
+
+
+        if (respostaValor === null) {
+
+            return;
+
+        }
+
+
+        const valorNovaCompra =
+            Number(
+                String(respostaValor)
+                    .replace(",", ".")
+            );
+
+
+        if (
+            Number.isNaN(valorNovaCompra) ||
+            valorNovaCompra < 0
+        ) {
+
+            alert(
+                "Informe um valor válido."
+            );
+
+            return;
+
+        }
+
+
+        const quantidadeAnterior =
+            Number(
+                peca.quantidadeAtual || 0
+            );
+
+
+        const valorAnteriorEstoque =
+            quantidadeAnterior *
+
+            Number(
+                peca.valorUnitario || 0
+            );
+
+
+        const novaQuantidade =
+            quantidadeAnterior +
+            quantidadeAdicionada;
+
+
+        const novoValorEstoque =
+            valorAnteriorEstoque +
+            valorNovaCompra;
+
+
+        const novoValorUnitario =
+            novaQuantidade > 0
+                ? novoValorEstoque /
+                    novaQuantidade
+                : 0;
+
+
+        peca.quantidadeAtual =
+            novaQuantidade;
+
+
+        peca.quantidadeInicial =
+            Number(
+                peca.quantidadeInicial || 0
+            ) +
+            quantidadeAdicionada;
+
+
+        peca.valorTotal =
+            Number(
+                peca.valorTotal || 0
+            ) +
+            valorNovaCompra;
+
+
+        peca.valorUnitario =
+            novoValorUnitario;
+
+
+        salvarPecasEquipamentos();
+
+        mostrarPecasEquipamentos();
+
+
+        registrarDiarioEquipamento({
+
+            tipo:
+                "Estoque",
+
+            titulo:
+                "Entrada de peças",
+
+            descricao:
+                `${quantidadeAdicionada} unidade(s) de ${peca.nome} adicionada(s). Estoque atual: ${novaQuantidade}.`
+
+        });
+
+
+        alert(
+            "Estoque atualizado com sucesso!"
+        );
+
+    };
+
+
+// =========================
+// EXCLUIR PEÇA
+// =========================
+
+window.excluirPecaEquipamento =
+    function (id) {
+
+        const peca =
+            pecasEquipamentos.find(
+                function (item) {
+
+                    return item.id === id;
+
+                }
+            );
+
+
+        if (!peca) {
+
+            alert(
+                "Peça não encontrada."
+            );
+
+            return;
+
+        }
+
+
+        const foiUtilizada =
+            manutencoesEquipamentos.some(
+                function (manutencao) {
+
+                    return manutencao.pecaId ===
+                        id;
+
+                }
+            );
+
+
+        let mensagem =
+
+            `Deseja excluir a peça "${peca.nome}"?`;
+
+
+        if (foiUtilizada) {
+
+            mensagem +=
+
+                "\n\nAtenção: essa peça já foi utilizada em uma manutenção. O histórico da manutenção permanecerá salvo.";
+
+        }
+
+
+        const confirmar =
+            confirm(mensagem);
+
+
+        if (!confirmar) {
+
+            return;
+
+        }
+
+
+        pecasEquipamentos =
+            pecasEquipamentos.filter(
+                function (item) {
+
+                    return item.id !== id;
+
+                }
+            );
+
+
+        if (
+            pecaEmEdicaoId === id
+        ) {
+
+            limparFormularioPeca();
+
+        }
+
+
+        salvarPecasEquipamentos();
+
+        mostrarPecasEquipamentos();
+
+
+        registrarDiarioEquipamento({
+
+            tipo:
+                "Estoque",
+
+            titulo:
+                "Peça excluída",
+
+            descricao:
+                `O cadastro da peça ${peca.nome} foi removido.`
+
+        });
+
+
+        alert(
+            "Peça excluída com sucesso!"
+        );
+
+    };
+// =========================
+// LUBRIFICANTES
+// =========================
+
+const botaoSalvarLubrificante =
+    document.getElementById(
+        "salvar-lubrificante"
+    );
+
+const botaoLimparFormularioLubrificante =
+    document.getElementById(
+        "limpar-formulario-lubrificante"
+    );
+
+const listaLubrificantes =
+    document.getElementById(
+        "lista-lubrificantes"
+    );
+
+
+// =========================
+// CÁLCULO DO VALOR UNITÁRIO
+// =========================
+
+function atualizarValorUnitarioLubrificante() {
+
+    const quantidade =
+        obterNumeroCampoEquipamentos(
+            "lubrificante-quantidade"
+        );
+
+    const valorTotal =
+        obterNumeroCampoEquipamentos(
+            "lubrificante-valor-total"
+        );
+
+    const valorUnitario =
+        quantidade > 0
+            ? valorTotal / quantidade
+            : 0;
+
+    definirValorCampoEquipamentos(
+        "lubrificante-valor-unitario",
+        formatarDinheiro(
+            valorUnitario
+        )
+    );
+
+}
+
+
+[
+    "lubrificante-quantidade",
+    "lubrificante-valor-total"
+].forEach(
+    function (id) {
+
+        const campo =
+            document.getElementById(id);
+
+        if (campo) {
+
+            campo.addEventListener(
+                "input",
+                atualizarValorUnitarioLubrificante
+            );
+
+        }
+
+    }
+);
+
+
+// =========================
+// RESUMO DOS LUBRIFICANTES
+// =========================
+
+function atualizarResumoLubrificantes() {
+
+    const quantidadeTotal =
+        lubrificantesEquipamentos.reduce(
+            function (total, item) {
+
+                return total +
+                    Number(
+                        item.quantidadeAtual || 0
+                    );
+
+            },
+            0
+        );
+
+
+    const estoqueBaixo =
+        lubrificantesEquipamentos.filter(
+            function (item) {
+
+                return (
+                    Number(
+                        item.quantidadeAtual || 0
+                    ) <=
+
+                    Number(
+                        item.estoqueMinimo || 0
+                    )
+                );
+
+            }
+        ).length;
+
+
+    const valorEstoque =
+        lubrificantesEquipamentos.reduce(
+            function (total, item) {
+
+                return total +
+
+                    Number(
+                        item.quantidadeAtual || 0
+                    ) *
+
+                    Number(
+                        item.valorUnitario || 0
+                    );
+
+            },
+            0
+        );
+
+
+    definirTextoEquipamentos(
+        "equipamentos-total-lubrificantes",
+        lubrificantesEquipamentos.length
+    );
+
+
+    definirTextoEquipamentos(
+        "equipamentos-lubrificantes-quantidade",
+        quantidadeTotal.toLocaleString(
+            "pt-BR",
+            {
+                maximumFractionDigits: 2
+            }
+        )
+    );
+
+
+    definirTextoEquipamentos(
+        "equipamentos-lubrificantes-estoque-baixo",
+        estoqueBaixo
+    );
+
+
+    definirTextoEquipamentos(
+        "equipamentos-lubrificantes-valor-estoque",
+        formatarDinheiro(
+            valorEstoque
+        )
+    );
+
+}
+
+
+// =========================
+// MOSTRAR LUBRIFICANTES
+// =========================
+
+function mostrarLubrificantesEquipamentos() {
+
+    if (!listaLubrificantes) {
+
+        atualizarResumoLubrificantes();
+
+        return;
+
+    }
+
+
+    if (
+        lubrificantesEquipamentos.length === 0
+    ) {
+
+        listaLubrificantes.innerHTML =
+            "<p>Nenhum lubrificante cadastrado.</p>";
+
+
+        atualizarResumoLubrificantes();
+
+
+        if (
+            typeof atualizarOpcoesEquipamentos ===
+            "function"
+        ) {
+
+            atualizarOpcoesEquipamentos();
+
+        }
+
+        return;
+
+    }
+
+
+    listaLubrificantes.innerHTML =
+        lubrificantesEquipamentos.map(
+            function (item) {
+
+                const quantidadeAtual =
+                    Number(
+                        item.quantidadeAtual || 0
+                    );
+
+
+                const estoqueMinimo =
+                    Number(
+                        item.estoqueMinimo || 0
+                    );
+
+
+                const estoqueBaixo =
+                    quantidadeAtual <=
+                    estoqueMinimo;
+
+
+                const valorAtualEstoque =
+                    quantidadeAtual *
+
+                    Number(
+                        item.valorUnitario || 0
+                    );
+
+
+                return `
+                    <div class="card-item">
+
+                        <h4>
+                            ${escaparTexto(
+                                item.nome
+                            )}
+                        </h4>
+
+                        <p>
+                            <strong>
+                                Tipo:
+                            </strong>
+
+                            ${escaparTexto(
+                                item.tipo
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Marca:
+                            </strong>
+
+                            ${escaparTexto(
+                                item.marca ||
+                                "Não informada"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Estoque atual:
+                            </strong>
+
+                            ${quantidadeAtual.toLocaleString(
+                                "pt-BR",
+                                {
+                                    maximumFractionDigits: 2
+                                }
+                            )}
+
+                            ${escaparTexto(
+                                item.unidade
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Estoque mínimo:
+                            </strong>
+
+                            ${estoqueMinimo.toLocaleString(
+                                "pt-BR",
+                                {
+                                    maximumFractionDigits: 2
+                                }
+                            )}
+
+                            ${escaparTexto(
+                                item.unidade
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Situação:
+                            </strong>
+
+                            ${
+                                estoqueBaixo
+                                    ? "⚠️ Estoque baixo"
+                                    : "✅ Estoque suficiente"
+                            }
+                        </p>
+
+                        <p>
+                            <strong>
+                                Valor por unidade:
+                            </strong>
+
+                            ${formatarDinheiro(
+                                item.valorUnitario
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Valor atual em estoque:
+                            </strong>
+
+                            ${formatarDinheiro(
+                                valorAtualEstoque
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Data da compra:
+                            </strong>
+
+                            ${formatarDataEquipamentos(
+                                item.dataCompra
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Fornecedor:
+                            </strong>
+
+                            ${escaparTexto(
+                                item.fornecedor ||
+                                "Não informado"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Aplicação:
+                            </strong>
+
+                            ${escaparTexto(
+                                item.aplicacao ||
+                                "Não informada"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Observações:
+                            </strong>
+
+                            ${escaparTexto(
+                                item.observacoes ||
+                                "Nenhuma"
+                            )}
+                        </p>
+
+                        <button
+                            type="button"
+                            class="botao-principal"
+                            onclick="editarLubrificanteEquipamento(${item.id})">
+
+                            Editar
+
+                        </button>
+
+                        <button
+                            type="button"
+                            onclick="adicionarEstoqueLubrificante(${item.id})">
+
+                            Adicionar estoque
+
+                        </button>
+
+                        <button
+                            type="button"
+                            class="botao-excluir"
+                            onclick="excluirLubrificanteEquipamento(${item.id})">
+
+                            Excluir
+
+                        </button>
+
+                    </div>
+                `;
+
+            }
+        ).join("");
+
+
+    atualizarResumoLubrificantes();
+
+
+    if (
+        typeof atualizarOpcoesEquipamentos ===
+        "function"
+    ) {
+
+        atualizarOpcoesEquipamentos();
+
+    }
+
+}
+
+
+// =========================
+// LIMPAR FORMULÁRIO
+// =========================
+
+function limparFormularioLubrificante() {
+
+    lubrificanteEmEdicaoId = null;
+
+
+    [
+        "lubrificante-nome",
+        "lubrificante-tipo",
+        "lubrificante-marca",
+        "lubrificante-unidade",
+        "lubrificante-quantidade",
+        "lubrificante-estoque-minimo",
+        "lubrificante-valor-total",
+        "lubrificante-data-compra",
+        "lubrificante-fornecedor",
+        "lubrificante-aplicacao",
+        "lubrificante-observacoes"
+    ].forEach(
+        function (id) {
+
+            definirValorCampoEquipamentos(
+                id,
+                ""
+            );
+
+        }
+    );
+
+
+    definirValorCampoEquipamentos(
+        "lubrificante-valor-unitario",
+        "R$ 0,00"
+    );
+
+
+    if (botaoSalvarLubrificante) {
+
+        botaoSalvarLubrificante.textContent =
+            "Salvar Lubrificante";
+
+    }
+
+}
+
+// =========================
 // FINANCEIRO 2.0
 // =========================
 
