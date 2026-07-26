@@ -7112,7 +7112,1167 @@ window.excluirManutencaoEquipamento =
         );
 
     };
+// =========================
+// HORAS DE USO
+// PARTE 8A
+// =========================
 
+const botaoSalvarAjusteHoras =
+    document.getElementById(
+        "salvar-ajuste-horas"
+    );
+
+const botaoLimparAjusteHoras =
+    document.getElementById(
+        "limpar-ajuste-horas"
+    );
+
+const listaAjustesHoras =
+    document.getElementById(
+        "lista-ajustes-horas"
+    );
+
+const campoImpressoraHoras =
+    document.getElementById(
+        "horas-impressora"
+    );
+
+
+// =========================
+// TOTAL DE HORAS DA IMPRESSORA
+// =========================
+
+function obterTotalHorasImpressora(
+    impressora
+) {
+
+    if (!impressora) {
+        return 0;
+    }
+
+
+    const horasIniciais =
+        Number(
+            impressora.horasIniciais ||
+            impressora.horasUso ||
+            0
+        );
+
+
+    const horasProducao =
+        Number(
+            impressora.horasProducao ||
+            0
+        );
+
+
+    const ajustes =
+        ajustesHorasEquipamentos
+            .filter(
+                function (ajuste) {
+
+                    return ajuste.impressoraId ===
+                        impressora.id;
+
+                }
+            )
+            .reduce(
+                function (total, ajuste) {
+
+                    return total +
+                        Number(
+                            ajuste.horas || 0
+                        );
+
+                },
+                0
+            );
+
+
+    return Math.max(
+        0,
+        horasIniciais +
+        horasProducao +
+        ajustes
+    );
+
+}
+
+
+// =========================
+// ATUALIZAR HORAS NAS IMPRESSORAS
+// =========================
+
+function atualizarHorasDasImpressoras() {
+
+    impressoras.forEach(
+        function (impressora) {
+
+            impressora.totalHoras =
+                obterTotalHorasImpressora(
+                    impressora
+                );
+
+        }
+    );
+
+
+    salvarImpressoras();
+
+}
+
+
+// =========================
+// RESUMO DAS HORAS
+// =========================
+
+function atualizarResumoHorasEquipamentos() {
+
+    const totalHoras =
+        impressoras.reduce(
+            function (total, impressora) {
+
+                return total +
+                    obterTotalHorasImpressora(
+                        impressora
+                    );
+
+            },
+            0
+        );
+
+
+    const horasManuais =
+        ajustesHorasEquipamentos.reduce(
+            function (total, ajuste) {
+
+                return total +
+                    Number(
+                        ajuste.horas || 0
+                    );
+
+            },
+            0
+        );
+
+
+    const horasProducao =
+        impressoras.reduce(
+            function (total, impressora) {
+
+                return total +
+                    Number(
+                        impressora.horasProducao ||
+                        0
+                    );
+
+            },
+            0
+        );
+
+
+    definirTextoEquipamentos(
+        "equipamentos-total-horas",
+        formatarHorasEquipamentos(
+            totalHoras
+        )
+    );
+
+
+    definirTextoEquipamentos(
+        "equipamentos-horas-producao",
+        formatarHorasEquipamentos(
+            horasProducao
+        )
+    );
+
+
+    definirTextoEquipamentos(
+        "equipamentos-horas-manuais",
+        formatarHorasEquipamentos(
+            horasManuais
+        )
+    );
+
+
+    definirTextoEquipamentos(
+        "horas-total-geral",
+        formatarHorasEquipamentos(
+            totalHoras
+        )
+    );
+
+}
+
+
+// =========================
+// MOSTRAR HORAS POR IMPRESSORA
+// =========================
+
+function mostrarResumoHorasImpressoras() {
+
+    const lista =
+        document.getElementById(
+            "lista-horas-impressoras"
+        );
+
+
+    if (!lista) {
+        return;
+    }
+
+
+    if (impressoras.length === 0) {
+
+        lista.innerHTML =
+            "<p>Nenhuma impressora cadastrada.</p>";
+
+        return;
+
+    }
+
+
+    lista.innerHTML =
+        impressoras.map(
+            function (impressora) {
+
+                const totalHoras =
+                    obterTotalHorasImpressora(
+                        impressora
+                    );
+
+
+                const proximaManutencaoHoras =
+                    Number(
+                        impressora
+                            .proximasHorasManutencao ||
+                        0
+                    );
+
+
+                let situacaoManutencao =
+                    "Sem manutenção programada por horas";
+
+
+                if (
+                    proximaManutencaoHoras > 0
+                ) {
+
+                    const horasRestantes =
+                        proximaManutencaoHoras -
+                        totalHoras;
+
+
+                    if (horasRestantes <= 0) {
+
+                        situacaoManutencao =
+                            "⚠️ Manutenção por horas vencida";
+
+                    } else {
+
+                        situacaoManutencao =
+                            `Próxima manutenção em ${formatarHorasEquipamentos(
+                                horasRestantes
+                            )}`;
+
+                    }
+
+                }
+
+
+                return `
+                    <div class="card-item">
+
+                        <h4>
+                            ${escaparTexto(
+                                impressora.nome
+                            )}
+                        </h4>
+
+                        <p>
+                            <strong>Modelo:</strong>
+
+                            ${escaparTexto(
+                                impressora.modelo ||
+                                "Não informado"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Horas iniciais:
+                            </strong>
+
+                            ${formatarHorasEquipamentos(
+                                impressora.horasIniciais ||
+                                impressora.horasUso ||
+                                0
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Horas de produção:
+                            </strong>
+
+                            ${formatarHorasEquipamentos(
+                                impressora.horasProducao ||
+                                0
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Total acumulado:
+                            </strong>
+
+                            ${formatarHorasEquipamentos(
+                                totalHoras
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>
+                                Manutenção:
+                            </strong>
+
+                            ${situacaoManutencao}
+                        </p>
+
+                    </div>
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+// =========================
+// MOSTRAR HISTÓRICO DE AJUSTES
+// =========================
+
+function mostrarAjustesHorasEquipamentos() {
+
+    if (!listaAjustesHoras) {
+
+        atualizarResumoHorasEquipamentos();
+
+        mostrarResumoHorasImpressoras();
+
+        return;
+
+    }
+
+
+    if (
+        ajustesHorasEquipamentos.length ===
+        0
+    ) {
+
+        listaAjustesHoras.innerHTML =
+            "<p>Nenhum ajuste manual de horas registrado.</p>";
+
+
+        atualizarResumoHorasEquipamentos();
+
+        mostrarResumoHorasImpressoras();
+
+        return;
+
+    }
+
+
+    const ajustesOrdenados =
+        [...ajustesHorasEquipamentos].sort(
+            function (a, b) {
+
+                return String(
+                    b.data || ""
+                ).localeCompare(
+                    String(a.data || "")
+                );
+
+            }
+        );
+
+
+    listaAjustesHoras.innerHTML =
+        ajustesOrdenados.map(
+            function (ajuste) {
+
+                const horas =
+                    Number(
+                        ajuste.horas || 0
+                    );
+
+
+                const sinal =
+                    horas >= 0
+                        ? "+"
+                        : "";
+
+
+                return `
+                    <div class="card-item">
+
+                        <h4>
+                            ${escaparTexto(
+                                ajuste.impressoraNome
+                            )}
+                        </h4>
+
+                        <p>
+                            <strong>Data:</strong>
+
+                            ${formatarDataEquipamentos(
+                                ajuste.data
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Ajuste:</strong>
+
+                            ${sinal}${formatarHorasEquipamentos(
+                                horas
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Motivo:</strong>
+
+                            ${escaparTexto(
+                                ajuste.motivo ||
+                                "Não informado"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Observações:</strong>
+
+                            ${escaparTexto(
+                                ajuste.observacoes ||
+                                "Nenhuma"
+                            )}
+                        </p>
+
+                        <button
+                            type="button"
+                            class="botao-excluir"
+                            onclick="excluirAjusteHorasEquipamento(${ajuste.id})">
+
+                            Excluir ajuste
+
+                        </button>
+
+                    </div>
+                `;
+
+            }
+        ).join("");
+
+
+    atualizarResumoHorasEquipamentos();
+
+    mostrarResumoHorasImpressoras();
+
+}
+
+
+// =========================
+// MOSTRAR HORAS DA IMPRESSORA SELECIONADA
+// =========================
+
+function mostrarHorasImpressoraSelecionada() {
+
+    if (!campoImpressoraHoras) {
+        return;
+    }
+
+
+    const impressoraId =
+        Number(
+            campoImpressoraHoras.value
+        );
+
+
+    const impressora =
+        impressoras.find(
+            function (item) {
+
+                return item.id ===
+                    impressoraId;
+
+            }
+        );
+
+
+    const totalHoras =
+        impressora
+            ? obterTotalHorasImpressora(
+                impressora
+            )
+            : 0;
+
+
+    definirTextoEquipamentos(
+        "horas-atual-impressora",
+        impressora
+            ? formatarHorasEquipamentos(
+                totalHoras
+            )
+            : "0h"
+    );
+
+}
+
+
+if (campoImpressoraHoras) {
+
+    campoImpressoraHoras.addEventListener(
+        "change",
+        mostrarHorasImpressoraSelecionada
+    );
+
+}
+
+
+// =========================
+// LIMPAR FORMULÁRIO DE HORAS
+// =========================
+
+function limparFormularioAjusteHoras() {
+
+    definirValorCampoEquipamentos(
+        "horas-impressora",
+        ""
+    );
+
+
+    definirValorCampoEquipamentos(
+        "horas-data",
+        obterDataHojeEquipamentos()
+    );
+
+
+    definirValorCampoEquipamentos(
+        "horas-quantidade",
+        ""
+    );
+
+
+    definirValorCampoEquipamentos(
+        "horas-motivo",
+        ""
+    );
+
+
+    definirValorCampoEquipamentos(
+        "horas-observacoes",
+        ""
+    );
+
+
+    definirTextoEquipamentos(
+        "horas-atual-impressora",
+        "0h"
+    );
+
+}
+
+
+if (botaoLimparAjusteHoras) {
+
+    botaoLimparAjusteHoras.addEventListener(
+        "click",
+        limparFormularioAjusteHoras
+    );
+
+}
+// =========================
+// SALVAR AJUSTE MANUAL DE HORAS
+// =========================
+
+if (botaoSalvarAjusteHoras) {
+
+    botaoSalvarAjusteHoras.addEventListener(
+        "click",
+        function () {
+
+            const impressoraId =
+                Number(
+                    obterTextoCampoEquipamentos(
+                        "horas-impressora"
+                    )
+                );
+
+
+            const data =
+                obterTextoCampoEquipamentos(
+                    "horas-data"
+                );
+
+
+            const quantidadeHoras =
+                obterNumeroCampoEquipamentos(
+                    "horas-quantidade"
+                );
+
+
+            const motivo =
+                obterTextoCampoEquipamentos(
+                    "horas-motivo"
+                );
+
+
+            const observacoes =
+                obterTextoCampoEquipamentos(
+                    "horas-observacoes"
+                );
+
+
+            const impressora =
+                impressoras.find(
+                    function (item) {
+
+                        return item.id ===
+                            impressoraId;
+
+                    }
+                );
+
+
+            if (!impressora) {
+
+                alert(
+                    "Selecione uma impressora."
+                );
+
+                return;
+
+            }
+
+
+            if (!data) {
+
+                alert(
+                    "Informe a data do ajuste."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                Number.isNaN(
+                    quantidadeHoras
+                ) ||
+                quantidadeHoras === 0
+            ) {
+
+                alert(
+                    "Informe uma quantidade de horas diferente de zero."
+                );
+
+                return;
+
+            }
+
+
+            if (!motivo) {
+
+                alert(
+                    "Informe o motivo do ajuste."
+                );
+
+                return;
+
+            }
+
+
+            const totalAntes =
+                obterTotalHorasImpressora(
+                    impressora
+                );
+
+
+            const totalDepois =
+                totalAntes +
+                quantidadeHoras;
+
+
+            if (totalDepois < 0) {
+
+                alert(
+                    `Este ajuste deixaria a impressora com horas negativas.\n\nHoras atuais: ${formatarHorasEquipamentos(
+                        totalAntes
+                    )}.`
+                );
+
+                return;
+
+            }
+
+
+            const novoAjuste = {
+
+                id:
+                    Date.now() +
+                    Math.random(),
+
+                impressoraId:
+                    impressora.id,
+
+                impressoraNome:
+                    impressora.nome,
+
+                data:
+                    data,
+
+                horas:
+                    quantidadeHoras,
+
+                motivo:
+                    motivo,
+
+                observacoes:
+                    observacoes,
+
+                totalAntes:
+                    totalAntes,
+
+                totalDepois:
+                    totalDepois,
+
+                criadoEm:
+                    new Date()
+                        .toISOString()
+            };
+
+
+            ajustesHorasEquipamentos.push(
+                novoAjuste
+            );
+
+
+            salvarAjustesHorasEquipamentos();
+
+            atualizarHorasDasImpressoras();
+
+
+            registrarDiarioEquipamento({
+
+                data:
+                    data,
+
+                impressoraId:
+                    impressora.id,
+
+                impressoraNome:
+                    impressora.nome,
+
+                tipo:
+                    "Horas",
+
+                titulo:
+                    quantidadeHoras > 0
+                        ? "Horas adicionadas manualmente"
+                        : "Horas removidas manualmente",
+
+                descricao:
+                    `${formatarHorasEquipamentos(
+                        Math.abs(
+                            quantidadeHoras
+                        )
+                    )} ${
+                        quantidadeHoras > 0
+                            ? "adicionadas"
+                            : "removidas"
+                    }. Motivo: ${motivo}. Total após o ajuste: ${formatarHorasEquipamentos(
+                        totalDepois
+                    )}.`
+
+            });
+
+
+            mostrarAjustesHorasEquipamentos();
+
+            mostrarImpressoras();
+
+            atualizarResumoEquipamentos();
+
+            limparFormularioAjusteHoras();
+
+
+            alert(
+                "Ajuste de horas registrado com sucesso!"
+            );
+
+        }
+    );
+
+}
+
+
+// =========================
+// EXCLUIR AJUSTE DE HORAS
+// =========================
+
+window.excluirAjusteHorasEquipamento =
+    function (id) {
+
+        const ajuste =
+            ajustesHorasEquipamentos.find(
+                function (item) {
+
+                    return item.id === id;
+
+                }
+            );
+
+
+        if (!ajuste) {
+
+            alert(
+                "Ajuste de horas não encontrado."
+            );
+
+            return;
+
+        }
+
+
+        const impressora =
+            impressoras.find(
+                function (item) {
+
+                    return item.id ===
+                        ajuste.impressoraId;
+
+                }
+            );
+
+
+        if (impressora) {
+
+            const totalAtual =
+                obterTotalHorasImpressora(
+                    impressora
+                );
+
+
+            const totalAposExclusao =
+                totalAtual -
+                Number(
+                    ajuste.horas || 0
+                );
+
+
+            if (totalAposExclusao < 0) {
+
+                alert(
+                    "Este ajuste não pode ser excluído porque deixaria a impressora com horas negativas."
+                );
+
+                return;
+
+            }
+
+        }
+
+
+        const confirmar =
+            confirm(
+                `Deseja excluir o ajuste de ${formatarHorasEquipamentos(
+                    Math.abs(
+                        ajuste.horas || 0
+                    )
+                )} da impressora "${ajuste.impressoraNome}"?`
+            );
+
+
+        if (!confirmar) {
+
+            return;
+
+        }
+
+
+        ajustesHorasEquipamentos =
+            ajustesHorasEquipamentos.filter(
+                function (item) {
+
+                    return item.id !== id;
+
+                }
+            );
+
+
+        salvarAjustesHorasEquipamentos();
+
+        atualizarHorasDasImpressoras();
+
+
+        registrarDiarioEquipamento({
+
+            data:
+                obterDataHojeEquipamentos(),
+
+            impressoraId:
+                ajuste.impressoraId,
+
+            impressoraNome:
+                ajuste.impressoraNome,
+
+            tipo:
+                "Horas",
+
+            titulo:
+                "Ajuste manual excluído",
+
+            descricao:
+                `O ajuste de ${formatarHorasEquipamentos(
+                    Math.abs(
+                        ajuste.horas || 0
+                    )
+                )} referente ao motivo "${ajuste.motivo}" foi excluído.`
+
+        });
+
+
+        mostrarAjustesHorasEquipamentos();
+
+        mostrarImpressoras();
+
+        atualizarResumoEquipamentos();
+
+
+        alert(
+            "Ajuste de horas excluído com sucesso!"
+        );
+
+    };
+
+
+// =========================
+// ADICIONAR HORAS AUTOMATICAMENTE
+// PELA PRODUÇÃO
+// =========================
+
+window.adicionarHorasProducaoEquipamento =
+    function (
+        impressoraId,
+        horas,
+        descricao,
+        data
+    ) {
+
+        const id =
+            Number(
+                impressoraId
+            );
+
+
+        const quantidadeHoras =
+            Number(
+                horas || 0
+            );
+
+
+        const impressora =
+            impressoras.find(
+                function (item) {
+
+                    return item.id === id;
+
+                }
+            );
+
+
+        if (
+            !impressora ||
+            Number.isNaN(
+                quantidadeHoras
+            ) ||
+            quantidadeHoras <= 0
+        ) {
+
+            return false;
+
+        }
+
+
+        impressora.horasProducao =
+            Number(
+                impressora.horasProducao ||
+                0
+            ) +
+            quantidadeHoras;
+
+
+        impressora.totalHoras =
+            obterTotalHorasImpressora(
+                impressora
+            );
+
+
+        salvarImpressoras();
+
+
+        registrarDiarioEquipamento({
+
+            data:
+                data ||
+                obterDataHojeEquipamentos(),
+
+            impressoraId:
+                impressora.id,
+
+            impressoraNome:
+                impressora.nome,
+
+            tipo:
+                "Produção",
+
+            titulo:
+                "Horas adicionadas pela produção",
+
+            descricao:
+                `${formatarHorasEquipamentos(
+                    quantidadeHoras
+                )} adicionadas automaticamente. ${
+                    descricao ||
+                    "Produção registrada no sistema."
+                }`
+
+        });
+
+
+        mostrarImpressoras();
+
+        mostrarAjustesHorasEquipamentos();
+
+        atualizarResumoEquipamentos();
+
+
+        return true;
+
+    };
+
+
+// =========================
+// REMOVER HORAS AUTOMÁTICAS
+// EM CASO DE EXCLUSÃO DA PRODUÇÃO
+// =========================
+
+window.removerHorasProducaoEquipamento =
+    function (
+        impressoraId,
+        horas,
+        descricao,
+        data
+    ) {
+
+        const id =
+            Number(
+                impressoraId
+            );
+
+
+        const quantidadeHoras =
+            Number(
+                horas || 0
+            );
+
+
+        const impressora =
+            impressoras.find(
+                function (item) {
+
+                    return item.id === id;
+
+                }
+            );
+
+
+        if (
+            !impressora ||
+            Number.isNaN(
+                quantidadeHoras
+            ) ||
+            quantidadeHoras <= 0
+        ) {
+
+            return false;
+
+        }
+
+
+        const horasProducaoAtuais =
+            Number(
+                impressora.horasProducao ||
+                0
+            );
+
+
+        impressora.horasProducao =
+            Math.max(
+                0,
+                horasProducaoAtuais -
+                quantidadeHoras
+            );
+
+
+        impressora.totalHoras =
+            obterTotalHorasImpressora(
+                impressora
+            );
+
+
+        salvarImpressoras();
+
+
+        registrarDiarioEquipamento({
+
+            data:
+                data ||
+                obterDataHojeEquipamentos(),
+
+            impressoraId:
+                impressora.id,
+
+            impressoraNome:
+                impressora.nome,
+
+            tipo:
+                "Produção",
+
+            titulo:
+                "Horas de produção removidas",
+
+            descricao:
+                `${formatarHorasEquipamentos(
+                    quantidadeHoras
+                )} removidas automaticamente. ${
+                    descricao ||
+                    "Produção excluída do sistema."
+                }`
+
+        });
+
+
+        mostrarImpressoras();
+
+        mostrarAjustesHorasEquipamentos();
+
+        atualizarResumoEquipamentos();
+
+
+        return true;
+
+    };
+    
 
 // =========================
 // FINANCEIRO 2.0
