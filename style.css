@@ -552,3 +552,15 @@ button {
         font-size: 30px;
     }
 }
+<div class="menu-rodape">
+
+    <button
+        id="botao-sair"
+        class="botao-sair"
+        type="button">
+
+        🚪 Sair
+
+    </button>
+
+</div>
