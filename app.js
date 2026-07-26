@@ -7785,15 +7785,21 @@ if (botaoSalvarAjusteHoras) {
             };
 
 
-            ajustesHorasEquipamentos.push(
+                        registrosHorasEquipamentos.push(
                 novoAjuste
             );
+
+
+            impressora.horasAjustes =
+                Number(
+                    impressora.horasAjustes || 0
+                ) +
+                quantidadeHoras;
 
 
             salvarRegistrosHorasEquipamentos();
 
             atualizarHorasDasImpressoras();
-
 
             registrarDiarioEquipamento({
 
