@@ -7137,68 +7137,6 @@ const campoImpressoraHoras =
         "horas-impressora"
     );
 
-
-// =========================
-// TOTAL DE HORAS DA IMPRESSORA
-// =========================
-
-function obterTotalHorasImpressora(
-    impressora
-) {
-
-    if (!impressora) {
-        return 0;
-    }
-
-
-    const horasIniciais =
-        Number(
-            impressora.horasIniciais ||
-            impressora.horasUso ||
-            0
-        );
-
-
-    const horasProducao =
-        Number(
-            impressora.horasProducao ||
-            0
-        );
-
-
-    const ajustes =
-        ajustesHorasEquipamentos
-            .filter(
-                function (ajuste) {
-
-                    return ajuste.impressoraId ===
-                        impressora.id;
-
-                }
-            )
-            .reduce(
-                function (total, ajuste) {
-
-                    return total +
-                        Number(
-                            ajuste.horas || 0
-                        );
-
-                },
-                0
-            );
-
-
-    return Math.max(
-        0,
-        horasIniciais +
-        horasProducao +
-        ajustes
-    );
-
-}
-
-
 // =========================
 // ATUALIZAR HORAS NAS IMPRESSORAS
 // =========================
@@ -7243,7 +7181,7 @@ function atualizarResumoHorasEquipamentos() {
 
 
     const horasManuais =
-        ajustesHorasEquipamentos.reduce(
+        registrosHorasEquipamentos.reduce(
             function (total, ajuste) {
 
                 return total +
@@ -7262,7 +7200,7 @@ function atualizarResumoHorasEquipamentos() {
 
                 return total +
                     Number(
-                        impressora.horasProducao ||
+                        impressora.horasProducoes ||
                         0
                     );
 
@@ -7416,7 +7354,7 @@ function mostrarResumoHorasImpressoras() {
                             </strong>
 
                             ${formatarHorasEquipamentos(
-                                impressora.horasProducao ||
+                                impressora.horasProducoes ||
                                 0
                             )}
                         </p>
@@ -7466,7 +7404,7 @@ function mostrarAjustesHorasEquipamentos() {
 
 
     if (
-        ajustesHorasEquipamentos.length ===
+        registrosHorasEquipamentos.length ===
         0
     ) {
 
@@ -7484,7 +7422,7 @@ function mostrarAjustesHorasEquipamentos() {
 
 
     const ajustesOrdenados =
-        [...ajustesHorasEquipamentos].sort(
+        [...registrosHorasEquipamentos].sort(
             function (a, b) {
 
                 return String(
@@ -7533,9 +7471,9 @@ function mostrarAjustesHorasEquipamentos() {
                         <p>
                             <strong>Ajuste:</strong>
 
-                            ${sinal}${formatarHorasEquipamentos(
-                                horas
-                            )}
+                           ${formatarHorasEquipamentos(
+    horas
+)}
                         </p>
 
                         <p>
@@ -7551,9 +7489,21 @@ function mostrarAjustesHorasEquipamentos() {
                             <strong>Observações:</strong>
 
                             ${escaparTexto(
-                                ajuste.observacoes ||
-                                "Nenhuma"
-                            )}
+                                registrosHorasEquipamentos.push(
+    novoAjuste
+);
+
+
+impressora.horasAjustes =
+    Number(
+        impressora.horasAjustes || 0
+    ) +
+    quantidadeHoras;
+
+
+salvarRegistrosHorasEquipamentos();
+
+atualizarHorasDasImpressoras();
                         </p>
 
                         <button
@@ -7856,7 +7806,7 @@ if (botaoSalvarAjusteHoras) {
             );
 
 
-            salvarAjustesHorasEquipamentos();
+            salvarRegistrosHorasEquipamentos();
 
             atualizarHorasDasImpressoras();
 
