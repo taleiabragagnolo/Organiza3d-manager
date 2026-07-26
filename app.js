@@ -8225,7 +8225,526 @@ impressora.horasProducoes =
         return true;
 
     };
-    
+    // =========================
+// DIÁRIO DOS EQUIPAMENTOS
+// PARTE 9A
+// =========================
+
+const botaoSalvarDiarioEquipamento =
+    document.getElementById(
+        "salvar-diario-equipamento"
+    );
+
+const botaoLimparDiarioEquipamento =
+    document.getElementById(
+        "limpar-diario-equipamento"
+    );
+
+const listaDiarioEquipamentos =
+    document.getElementById(
+        "lista-diario-equipamentos"
+    );
+
+const campoDiarioImpressora =
+    document.getElementById(
+        "diario-impressora"
+    );
+
+const campoDiarioData =
+    document.getElementById(
+        "diario-data"
+    );
+
+const campoDiarioTipo =
+    document.getElementById(
+        "diario-tipo"
+    );
+
+const campoDiarioTitulo =
+    document.getElementById(
+        "diario-titulo"
+    );
+
+const campoDiarioDescricao =
+    document.getElementById(
+        "diario-descricao"
+    );
+
+
+// =========================
+// NORMALIZAR DIÁRIO
+// =========================
+
+function normalizarDiarioEquipamentos() {
+
+    diarioEquipamentos =
+        diarioEquipamentos.map(
+            function (registro, indice) {
+
+                return {
+
+                    id:
+                        registro.id ||
+                        Date.now() +
+                        indice +
+                        5000,
+
+                    data:
+                        registro.data ||
+                        obterDataHojeEquipamentos(),
+
+                    impressoraId:
+                        registro.impressoraId ||
+                        null,
+
+                    impressoraNome:
+                        registro.impressoraNome ||
+                        "Geral",
+
+                    tipo:
+                        registro.tipo ||
+                        "Outro",
+
+                    titulo:
+                        registro.titulo ||
+                        "Ocorrência",
+
+                    descricao:
+                        registro.descricao ||
+                        "",
+
+                    criadoEm:
+                        registro.criadoEm ||
+                        new Date()
+                            .toISOString()
+
+                };
+
+            }
+        );
+
+    salvarDiarioEquipamentos();
+
+}
+
+
+// =========================
+// LIMPAR FORMULÁRIO
+// =========================
+
+function limparFormularioDiarioEquipamento() {
+
+    definirValorCampoEquipamentos(
+        "diario-impressora",
+        ""
+    );
+
+    definirValorCampoEquipamentos(
+        "diario-data",
+        obterDataHojeEquipamentos()
+    );
+
+    definirValorCampoEquipamentos(
+        "diario-tipo",
+        ""
+    );
+
+    definirValorCampoEquipamentos(
+        "diario-titulo",
+        ""
+    );
+
+    definirValorCampoEquipamentos(
+        "diario-descricao",
+        ""
+    );
+
+}
+
+
+// =========================
+// MOSTRAR DIÁRIO
+// =========================
+
+function mostrarDiarioEquipamentos() {
+
+    if (!listaDiarioEquipamentos) {
+
+        return;
+
+    }
+
+    if (diarioEquipamentos.length === 0) {
+
+        listaDiarioEquipamentos.innerHTML =
+            "<p>Nenhum registro no diário.</p>";
+
+        return;
+
+    }
+
+    const registrosOrdenados =
+        [...diarioEquipamentos].sort(
+            function (a, b) {
+
+                const dataA =
+                    `${a.data || ""}-${
+                        a.criadoEm || ""
+                    }`;
+
+                const dataB =
+                    `${b.data || ""}-${
+                        b.criadoEm || ""
+                    }`;
+
+                return dataB.localeCompare(
+                    dataA
+                );
+
+            }
+        );
+
+    listaDiarioEquipamentos.innerHTML =
+        registrosOrdenados.map(
+            function (registro) {
+
+                return `
+                    <div class="card-item">
+
+                        <h4>
+                            ${escaparTexto(
+                                registro.titulo
+                            )}
+                        </h4>
+
+                        <p>
+                            <strong>Data:</strong>
+
+                            ${formatarDataEquipamentos(
+                                registro.data
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Impressora:</strong>
+
+                            ${escaparTexto(
+                                registro.impressoraNome ||
+                                "Geral"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Tipo:</strong>
+
+                            ${escaparTexto(
+                                registro.tipo ||
+                                "Outro"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Descrição:</strong>
+
+                            ${escaparTexto(
+                                registro.descricao ||
+                                "Nenhuma descrição."
+                            )}
+                        </p>
+
+                        <button
+                            type="button"
+                            class="botao-excluir"
+                            onclick="excluirRegistroDiarioEquipamento(
+                                ${registro.id}
+                            )">
+
+                            Excluir registro
+
+                        </button>
+
+                    </div>
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+// =========================
+// SALVAR REGISTRO MANUAL
+// =========================
+
+if (botaoSalvarDiarioEquipamento) {
+
+    botaoSalvarDiarioEquipamento
+        .addEventListener(
+            "click",
+            function () {
+
+                const impressoraId =
+                    Number(
+                        obterTextoCampoEquipamentos(
+                            "diario-impressora"
+                        )
+                    );
+
+                const data =
+                    obterTextoCampoEquipamentos(
+                        "diario-data"
+                    );
+
+                const tipo =
+                    obterTextoCampoEquipamentos(
+                        "diario-tipo"
+                    );
+
+                const titulo =
+                    obterTextoCampoEquipamentos(
+                        "diario-titulo"
+                    );
+
+                const descricao =
+                    obterTextoCampoEquipamentos(
+                        "diario-descricao"
+                    );
+
+                const impressora =
+                    impressoras.find(
+                        function (item) {
+
+                            return item.id ===
+                                impressoraId;
+
+                        }
+                    );
+
+                if (!data) {
+
+                    alert(
+                        "Informe a data do registro."
+                    );
+
+                    return;
+
+                }
+
+                if (!tipo) {
+
+                    alert(
+                        "Selecione o tipo do registro."
+                    );
+
+                    return;
+
+                }
+
+                if (!titulo) {
+
+                    alert(
+                        "Informe o título do registro."
+                    );
+
+                    return;
+
+                }
+
+                if (!descricao) {
+
+                    alert(
+                        "Informe a descrição do registro."
+                    );
+
+                    return;
+
+                }
+
+                const novoRegistro = {
+
+                    id:
+                        Date.now() +
+                        Math.random(),
+
+                    data:
+                        data,
+
+                    impressoraId:
+                        impressora
+                            ? impressora.id
+                            : null,
+
+                    impressoraNome:
+                        impressora
+                            ? impressora.nome
+                            : "Geral",
+
+                    tipo:
+                        tipo,
+
+                    titulo:
+                        titulo,
+
+                    descricao:
+                        descricao,
+
+                    criadoEm:
+                        new Date()
+                            .toISOString()
+
+                };
+
+                diarioEquipamentos.push(
+                    novoRegistro
+                );
+
+                salvarDiarioEquipamentos();
+
+                mostrarDiarioEquipamentos();
+
+                limparFormularioDiarioEquipamento();
+
+                alert(
+                    "Registro adicionado ao diário com sucesso!"
+                );
+
+            }
+        );
+
+}
+
+
+// =========================
+// LIMPAR PELO BOTÃO
+// =========================
+
+if (botaoLimparDiarioEquipamento) {
+
+    botaoLimparDiarioEquipamento
+        .addEventListener(
+            "click",
+            limparFormularioDiarioEquipamento
+        );
+
+}
+// =========================
+// DIÁRIO DOS EQUIPAMENTOS
+// PARTE 9B
+// EXCLUIR REGISTRO
+// =========================
+
+window.excluirRegistroDiarioEquipamento =
+    function (id) {
+
+        const registro =
+            diarioEquipamentos.find(
+                function (item) {
+
+                    return item.id === id;
+
+                }
+            );
+
+        if (!registro) {
+
+            alert(
+                "Registro do diário não encontrado."
+            );
+
+            return;
+
+        }
+
+        const confirmar =
+            confirm(
+                `Deseja excluir o registro "${registro.titulo}"?`
+            );
+
+        if (!confirmar) {
+
+            return;
+
+        }
+
+        diarioEquipamentos =
+            diarioEquipamentos.filter(
+                function (item) {
+
+                    return item.id !== id;
+
+                }
+            );
+
+        salvarDiarioEquipamentos();
+
+        mostrarDiarioEquipamentos();
+
+        alert(
+            "Registro do diário excluído com sucesso!"
+        );
+
+    };
+    // =========================
+// EQUIPAMENTOS
+// PARTE 10
+// INICIALIZAÇÃO FINAL
+// =========================
+
+function iniciarModuloEquipamentos() {
+
+    normalizarDadosEquipamentos();
+
+    normalizarDiarioEquipamentos();
+
+    atualizarHorasDasImpressoras();
+
+    atualizarOpcoesEquipamentos();
+
+
+    mostrarImpressoras();
+
+    mostrarPecasEquipamentos();
+
+    mostrarLubrificantesEquipamentos();
+
+    mostrarManutencoesEquipamentos();
+
+    mostrarAjustesHorasEquipamentos();
+
+    mostrarDiarioEquipamentos();
+
+
+    atualizarResumoImpressoras();
+
+    atualizarResumoHorasEquipamentos();
+
+
+    limparFormularioImpressora();
+
+    limparFormularioPeca();
+
+    limparFormularioLubrificante();
+
+    limparFormularioManutencao();
+
+    limparFormularioAjusteHoras();
+
+    limparFormularioDiarioEquipamento();
+
+
+    abrirAbaEquipamento(
+        "aba-impressoras"
+    );
+
+}
+
+
+// =========================
+// INICIAR EQUIPAMENTOS
+// =========================
+
+iniciarModuloEquipamentos();
+
 
 // =========================
 // FINANCEIRO 2.0
