@@ -7445,12 +7445,7 @@ function mostrarAjustesHorasEquipamentos() {
                     );
 
 
-                const sinal =
-                    horas >= 0
-                        ? "+"
-                        : "";
-
-
+                
                 return `
                     <div class="card-item">
 
@@ -8008,7 +8003,7 @@ salvarRegistrosHorasEquipamentos();
 
         mostrarImpressoras();
 
-        atualizarResumoEquipamentos();
+        atualizarResumoHorasEquipamentos();
 
 
         alert(
@@ -8066,9 +8061,9 @@ window.adicionarHorasProducaoEquipamento =
         }
 
 
-        impressora.horasProducao =
+        impressora.horasProducoes =
             Number(
-                impressora.horasProducao ||
+                impressora.horasProducoes ||
                 0
             ) +
             quantidadeHoras;
@@ -8116,7 +8111,7 @@ window.adicionarHorasProducaoEquipamento =
 
         mostrarAjustesHorasEquipamentos();
 
-        atualizarResumoEquipamentos();
+        atualizarResumoHorasEquipamentos();
 
 
         return true;
@@ -8173,18 +8168,18 @@ window.removerHorasProducaoEquipamento =
 
 
         const horasProducaoAtuais =
-            Number(
-                impressora.horasProducao ||
-                0
-            );
+    Number(
+        impressora.horasProducoes ||
+        0
+    );
 
 
-        impressora.horasProducao =
-            Math.max(
-                0,
-                horasProducaoAtuais -
-                quantidadeHoras
-            );
+impressora.horasProducoes =
+    Math.max(
+        0,
+        horasProducaoAtuais -
+        quantidadeHoras
+    );
 
 
         impressora.totalHoras =
@@ -8229,7 +8224,7 @@ window.removerHorasProducaoEquipamento =
 
         mostrarAjustesHorasEquipamentos();
 
-        atualizarResumoEquipamentos();
+        atualizarResumoHorasEquipamentos();
 
 
         return true;
