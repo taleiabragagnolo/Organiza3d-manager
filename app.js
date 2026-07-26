@@ -13493,3 +13493,33 @@ campoSenha.addEventListener("keydown", function (e) {
     }
 
 });
+/* =======================================
+   BOTÃO SAIR
+======================================= */
+
+const botaoSair = document.getElementById("botao-sair");
+
+if (botaoSair) {
+
+    botaoSair.addEventListener("click", function () {
+
+        const confirmarSaida = confirm(
+            "Deseja realmente sair do sistema?"
+        );
+
+        if (!confirmarSaida) {
+            return;
+        }
+
+        aplicativo.style.display = "none";
+        telaLogin.style.display = "flex";
+
+        campoUsuario.value = "";
+        campoSenha.value = "";
+        mensagemLogin.textContent = "";
+
+        campoUsuario.focus();
+
+    });
+
+}
