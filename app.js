@@ -5600,11 +5600,11 @@ function mostrarFilamentos() {
 
                         <button
                             type="button"
-                            class="botao-excluir"
-                            onclick="excluirFilamento(
-                                ${filamento.id}
-                            )">
-                            Excluir
+                             class="botao-principal"
+                              onclick="editarFilamento(
+                            ${filamento.id}
+                              )">
+                              Editar
                         </button>
 
                     </div>
