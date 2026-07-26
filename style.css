@@ -10,14 +10,19 @@
     --cor-principal: #958e76;
     --cor-principal-escura: #664f38;
     --cor-principal-clara: #d9c5b5;
+
     --cor-rose: #cb9f8b;
     --cor-rose-escura: #a97865;
+
     --cor-fundo: #f8f3ed;
     --cor-branca: #fffdf9;
+
     --cor-texto: #4f3d2d;
     --cor-texto-claro: #81684e;
+
     --cor-borda: #e3d5c8;
     --cor-menu: #5b4938;
+
     --cor-aviso: #fff1dc;
     --cor-perigo: #b85c5c;
     --cor-sucesso: #71856c;
@@ -29,8 +34,25 @@ body {
     min-height: 100vh;
     background: var(--cor-fundo);
     color: var(--cor-texto);
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 }
+h1,
+h2,
+h3,
+h4,
+.logo p {
+    margin-top: 4px;
+    color: var(--cor-principal-clara);
+    font-size: 14px;
+}
+
+button,
+input,
+select,
+textarea {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+
 
 button,
 input,
@@ -85,18 +107,19 @@ button {
     border: 0;
     border-radius: 10px;
     background: transparent;
-    color: #e9e1f3;
+    color: #f5ece4;
     text-align: left;
     transition: 0.2s;
 }
 
 .menu-item:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(238, 227, 214, 0.14);
 }
 
 .menu-item.ativo {
-    background: var(--cor-principal);
-    color: var(--cor-branca);
+    background: var(--cor-rose);
+    color: var(--cor-principal-escura);
+    box-shadow: 0 4px 12px rgba(30, 20, 12, 0.18);
 }
 
 /* CONTEÚDO PRINCIPAL */
@@ -126,7 +149,7 @@ button {
 }
 
 .cabecalho p {
-    color: #ede9fe;
+    color: #fff7ef;
 }
 
 .pagina {
