@@ -13458,7 +13458,7 @@ function abrirSistema() {
 
     telaLogin.style.display = "none";
 
-    aplicativo.style.display = "";
+    aplicativo.style.display = "flex";
 
 }
 
