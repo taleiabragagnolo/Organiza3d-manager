@@ -7480,25 +7480,14 @@ function mostrarAjustesHorasEquipamentos() {
                             )}
                         </p>
 
-                        <p>
+                                                <p>
                             <strong>Observações:</strong>
 
                             ${escaparTexto(
-                                registrosHorasEquipamentos.push(
-    novoAjuste
-);
-
-
-impressora.horasAjustes =
-    Number(
-        impressora.horasAjustes || 0
-    ) +
-    quantidadeHoras;
-
-
-salvarRegistrosHorasEquipamentos();
-
-atualizarHorasDasImpressoras();
+                                ajuste.observacoes ||
+                                "Nenhuma"
+                            )}
+                    
                         </p>
 
                         <button
