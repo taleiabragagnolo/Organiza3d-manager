@@ -12008,29 +12008,7 @@ if (botaoSalvarAcessorio) {
                 return;
             }
 
-            const novoAcessorio = {
-                id: Date.now(),
-                nome: nome,
-                categoria: categoria,
-                quantidade: quantidade,
-                estoqueMinimo: estoqueMinimo,
-                unidadeCompra: unidadeCompra,
-                valorCompra: valorCompra,
-                valorUnitario: valorUnitario,
-                dataCompra: dataCompra,
-                fornecedor: fornecedor,
-                observacoes: observacoes
-            };
-
-            acessorios.push(novoAcessorio);
-
-            salvarAcessorios();
-            mostrarAcessorios();
-            limparFormularioAcessorio();
-
-            alert(
-                "Acessório cadastrado com sucesso!"
-            );
+           acessorioEmEdicaoId = id
         }
     );
 }
