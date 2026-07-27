@@ -11892,53 +11892,8 @@ window.editarAcessorio = function (id) {
         top: 0,
         behavior: "smooth"
     });
-};
-
-    if (botaoSalvarAcessorio) {
-        botaoSalvarAcessorio.textContent =
-            "Salvar Acessório";
-    }
-}
-window.excluirAcessorio = function (id) {
-
-    const confirmar = confirm(
-        "Tem certeza que deseja excluir este acessório?"
-    );
-
-    if (!confirmar) {
-        return;
-    }
-
-    acessorios = acessorios.filter(function (acessorio) {
-        return acessorio.id !== id;
-    });
-
-    salvarAcessorios();
-    mostrarAcessorios();
 
 };
-window.editarAcessorio = function (id) {
-
-    const acessorio = acessorios.find(function (item) {
-        return item.id === id;
-    });
-
-    if (!acessorio) {
-        alert("Acessório não encontrado.");
-        return;
-    }
-
-    document.getElementById("acessorio-nome").value = acessorio.nome;
-    document.getElementById("acessorio-categoria").value = acessorio.categoria;
-    document.getElementById("acessorio-quantidade").value = acessorio.quantidade;
-    document.getElementById("acessorio-estoque-minimo").value = acessorio.estoqueMinimo;
-    document.getElementById("acessorio-unidade-compra").value = acessorio.unidadeCompra;
-    document.getElementById("acessorio-valor-compra").value = acessorio.valorCompra;
-    document.getElementById("acessorio-data-compra").value = acessorio.dataCompra;
-    document.getElementById("acessorio-fornecedor").value = acessorio.fornecedor;
-    document.getElementById("acessorio-observacoes").value = acessorio.observacoes;
-
-    excluirAcessorio(id);
 
 if (botaoSalvarAcessorio) {
 
@@ -12080,14 +12035,6 @@ if (botaoSalvarAcessorio) {
     );
 }
 
-if (botaoLimparFormularioAcessorio) {
-
-    botaoLimparFormularioAcessorio
-        .addEventListener(
-            "click",
-            limparFormularioAcessorio
-        );
-}
 let filamentos = [];
 mostrarAcessorios();
 try {
