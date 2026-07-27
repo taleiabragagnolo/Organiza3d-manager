@@ -11753,9 +11753,6 @@ function mostrarAcessorios() {
 }
 function limparFormularioAcessorio() {
 
-    calcularValorUnitarioAcessorio();
-};
-
     document.getElementById(
         "acessorio-nome"
     ).value = "";
@@ -11797,6 +11794,105 @@ function limparFormularioAcessorio() {
     ).value = "";
 
     acessorioEmEdicaoId = null;
+
+    if (botaoSalvarAcessorio) {
+        botaoSalvarAcessorio.textContent =
+            "Salvar Acessório";
+    }
+}
+
+window.excluirAcessorio = function (id) {
+
+    const acessorioEncontrado =
+        acessorios.find(function (acessorio) {
+            return acessorio.id === id;
+        });
+
+    if (!acessorioEncontrado) {
+        alert("Acessório não encontrado.");
+        return;
+    }
+
+    const confirmar = confirm(
+        `Tem certeza que deseja excluir "${acessorioEncontrado.nome}"?`
+    );
+
+    if (!confirmar) {
+        return;
+    }
+
+    acessorios = acessorios.filter(
+        function (acessorio) {
+            return acessorio.id !== id;
+        }
+    );
+
+    salvarAcessorios();
+    mostrarAcessorios();
+};
+
+window.editarAcessorio = function (id) {
+
+    const acessorio =
+        acessorios.find(function (item) {
+            return item.id === id;
+        });
+
+    if (!acessorio) {
+        alert("Acessório não encontrado.");
+        return;
+    }
+
+    acessorioEmEdicaoId = id;
+
+    document.getElementById(
+        "acessorio-nome"
+    ).value = acessorio.nome || "";
+
+    document.getElementById(
+        "acessorio-categoria"
+    ).value = acessorio.categoria || "";
+
+    document.getElementById(
+        "acessorio-quantidade"
+    ).value = acessorio.quantidade || "";
+
+    document.getElementById(
+        "acessorio-estoque-minimo"
+    ).value = acessorio.estoqueMinimo || "";
+
+    document.getElementById(
+        "acessorio-unidade-compra"
+    ).value = acessorio.unidadeCompra || "";
+
+    document.getElementById(
+        "acessorio-valor-compra"
+    ).value = acessorio.valorCompra || "";
+
+    document.getElementById(
+        "acessorio-data-compra"
+    ).value = acessorio.dataCompra || "";
+
+    document.getElementById(
+        "acessorio-fornecedor"
+    ).value = acessorio.fornecedor || "";
+
+    document.getElementById(
+        "acessorio-observacoes"
+    ).value = acessorio.observacoes || "";
+
+    calcularValorUnitarioAcessorio();
+
+    if (botaoSalvarAcessorio) {
+        botaoSalvarAcessorio.textContent =
+            "Atualizar Acessório";
+    }
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+};
 
     if (botaoSalvarAcessorio) {
         botaoSalvarAcessorio.textContent =
