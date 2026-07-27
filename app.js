@@ -11615,7 +11615,225 @@ function calcularValorUnitarioAcessorio() {
 });
 
 calcularValorUnitarioAcessorio();
+const botaoSalvarAcessorio =
+    document.getElementById(
+        "salvar-acessorio"
+    );
 
+const botaoLimparFormularioAcessorio =
+    document.getElementById(
+        "limpar-formulario-acessorio"
+    );
+
+const listaAcessorios =
+    document.getElementById(
+        "lista-acessorios"
+    );
+
+function salvarAcessorios() {
+    localStorage.setItem(
+        "organiza3d_acessorios",
+        JSON.stringify(acessorios)
+    );
+}
+
+function limparFormularioAcessorio() {
+
+    document.getElementById(
+        "acessorio-nome"
+    ).value = "";
+
+    document.getElementById(
+        "acessorio-categoria"
+    ).value = "";
+
+    document.getElementById(
+        "acessorio-quantidade"
+    ).value = "";
+
+    document.getElementById(
+        "acessorio-estoque-minimo"
+    ).value = "";
+
+    document.getElementById(
+        "acessorio-unidade-compra"
+    ).value = "";
+
+    document.getElementById(
+        "acessorio-valor-compra"
+    ).value = "";
+
+    document.getElementById(
+        "acessorio-valor-unitario"
+    ).value = "R$ 0,0000";
+
+    document.getElementById(
+        "acessorio-data-compra"
+    ).value = "";
+
+    document.getElementById(
+        "acessorio-fornecedor"
+    ).value = "";
+
+    document.getElementById(
+        "acessorio-observacoes"
+    ).value = "";
+
+    acessorioEmEdicaoId = null;
+
+    if (botaoSalvarAcessorio) {
+        botaoSalvarAcessorio.textContent =
+            "Salvar Acessório";
+    }
+}
+
+if (botaoSalvarAcessorio) {
+
+    botaoSalvarAcessorio.addEventListener(
+        "click",
+        function () {
+
+            const nome =
+                document.getElementById(
+                    "acessorio-nome"
+                ).value.trim();
+
+            const categoria =
+                document.getElementById(
+                    "acessorio-categoria"
+                ).value;
+
+            const quantidade =
+                Number(
+                    document.getElementById(
+                        "acessorio-quantidade"
+                    ).value
+                );
+
+            const estoqueMinimo =
+                Number(
+                    document.getElementById(
+                        "acessorio-estoque-minimo"
+                    ).value
+                );
+
+            const unidadeCompra =
+                document.getElementById(
+                    "acessorio-unidade-compra"
+                ).value;
+
+            const valorCompra =
+                Number(
+                    document.getElementById(
+                        "acessorio-valor-compra"
+                    ).value
+                );
+
+            const valorUnitario =
+                quantidade > 0
+                    ? valorCompra / quantidade
+                    : 0;
+
+            const dataCompra =
+                document.getElementById(
+                    "acessorio-data-compra"
+                ).value;
+
+            const fornecedor =
+                document.getElementById(
+                    "acessorio-fornecedor"
+                ).value.trim();
+
+            const observacoes =
+                document.getElementById(
+                    "acessorio-observacoes"
+                ).value.trim();
+
+            if (!nome) {
+                alert(
+                    "Informe o nome do acessório."
+                );
+                return;
+            }
+
+            if (!categoria) {
+                alert(
+                    "Selecione a categoria."
+                );
+                return;
+            }
+
+            if (
+                Number.isNaN(quantidade) ||
+                quantidade <= 0
+            ) {
+                alert(
+                    "Informe uma quantidade válida."
+                );
+                return;
+            }
+
+            if (
+                Number.isNaN(estoqueMinimo) ||
+                estoqueMinimo < 0
+            ) {
+                alert(
+                    "Informe um estoque mínimo válido."
+                );
+                return;
+            }
+
+            if (!unidadeCompra) {
+                alert(
+                    "Selecione a unidade de compra."
+                );
+                return;
+            }
+
+            if (
+                Number.isNaN(valorCompra) ||
+                valorCompra < 0
+            ) {
+                alert(
+                    "Informe um valor de compra válido."
+                );
+                return;
+            }
+
+            const novoAcessorio = {
+                id: Date.now(),
+                nome: nome,
+                categoria: categoria,
+                quantidade: quantidade,
+                estoqueMinimo: estoqueMinimo,
+                unidadeCompra: unidadeCompra,
+                valorCompra: valorCompra,
+                valorUnitario: valorUnitario,
+                dataCompra: dataCompra,
+                fornecedor: fornecedor,
+                observacoes: observacoes
+            };
+
+            acessorios.push(novoAcessorio);
+
+            salvarAcessorios();
+            limparFormularioAcessorio();
+
+            alert(
+                "Acessório cadastrado com sucesso!"
+            );
+        }
+    );
+}
+
+if (botaoLimparFormularioAcessorio) {
+
+    botaoLimparFormularioAcessorio
+        .addEventListener(
+            "click",
+            limparFormularioAcessorio
+        );
+}
 let filamentoEmEdicaoId = null;
 
 const botaoSalvarFilamento =
