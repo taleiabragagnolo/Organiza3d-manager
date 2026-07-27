@@ -11615,6 +11615,7 @@ function calcularValorUnitarioAcessorio() {
 });
 
 calcularValorUnitarioAcessorio();
+
 let filamentoEmEdicaoId = null;
 
 const botaoSalvarFilamento =
