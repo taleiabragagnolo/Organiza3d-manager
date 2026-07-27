@@ -11834,6 +11834,31 @@ if (botaoLimparFormularioAcessorio) {
             limparFormularioAcessorio
         );
 }
+let filamentos = [];
+
+try {
+
+    const dadosFilamentos =
+        JSON.parse(
+            localStorage.getItem(
+                "organiza3d_filamentos"
+            )
+        );
+
+    filamentos =
+        Array.isArray(dadosFilamentos)
+            ? dadosFilamentos
+            : [];
+
+} catch (erro) {
+
+    console.error(
+        "Não foi possível carregar os filamentos.",
+        erro
+    );
+
+    filamentos = [];
+}
 let filamentoEmEdicaoId = null;
 
 const botaoSalvarFilamento =
@@ -12136,7 +12161,7 @@ function normalizarFilamentosAntigos() {
     }
 
     filamentos = filamentos.map(
-        
+
         function (filamento, indice) {
             const pesoInicial = Number(
                 filamento.pesoInicial || 0
