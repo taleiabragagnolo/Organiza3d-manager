@@ -667,3 +667,18 @@ button {
         border-radius: 18px;
     }
 }
+/* =========================
+   ABAS FILAMENTOS
+========================= */
+
+.aba-filamento{
+    cursor:pointer;
+}
+
+.conteudo-aba-filamento{
+    display:none;
+}
+
+.conteudo-aba-filamento.ativo{
+    display:block;
+}
