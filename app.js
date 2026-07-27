@@ -11636,7 +11636,107 @@ function salvarAcessorios() {
         JSON.stringify(acessorios)
     );
 }
+function mostrarAcessorios() {
 
+    if (!listaAcessorios) {
+        return;
+    }
+
+    if (acessorios.length === 0) {
+        listaAcessorios.innerHTML =
+            "<p>Nenhum acessório cadastrado.</p>";
+        return;
+    }
+
+    listaAcessorios.innerHTML =
+        acessorios
+            .map(function (acessorio) {
+
+                return `
+                    <div class="card-item">
+
+                        <h4>
+                            ${escaparTexto(
+                                acessorio.nome
+                            )}
+                        </h4>
+
+                        <p>
+                            <strong>Categoria:</strong>
+                            ${escaparTexto(
+                                acessorio.categoria
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Quantidade:</strong>
+                            ${Number(
+                                acessorio.quantidade || 0
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Estoque mínimo:</strong>
+                            ${Number(
+                                acessorio.estoqueMinimo || 0
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Unidade de compra:</strong>
+                            ${escaparTexto(
+                                acessorio.unidadeCompra ||
+                                "Não informada"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Valor da compra:</strong>
+                            ${formatarDinheiro(
+                                acessorio.valorCompra
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Valor unitário:</strong>
+                            ${formatarValorUnitarioAcessorio(
+                                acessorio.valorUnitario
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Data da compra:</strong>
+                            ${
+                                acessorio.dataCompra
+                                    ? acessorio.dataCompra
+                                        .split("-")
+                                        .reverse()
+                                        .join("/")
+                                    : "Não informada"
+                            }
+                        </p>
+
+                        <p>
+                            <strong>Fornecedor:</strong>
+                            ${escaparTexto(
+                                acessorio.fornecedor ||
+                                "Não informado"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Observações:</strong>
+                            ${escaparTexto(
+                                acessorio.observacoes ||
+                                "Nenhuma"
+                            )}
+                        </p>
+
+                    </div>
+                `;
+            })
+            .join("");
+}
 function limparFormularioAcessorio() {
 
     document.getElementById(
@@ -11817,6 +11917,7 @@ if (botaoSalvarAcessorio) {
             acessorios.push(novoAcessorio);
 
             salvarAcessorios();
+            mostrarAcessorios();
             limparFormularioAcessorio();
 
             alert(
@@ -11835,7 +11936,7 @@ if (botaoLimparFormularioAcessorio) {
         );
 }
 let filamentos = [];
-
+mostrarAcessorios();
 try {
 
     const dadosFilamentos =
@@ -12370,7 +12471,14 @@ function mostrarFilamentos() {
                               )">
                               Editar
                         </button>
-
+<button
+    type="button"
+    class="botao-excluir"
+    onclick="excluirFilamento(
+        ${filamento.id}
+    )">
+    Excluir
+</button>
                     </div>
                 `;
             })
