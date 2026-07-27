@@ -11534,6 +11534,87 @@ botoesAbasFilamentos.forEach(
 );
 
 abrirAbaFilamento("aba-filamentos");
+// =========================
+// ACESSÓRIOS
+// =========================
+
+let acessorios = JSON.parse(
+    localStorage.getItem("organiza3d_acessorios")
+) || [];
+
+let acessorioEmEdicaoId = null;
+
+const campoAcessorioQuantidade =
+    document.getElementById(
+        "acessorio-quantidade"
+    );
+
+const campoAcessorioValorCompra =
+    document.getElementById(
+        "acessorio-valor-compra"
+    );
+
+const campoAcessorioValorUnitario =
+    document.getElementById(
+        "acessorio-valor-unitario"
+    );
+
+function formatarValorUnitarioAcessorio(valor) {
+
+    return Number(valor || 0).toLocaleString(
+        "pt-BR",
+        {
+            style: "currency",
+            currency: "BRL",
+            minimumFractionDigits: 4,
+            maximumFractionDigits: 4
+        }
+    );
+}
+
+function calcularValorUnitarioAcessorio() {
+
+    const quantidade = Number(
+        campoAcessorioQuantidade
+            ? campoAcessorioQuantidade.value || 0
+            : 0
+    );
+
+    const valorCompra = Number(
+        campoAcessorioValorCompra
+            ? campoAcessorioValorCompra.value || 0
+            : 0
+    );
+
+    const valorUnitario =
+        quantidade > 0
+            ? valorCompra / quantidade
+            : 0;
+
+    if (campoAcessorioValorUnitario) {
+
+        campoAcessorioValorUnitario.value =
+            formatarValorUnitarioAcessorio(
+                valorUnitario
+            );
+    }
+}
+
+[
+    campoAcessorioQuantidade,
+    campoAcessorioValorCompra
+].forEach(function (campo) {
+
+    if (campo) {
+
+        campo.addEventListener(
+            "input",
+            calcularValorUnitarioAcessorio
+        );
+    }
+});
+
+calcularValorUnitarioAcessorio();
 let filamentoEmEdicaoId = null;
 
 const botaoSalvarFilamento =
