@@ -11472,7 +11472,68 @@ prepararFormularioFinanceiro();
 // =========================
 // FILAMENTOS 2.0
 // =========================
+// =========================
+// ABAS DOS FILAMENTOS
+// =========================
 
+const botoesAbasFilamentos =
+    document.querySelectorAll(
+        ".aba-filamento"
+    );
+
+const conteudosAbasFilamentos =
+    document.querySelectorAll(
+        ".conteudo-aba-filamento"
+    );
+
+function abrirAbaFilamento(idAba) {
+
+    conteudosAbasFilamentos.forEach(
+        function (conteudo) {
+
+            const ativa =
+                conteudo.id === idAba;
+
+            conteudo.hidden = !ativa;
+
+            conteudo.classList.toggle(
+                "ativo",
+                ativa
+            );
+        }
+    );
+
+    botoesAbasFilamentos.forEach(
+        function (botao) {
+
+            const ativo =
+                botao.dataset.abaFilamento ===
+                idAba;
+
+            botao.classList.toggle(
+                "botao-principal",
+                ativo
+            );
+        }
+    );
+}
+
+botoesAbasFilamentos.forEach(
+    function (botao) {
+
+        botao.addEventListener(
+            "click",
+            function () {
+
+                abrirAbaFilamento(
+                    botao.dataset.abaFilamento
+                );
+            }
+        );
+    }
+);
+
+abrirAbaFilamento("aba-filamentos");
 let filamentoEmEdicaoId = null;
 
 const botaoSalvarFilamento =
