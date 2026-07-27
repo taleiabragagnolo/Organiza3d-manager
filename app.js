@@ -12130,7 +12130,13 @@ function atualizarResumoFilamentos() {
 }
 
 function normalizarFilamentosAntigos() {
+
+    if (!Array.isArray(filamentos)) {
+        filamentos = [];
+    }
+
     filamentos = filamentos.map(
+        
         function (filamento, indice) {
             const pesoInicial = Number(
                 filamento.pesoInicial || 0
