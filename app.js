@@ -11731,7 +11731,21 @@ function mostrarAcessorios() {
                                 "Nenhuma"
                             )}
                         </p>
+<div class="acoes-card">
 
+    <button
+        class="botao-principal"
+        onclick="editarAcessorio(${acessorio.id})">
+        Editar
+    </button>
+
+    <button
+        class="botao-excluir"
+        onclick="excluirAcessorio(${acessorio.id})">
+        Excluir
+    </button>
+
+</div>
                     </div>
                 `;
             })
