@@ -504,4 +504,3 @@ if (botaoAtualizarDashboardCompleto) {
 // =========================
 
 atualizarDashboardCompleto();
-});
