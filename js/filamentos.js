@@ -1,6 +1,7 @@
 // =========================
 // FILAMENTOS 2.0
 // =========================
+
 // =========================
 // ABAS DOS FILAMENTOS
 // =========================
@@ -63,13 +64,37 @@ botoesAbasFilamentos.forEach(
 );
 
 abrirAbaFilamento("aba-filamentos");
+
+
 // =========================
-// ACESSÓRIOS
+// ACESSÓRIOS DE PRODUÇÃO
 // =========================
 
-let acessorios = JSON.parse(
-    localStorage.getItem("organiza3d_acessorios")
-) || [];
+let acessorios = [];
+
+try {
+
+    const dadosAcessorios =
+        JSON.parse(
+            localStorage.getItem(
+                "organiza3d_acessorios"
+            )
+        );
+
+    acessorios =
+        Array.isArray(dadosAcessorios)
+            ? dadosAcessorios
+            : [];
+
+} catch (erro) {
+
+    console.error(
+        "Não foi possível carregar os acessórios.",
+        erro
+    );
+
+    acessorios = [];
+}
 
 let acessorioEmEdicaoId = null;
 
@@ -86,6 +111,21 @@ const campoAcessorioValorCompra =
 const campoAcessorioValorUnitario =
     document.getElementById(
         "acessorio-valor-unitario"
+    );
+
+const botaoSalvarAcessorio =
+    document.getElementById(
+        "salvar-acessorio"
+    );
+
+const botaoLimparFormularioAcessorio =
+    document.getElementById(
+        "limpar-formulario-acessorio"
+    );
+
+const listaAcessorios =
+    document.getElementById(
+        "lista-acessorios"
     );
 
 function formatarValorUnitarioAcessorio(valor) {
@@ -129,42 +169,14 @@ function calcularValorUnitarioAcessorio() {
     }
 }
 
-[
-    campoAcessorioQuantidade,
-    campoAcessorioValorCompra
-].forEach(function (campo) {
-
-    if (campo) {
-
-        campo.addEventListener(
-            "input",
-            calcularValorUnitarioAcessorio
-        );
-    }
-});
-
-calcularValorUnitarioAcessorio();
-const botaoSalvarAcessorio =
-    document.getElementById(
-        "salvar-acessorio"
-    );
-
-const botaoLimparFormularioAcessorio =
-    document.getElementById(
-        "limpar-formulario-acessorio"
-    );
-
-const listaAcessorios =
-    document.getElementById(
-        "lista-acessorios"
-    );
-
 function salvarAcessorios() {
+
     localStorage.setItem(
         "organiza3d_acessorios",
         JSON.stringify(acessorios)
     );
 }
+
 function mostrarAcessorios() {
 
     if (!listaAcessorios) {
@@ -172,14 +184,24 @@ function mostrarAcessorios() {
     }
 
     if (acessorios.length === 0) {
+
         listaAcessorios.innerHTML =
             "<p>Nenhum acessório cadastrado.</p>";
+
         return;
     }
 
     listaAcessorios.innerHTML =
         acessorios
             .map(function (acessorio) {
+
+                const dataCompra =
+                    acessorio.dataCompra
+                        ? acessorio.dataCompra
+                            .split("-")
+                            .reverse()
+                            .join("/")
+                        : "Não informada";
 
                 return `
                     <div class="card-item">
@@ -193,7 +215,8 @@ function mostrarAcessorios() {
                         <p>
                             <strong>Categoria:</strong>
                             ${escaparTexto(
-                                acessorio.categoria
+                                acessorio.categoria ||
+                                "Não informada"
                             )}
                         </p>
 
@@ -235,14 +258,7 @@ function mostrarAcessorios() {
 
                         <p>
                             <strong>Data da compra:</strong>
-                            ${
-                                acessorio.dataCompra
-                                    ? acessorio.dataCompra
-                                        .split("-")
-                                        .reverse()
-                                        .join("/")
-                                    : "Não informada"
-                            }
+                            ${dataCompra}
                         </p>
 
                         <p>
@@ -260,115 +276,137 @@ function mostrarAcessorios() {
                                 "Nenhuma"
                             )}
                         </p>
-<div class="acoes-card">
 
-    <button
-        class="botao-principal"
-        onclick="editarAcessorio(${acessorio.id})">
-        Editar
-    </button>
+                        <div class="acoes-card">
 
-    <button
-        class="botao-excluir"
-        onclick="excluirAcessorio(${acessorio.id})">
-        Excluir
-    </button>
+                            <button
+                                type="button"
+                                class="botao-principal"
+                                onclick="editarAcessorio(
+                                    ${acessorio.id}
+                                )">
+                                Editar
+                            </button>
 
-</div>
+                            <button
+                                type="button"
+                                class="botao-excluir"
+                                onclick="excluirAcessorio(
+                                    ${acessorio.id}
+                                )">
+                                Excluir
+                            </button>
+
+                        </div>
+
                     </div>
                 `;
             })
             .join("");
 }
+
 function limparFormularioAcessorio() {
 
-    document.getElementById(
-        "acessorio-nome"
-    ).value = "";
+    const campoNome =
+        document.getElementById(
+            "acessorio-nome"
+        );
 
-    document.getElementById(
-        "acessorio-categoria"
-    ).value = "";
+    const campoCategoria =
+        document.getElementById(
+            "acessorio-categoria"
+        );
 
-    document.getElementById(
-        "acessorio-quantidade"
-    ).value = "";
+    const campoEstoqueMinimo =
+        document.getElementById(
+            "acessorio-estoque-minimo"
+        );
 
-    document.getElementById(
-        "acessorio-estoque-minimo"
-    ).value = "";
+    const campoUnidadeCompra =
+        document.getElementById(
+            "acessorio-unidade-compra"
+        );
 
-    document.getElementById(
-        "acessorio-unidade-compra"
-    ).value = "";
+    const campoDataCompra =
+        document.getElementById(
+            "acessorio-data-compra"
+        );
 
-    document.getElementById(
-        "acessorio-valor-compra"
-    ).value = "";
+    const campoFornecedor =
+        document.getElementById(
+            "acessorio-fornecedor"
+        );
 
-    document.getElementById(
-        "acessorio-valor-unitario"
-    ).value = "R$ 0,0000";
+    const campoObservacoes =
+        document.getElementById(
+            "acessorio-observacoes"
+        );
 
-    document.getElementById(
-        "acessorio-data-compra"
-    ).value = "";
+    if (campoNome) {
+        campoNome.value = "";
+    }
 
-    document.getElementById(
-        "acessorio-fornecedor"
-    ).value = "";
+    if (campoCategoria) {
+        campoCategoria.value = "";
+    }
 
-    document.getElementById(
-        "acessorio-observacoes"
-    ).value = "";
+    if (campoAcessorioQuantidade) {
+        campoAcessorioQuantidade.value = "";
+    }
+
+    if (campoEstoqueMinimo) {
+        campoEstoqueMinimo.value = "";
+    }
+
+    if (campoUnidadeCompra) {
+        campoUnidadeCompra.value = "";
+    }
+
+    if (campoAcessorioValorCompra) {
+        campoAcessorioValorCompra.value = "";
+    }
+
+    if (campoAcessorioValorUnitario) {
+        campoAcessorioValorUnitario.value =
+            "R$ 0,0000";
+    }
+
+    if (campoDataCompra) {
+        campoDataCompra.value = "";
+    }
+
+    if (campoFornecedor) {
+        campoFornecedor.value = "";
+    }
+
+    if (campoObservacoes) {
+        campoObservacoes.value = "";
+    }
 
     acessorioEmEdicaoId = null;
 
     if (botaoSalvarAcessorio) {
+
         botaoSalvarAcessorio.textContent =
             "Salvar Acessório";
     }
 }
 
-window.excluirAcessorio = function (id) {
-
-    const acessorioEncontrado =
-        acessorios.find(function (acessorio) {
-            return acessorio.id === id;
-        });
-
-    if (!acessorioEncontrado) {
-        alert("Acessório não encontrado.");
-        return;
-    }
-
-    const confirmar = confirm(
-        `Tem certeza que deseja excluir "${acessorioEncontrado.nome}"?`
-    );
-
-    if (!confirmar) {
-        return;
-    }
-
-    acessorios = acessorios.filter(
-        function (acessorio) {
-            return acessorio.id !== id;
-        }
-    );
-
-    salvarAcessorios();
-    mostrarAcessorios();
-};
-
 window.editarAcessorio = function (id) {
 
     const acessorio =
-        acessorios.find(function (item) {
-            return item.id === id;
-        });
+        acessorios.find(
+            function (item) {
+                return item.id === id;
+            }
+        );
 
     if (!acessorio) {
-        alert("Acessório não encontrado.");
+
+        alert(
+            "Acessório não encontrado."
+        );
+
         return;
     }
 
@@ -413,16 +451,91 @@ window.editarAcessorio = function (id) {
     calcularValorUnitarioAcessorio();
 
     if (botaoSalvarAcessorio) {
+
         botaoSalvarAcessorio.textContent =
             "Atualizar Acessório";
     }
+
+    abrirAbaFilamento(
+        "aba-acessorios"
+    );
 
     window.scrollTo({
         top: 0,
         behavior: "smooth"
     });
-
 };
+
+window.excluirAcessorio = function (id) {
+
+    const acessorioEncontrado =
+        acessorios.find(
+            function (acessorio) {
+                return acessorio.id === id;
+            }
+        );
+
+    if (!acessorioEncontrado) {
+
+        alert(
+            "Acessório não encontrado."
+        );
+
+        return;
+    }
+
+    const confirmar = confirm(
+        `Tem certeza que deseja excluir "${acessorioEncontrado.nome}"?`
+    );
+
+    if (!confirmar) {
+        return;
+    }
+
+    acessorios =
+        acessorios.filter(
+            function (acessorio) {
+                return acessorio.id !== id;
+            }
+        );
+
+    salvarAcessorios();
+    mostrarAcessorios();
+
+    if (
+        acessorioEmEdicaoId === id
+    ) {
+        limparFormularioAcessorio();
+    }
+
+    if (
+        typeof atualizarDashboardCompleto ===
+        "function"
+    ) {
+        atualizarDashboardCompleto();
+    }
+
+    if (
+        typeof atualizarRelatorios ===
+        "function"
+    ) {
+        atualizarRelatorios();
+    }
+};
+
+[
+    campoAcessorioQuantidade,
+    campoAcessorioValorCompra
+].forEach(function (campo) {
+
+    if (campo) {
+
+        campo.addEventListener(
+            "input",
+            calcularValorUnitarioAcessorio
+        );
+    }
+});
 
 if (botaoSalvarAcessorio) {
 
@@ -487,16 +600,20 @@ if (botaoSalvarAcessorio) {
                 ).value.trim();
 
             if (!nome) {
+
                 alert(
                     "Informe o nome do acessório."
                 );
+
                 return;
             }
 
             if (!categoria) {
+
                 alert(
                     "Selecione a categoria."
                 );
+
                 return;
             }
 
@@ -504,9 +621,11 @@ if (botaoSalvarAcessorio) {
                 Number.isNaN(quantidade) ||
                 quantidade <= 0
             ) {
+
                 alert(
                     "Informe uma quantidade válida."
                 );
+
                 return;
             }
 
@@ -514,16 +633,20 @@ if (botaoSalvarAcessorio) {
                 Number.isNaN(estoqueMinimo) ||
                 estoqueMinimo < 0
             ) {
+
                 alert(
                     "Informe um estoque mínimo válido."
                 );
+
                 return;
             }
 
             if (!unidadeCompra) {
+
                 alert(
                     "Selecione a unidade de compra."
                 );
+
                 return;
             }
 
@@ -531,19 +654,107 @@ if (botaoSalvarAcessorio) {
                 Number.isNaN(valorCompra) ||
                 valorCompra < 0
             ) {
+
                 alert(
                     "Informe um valor de compra válido."
                 );
+
                 return;
             }
 
-           acessorioEmEdicaoId = id
+            const dadosAcessorio = {
+                nome: nome,
+                categoria: categoria,
+                quantidade: quantidade,
+                estoqueMinimo: estoqueMinimo,
+                unidadeCompra: unidadeCompra,
+                valorCompra: valorCompra,
+                valorUnitario: valorUnitario,
+                dataCompra: dataCompra,
+                fornecedor: fornecedor,
+                observacoes: observacoes
+            };
+
+            if (
+                acessorioEmEdicaoId !== null
+            ) {
+
+                const indice =
+                    acessorios.findIndex(
+                        function (acessorio) {
+                            return acessorio.id ===
+                                acessorioEmEdicaoId;
+                        }
+                    );
+
+                if (indice === -1) {
+
+                    alert(
+                        "Acessório não encontrado."
+                    );
+
+                    return;
+                }
+
+                acessorios[indice] = {
+                    id: acessorioEmEdicaoId,
+                    ...dadosAcessorio
+                };
+
+                alert(
+                    "Acessório atualizado com sucesso!"
+                );
+
+            } else {
+
+                acessorios.push({
+                    id: Date.now(),
+                    ...dadosAcessorio
+                });
+
+                alert(
+                    "Acessório cadastrado com sucesso!"
+                );
+            }
+
+            salvarAcessorios();
+            mostrarAcessorios();
+            limparFormularioAcessorio();
+
+            if (
+                typeof atualizarDashboardCompleto ===
+                "function"
+            ) {
+                atualizarDashboardCompleto();
+            }
+
+            if (
+                typeof atualizarRelatorios ===
+                "function"
+            ) {
+                atualizarRelatorios();
+            }
         }
     );
 }
 
-let filamentos = [];
+if (botaoLimparFormularioAcessorio) {
+
+    botaoLimparFormularioAcessorio.addEventListener(
+        "click",
+        limparFormularioAcessorio
+    );
+}
+
+calcularValorUnitarioAcessorio();
 mostrarAcessorios();
+limparFormularioAcessorio();
+// =========================
+// FILAMENTOS
+// =========================
+
+let filamentos = [];
+
 try {
 
     const dadosFilamentos =
@@ -567,10 +778,13 @@ try {
 
     filamentos = [];
 }
+
 let filamentoEmEdicaoId = null;
 
 const botaoSalvarFilamento =
-    document.getElementById("salvar-filamento");
+    document.getElementById(
+        "salvar-filamento"
+    );
 
 const botaoLimparFormularioFilamento =
     document.getElementById(
@@ -578,16 +792,24 @@ const botaoLimparFormularioFilamento =
     );
 
 const listaFilamentos =
-    document.getElementById("lista-filamentos");
+    document.getElementById(
+        "lista-filamentos"
+    );
 
 const campoFilamentoFabricante =
-    document.getElementById("filamento-fabricante");
+    document.getElementById(
+        "filamento-fabricante"
+    );
 
 const campoFilamentoMaterial =
-    document.getElementById("filamento-material");
+    document.getElementById(
+        "filamento-material"
+    );
 
 const campoFilamentoCor =
-    document.getElementById("filamento-cor");
+    document.getElementById(
+        "filamento-cor"
+    );
 
 const campoFilamentoPesoInicial =
     document.getElementById(
@@ -605,7 +827,9 @@ const campoFilamentoPercentual =
     );
 
 const campoFilamentoValor =
-    document.getElementById("filamento-valor");
+    document.getElementById(
+        "filamento-valor"
+    );
 
 const campoFilamentoDataCompra =
     document.getElementById(
@@ -618,28 +842,48 @@ const campoFilamentoFornecedor =
     );
 
 const campoFilamentoStatus =
-    document.getElementById("filamento-status");
+    document.getElementById(
+        "filamento-status"
+    );
 
 const campoFilamentoObservacoes =
     document.getElementById(
         "filamento-observacoes"
     );
 
+
+// =========================
+// SALVAMENTO
+// =========================
+
 function salvarFilamentos() {
+
     localStorage.setItem(
         "organiza3d_filamentos",
         JSON.stringify(filamentos)
     );
 }
 
+
+// =========================
+// CÁLCULOS
+// =========================
+
 function calcularPercentualFilamento(
     pesoInicial,
     pesoRestante
 ) {
-    const inicial = Number(pesoInicial);
-    const restante = Number(pesoRestante);
 
-    if (!inicial || inicial <= 0) {
+    const inicial =
+        Number(pesoInicial);
+
+    const restante =
+        Number(pesoRestante);
+
+    if (
+        Number.isNaN(inicial) ||
+        inicial <= 0
+    ) {
         return 0;
     }
 
@@ -648,7 +892,10 @@ function calcularPercentualFilamento(
 
     return Math.max(
         0,
-        Math.min(100, percentual)
+        Math.min(
+            100,
+            percentual
+        )
     );
 }
 
@@ -656,8 +903,12 @@ function definirStatusFilamento(
     pesoInicial,
     pesoRestante
 ) {
-    const inicial = Number(pesoInicial);
-    const restante = Number(pesoRestante);
+
+    const inicial =
+        Number(pesoInicial);
+
+    const restante =
+        Number(pesoRestante);
 
     if (restante <= 0) {
         return "Finalizado";
@@ -680,22 +931,28 @@ function definirStatusFilamento(
     return "Novo";
 }
 
-function formatarPercentualFilamento(valor) {
-    return `${Number(valor).toLocaleString(
-        "pt-BR",
-        {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 1
-        }
-    )}%`;
+function formatarPercentualFilamento(
+    valor
+) {
+
+    return `${Number(valor || 0)
+        .toLocaleString(
+            "pt-BR",
+            {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 1
+            }
+        )}%`;
 }
 
 function formatarDataFilamento(data) {
+
     if (!data) {
         return "Não informada";
     }
 
-    const partes = data.split("-");
+    const partes =
+        data.split("-");
 
     if (partes.length !== 3) {
         return data;
@@ -705,22 +962,27 @@ function formatarDataFilamento(data) {
 }
 
 function obterDataHojeFilamento() {
+
     const hoje = new Date();
 
-    const ano = hoje.getFullYear();
+    const ano =
+        hoje.getFullYear();
 
-    const mes = String(
-        hoje.getMonth() + 1
-    ).padStart(2, "0");
+    const mes =
+        String(
+            hoje.getMonth() + 1
+        ).padStart(2, "0");
 
-    const dia = String(
-        hoje.getDate()
-    ).padStart(2, "0");
+    const dia =
+        String(
+            hoje.getDate()
+        ).padStart(2, "0");
 
     return `${ano}-${mes}-${dia}`;
 }
 
 function atualizarCalculosFormularioFilamento() {
+
     if (
         !campoFilamentoPesoInicial ||
         !campoFilamentoPesoRestante
@@ -728,13 +990,17 @@ function atualizarCalculosFormularioFilamento() {
         return;
     }
 
-    const pesoInicial = Number(
-        campoFilamentoPesoInicial.value
-    );
+    const pesoInicial =
+        Number(
+            campoFilamentoPesoInicial.value ||
+            0
+        );
 
-    const pesoRestante = Number(
-        campoFilamentoPesoRestante.value
-    );
+    const pesoRestante =
+        Number(
+            campoFilamentoPesoRestante.value ||
+            0
+        );
 
     const percentual =
         calcularPercentualFilamento(
@@ -749,6 +1015,7 @@ function atualizarCalculosFormularioFilamento() {
         );
 
     if (campoFilamentoPercentual) {
+
         campoFilamentoPercentual.value =
             formatarPercentualFilamento(
                 percentual
@@ -756,11 +1023,19 @@ function atualizarCalculosFormularioFilamento() {
     }
 
     if (campoFilamentoStatus) {
-        campoFilamentoStatus.value = status;
+
+        campoFilamentoStatus.value =
+            status;
     }
 }
 
+
+// =========================
+// RESUMO
+// =========================
+
 function atualizarResumoFilamentos() {
+
     const campoTotal =
         document.getElementById(
             "filamentos-total-rolos"
@@ -791,28 +1066,37 @@ function atualizarResumoFilamentos() {
             "filamentos-peso-disponivel"
         );
 
-    const totalNovos = filamentos.filter(
-        function (filamento) {
-            return filamento.status === "Novo";
-        }
-    ).length;
+    const totalNovos =
+        filamentos.filter(
+            function (filamento) {
 
-    const totalEmUso = filamentos.filter(
-        function (filamento) {
-            return filamento.status === "Em uso";
-        }
-    ).length;
+                return filamento.status ===
+                    "Novo";
+            }
+        ).length;
 
-    const totalBaixo = filamentos.filter(
-        function (filamento) {
-            return filamento.status ===
-                "Baixo estoque";
-        }
-    ).length;
+    const totalEmUso =
+        filamentos.filter(
+            function (filamento) {
+
+                return filamento.status ===
+                    "Em uso";
+            }
+        ).length;
+
+    const totalBaixo =
+        filamentos.filter(
+            function (filamento) {
+
+                return filamento.status ===
+                    "Baixo estoque";
+            }
+        ).length;
 
     const totalFinalizados =
         filamentos.filter(
             function (filamento) {
+
                 return filamento.status ===
                     "Finalizado";
             }
@@ -820,38 +1104,52 @@ function atualizarResumoFilamentos() {
 
     const pesoDisponivel =
         filamentos.reduce(
-            function (total, filamento) {
+            function (
+                total,
+                filamento
+            ) {
+
                 return total +
                     Number(
-                        filamento.pesoRestante || 0
+                        filamento.pesoRestante ||
+                        0
                     );
             },
             0
         );
 
     if (campoTotal) {
+
         campoTotal.textContent =
             filamentos.length;
     }
 
     if (campoNovos) {
-        campoNovos.textContent = totalNovos;
+
+        campoNovos.textContent =
+            totalNovos;
     }
 
     if (campoEmUso) {
-        campoEmUso.textContent = totalEmUso;
+
+        campoEmUso.textContent =
+            totalEmUso;
     }
 
     if (campoBaixo) {
-        campoBaixo.textContent = totalBaixo;
+
+        campoBaixo.textContent =
+            totalBaixo;
     }
 
     if (campoFinalizados) {
+
         campoFinalizados.textContent =
             totalFinalizados;
     }
 
     if (campoPesoDisponivel) {
+
         campoPesoDisponivel.textContent =
             `${pesoDisponivel.toLocaleString(
                 "pt-BR",
@@ -862,101 +1160,155 @@ function atualizarResumoFilamentos() {
     }
 }
 
+
+// =========================
+// NORMALIZAÇÃO DE DADOS ANTIGOS
+// =========================
+
 function normalizarFilamentosAntigos() {
 
     if (!Array.isArray(filamentos)) {
+
         filamentos = [];
     }
 
-    filamentos = filamentos.map(
+    filamentos =
+        filamentos.map(
+            function (
+                filamento,
+                indice
+            ) {
 
-        function (filamento, indice) {
-            const pesoInicial = Number(
-                filamento.pesoInicial || 0
-            );
-
-            const pesoRestante =
-                filamento.pesoRestante !== undefined
-                    ? Number(
-                        filamento.pesoRestante
-                    )
-                    : pesoInicial;
-
-            return {
-                id:
-                    filamento.id ||
-                    Date.now() + indice,
-
-                fabricante:
-                    filamento.fabricante || "",
-
-                material:
-                    filamento.material ||
-                    filamento.tipo ||
-                    "Outro",
-
-                cor:
-                    filamento.cor || "",
-
-                pesoInicial:
-                    pesoInicial,
-
-                pesoRestante:
-                    pesoRestante,
-
-                percentual:
-                    calcularPercentualFilamento(
-                        pesoInicial,
-                        pesoRestante
-                    ),
-
-                valor:
+                const pesoInicial =
                     Number(
-                        filamento.valor || 0
-                    ),
+                        filamento.pesoInicial ||
+                        0
+                    );
 
-                dataCompra:
-                    filamento.dataCompra || "",
+                let pesoRestante =
+                    filamento.pesoRestante !==
+                    undefined
+                        ? Number(
+                            filamento.pesoRestante
+                        )
+                        : pesoInicial;
 
-                fornecedor:
-                    filamento.fornecedor || "",
-
-                observacoes:
-                    filamento.observacoes || "",
-
-                status:
-                    definirStatusFilamento(
-                        pesoInicial,
+                if (
+                    Number.isNaN(
                         pesoRestante
                     )
-            };
-        }
-    );
+                ) {
+                    pesoRestante =
+                        pesoInicial;
+                }
+
+                pesoRestante =
+                    Math.max(
+                        0,
+                        Math.min(
+                            pesoInicial,
+                            pesoRestante
+                        )
+                    );
+
+                return {
+                    id:
+                        filamento.id ||
+                        Date.now() + indice,
+
+                    fabricante:
+                        filamento.fabricante ||
+                        "",
+
+                    material:
+                        filamento.material ||
+                        filamento.tipo ||
+                        "Outro",
+
+                    cor:
+                        filamento.cor ||
+                        "",
+
+                    pesoInicial:
+                        pesoInicial,
+
+                    pesoRestante:
+                        pesoRestante,
+
+                    percentual:
+                        calcularPercentualFilamento(
+                            pesoInicial,
+                            pesoRestante
+                        ),
+
+                    valor:
+                        Number(
+                            filamento.valor ||
+                            filamento.valorPago ||
+                            0
+                        ),
+
+                    dataCompra:
+                        filamento.dataCompra ||
+                        "",
+
+                    fornecedor:
+                        filamento.fornecedor ||
+                        "",
+
+                    observacoes:
+                        filamento.observacoes ||
+                        "",
+
+                    status:
+                        definirStatusFilamento(
+                            pesoInicial,
+                            pesoRestante
+                        )
+                };
+            }
+        );
 
     salvarFilamentos();
 }
 
+
+// =========================
+// LISTAGEM
+// =========================
+
 function mostrarFilamentos() {
+
     if (!listaFilamentos) {
         return;
     }
 
     if (filamentos.length === 0) {
+
         listaFilamentos.innerHTML =
             "<p>Nenhum filamento cadastrado.</p>";
 
         atualizarResumoFilamentos();
+
         return;
     }
 
     listaFilamentos.innerHTML =
         filamentos
             .map(function (filamento) {
+
                 const percentual =
                     calcularPercentualFilamento(
                         filamento.pesoInicial,
                         filamento.pesoRestante
                     );
+
+                const fabricante =
+                    filamento.fabricante
+                        ? escaparTexto(
+                            filamento.fabricante
+                        )
+                        : "Não informado";
 
                 const fornecedor =
                     filamento.fornecedor
@@ -986,28 +1338,27 @@ function mostrarFilamentos() {
 
                         <p>
                             <strong>Fabricante:</strong>
-                            ${
-                                filamento.fabricante
-                                    ? escaparTexto(
-                                        filamento.fabricante
-                                    )
-                                    : "Não informado"
-                            }
+                            ${fabricante}
                         </p>
 
                         <p>
                             <strong>Peso inicial:</strong>
                             ${Number(
-                                filamento.pesoInicial
+                                filamento.pesoInicial ||
+                                0
                             ).toLocaleString(
-                                "pt-BR"
+                                "pt-BR",
+                                {
+                                    maximumFractionDigits: 1
+                                }
                             )} g
                         </p>
 
                         <p>
                             <strong>Peso restante:</strong>
                             ${Number(
-                                filamento.pesoRestante
+                                filamento.pesoRestante ||
+                                0
                             ).toLocaleString(
                                 "pt-BR",
                                 {
@@ -1054,38 +1405,44 @@ function mostrarFilamentos() {
                             ${observacoes}
                         </p>
 
-                        ${
-                            filamento.status !==
-                            "Finalizado"
-                                ? `
-                                    <button
-                                        type="button"
-                                        class="botao-principal"
-                                        onclick="registrarConsumoFilamento(
-                                            ${filamento.id}
-                                        )">
-                                        Registrar Consumo
-                                    </button>
-                                `
-                                : ""
-                        }
+                        <div class="acoes-card">
+
+                            ${
+                                filamento.status !==
+                                "Finalizado"
+                                    ? `
+                                        <button
+                                            type="button"
+                                            class="botao-principal"
+                                            onclick="registrarConsumoFilamento(
+                                                ${filamento.id}
+                                            )">
+                                            Registrar Consumo
+                                        </button>
+                                    `
+                                    : ""
+                            }
 
                             <button
-                            type="button"
-                             class="botao-principal"
-                              onclick="editarFilamento(
-                            ${filamento.id}
-                              )">
-                              Editar
-                        </button>
-<button
-    type="button"
-    class="botao-excluir"
-    onclick="excluirFilamento(
-        ${filamento.id}
-    )">
-    Excluir
-</button>
+                                type="button"
+                                class="botao-principal"
+                                onclick="editarFilamento(
+                                    ${filamento.id}
+                                )">
+                                Editar
+                            </button>
+
+                            <button
+                                type="button"
+                                class="botao-excluir"
+                                onclick="excluirFilamento(
+                                    ${filamento.id}
+                                )">
+                                Excluir
+                            </button>
+
+                        </div>
+
                     </div>
                 `;
             })
@@ -1094,65 +1451,107 @@ function mostrarFilamentos() {
     atualizarResumoFilamentos();
 }
 
+
+// =========================
+// LIMPEZA DO FORMULÁRIO
+// =========================
+
 function limparFormularioFilamento() {
+
     if (campoFilamentoFabricante) {
-        campoFilamentoFabricante.value = "";
+
+        campoFilamentoFabricante.value =
+            "";
     }
 
     if (campoFilamentoMaterial) {
-        campoFilamentoMaterial.value = "";
+
+        campoFilamentoMaterial.value =
+            "";
     }
 
     if (campoFilamentoCor) {
-        campoFilamentoCor.value = "";
+
+        campoFilamentoCor.value =
+            "";
     }
 
     if (campoFilamentoPesoInicial) {
-        campoFilamentoPesoInicial.value = "";
+
+        campoFilamentoPesoInicial.value =
+            "";
     }
 
     if (campoFilamentoPesoRestante) {
-        campoFilamentoPesoRestante.value = "";
+
+        campoFilamentoPesoRestante.value =
+            "";
     }
 
     if (campoFilamentoPercentual) {
-        campoFilamentoPercentual.value = "0%";
+
+        campoFilamentoPercentual.value =
+            "0%";
     }
 
     if (campoFilamentoValor) {
-        campoFilamentoValor.value = "";
+
+        campoFilamentoValor.value =
+            "";
     }
 
     if (campoFilamentoDataCompra) {
+
         campoFilamentoDataCompra.value =
             obterDataHojeFilamento();
     }
 
     if (campoFilamentoFornecedor) {
-        campoFilamentoFornecedor.value = "";
+
+        campoFilamentoFornecedor.value =
+            "";
     }
 
     if (campoFilamentoStatus) {
-        campoFilamentoStatus.value = "Novo";
+
+        campoFilamentoStatus.value =
+            "Novo";
     }
 
     if (campoFilamentoObservacoes) {
-        campoFilamentoObservacoes.value = "";
+
+        campoFilamentoObservacoes.value =
+            "";
+    }
+
+    filamentoEmEdicaoId = null;
+
+    if (botaoSalvarFilamento) {
+
+        botaoSalvarFilamento.textContent =
+            "Salvar Filamento";
     }
 }
+// =========================
+// EVENTOS DOS CAMPOS
+// =========================
 
 if (campoFilamentoPesoInicial) {
+
     campoFilamentoPesoInicial.addEventListener(
         "input",
         function () {
-            const pesoInicial = Number(
-                campoFilamentoPesoInicial.value
-            );
+
+            const pesoInicial =
+                Number(
+                    campoFilamentoPesoInicial.value
+                );
 
             if (
                 campoFilamentoPesoRestante &&
                 !campoFilamentoPesoRestante.value
             ) {
+
                 campoFilamentoPesoRestante.value =
                     pesoInicial || "";
             }
@@ -1163,16 +1562,24 @@ if (campoFilamentoPesoInicial) {
 }
 
 if (campoFilamentoPesoRestante) {
+
     campoFilamentoPesoRestante.addEventListener(
         "input",
         atualizarCalculosFormularioFilamento
     );
 }
 
+
+// =========================
+// SALVAR / EDITAR
+// =========================
+
 if (botaoSalvarFilamento) {
+
     botaoSalvarFilamento.addEventListener(
         "click",
         function () {
+
             const fabricante =
                 campoFilamentoFabricante.value.trim();
 
@@ -1182,17 +1589,20 @@ if (botaoSalvarFilamento) {
             const cor =
                 campoFilamentoCor.value.trim();
 
-            const pesoInicial = Number(
-                campoFilamentoPesoInicial.value
-            );
+            const pesoInicial =
+                Number(
+                    campoFilamentoPesoInicial.value
+                );
 
-            const pesoRestante = Number(
-                campoFilamentoPesoRestante.value
-            );
+            const pesoRestante =
+                Number(
+                    campoFilamentoPesoRestante.value
+                );
 
-            const valor = Number(
-                campoFilamentoValor.value
-            );
+            const valor =
+                Number(
+                    campoFilamentoValor.value
+                );
 
             const dataCompra =
                 campoFilamentoDataCompra.value;
@@ -1204,43 +1614,57 @@ if (botaoSalvarFilamento) {
                 campoFilamentoObservacoes.value.trim();
 
             if (!material) {
+
                 alert(
-                    "Selecione o material do filamento."
+                    "Selecione o material."
                 );
+
                 return;
             }
 
             if (!cor) {
+
                 alert(
-                    "Informe a cor do filamento."
+                    "Informe a cor."
                 );
+
                 return;
             }
 
             if (
-                !pesoInicial ||
+                Number.isNaN(pesoInicial) ||
                 pesoInicial <= 0
             ) {
+
                 alert(
-                    "Informe um peso inicial válido."
+                    "Peso inicial inválido."
                 );
+
                 return;
             }
 
             if (
+                Number.isNaN(pesoRestante) ||
                 pesoRestante < 0 ||
                 pesoRestante > pesoInicial
             ) {
+
                 alert(
-                    "O peso restante deve estar entre zero e o peso inicial."
+                    "Peso restante inválido."
                 );
+
                 return;
             }
 
-            if (valor < 0) {
+            if (
+                Number.isNaN(valor) ||
+                valor < 0
+            ) {
+
                 alert(
-                    "Informe um valor válido."
+                    "Valor inválido."
                 );
+
                 return;
             }
 
@@ -1256,175 +1680,326 @@ if (botaoSalvarFilamento) {
                     pesoRestante
                 );
 
-            const novoFilamento = {
-                id: Date.now(),
-                fabricante: fabricante,
-                material: material,
-                cor: cor,
-                pesoInicial: pesoInicial,
-                pesoRestante: pesoRestante,
-                percentual: percentual,
-                valor: valor,
-                dataCompra: dataCompra,
-                fornecedor: fornecedor,
-                status: status,
-                observacoes: observacoes
+            const objeto = {
+
+                id:
+                    filamentoEmEdicaoId ??
+                    Date.now(),
+
+                fabricante,
+
+                material,
+
+                cor,
+
+                pesoInicial,
+
+                pesoRestante,
+
+                percentual,
+
+                valor,
+
+                dataCompra,
+
+                fornecedor,
+
+                status,
+
+                observacoes
             };
 
-            filamentos.push(novoFilamento);
+            if (
+                filamentoEmEdicaoId !== null
+            ) {
+
+                const indice =
+                    filamentos.findIndex(
+                        function (f) {
+
+                            return (
+                                f.id ===
+                                filamentoEmEdicaoId
+                            );
+
+                        }
+                    );
+
+                if (indice >= 0) {
+
+                    filamentos[indice] =
+                        objeto;
+                }
+
+            } else {
+
+                filamentos.push(
+                    objeto
+                );
+            }
 
             salvarFilamentos();
+
             mostrarFilamentos();
+
             limparFormularioFilamento();
 
             if (
-    typeof atualizarDashboardCompleto ===
-    "function"
-) {
-    atualizarDashboardCompleto();
-}
+                typeof atualizarDashboardCompleto ===
+                "function"
+            ) {
 
-if (
-    typeof atualizarRelatorios ===
-    "function"
-) {
-    atualizarRelatorios();
-}
+                atualizarDashboardCompleto();
+            }
 
-alert(
-    "Filamento cadastrado com sucesso!"
-);
+            if (
+                typeof atualizarRelatorios ===
+                "function"
+            ) {
+
+                atualizarRelatorios();
+            }
+
+            alert(
+                filamentoEmEdicaoId !== null
+                    ? "Filamento atualizado com sucesso!"
+                    : "Filamento cadastrado com sucesso!"
+            );
+
         }
     );
 }
 
-if (botaoLimparFormularioFilamento) {
-    botaoLimparFormularioFilamento.addEventListener(
-        "click",
-        limparFormularioFilamento
-    );
-}
+
+// =========================
+// EDITAR
+// =========================
+
+window.editarFilamento =
+function (id) {
+
+    const filamento =
+        filamentos.find(
+            function (item) {
+
+                return item.id === id;
+
+            }
+        );
+
+    if (!filamento) {
+
+        return;
+    }
+
+    filamentoEmEdicaoId = id;
+
+    campoFilamentoFabricante.value =
+        filamento.fabricante;
+
+    campoFilamentoMaterial.value =
+        filamento.material;
+
+    campoFilamentoCor.value =
+        filamento.cor;
+
+    campoFilamentoPesoInicial.value =
+        filamento.pesoInicial;
+
+    campoFilamentoPesoRestante.value =
+        filamento.pesoRestante;
+
+    campoFilamentoValor.value =
+        filamento.valor;
+
+    campoFilamentoDataCompra.value =
+        filamento.dataCompra;
+
+    campoFilamentoFornecedor.value =
+        filamento.fornecedor;
+
+    campoFilamentoObservacoes.value =
+        filamento.observacoes;
+
+    atualizarCalculosFormularioFilamento();
+
+    botaoSalvarFilamento.textContent =
+        "Salvar Alterações";
+};
+
+
+// =========================
+// REGISTRAR CONSUMO
+// =========================
 
 window.registrarConsumoFilamento =
-    function (id) {
-        const filamento = filamentos.find(
+function (id) {
+
+    const filamento =
+        filamentos.find(
             function (item) {
+
                 return item.id === id;
+
             }
         );
 
-        if (!filamento) {
-            alert("Filamento não encontrado.");
-            return;
-        }
+    if (!filamento) {
 
-        const resposta = prompt(
-            `Informe quantos gramas foram utilizados de ` +
-            `${filamento.material} ${filamento.cor}:`
+        return;
+    }
+
+    const resposta =
+        prompt(
+            "Quantos gramas foram utilizados?"
         );
 
-        if (resposta === null) {
-            return;
-        }
+    if (resposta === null) {
 
-        const textoConsumo = resposta
-            .trim()
-            .replace(",", ".");
+        return;
+    }
 
-        const consumo = Number(textoConsumo);
+    const consumo =
+        Number(
+            resposta.replace(",", ".")
+        );
 
-        if (!consumo || consumo <= 0) {
-            alert(
-                "Informe uma quantidade válida."
-            );
-            return;
-        }
-
-        if (
-            consumo >
-            Number(filamento.pesoRestante)
-        ) {
-            alert(
-                "O consumo informado é maior que o peso disponível."
-            );
-            return;
-        }
-
-        filamento.pesoRestante =
-            Math.max(
-                0,
-                Number(filamento.pesoRestante) -
-                consumo
-            );
-
-        filamento.percentual =
-            calcularPercentualFilamento(
-                filamento.pesoInicial,
-                filamento.pesoRestante
-            );
-
-        filamento.status =
-            definirStatusFilamento(
-                filamento.pesoInicial,
-                filamento.pesoRestante
-            );
-
-        salvarFilamentos();
-        mostrarFilamentos();
-
-        if (
-            typeof atualizarDashboardCompleto ===
-            "function"
-        ) {
-            atualizarDashboardCompleto();
-        }
-
-        if (
-            typeof atualizarRelatorios ===
-            "function"
-        ) {
-            atualizarRelatorios();
-        }
+    if (
+        Number.isNaN(consumo) ||
+        consumo <= 0
+    ) {
 
         alert(
-            "Consumo registrado com sucesso!"
+            "Quantidade inválida."
         );
-    };
+
+        return;
+    }
+
+    if (
+        consumo >
+        filamento.pesoRestante
+    ) {
+
+        alert(
+            "Quantidade maior que o estoque."
+        );
+
+        return;
+    }
+
+    filamento.pesoRestante -=
+        consumo;
+
+    filamento.percentual =
+        calcularPercentualFilamento(
+            filamento.pesoInicial,
+            filamento.pesoRestante
+        );
+
+    filamento.status =
+        definirStatusFilamento(
+            filamento.pesoInicial,
+            filamento.pesoRestante
+        );
+
+    salvarFilamentos();
+
+    mostrarFilamentos();
+
+    if (
+        typeof atualizarDashboardCompleto ===
+        "function"
+    ) {
+
+        atualizarDashboardCompleto();
+    }
+
+    if (
+        typeof atualizarRelatorios ===
+        "function"
+    ) {
+
+        atualizarRelatorios();
+    }
+
+    alert(
+        "Consumo registrado."
+    );
+
+};
+
+
+// =========================
+// EXCLUIR
+// =========================
 
 window.excluirFilamento =
-    function (id) {
-        const confirmar = confirm(
-            "Tem certeza que deseja excluir este filamento?"
-        );
+function (id) {
 
-        if (!confirmar) {
-            return;
-        }
+    if (
+        !confirm(
+            "Deseja excluir este filamento?"
+        )
+    ) {
 
-        filamentos = filamentos.filter(
-            function (filamento) {
-                return filamento.id !== id;
+        return;
+    }
+
+    filamentos =
+        filamentos.filter(
+            function (item) {
+
+                return item.id !== id;
+
             }
         );
 
-        salvarFilamentos();
-        mostrarFilamentos();
+    salvarFilamentos();
 
-        if (
-            typeof atualizarDashboardCompleto ===
-            "function"
-        ) {
-            atualizarDashboardCompleto();
-        }
+    mostrarFilamentos();
 
-        if (
-            typeof atualizarRelatorios ===
-            "function"
-        ) {
-            atualizarRelatorios();
-        }
-    };
+    if (
+        typeof atualizarDashboardCompleto ===
+        "function"
+    ) {
+
+        atualizarDashboardCompleto();
+    }
+
+    if (
+        typeof atualizarRelatorios ===
+        "function"
+    ) {
+
+        atualizarRelatorios();
+    }
+
+};
+
+
+// =========================
+// BOTÃO LIMPAR
+// =========================
+
+if (
+    botaoLimparFormularioFilamento
+) {
+
+    botaoLimparFormularioFilamento
+        .addEventListener(
+            "click",
+            limparFormularioFilamento
+        );
+}
+
+
+// =========================
+// INICIALIZAÇÃO
+// =========================
 
 normalizarFilamentosAntigos();
+
 mostrarFilamentos();
+
 limparFormularioFilamento();
