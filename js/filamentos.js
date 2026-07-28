@@ -1738,33 +1738,36 @@ if (botaoSalvarFilamento) {
                 );
             }
 
-            salvarFilamentos();
+           const estavaEditando =
+    filamentoEmEdicaoId !== null;
 
-            mostrarFilamentos();
+salvarFilamentos();
 
-            limparFormularioFilamento();
+mostrarFilamentos();
 
-            if (
-                typeof atualizarDashboardCompleto ===
-                "function"
-            ) {
+limparFormularioFilamento();
 
-                atualizarDashboardCompleto();
-            }
+if (
+    typeof atualizarDashboardCompleto ===
+    "function"
+) {
 
-            if (
-                typeof atualizarRelatorios ===
-                "function"
-            ) {
+    atualizarDashboardCompleto();
+}
 
-                atualizarRelatorios();
-            }
+if (
+    typeof atualizarRelatorios ===
+    "function"
+) {
 
-            alert(
-                filamentoEmEdicaoId !== null
-                    ? "Filamento atualizado com sucesso!"
-                    : "Filamento cadastrado com sucesso!"
-            );
+    atualizarRelatorios();
+}
+
+alert(
+    estavaEditando
+        ? "Filamento atualizado com sucesso!"
+        : "Filamento cadastrado com sucesso!"
+);
 
         }
     );
