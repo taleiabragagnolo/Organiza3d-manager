@@ -1,3 +1,4 @@
+ alert("O app.js carregou");
  document.addEventListener("DOMContentLoaded", function () {
     const botoesMenu = document.querySelectorAll(".menu-item");
     const paginas = document.querySelectorAll(".pagina");
