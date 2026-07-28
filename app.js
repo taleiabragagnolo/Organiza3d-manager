@@ -3,14 +3,6 @@
     const botoesMenu = document.querySelectorAll(".menu-item");
     const paginas = document.querySelectorAll(".pagina");
 
-
-
-
-
-
-
-
-
 // =========================
 // RELATÓRIOS
 // =========================
