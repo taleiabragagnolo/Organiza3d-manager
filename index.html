@@ -2892,4 +2892,904 @@
                     id="manutencao-custo-servico"
                     min="0"
                     step="0.01">
-                    
+                    <small>
+    Mão de obra, frete ou serviço técnico.
+</small>
+
+</div>
+
+<div class="campo">
+
+    <label for="manutencao-responsavel">
+        Responsável
+    </label>
+
+    <input
+        type="text"
+        id="manutencao-responsavel"
+        placeholder="Ex.: Proprietária ou assistência técnica">
+
+</div>
+
+</div>
+
+<h4>Próxima manutenção</h4>
+
+<div class="linha">
+
+    <div class="campo">
+
+        <label for="manutencao-proxima-data">
+            Próxima data prevista
+        </label>
+
+        <input
+            type="date"
+            id="manutencao-proxima-data">
+
+    </div>
+
+    <div class="campo">
+
+        <label for="manutencao-proximas-horas">
+            Próxima manutenção com quantas horas
+        </label>
+
+        <input
+            type="number"
+            id="manutencao-proximas-horas"
+            min="0"
+            step="0.01"
+            placeholder="Ex.: 1000">
+
+    </div>
+
+</div>
+
+<div class="campo">
+
+    <label for="manutencao-observacoes">
+        Observações
+    </label>
+
+    <textarea
+        id="manutencao-observacoes"
+        rows="3"
+        placeholder="Problemas encontrados, recomendações ou informações adicionais"></textarea>
+
+</div>
+
+<button
+    id="salvar-manutencao"
+    class="botao-principal"
+    type="button">
+    Salvar Manutenção
+</button>
+
+<button
+    id="limpar-formulario-manutencao"
+    type="button">
+    Limpar Formulário
+</button>
+
+</div>
+
+<h3>Histórico de manutenções</h3>
+
+<div id="lista-manutencoes">
+
+    <p>
+        Nenhuma manutenção registrada.
+    </p>
+
+</div>
+
+</div>
+
+<!-- ========================= -->
+<!-- ABA HORAS DE USO -->
+<!-- ========================= -->
+
+<div
+    id="aba-horas"
+    class="conteudo-aba-equipamento"
+    hidden>
+
+    <h3>Resumo das horas de uso</h3>
+
+    <div class="cards">
+
+        <div class="card">
+
+            <span>⏱️ Total acumulado</span>
+
+            <strong id="equipamentos-horas-total">
+                0h
+            </strong>
+
+        </div>
+
+        <div class="card">
+
+            <span>📝 Registros manuais</span>
+
+            <strong id="equipamentos-horas-registros">
+                0
+            </strong>
+
+        </div>
+
+        <div class="card">
+
+            <span>➕ Horas adicionadas</span>
+
+            <strong id="equipamentos-horas-adicionadas">
+                0h
+            </strong>
+
+        </div>
+
+        <div class="card">
+
+            <span>🏭 Horas de produção</span>
+
+            <strong id="equipamentos-horas-producoes">
+                0h
+            </strong>
+
+        </div>
+
+    </div>
+
+    <h3>Registrar horas manualmente</h3>
+
+    <div class="formulario">
+
+        <div class="linha">
+
+            <div class="campo">
+
+                <label for="horas-impressora">
+                    Impressora
+                </label>
+
+                <select id="horas-impressora">
+
+                    <option value="">
+                        Selecione a impressora
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="horas-data">
+                    Data
+                </label>
+
+                <input
+                    type="date"
+                    id="horas-data">
+
+            </div>
+
+        </div>
+        <div class="campo">
+
+    <label for="horas-observacoes">
+        Observações
+    </label>
+
+    <textarea
+        id="horas-observacoes"
+        rows="3"
+        placeholder="Explique o motivo do lançamento ou da correção"></textarea>
+
+</div>
+
+<button
+    id="salvar-registro-horas"
+    class="botao-principal"
+    type="button">
+    Salvar Registro de Horas
+</button>
+
+<button
+    id="limpar-formulario-horas"
+    type="button">
+    Limpar Formulário
+</button>
+
+</div>
+
+<h3>Histórico de horas</h3>
+
+<div class="formulario">
+
+    <div class="linha">
+
+        <div class="campo">
+
+            <label for="filtro-horas-impressora">
+                Filtrar por impressora
+            </label>
+
+            <select id="filtro-horas-impressora">
+
+                <option value="">
+                    Todas as impressoras
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="campo">
+
+            <label for="filtro-horas-motivo">
+                Filtrar por motivo
+            </label>
+
+            <select id="filtro-horas-motivo">
+
+                <option value="">
+                    Todos os motivos
+                </option>
+
+                <option value="Produção">Produção</option>
+                <option value="Impressão não cadastrada">Impressão não cadastrada</option>
+                <option value="Teste">Teste</option>
+                <option value="Calibração">Calibração</option>
+                <option value="Manutenção">Manutenção</option>
+                <option value="Correção de horas">Correção de horas</option>
+                <option value="Outro">Outro</option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+    <button
+        id="aplicar-filtros-horas"
+        class="botao-principal"
+        type="button">
+        Aplicar Filtros
+    </button>
+
+    <button
+        id="limpar-filtros-horas"
+        type="button">
+        Limpar Filtros
+    </button>
+
+</div>
+
+<div id="lista-horas-equipamentos">
+
+    <p>
+        Nenhum registro de horas encontrado.
+    </p>
+
+</div>
+
+</div>
+
+<!-- ========================= -->
+<!-- ABA DIÁRIO -->
+<!-- ========================= -->
+
+<div
+    id="aba-diario"
+    class="conteudo-aba-equipamento"
+    hidden>
+
+    <h3>Diário dos equipamentos</h3>
+
+    <p>
+        O diário reúne automaticamente os cadastros, ajustes de horas,
+        manutenções, trocas de peças, lubrificações e outras ocorrências.
+    </p>
+
+    <div class="formulario">
+
+        <div class="linha">
+
+            <div class="campo">
+
+                <label for="filtro-diario-impressora">
+                    Impressora
+                </label>
+
+                <select id="filtro-diario-impressora">
+
+                    <option value="">
+                        Todas as impressoras
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="filtro-diario-tipo">
+                    Tipo de ocorrência
+                </label>
+
+                <select id="filtro-diario-tipo">
+
+                    <option value="">
+                        Todas as ocorrências
+                    </option>
+
+                    <option value="Cadastro">Cadastro</option>
+                    <option value="Produção">Produção</option>
+                    <option value="Horas">Horas</option>
+                    <option value="Manutenção">Manutenção</option>
+                    <option value="Peça">Peça</option>
+                    <option value="Lubrificante">Lubrificante</option>
+                    <option value="Status">Status</option>
+
+                </select>
+
+            </div>
+
+        </div>
+        <div class="linha">
+
+    <div class="campo">
+
+        <label for="filtro-diario-data-inicial">
+            Data inicial
+        </label>
+
+        <input
+            type="date"
+            id="filtro-diario-data-inicial">
+
+    </div>
+
+    <div class="campo">
+
+        <label for="filtro-diario-data-final">
+            Data final
+        </label>
+
+        <input
+            type="date"
+            id="filtro-diario-data-final">
+
+    </div>
+
+</div>
+
+<button
+    id="aplicar-filtros-diario"
+    class="botao-principal"
+    type="button">
+    Aplicar Filtros
+</button>
+
+<button
+    id="limpar-filtros-diario"
+    type="button">
+    Limpar Filtros
+</button>
+
+</div>
+
+<div id="lista-diario-equipamentos">
+
+    <p>
+        Nenhuma ocorrência registrada.
+    </p>
+
+</div>
+
+</div>
+
+</section>
+
+<section id="financeiro" class="pagina">
+
+    <h2>Financeiro 2.0</h2>
+
+    <p>
+        Registre entradas e despesas,
+        acompanhe pagamentos e controle
+        o saldo do negócio.
+    </p>
+
+    <h3>Resumo financeiro</h3>
+
+    <div class="cards">
+
+        <div class="card">
+            <span>💰 Entradas</span>
+            <strong id="financeiro-total-entradas">
+                R$ 0,00
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>💸 Despesas</span>
+            <strong id="financeiro-total-despesas">
+                R$ 0,00
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>📊 Saldo</span>
+            <strong id="financeiro-saldo">
+                R$ 0,00
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>⏳ Valores pendentes</span>
+            <strong id="financeiro-total-pendente">
+                R$ 0,00
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>📥 Entradas pendentes</span>
+            <strong id="financeiro-entradas-pendentes">
+                R$ 0,00
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>📤 Despesas pendentes</span>
+            <strong id="financeiro-despesas-pendentes">
+                R$ 0,00
+            </strong>
+        </div>
+
+    </div>
+
+    <h3>Novo lançamento</h3>
+
+    <div class="formulario">
+
+        <div class="linha">
+
+            <div class="campo">
+
+                <label for="tipo-lancamento">
+                    Tipo
+                </label>
+
+                <select id="tipo-lancamento">
+
+                    <option value="Entrada">
+                        Entrada
+                    </option>
+
+                    <option value="Despesa">
+                        Despesa
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="categoria-lancamento">
+                    Categoria
+                </label>
+
+                <select id="categoria-lancamento">
+
+                    <option value="">
+                        Selecione uma categoria
+                    </option>
+
+                    <option value="Venda">Venda</option>
+                    <option value="Filamento">Filamento</option>
+                    <option value="Manutenção">Manutenção</option>
+                    <option value="Energia">Energia elétrica</option>
+                    <option value="Embalagem">Embalagem</option>
+                    <option value="Frete">Frete</option>
+                    <option value="Equipamentos">Equipamentos</option>
+                    <option value="Serviços">Serviços</option>
+                    <option value="Impostos">Impostos</option>
+                    <option value="Outros">Outros</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+
+                <label for="descricao-lancamento">
+                    Descrição
+                </label>
+
+                <input
+                    type="text"
+                    id="descricao-lancamento"
+                    placeholder="Ex.: Venda de suporte personalizado">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="valor-lancamento">
+                    Valor
+                </label>
+
+                <input
+                    type="number"
+                    id="valor-lancamento">
+                                        min="0"
+                    step="0.01"
+                    placeholder="Ex.: 45,90">
+
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+
+                <label for="data-lancamento">
+                    Data
+                </label>
+
+                <input
+                    type="date"
+                    id="data-lancamento">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="status-lancamento">
+                    Status
+                </label>
+
+                <select id="status-lancamento">
+
+                    <option value="Pago">
+                        Pago
+                    </option>
+
+                    <option value="Pendente">
+                        Pendente
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <div class="campo">
+
+            <label for="observacoes-lancamento">
+                Observações
+            </label>
+
+            <textarea
+                id="observacoes-lancamento"
+                rows="3"
+                placeholder="Informações adicionais sobre este lançamento"></textarea>
+
+        </div>
+
+        <button
+            id="salvar-lancamento"
+            class="botao-principal"
+            type="button">
+            Salvar Lançamento
+        </button>
+
+        <button
+            id="limpar-formulario-financeiro"
+            type="button">
+            Limpar Formulário
+        </button>
+
+    </div>
+                        min="0"
+                    step="0.01"
+                    placeholder="Ex.: 150,00">
+
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+
+                <label for="data-lancamento">
+                    Data
+                </label>
+
+                <input
+                    type="date"
+                    id="data-lancamento">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="forma-pagamento-lancamento">
+                    Forma de pagamento
+                </label>
+
+                <select id="forma-pagamento-lancamento">
+
+                    <option value="">
+                        Selecione
+                    </option>
+
+                    <option value="Pix">Pix</option>
+                    <option value="Dinheiro">Dinheiro</option>
+                    <option value="Cartão de crédito">Cartão de crédito</option>
+                    <option value="Cartão de débito">Cartão de débito</option>
+                    <option value="Transferência">Transferência</option>
+                    <option value="Boleto">Boleto</option>
+                    <option value="Outro">Outro</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+
+                <label for="situacao-lancamento">
+                    Situação
+                </label>
+
+                <select id="situacao-lancamento">
+
+                    <option value="Pago">Pago</option>
+                    <option value="Pendente">Pendente</option>
+                    <option value="Parcial">Parcial</option>
+
+                </select>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="valor-pago-lancamento">
+                    Valor pago
+                </label>
+
+                <input
+                    type="number"
+                    id="valor-pago-lancamento"
+                    min="0"
+                    step="0.01"
+                    placeholder="Ex.: 100,00">
+
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+
+                <label for="encomenda-lancamento">
+                    Encomenda vinculada
+                </label>
+
+                <select id="encomenda-lancamento">
+
+                    <option value="">
+                        Nenhuma encomenda vinculada
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="origem-lancamento">
+                    Origem
+                </label>
+
+                <select id="origem-lancamento">
+
+                    <option value="Manual">Manual</option>
+                    <option value="Encomenda">Encomenda</option>
+                    <option value="Filamento">Filamento</option>
+                    <option value="Impressora">Impressora</option>
+                    <option value="Outro">Outro</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <div class="campo">
+
+            <label for="observacoes-lancamento">
+                Observações
+            </label>
+
+            <textarea
+                id="observacoes-lancamento"
+                rows="3"
+                placeholder="Informações adicionais sobre o lançamento"></textarea>
+
+        </div>
+
+        <button
+            id="salvar-lancamento"
+            class="botao-principal"
+            type="button">
+            Salvar Lançamento
+        </button>
+
+        <button
+            id="limpar-formulario-lancamento"
+            type="button">
+            Limpar Formulário
+        </button>
+
+    </div>
+    <h3>Filtros</h3>
+
+<div class="formulario">
+
+    <div class="linha">
+
+        <div class="campo">
+
+            <label for="filtro-tipo-financeiro">
+                Tipo
+            </label>
+
+            <select id="filtro-tipo-financeiro">
+
+                <option value="">
+                    Todos
+                </option>
+
+                <option value="Entrada">
+                    Entradas
+                </option>
+
+                <option value="Despesa">
+                    Despesas
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="campo">
+
+            <label for="filtro-situacao-financeiro">
+                Situação
+            </label>
+
+            <select id="filtro-situacao-financeiro">
+
+                <option value="">
+                    Todas
+                </option>
+
+                <option value="Pago">
+                    Pago
+                </option>
+
+                <option value="Pendente">
+                    Pendente
+                </option>
+
+                <option value="Parcial">
+                    Parcial
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+    <h3>Filtros</h3>
+
+<div class="formulario">
+
+    <div class="linha">
+
+        <div class="campo">
+
+            <label for="filtro-tipo-financeiro">
+                Tipo
+            </label>
+
+            <select id="filtro-tipo-financeiro">
+
+                <option value="">
+                    Todos
+                </option>
+
+                <option value="Entrada">
+                    Entradas
+                </option>
+
+                <option value="Despesa">
+                    Despesas
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="campo">
+
+            <label for="filtro-situacao-financeiro">
+                Situação
+            </label>
+
+            <select id="filtro-situacao-financeiro">
+
+                <option value="">
+                    Todas
+                </option>
+
+                <option value="Pago">
+                    Pago
+                </option>
+
+                <option value="Pendente">
+                    Pendente
+                </option>
+
+                <option value="Parcial">
+                    Parcial
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+        <button
+        id="aplicar-filtros-financeiro"
+        class="botao-principal"
+        type="button">
+        Aplicar Filtros
+    </button>
+
+    <button
+        id="limpar-filtros-financeiro"
+        type="button">
+        Limpar Filtros
+    </button>
+
+</div>
+
+<h3>Lançamentos financeiros</h3>
+
+<div id="lista-financeiro">
+
+    <p>
+        Nenhum lançamento financeiro cadastrado.
+    </p>
+
+</div>
+
+</section>
