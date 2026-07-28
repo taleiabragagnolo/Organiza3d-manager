@@ -1355,67 +1355,67 @@
 
         <div class="linha">
 
-    <div class="campo">
-        <label for="acessorio-quantidade">
-            Quantidade
-        </label>
+            <div class="linha">
 
-        <input
-            type="number"
-            id="acessorio-quantidade"
-            min="1"
-            step="1"
-            placeholder="Ex.: 100">
-    </div>
+            <div class="campo">
+                <label for="acessorio-quantidade">
+                    Quantidade
+                </label>
 
-    <div class="campo">
-        <label for="acessorio-estoque-minimo">
-            Estoque mínimo
-        </label>
+                <input
+                    type="number"
+                    id="acessorio-quantidade"
+                    min="1"
+                    step="1"
+                    placeholder="Ex.: 100">
+            </div>
 
-        <input
-            type="number"
-            id="acessorio-estoque-minimo"
-            min="0"
-            step="1"
-            placeholder="Ex.: 20">
-    </div>
-<div class="linha">
+            <div class="campo">
+                <label for="acessorio-estoque-minimo">
+                    Estoque mínimo
+                </label>
 
-    <div class="campo">
-        <label for="acessorio-unidade-compra">
-            Unidade de compra
-        </label>
+                <input
+                    type="number"
+                    id="acessorio-estoque-minimo"
+                    min="0"
+                    step="1"
+                    placeholder="Ex.: 20">
+            </div>
 
-        <select id="acessorio-unidade-compra">
-
-            <option value="">
-                Selecione a unidade
-            </option>
-
-            <option value="Unidade">
-                Unidade
-            </option>
-
-            <option value="Pacote">
-                Pacote
-            </option>
-
-            <option value="Caixa">
-                Caixa
-            </option>
-
-            <option value="Cartela">
-                Cartela
-            </option>
-
-        </select>
-    </div>
-
-    <div class="campo">
-    </div>
+        </div>
 
         <div class="linha">
+
+            <div class="campo">
+                <label for="acessorio-unidade-compra">
+                    Unidade de compra
+                </label>
+
+                <select id="acessorio-unidade-compra">
+
+                    <option value="">
+                        Selecione a unidade
+                    </option>
+
+                    <option value="Unidade">
+                        Unidade
+                    </option>
+
+                    <option value="Pacote">
+                        Pacote
+                    </option>
+
+                    <option value="Caixa">
+                        Caixa
+                    </option>
+
+                    <option value="Cartela">
+                        Cartela
+                    </option>
+
+                </select>
+            </div>
 
             <div class="campo">
                 <label for="acessorio-valor-compra">
@@ -1429,6 +1429,10 @@
                     step="0.01"
                     placeholder="Ex.: 35,90">
             </div>
+
+        </div>
+
+        <div class="linha">
 
             <div class="campo">
                 <label for="acessorio-valor-unitario">
@@ -1446,10 +1450,6 @@
                 </small>
             </div>
 
-        </div>
-
-        <div class="linha">
-
             <div class="campo">
                 <label for="acessorio-data-compra">
                     Data da compra
@@ -1460,17 +1460,17 @@
                     id="acessorio-data-compra">
             </div>
 
-            <div class="campo">
-                <label for="acessorio-fornecedor">
-                    Fornecedor
-                </label>
+        </div>
 
-                <input
-                    type="text"
-                    id="acessorio-fornecedor"
-                    placeholder="Ex.: Loja de acessórios">
-            </div>
+        <div class="campo">
+            <label for="acessorio-fornecedor">
+                Fornecedor
+            </label>
 
+            <input
+                type="text"
+                id="acessorio-fornecedor"
+                placeholder="Ex.: Loja de acessórios">
         </div>
 
         <div class="campo">
@@ -1507,16 +1507,234 @@
 
 </div>
 
+
+<!-- ========================= -->
+<!-- ABA EMBALAGENS -->
+<!-- ========================= -->
+
 <div
     id="aba-embalagens"
     class="conteudo-aba-filamento"
     hidden>
 
-    <h3>Embalagens</h3>
+    <h3>Resumo das embalagens</h3>
 
-    <p>
-        Em desenvolvimento...
-    </p>
+    <div class="cards">
+
+        <div class="card">
+            <span>📦 Embalagens cadastradas</span>
+            <strong id="embalagens-total-itens">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>📊 Quantidade em estoque</span>
+            <strong id="embalagens-quantidade-estoque">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>⚠️ Estoque baixo</span>
+            <strong id="embalagens-estoque-baixo">
+                0
+            </strong>
+        </div>
+
+        <div class="card">
+            <span>💰 Valor em estoque</span>
+            <strong id="embalagens-valor-estoque">
+                R$ 0,00
+            </strong>
+        </div>
+
+    </div>
+
+    <h3>Cadastrar embalagem</h3>
+
+    <div class="formulario">
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="embalagem-nome">
+                    Nome da embalagem
+                </label>
+
+                <input
+                    type="text"
+                    id="embalagem-nome"
+                    placeholder="Ex.: Caixa para chaveiro">
+            </div>
+
+            <div class="campo">
+                <label for="embalagem-categoria">
+                    Categoria
+                </label>
+
+                <select id="embalagem-categoria">
+
+                    <option value="">
+                        Selecione a categoria
+                    </option>
+
+                    <option value="Caixa">
+                        Caixa
+                    </option>
+
+                    <option value="Sacola">
+                        Sacola
+                    </option>
+
+                    <option value="Envelope">
+                        Envelope
+                    </option>
+
+                    <option value="Saco plástico">
+                        Saco plástico
+                    </option>
+
+                    <option value="Papel">
+                        Papel
+                    </option>
+
+                    <option value="Etiqueta">
+                        Etiqueta
+                    </option>
+
+                    <option value="Fita">
+                        Fita
+                    </option>
+
+                    <option value="Outro">
+                        Outro
+                    </option>
+
+                </select>
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="embalagem-quantidade">
+                    Quantidade
+                </label>
+
+                <input
+                    type="number"
+                    id="embalagem-quantidade"
+                    min="1"
+                    step="1"
+                    placeholder="Ex.: 50">
+            </div>
+
+            <div class="campo">
+                <label for="embalagem-estoque-minimo">
+                    Estoque mínimo
+                </label>
+
+                <input
+                    type="number"
+                    id="embalagem-estoque-minimo"
+                    min="0"
+                    step="1"
+                    placeholder="Ex.: 10">
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="embalagem-valor-compra">
+                    Valor da compra
+                </label>
+
+                <input
+                    type="number"
+                    id="embalagem-valor-compra"
+                    min="0"
+                    step="0.01"
+                    placeholder="Ex.: 45,90">
+            </div>
+
+            <div class="campo">
+                <label for="embalagem-valor-unitario">
+                    Valor unitário
+                </label>
+
+                <input
+                    type="text"
+                    id="embalagem-valor-unitario"
+                    value="R$ 0,0000"
+                    readonly>
+
+                <small>
+                    Calculado automaticamente.
+                </small>
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+                <label for="embalagem-data-compra">
+                    Data da compra
+                </label>
+
+                <input
+                    type="date"
+                    id="embalagem-data-compra">
+            </div>
+
+            <div class="campo">
+                <label for="embalagem-fornecedor">
+                    Fornecedor
+                </label>
+
+                <input
+                    type="text"
+                    id="embalagem-fornecedor"
+                    placeholder="Ex.: Loja de embalagens">
+            </div>
+
+        </div>
+
+        <div class="campo">
+            <label for="embalagem-observacoes">
+                Observações
+            </label>
+
+            <textarea
+                id="embalagem-observacoes"
+                rows="3"
+                placeholder="Medidas, material, cor ou outras informações"></textarea>
+        </div>
+
+        <button
+            id="salvar-embalagem"
+            class="botao-principal"
+            type="button">
+            Salvar Embalagem
+        </button>
+
+        <button
+            id="limpar-formulario-embalagem"
+            type="button">
+            Limpar Formulário
+        </button>
+
+    </div>
+
+    <h3>Embalagens cadastradas</h3>
+
+    <div id="lista-embalagens">
+        <p>Nenhuma embalagem cadastrada.</p>
+    </div>
 
 </div>
 </section>
