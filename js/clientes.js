@@ -1,180 +1,240 @@
-// =========================
-// CLIENTES
-// =========================
+// ======================================================
+// MÓDULO CLIENTES
+// clientes.js
+// ======================================================
 
-let clientes = JSON.parse(
-    localStorage.getItem("organiza3d_clientes")
-) || [];
+function iniciarClientes() {
 
-const botaoSalvarCliente =
-    document.getElementById("salvar-cliente");
+    let clientes = JSON.parse(
+        localStorage.getItem("organiza3d_clientes")
+    ) || [];
 
-const listaClientes =
-    document.getElementById("lista-clientes");
+    const botaoSalvarCliente =
+        document.getElementById("salvar-cliente");
 
-const totalClientes =
-    document.getElementById("total-clientes");
+    const listaClientes =
+        document.getElementById("lista-clientes");
 
-function salvarClientes() {
-    localStorage.setItem(
-        "organiza3d_clientes",
-        JSON.stringify(clientes)
-    );
-}
+    const totalClientes =
+        document.getElementById("total-clientes");
 
-function atualizarTotalClientes() {
-    if (totalClientes) {
-        totalClientes.textContent = clientes.length;
-    }
-}
+    function salvarClientes() {
 
-function mostrarClientes() {
-    if (!listaClientes) {
-        return;
+        localStorage.setItem(
+            "organiza3d_clientes",
+            JSON.stringify(clientes)
+        );
+
     }
 
-    if (clientes.length === 0) {
-        listaClientes.innerHTML =
-            "<p>Nenhum cliente cadastrado.</p>";
+    function atualizarTotalClientes() {
 
-        return;
+        if (totalClientes) {
+            totalClientes.textContent = clientes.length;
+        }
+
     }
 
-    listaClientes.innerHTML = clientes
-        .map(function (cliente) {
-            return `
-                <div class="card-item">
+    function mostrarClientes() {
 
-                    <h4>${escaparTexto(cliente.nome)}</h4>
+        if (!listaClientes) {
+            return;
+        }
 
-                    <p>
-                        <strong>Telefone:</strong>
-                        ${escaparTexto(cliente.telefone || "Não informado")}
-                    </p>
+        if (clientes.length === 0) {
 
-                    <p>
-                        <strong>E-mail:</strong>
-                        ${escaparTexto(cliente.email || "Não informado")}
-                    </p>
+            listaClientes.innerHTML =
+                "<p>Nenhum cliente cadastrado.</p>";
 
-                    <p>
-                        <strong>Cidade:</strong>
-                        ${escaparTexto(cliente.cidade || "Não informada")}
-                    </p>
+            return;
 
-                    <p>
-                        <strong>Observações:</strong>
-                        ${escaparTexto(
-                            cliente.observacoes || "Nenhuma"
-                        )}
-                    </p>
+        }
 
-                    <button
-                        type="button"
-                        class="botao-excluir"
-                        onclick="excluirCliente(${cliente.id})">
-                        Excluir
-                    </button>
+        listaClientes.innerHTML = clientes
+            .map(function (cliente) {
 
-                </div>
-            `;
-        })
-        .join("");
-}
+                return `
+                    <div class="card-item">
 
-mostrarClientes();
-atualizarTotalClientes();
+                        <h4>
+                            ${escaparTexto(cliente.nome)}
+                        </h4>
 
-if (botaoSalvarCliente) {
-    botaoSalvarCliente.addEventListener(
-        "click",
-        function () {
-            const nome = document
-                .getElementById("nome-cliente")
-                .value
-                .trim();
+                        <p>
+                            <strong>Telefone:</strong>
+                            ${escaparTexto(
+                                cliente.telefone ||
+                                "Não informado"
+                            )}
+                        </p>
 
-            const telefone = document
-                .getElementById("telefone-cliente")
-                .value
-                .trim();
+                        <p>
+                            <strong>E-mail:</strong>
+                            ${escaparTexto(
+                                cliente.email ||
+                                "Não informado"
+                            )}
+                        </p>
 
-            const email = document
-                .getElementById("email-cliente")
-                .value
-                .trim();
+                        <p>
+                            <strong>Cidade:</strong>
+                            ${escaparTexto(
+                                cliente.cidade ||
+                                "Não informada"
+                            )}
+                        </p>
 
-            const cidade = document
-                .getElementById("cidade-cliente")
-                .value
-                .trim();
+                        <p>
+                            <strong>Observações:</strong>
+                            ${escaparTexto(
+                                cliente.observacoes ||
+                                "Nenhuma"
+                            )}
+                        </p>
 
-            const observacoes = document
-                .getElementById("observacoes-cliente")
-                .value
-                .trim();
+                        <button
+                            type="button"
+                            class="botao-excluir"
+                            onclick="excluirCliente(${cliente.id})"
+                        >
+                            Excluir
+                        </button>
 
-            if (!nome) {
-                alert("Informe o nome do cliente.");
-                return;
+                    </div>
+                `;
+
+            })
+            .join("");
+
+    }
+
+    window.excluirCliente = function (id) {
+
+        const confirmar = confirm(
+            "Tem certeza que deseja excluir este cliente?"
+        );
+
+        if (!confirmar) {
+            return;
+        }
+
+        clientes = clientes.filter(
+            function (cliente) {
+                return cliente.id !== id;
             }
+        );
 
-            const cliente = {
-                id: Date.now(),
-                nome: nome,
-                telefone: telefone,
-                email: email,
-                cidade: cidade,
-                observacoes: observacoes
-            };
+        salvarClientes();
+        mostrarClientes();
+        atualizarTotalClientes();
 
-            clientes.push(cliente);
+    };
 
-            salvarClientes();
-            mostrarClientes();
-            atualizarTotalClientes();
+    if (botaoSalvarCliente) {
 
-            document.getElementById(
-                "nome-cliente"
-            ).value = "";
+        botaoSalvarCliente.addEventListener(
+            "click",
+            function () {
 
-            document.getElementById(
-                "telefone-cliente"
-            ).value = "";
+                const campoNome =
+                    document.getElementById("nome-cliente");
 
-            document.getElementById(
-                "email-cliente"
-            ).value = "";
+                const campoTelefone =
+                    document.getElementById("telefone-cliente");
 
-            document.getElementById(
-                "cidade-cliente"
-            ).value = "";
+                const campoEmail =
+                    document.getElementById("email-cliente");
 
-            document.getElementById(
-                "observacoes-cliente"
-            ).value = "";
+                const campoCidade =
+                    document.getElementById("cidade-cliente");
 
-            alert("Cliente cadastrado com sucesso!");
-        }
-    );
-}
+                const campoObservacoes =
+                    document.getElementById(
+                        "observacoes-cliente"
+                    );
 
-window.excluirCliente = function (id) {
-    const confirmar = confirm(
-        "Tem certeza que deseja excluir este cliente?"
-    );
+                if (!campoNome) {
+                    return;
+                }
 
-    if (!confirmar) {
-        return;
+                const nome =
+                    campoNome.value.trim();
+
+                const telefone =
+                    campoTelefone
+                        ? campoTelefone.value.trim()
+                        : "";
+
+                const email =
+                    campoEmail
+                        ? campoEmail.value.trim()
+                        : "";
+
+                const cidade =
+                    campoCidade
+                        ? campoCidade.value.trim()
+                        : "";
+
+                const observacoes =
+                    campoObservacoes
+                        ? campoObservacoes.value.trim()
+                        : "";
+
+                if (!nome) {
+
+                    alert(
+                        "Informe o nome do cliente."
+                    );
+
+                    return;
+
+                }
+
+                const cliente = {
+
+                    id: Date.now(),
+                    nome: nome,
+                    telefone: telefone,
+                    email: email,
+                    cidade: cidade,
+                    observacoes: observacoes
+
+                };
+
+                clientes.push(cliente);
+
+                salvarClientes();
+                mostrarClientes();
+                atualizarTotalClientes();
+
+                campoNome.value = "";
+
+                if (campoTelefone) {
+                    campoTelefone.value = "";
+                }
+
+                if (campoEmail) {
+                    campoEmail.value = "";
+                }
+
+                if (campoCidade) {
+                    campoCidade.value = "";
+                }
+
+                if (campoObservacoes) {
+                    campoObservacoes.value = "";
+                }
+
+                alert(
+                    "Cliente cadastrado com sucesso!"
+                );
+
+            }
+        );
+
     }
 
-    clientes = clientes.filter(
-        function (cliente) {
-            return cliente.id !== id;
-        }
-    );
-
-    salvarClientes();
     mostrarClientes();
     atualizarTotalClientes();
-};
+
+}
