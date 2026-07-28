@@ -106,8 +106,8 @@ function iniciarModulos() {
         iniciarFilamentos();
     }
 
-    if (typeof iniciarImpressoras === "function") {
-        iniciarImpressoras();
+    if (typeof iniciarEquipamento === "function") {
+    iniciarEquipamento();
     }
 
     if (typeof iniciarFinanceiro === "function") {

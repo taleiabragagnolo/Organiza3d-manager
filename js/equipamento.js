@@ -1,6 +1,7 @@
 // =========================
 // EQUIPAMENTOS 2.0
 // =========================
+function iniciarEquipamento() {
 
 let impressoras = carregarListaEquipamentos(
     "organiza3d_impressoras"
@@ -7573,3 +7574,4 @@ function iniciarModuloEquipamentos() {
 // =========================
 
 iniciarModuloEquipamentos();
+}
