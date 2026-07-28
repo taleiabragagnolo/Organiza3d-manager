@@ -3,7 +3,7 @@
 // cliente.js
 // ======================================================
 
-function iniciarClientes() {
+function iniciarCliente() {
 
     let cliente = JSON.parse(
         localStorage.getItem("organiza3d_cliente")
