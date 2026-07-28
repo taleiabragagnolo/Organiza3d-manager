@@ -59,77 +59,8 @@ const campoProdutoObservacoes =
         "produto-observacoes"
     );
 
-// =========================
-// MENU
-// =========================
 
-iniciarMenu();
 
-function iniciarMenu() {
-    botoesMenu.forEach(function (botao) {
-        botao.addEventListener(
-            "click",
-            function () {
-                const paginaEscolhida =
-                    botao.dataset.pagina;
-
-                botoesMenu.forEach(
-                    function (item) {
-                        item.classList.remove(
-                            "ativo"
-                        );
-                    }
-                );
-
-                paginas.forEach(
-                    function (pagina) {
-                        pagina.classList.remove(
-                            "ativa"
-                        );
-                    }
-                );
-
-                botao.classList.add("ativo");
-
-                const pagina =
-                    document.getElementById(
-                        paginaEscolhida
-                    );
-
-                if (pagina) {
-                    pagina.classList.add("ativa");
-                }
-            }
-        );
-    });
-}
-
-// =========================
-// FUNÇÕES GERAIS
-// =========================
-
-function formatarDinheiro(valor) {
-    return Number(valor || 0).toLocaleString(
-        "pt-BR",
-        {
-            style: "currency",
-            currency: "BRL"
-        }
-    );
-}
-
-function escaparTexto(texto) {
-    const elemento =
-        document.createElement("div");
-
-    elemento.textContent =
-        texto === undefined ||
-        texto === null
-            ? ""
-            : String(texto);
-
-    return elemento.innerHTML;
-}
 
 // =========================
 // FUNÇÕES DOS PRODUTOS
@@ -377,73 +308,6 @@ function atualizarResumoProdutos() {
     }
 }
 
-function atualizarDashboard() {
-    const totalProdutosDashboard =
-        document.getElementById(
-            "total-produtos"
-        );
-
-    const campoFaturamento =
-        document.getElementById(
-            "total-faturamento"
-        );
-
-    const campoLucro =
-        document.getElementById(
-            "total-lucro"
-        );
-
-    const faturamentoEstimado =
-        produtos.reduce(
-            function (total, produto) {
-                return total +
-                    Number(
-                        produto.preco || 0
-                    ) *
-                    Number(
-                        produto.estoque || 0
-                    );
-            },
-            0
-        );
-
-    const custoEstoque =
-        produtos.reduce(
-            function (total, produto) {
-                return total +
-                    Number(
-                        produto.custo || 0
-                    ) *
-                    Number(
-                        produto.estoque || 0
-                    );
-            },
-            0
-        );
-
-    const lucroEstimado =
-        faturamentoEstimado -
-        custoEstoque;
-
-    if (totalProdutosDashboard) {
-        totalProdutosDashboard.textContent =
-            produtos.length;
-    }
-
-    if (campoFaturamento) {
-        campoFaturamento.textContent =
-            formatarDinheiro(
-                faturamentoEstimado
-            );
-    }
-
-    if (campoLucro) {
-        campoLucro.textContent =
-            formatarDinheiro(
-                lucroEstimado
-            );
-    }
-}
 
 function normalizarProdutosAntigos() {
     produtos = produtos.map(
