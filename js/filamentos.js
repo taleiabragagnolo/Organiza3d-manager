@@ -2006,3 +2006,757 @@ normalizarFilamentosAntigos();
 mostrarFilamentos();
 
 limparFormularioFilamento();
+
+// =========================
+// EMBALAGENS
+// =========================
+
+let embalagens = [];
+
+try {
+
+    const dadosEmbalagens =
+        JSON.parse(
+            localStorage.getItem(
+                "organiza3d_embalagens"
+            )
+        );
+
+    embalagens =
+        Array.isArray(dadosEmbalagens)
+            ? dadosEmbalagens
+            : [];
+
+} catch (erro) {
+
+    console.error(
+        "Não foi possível carregar as embalagens.",
+        erro
+    );
+
+    embalagens = [];
+}
+
+let embalagemEmEdicaoId = null;
+
+const campoEmbalagemNome =
+    document.getElementById(
+        "embalagem-nome"
+    );
+
+const campoEmbalagemCategoria =
+    document.getElementById(
+        "embalagem-categoria"
+    );
+
+const campoEmbalagemQuantidade =
+    document.getElementById(
+        "embalagem-quantidade"
+    );
+
+const campoEmbalagemEstoqueMinimo =
+    document.getElementById(
+        "embalagem-estoque-minimo"
+    );
+
+const campoEmbalagemValorCompra =
+    document.getElementById(
+        "embalagem-valor-compra"
+    );
+
+const campoEmbalagemValorUnitario =
+    document.getElementById(
+        "embalagem-valor-unitario"
+    );
+
+const campoEmbalagemDataCompra =
+    document.getElementById(
+        "embalagem-data-compra"
+    );
+
+const campoEmbalagemFornecedor =
+    document.getElementById(
+        "embalagem-fornecedor"
+    );
+
+const campoEmbalagemObservacoes =
+    document.getElementById(
+        "embalagem-observacoes"
+    );
+
+const botaoSalvarEmbalagem =
+    document.getElementById(
+        "salvar-embalagem"
+    );
+
+const botaoLimparFormularioEmbalagem =
+    document.getElementById(
+        "limpar-formulario-embalagem"
+    );
+
+const listaEmbalagens =
+    document.getElementById(
+        "lista-embalagens"
+    );
+
+function salvarEmbalagens() {
+
+    localStorage.setItem(
+        "organiza3d_embalagens",
+        JSON.stringify(
+            embalagens
+        )
+    );
+
+}
+
+function calcularValorUnitarioEmbalagem() {
+
+    if (
+        !campoEmbalagemQuantidade ||
+        !campoEmbalagemValorCompra ||
+        !campoEmbalagemValorUnitario
+    ) {
+        return;
+    }
+
+    const quantidade =
+        Number(
+            campoEmbalagemQuantidade.value ||
+            0
+        );
+
+    const valorCompra =
+        Number(
+            campoEmbalagemValorCompra.value ||
+            0
+        );
+
+    const valorUnitario =
+        quantidade > 0
+            ? valorCompra / quantidade
+            : 0;
+
+    campoEmbalagemValorUnitario.value =
+        valorUnitario.toLocaleString(
+            "pt-BR",
+            {
+                style: "currency",
+                currency: "BRL",
+                minimumFractionDigits: 4,
+                maximumFractionDigits: 4
+            }
+        );
+
+}
+// =========================
+// LISTAGEM DAS EMBALAGENS
+// =========================
+
+function mostrarEmbalagens() {
+
+    if (!listaEmbalagens) {
+        return;
+    }
+
+    if (embalagens.length === 0) {
+
+        listaEmbalagens.innerHTML =
+            "<p>Nenhuma embalagem cadastrada.</p>";
+
+        return;
+    }
+
+    listaEmbalagens.innerHTML =
+        embalagens
+            .map(function (embalagem) {
+
+                const dataCompra =
+                    embalagem.dataCompra
+                        ? embalagem.dataCompra
+                            .split("-")
+                            .reverse()
+                            .join("/")
+                        : "Não informada";
+
+                const valorUnitario =
+                    Number(
+                        embalagem.valorUnitario || 0
+                    ).toLocaleString(
+                        "pt-BR",
+                        {
+                            style: "currency",
+                            currency: "BRL",
+                            minimumFractionDigits: 4,
+                            maximumFractionDigits: 4
+                        }
+                    );
+
+                return `
+                    <div class="card-item">
+
+                        <h4>
+                            ${escaparTexto(
+                                embalagem.nome
+                            )}
+                        </h4>
+
+                        <p>
+                            <strong>Categoria:</strong>
+                            ${escaparTexto(
+                                embalagem.categoria ||
+                                "Não informada"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Quantidade:</strong>
+                            ${Number(
+                                embalagem.quantidade || 0
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Estoque mínimo:</strong>
+                            ${Number(
+                                embalagem.estoqueMinimo || 0
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Valor da compra:</strong>
+                            ${formatarDinheiro(
+                                embalagem.valorCompra
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Valor unitário:</strong>
+                            ${valorUnitario}
+                        </p>
+
+                        <p>
+                            <strong>Data da compra:</strong>
+                            ${dataCompra}
+                        </p>
+
+                        <p>
+                            <strong>Fornecedor:</strong>
+                            ${escaparTexto(
+                                embalagem.fornecedor ||
+                                "Não informado"
+                            )}
+                        </p>
+
+                        <p>
+                            <strong>Observações:</strong>
+                            ${escaparTexto(
+                                embalagem.observacoes ||
+                                "Nenhuma"
+                            )}
+                        </p>
+
+                        <div class="acoes-card">
+
+                            <button
+                                type="button"
+                                class="botao-principal"
+                                onclick="editarEmbalagem(
+                                    ${embalagem.id}
+                                )">
+                                Editar
+                            </button>
+
+                            <button
+                                type="button"
+                                class="botao-excluir"
+                                onclick="excluirEmbalagem(
+                                    ${embalagem.id}
+                                )">
+                                Excluir
+                            </button>
+
+                        </div>
+
+                    </div>
+                `;
+            })
+            .join("");
+}
+
+
+// =========================
+// LIMPEZA DO FORMULÁRIO
+// =========================
+
+function limparFormularioEmbalagem() {
+
+    if (campoEmbalagemNome) {
+
+        campoEmbalagemNome.value =
+            "";
+    }
+
+    if (campoEmbalagemCategoria) {
+
+        campoEmbalagemCategoria.value =
+            "";
+    }
+
+    if (campoEmbalagemQuantidade) {
+
+        campoEmbalagemQuantidade.value =
+            "";
+    }
+
+    if (campoEmbalagemEstoqueMinimo) {
+
+        campoEmbalagemEstoqueMinimo.value =
+            "";
+    }
+
+    if (campoEmbalagemValorCompra) {
+
+        campoEmbalagemValorCompra.value =
+            "";
+    }
+
+    if (campoEmbalagemValorUnitario) {
+
+        campoEmbalagemValorUnitario.value =
+            "R$ 0,0000";
+    }
+
+    if (campoEmbalagemDataCompra) {
+
+        campoEmbalagemDataCompra.value =
+            "";
+    }
+
+    if (campoEmbalagemFornecedor) {
+
+        campoEmbalagemFornecedor.value =
+            "";
+    }
+
+    if (campoEmbalagemObservacoes) {
+
+        campoEmbalagemObservacoes.value =
+            "";
+    }
+
+    embalagemEmEdicaoId = null;
+
+    if (botaoSalvarEmbalagem) {
+
+        botaoSalvarEmbalagem.textContent =
+            "Salvar Embalagem";
+    }
+}
+
+
+// =========================
+// EDITAR EMBALAGEM
+// =========================
+
+window.editarEmbalagem =
+function (id) {
+
+    const embalagem =
+        embalagens.find(
+            function (item) {
+
+                return item.id === id;
+            }
+        );
+
+    if (!embalagem) {
+
+        alert(
+            "Embalagem não encontrada."
+        );
+
+        return;
+    }
+
+    embalagemEmEdicaoId = id;
+
+    if (campoEmbalagemNome) {
+
+        campoEmbalagemNome.value =
+            embalagem.nome || "";
+    }
+
+    if (campoEmbalagemCategoria) {
+
+        campoEmbalagemCategoria.value =
+            embalagem.categoria || "";
+    }
+
+    if (campoEmbalagemQuantidade) {
+
+        campoEmbalagemQuantidade.value =
+            embalagem.quantidade || "";
+    }
+
+    if (campoEmbalagemEstoqueMinimo) {
+
+        campoEmbalagemEstoqueMinimo.value =
+            embalagem.estoqueMinimo || "";
+    }
+
+    if (campoEmbalagemValorCompra) {
+
+        campoEmbalagemValorCompra.value =
+            embalagem.valorCompra || "";
+    }
+
+    if (campoEmbalagemDataCompra) {
+
+        campoEmbalagemDataCompra.value =
+            embalagem.dataCompra || "";
+    }
+
+    if (campoEmbalagemFornecedor) {
+
+        campoEmbalagemFornecedor.value =
+            embalagem.fornecedor || "";
+    }
+
+    if (campoEmbalagemObservacoes) {
+
+        campoEmbalagemObservacoes.value =
+            embalagem.observacoes || "";
+    }
+
+    calcularValorUnitarioEmbalagem();
+
+    if (botaoSalvarEmbalagem) {
+
+        botaoSalvarEmbalagem.textContent =
+            "Atualizar Embalagem";
+    }
+
+    abrirAbaFilamento(
+        "aba-embalagens"
+    );
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+};
+
+
+// =========================
+// EXCLUIR EMBALAGEM
+// =========================
+
+window.excluirEmbalagem =
+function (id) {
+
+    const embalagemEncontrada =
+        embalagens.find(
+            function (embalagem) {
+
+                return embalagem.id === id;
+            }
+        );
+
+    if (!embalagemEncontrada) {
+
+        alert(
+            "Embalagem não encontrada."
+        );
+
+        return;
+    }
+
+    const confirmar =
+        confirm(
+            `Tem certeza que deseja excluir "${embalagemEncontrada.nome}"?`
+        );
+
+    if (!confirmar) {
+        return;
+    }
+
+    embalagens =
+        embalagens.filter(
+            function (embalagem) {
+
+                return embalagem.id !== id;
+            }
+        );
+
+    salvarEmbalagens();
+
+    mostrarEmbalagens();
+
+    if (
+        embalagemEmEdicaoId === id
+    ) {
+
+        limparFormularioEmbalagem();
+    }
+
+    if (
+        typeof atualizarDashboardCompleto ===
+        "function"
+    ) {
+
+        atualizarDashboardCompleto();
+    }
+
+    if (
+        typeof atualizarRelatorios ===
+        "function"
+    ) {
+
+        atualizarRelatorios();
+    }
+};
+// =========================
+// EVENTOS
+// =========================
+
+[
+    campoEmbalagemQuantidade,
+    campoEmbalagemValorCompra
+].forEach(function (campo) {
+
+    if (campo) {
+
+        campo.addEventListener(
+            "input",
+            calcularValorUnitarioEmbalagem
+        );
+
+    }
+
+});
+
+
+// =========================
+// SALVAR EMBALAGEM
+// =========================
+
+if (botaoSalvarEmbalagem) {
+
+    botaoSalvarEmbalagem.addEventListener(
+        "click",
+        function () {
+
+            const nome =
+                campoEmbalagemNome.value.trim();
+
+            const categoria =
+                campoEmbalagemCategoria.value;
+
+            const quantidade =
+                Number(
+                    campoEmbalagemQuantidade.value
+                );
+
+            const estoqueMinimo =
+                Number(
+                    campoEmbalagemEstoqueMinimo.value
+                );
+
+            const valorCompra =
+                Number(
+                    campoEmbalagemValorCompra.value
+                );
+
+            const valorUnitario =
+                quantidade > 0
+                    ? valorCompra / quantidade
+                    : 0;
+
+            const dataCompra =
+                campoEmbalagemDataCompra.value;
+
+            const fornecedor =
+                campoEmbalagemFornecedor.value.trim();
+
+            const observacoes =
+                campoEmbalagemObservacoes.value.trim();
+
+            if (!nome) {
+
+                alert(
+                    "Informe o nome da embalagem."
+                );
+
+                return;
+
+            }
+
+            if (!categoria) {
+
+                alert(
+                    "Selecione a categoria."
+                );
+
+                return;
+
+            }
+
+            if (
+                Number.isNaN(quantidade) ||
+                quantidade <= 0
+            ) {
+
+                alert(
+                    "Quantidade inválida."
+                );
+
+                return;
+
+            }
+
+            if (
+                Number.isNaN(estoqueMinimo) ||
+                estoqueMinimo < 0
+            ) {
+
+                alert(
+                    "Estoque mínimo inválido."
+                );
+
+                return;
+
+            }
+
+            if (
+                Number.isNaN(valorCompra) ||
+                valorCompra < 0
+            ) {
+
+                alert(
+                    "Valor inválido."
+                );
+
+                return;
+
+            }
+
+            const dados = {
+
+                nome,
+                categoria,
+                quantidade,
+                estoqueMinimo,
+                valorCompra,
+                valorUnitario,
+                dataCompra,
+                fornecedor,
+                observacoes
+
+            };
+
+            const estavaEditando =
+                embalagemEmEdicaoId !== null;
+
+            if (estavaEditando) {
+
+                const indice =
+                    embalagens.findIndex(
+                        function (item) {
+
+                            return (
+                                item.id ===
+                                embalagemEmEdicaoId
+                            );
+
+                        }
+                    );
+
+                if (indice >= 0) {
+
+                    embalagens[indice] = {
+
+                        id:
+                            embalagemEmEdicaoId,
+
+                        ...dados
+
+                    };
+
+                }
+
+            } else {
+
+                embalagens.push({
+
+                    id: Date.now(),
+
+                    ...dados
+
+                });
+
+            }
+
+            salvarEmbalagens();
+
+            mostrarEmbalagens();
+
+            limparFormularioEmbalagem();
+
+            if (
+                typeof atualizarDashboardCompleto ===
+                "function"
+            ) {
+
+                atualizarDashboardCompleto();
+
+            }
+
+            if (
+                typeof atualizarRelatorios ===
+                "function"
+            ) {
+
+                atualizarRelatorios();
+
+            }
+
+            alert(
+                estavaEditando
+                    ? "Embalagem atualizada com sucesso!"
+                    : "Embalagem cadastrada com sucesso!"
+            );
+
+        }
+
+    );
+
+}
+
+
+// =========================
+// BOTÃO LIMPAR
+// =========================
+
+if (
+    botaoLimparFormularioEmbalagem
+) {
+
+    botaoLimparFormularioEmbalagem
+        .addEventListener(
+            "click",
+            limparFormularioEmbalagem
+        );
+
+}
+
+
+// =========================
+// INICIALIZAÇÃO
+// =========================
+
+calcularValorUnitarioEmbalagem();
+
+mostrarEmbalagens();
+
+limparFormularioEmbalagem();
