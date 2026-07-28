@@ -1118,5 +1118,5 @@ if (menuFinanceiro) {
 // ========================
 
 normalizarLancamentosFinanceiros();
-// prepararFormularioFinanceiro();
+prepararFormularioFinanceiro();
 mostrarLancamentosFinanceiros();
