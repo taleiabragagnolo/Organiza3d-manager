@@ -1,28 +1,28 @@
 // ======================================================
 // MÓDULO CLIENTES
-// clientes.js
+// cliente.js
 // ======================================================
 
 function iniciarClientes() {
 
-    let clientes = JSON.parse(
-        localStorage.getItem("organiza3d_clientes")
+    let cliente = JSON.parse(
+        localStorage.getItem("organiza3d_cliente")
     ) || [];
 
     const botaoSalvarCliente =
         document.getElementById("salvar-cliente");
 
     const listaClientes =
-        document.getElementById("lista-clientes");
+        document.getElementById("lista-cliente");
 
     const totalClientes =
-        document.getElementById("total-clientes");
+        document.getElementById("total-cliente");
 
     function salvarClientes() {
 
         localStorage.setItem(
-            "organiza3d_clientes",
-            JSON.stringify(clientes)
+            "organiza3d_cliente",
+            JSON.stringify(cliente)
         );
 
     }
@@ -30,7 +30,7 @@ function iniciarClientes() {
     function atualizarTotalClientes() {
 
         if (totalClientes) {
-            totalClientes.textContent = clientes.length;
+            totalClientes.textContent = cliente.length;
         }
 
     }
@@ -41,7 +41,7 @@ function iniciarClientes() {
             return;
         }
 
-        if (clientes.length === 0) {
+        if (cliente.length === 0) {
 
             listaClientes.innerHTML =
                 "<p>Nenhum cliente cadastrado.</p>";
@@ -50,7 +50,7 @@ function iniciarClientes() {
 
         }
 
-        listaClientes.innerHTML = clientes
+        listaClientes.innerHTML = cliente
             .map(function (cliente) {
 
                 return `
@@ -118,7 +118,7 @@ function iniciarClientes() {
             return;
         }
 
-        clientes = clientes.filter(
+        cliente = cliente.filter(
             function (cliente) {
                 return cliente.id !== id;
             }
@@ -201,7 +201,7 @@ function iniciarClientes() {
 
                 };
 
-                clientes.push(cliente);
+                cliente.push(cliente);
 
                 salvarClientes();
                 mostrarClientes();
