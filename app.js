@@ -638,8 +638,7 @@ function iniciarMenu() {
             }
         );
     });
-}    });
-}
+}  
 
 // =========================
 // FIM DO DOMContentLoaded
