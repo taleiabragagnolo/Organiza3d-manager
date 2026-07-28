@@ -1,7 +1,6 @@
- <script src="app.js?v=5"></script>
- 
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,190 +12,219 @@
 
 <body>
 
-   
 <div class="app" id="aplicativo">
-        
 
-        <aside class="menu-lateral">
+    <aside class="menu-lateral">
 
-            <div class="logo">
-                <h2>Organiza 3D</h2>
-                <p>Manager</p>
+        <div class="logo">
+            <h2>Organiza 3D</h2>
+            <p>Manager</p>
+        </div>
+
+        <nav class="menu">
+
+            <button
+                class="menu-item ativo"
+                data-pagina="dashboard"
+                type="button">
+                🏠 Dashboard
+            </button>
+
+            <button
+                class="menu-item"
+                data-pagina="produtos"
+                type="button">
+                📦 Produtos
+            </button>
+
+            <button
+                class="menu-item"
+                data-pagina="clientes"
+                type="button">
+                👥 Clientes
+            </button>
+
+            <button
+                class="menu-item"
+                data-pagina="encomendas"
+                type="button">
+                📋 Encomendas
+            </button>
+
+            <button
+                class="menu-item"
+                data-pagina="filamentos"
+                type="button">
+                🧵 Filamentos
+            </button>
+
+            <button
+                class="menu-item"
+                data-pagina="impressoras"
+                type="button">
+                🛠️ Equipamentos
+            </button>
+
+            <button
+                class="menu-item"
+                data-pagina="financeiro"
+                type="button">
+                💰 Financeiro
+            </button>
+
+            <button
+                class="menu-item"
+                data-pagina="relatorios"
+                type="button">
+                📊 Relatórios
+            </button>
+
+        </nav>
+
+        <div class="menu-rodape">
+
+            <button
+                id="botao-sair"
+                class="botao-sair"
+                type="button">
+                🚪 Sair
+            </button>
+
+        </div>
+
+    </aside>
+
+    <main class="conteudo">
+
+        <header class="cabecalho">
+
+            <div>
+                <h1>Organiza 3D Manager</h1>
+                <p>Gestão da Organiza 3D Home e Kids</p>
             </div>
 
-            <nav class="menu">
+        </header>
 
-                <button class="menu-item ativo" data-pagina="dashboard">
-                    🏠 Dashboard
-                </button>
+        <!-- ========================= -->
+        <!-- DASHBOARD -->
+        <!-- ========================= -->
 
-                <button class="menu-item" data-pagina="produtos">
-                    📦 Produtos
-                </button>
+        <section id="dashboard" class="pagina ativa">
 
-                <button class="menu-item" data-pagina="clientes">
-                    👥 Clientes
-                </button>
+            <h2>Visão geral</h2>
 
-                <button class="menu-item" data-pagina="encomendas">
-                    📋 Encomendas
-                </button>
+            <p>
+                Acompanhe os principais números da Organiza 3D.
+            </p>
 
-                <button class="menu-item" data-pagina="filamentos">
-                    🧵 Filamentos
-                </button>
+            <h3>Resumo geral</h3>
 
-                <button class="menu-item" data-pagina="impressoras">
-                     🛠️ Equipamentos
-                </button>
+            <div class="cards">
 
-                <button class="menu-item" data-pagina="financeiro">
-                    💰 Financeiro
-                </button>
-
-                <button class="menu-item" data-pagina="relatorios">
-                    📊 Relatórios
-                </button>
-
-            </nav>
-<div class="menu-rodape">
-
-    <button
-        id="botao-sair"
-        class="botao-sair"
-        type="button">
-
-        🚪 Sair
-
-    </button>
-
-</div>
-        </aside>
-
-        <main class="conteudo">
-
-            <header class="cabecalho">
-
-                <div>
-                    <h1>Organiza 3D Manager</h1>
-                    <p>Gestão da Organiza 3D Home e Kids</p>
+                <div class="card">
+                    <span>💰 Faturamento estimado</span>
+                    <strong id="total-faturamento">
+                        R$ 0,00
+                    </strong>
                 </div>
 
-            </header>
+                <div class="card">
+                    <span>📈 Lucro estimado</span>
+                    <strong id="total-lucro">
+                        R$ 0,00
+                    </strong>
+                </div>
 
-            <section id="dashboard" class="pagina ativa">
+                <div class="card">
+                    <span>📊 Saldo financeiro</span>
+                    <strong id="dashboard-saldo-financeiro">
+                        R$ 0,00
+                    </strong>
+                </div>
 
-    <h2>Visão geral</h2>
+                <div class="card">
+                    <span>📦 Produtos</span>
+                    <strong id="total-produtos">0</strong>
+                </div>
 
-    <p>
-        Acompanhe os principais números da Organiza 3D.
-    </p>
+                <div class="card">
+                    <span>👥 Clientes</span>
+                    <strong id="total-clientes">0</strong>
+                </div>
 
-    <h3>Resumo geral</h3>
+                <div class="card">
+                    <span>📋 Encomendas</span>
+                    <strong id="total-encomendas">0</strong>
+                </div>
 
-    <div class="cards">
+                <div class="card">
+                    <span>🧵 Filamentos</span>
+                    <strong id="total-filamentos">0</strong>
+                </div>
 
-        <div class="card">
-            <span>💰 Faturamento estimado</span>
-            <strong id="total-faturamento">
-                R$ 0,00
-            </strong>
-        </div>
+                <div class="card">
+                    <span>🖨️ Impressoras</span>
+                    <strong id="total-impressoras">0</strong>
+                </div>
 
-        <div class="card">
-            <span>📈 Lucro estimado</span>
-            <strong id="total-lucro">
-                R$ 0,00
-            </strong>
-        </div>
+            </div>
 
-        <div class="card">
-            <span>📊 Saldo financeiro</span>
-            <strong id="dashboard-saldo-financeiro">
-                R$ 0,00
-            </strong>
-        </div>
+            <h3>Situação das encomendas</h3>
 
-        <div class="card">
-            <span>📦 Produtos</span>
-            <strong id="total-produtos">0</strong>
-        </div>
+            <div class="cards">
 
-        <div class="card">
-            <span>👥 Clientes</span>
-            <strong id="total-clientes">0</strong>
-        </div>
+                <div class="card">
+                    <span>⏳ Aguardando</span>
+                    <strong id="dashboard-aguardando">0</strong>
+                </div>
 
-        <div class="card">
-            <span>📋 Encomendas</span>
-            <strong id="total-encomendas">0</strong>
-        </div>
+                <div class="card">
+                    <span>⚙️ Em produção</span>
+                    <strong id="dashboard-producao">0</strong>
+                </div>
 
-        <div class="card">
-            <span>🧵 Filamentos</span>
-            <strong id="total-filamentos">0</strong>
-        </div>
+                <div class="card">
+                    <span>✅ Finalizadas</span>
+                    <strong id="dashboard-finalizadas">0</strong>
+                </div>
 
-        <div class="card">
-            <span>🖨️ Impressoras</span>
-            <strong id="total-impressoras">0</strong>
-        </div>
+                <div class="card">
+                    <span>📦 Entregues</span>
+                    <strong id="dashboard-entregues">0</strong>
+                </div>
 
-    </div>
+                <div class="card">
+                    <span>⚠️ Atrasadas</span>
+                    <strong id="dashboard-atrasadas">0</strong>
+                </div>
 
-    <h3>Situação das encomendas</h3>
+            </div>
 
-    <div class="cards">
+            <h3>Avisos importantes</h3>
 
-        <div class="card">
-            <span>⏳ Aguardando</span>
-            <strong id="dashboard-aguardando">0</strong>
-        </div>
+            <div
+                id="dashboard-alertas"
+                class="formulario">
 
-        <div class="card">
-            <span>⚙️ Em produção</span>
-            <strong id="dashboard-producao">0</strong>
-        </div>
+                <p>Nenhum aviso no momento.</p>
 
-        <div class="card">
-            <span>✅ Finalizadas</span>
-            <strong id="dashboard-finalizadas">0</strong>
-        </div>
+            </div>
 
-        <div class="card">
-            <span>📦 Entregues</span>
-            <strong id="dashboard-entregues">0</strong>
-        </div>
+            <button
+                id="atualizar-dashboard"
+                class="botao-principal"
+                type="button">
+                Atualizar Dashboard
+            </button>
 
-        <div class="card">
-            <span>⚠️ Atrasadas</span>
-            <strong id="dashboard-atrasadas">0</strong>
-        </div>
+        </section>
 
-    </div>
+ <!-- ===================================================== -->
+<!-- PRODUTOS -->
+<!-- ===================================================== -->
 
-    <h3>Avisos importantes</h3>
-
-    <div
-        id="dashboard-alertas"
-        class="formulario">
-
-        <p>Nenhum aviso no momento.</p>
-
-    </div>
-
-    <button
-        id="atualizar-dashboard"
-        class="botao-principal"
-        type="button">
-        Atualizar Dashboard
-    </button>
-
-</section>
-
-            <section id="produtos" class="pagina">
-
-    <h2>Produtos 2.0</h2>
+<section id="produtos" class="pagina">
+        <h2>Produtos 2.0</h2>
 
     <p>
         Cadastre os produtos, acompanhe o estoque
@@ -251,6 +279,7 @@
         <div class="linha">
 
             <div class="campo">
+
                 <label for="produto-nome">
                     Nome do produto
                 </label>
@@ -259,9 +288,11 @@
                     type="text"
                     id="produto-nome"
                     placeholder="Ex.: Vaso decorativo">
+
             </div>
 
             <div class="campo">
+
                 <label for="produto-categoria">
                     Categoria
                 </label>
@@ -301,11 +332,13 @@
                     </option>
 
                 </select>
+
             </div>
 
         </div>
 
         <div class="campo">
+
             <label for="produto-descricao">
                 Descrição
             </label>
@@ -314,11 +347,12 @@
                 id="produto-descricao"
                 rows="3"
                 placeholder="Descreva o produto"></textarea>
-        </div>
 
-        <div class="linha">
+        </div>
+                <div class="linha">
 
             <div class="campo">
+
                 <label for="produto-custo">
                     Custo de produção
                 </label>
@@ -329,9 +363,11 @@
                     min="0"
                     step="0.01"
                     placeholder="Ex.: 12,50">
+
             </div>
 
             <div class="campo">
+
                 <label for="produto-preco">
                     Preço de venda
                 </label>
@@ -342,6 +378,7 @@
                     min="0"
                     step="0.01"
                     placeholder="Ex.: 35,00">
+
             </div>
 
         </div>
@@ -349,6 +386,7 @@
         <div class="linha">
 
             <div class="campo">
+
                 <label for="produto-lucro">
                     Lucro por unidade
                 </label>
@@ -358,9 +396,11 @@
                     id="produto-lucro"
                     value="R$ 0,00"
                     readonly>
+
             </div>
 
             <div class="campo">
+
                 <label for="produto-margem">
                     Margem de lucro
                 </label>
@@ -370,6 +410,7 @@
                     id="produto-margem"
                     value="0%"
                     readonly>
+
             </div>
 
         </div>
@@ -377,6 +418,7 @@
         <div class="linha">
 
             <div class="campo">
+
                 <label for="produto-estoque">
                     Quantidade em estoque
                 </label>
@@ -387,9 +429,11 @@
                     min="0"
                     step="1"
                     placeholder="Ex.: 10">
+
             </div>
 
             <div class="campo">
+
                 <label for="produto-estoque-minimo">
                     Estoque mínimo
                 </label>
@@ -400,6 +444,7 @@
                     min="0"
                     step="1"
                     placeholder="Ex.: 3">
+
             </div>
 
         </div>
@@ -407,6 +452,7 @@
         <div class="linha">
 
             <div class="campo">
+
                 <label for="produto-status">
                     Status
                 </label>
@@ -420,9 +466,11 @@
                 <small>
                     O status será definido automaticamente.
                 </small>
+
             </div>
 
             <div class="campo">
+
                 <label for="produto-data-cadastro">
                     Data de cadastro
                 </label>
@@ -430,11 +478,12 @@
                 <input
                     type="date"
                     id="produto-data-cadastro">
+
             </div>
 
         </div>
+                <div class="campo">
 
-        <div class="campo">
             <label for="produto-observacoes">
                 Observações
             </label>
@@ -443,6 +492,7 @@
                 id="produto-observacoes"
                 rows="3"
                 placeholder="Informações adicionais"></textarea>
+
         </div>
 
         <button
@@ -471,33 +521,46 @@
     </div>
 
 </section>
+<!-- ===================================================== -->
+<!-- CLIENTES -->
+<!-- ===================================================== -->
 
 <section id="clientes" class="pagina">
 
     <h2>Cadastro de Clientes</h2>
 
-    <p>Cadastre e acompanhe os clientes da empresa.</p>
+    <p>
+        Cadastre e acompanhe os clientes da empresa.
+    </p>
 
     <div class="formulario">
 
         <div class="linha">
 
             <div class="campo">
-                <label for="nome-cliente">Nome do cliente</label>
+
+                <label for="nome-cliente">
+                    Nome do cliente
+                </label>
 
                 <input
                     type="text"
                     id="nome-cliente"
                     placeholder="Ex.: Maria da Silva">
+
             </div>
 
             <div class="campo">
-                <label for="telefone-cliente">Telefone</label>
+
+                <label for="telefone-cliente">
+                    Telefone
+                </label>
 
                 <input
                     type="tel"
                     id="telefone-cliente"
-                    placeholder="Ex.: (11) 99999-9999">
+                    placeholder="Ex.: (45) 99999-9999">
+
             </div>
 
         </div>
@@ -505,34 +568,43 @@
         <div class="linha">
 
             <div class="campo">
-                <label for="email-cliente">E-mail</label>
+
+                <label for="email-cliente">
+                    E-mail
+                </label>
 
                 <input
                     type="email"
                     id="email-cliente"
                     placeholder="Ex.: cliente@email.com">
+
             </div>
 
             <div class="campo">
-                <label for="cidade-cliente">Cidade</label>
+
+                <label for="cidade-cliente">
+                    Cidade
+                </label>
 
                 <input
                     type="text"
                     id="cidade-cliente"
-                    placeholder="Ex.: São Paulo">
+                    placeholder="Ex.: Toledo">
+
             </div>
 
         </div>
 
         <div class="campo campo-completo">
 
-            <label for="observacoes-cliente">Observações</label>
+            <label for="observacoes-cliente">
+                Observações
+            </label>
 
             <textarea
                 id="observacoes-cliente"
                 rows="3"
-                placeholder="Preferências, endereço ou outras informações."
-            ></textarea>
+                placeholder="Preferências, endereço ou outras informações."></textarea>
 
         </div>
 
@@ -548,12 +620,19 @@
     <h3>Clientes cadastrados</h3>
 
     <div id="lista-clientes">
-        <p>Nenhum cliente cadastrado.</p>
+
+        <p>
+            Nenhum cliente cadastrado.
+        </p>
+
     </div>
 
 </section>
+<!-- ===================================================== -->
+<!-- ENCOMENDAS -->
+<!-- ===================================================== -->
 
- <section id="encomendas" class="pagina">
+<section id="encomendas" class="pagina">
 
     <h2>Encomendas 2.0</h2>
 
@@ -568,6 +647,7 @@
 
         <div class="card">
             <span>📋 Total</span>
+
             <strong id="encomendas-total">
                 0
             </strong>
@@ -575,6 +655,7 @@
 
         <div class="card">
             <span>⏳ Aguardando</span>
+
             <strong id="encomendas-aguardando">
                 0
             </strong>
@@ -582,6 +663,7 @@
 
         <div class="card">
             <span>⚙️ Em produção</span>
+
             <strong id="encomendas-em-producao">
                 0
             </strong>
@@ -589,6 +671,7 @@
 
         <div class="card">
             <span>✅ Finalizadas</span>
+
             <strong id="encomendas-finalizadas">
                 0
             </strong>
@@ -596,6 +679,7 @@
 
         <div class="card">
             <span>📦 Entregues</span>
+
             <strong id="encomendas-entregues">
                 0
             </strong>
@@ -603,6 +687,7 @@
 
         <div class="card">
             <span>⚠️ Atrasadas</span>
+
             <strong id="encomendas-atrasadas">
                 0
             </strong>
@@ -610,6 +695,7 @@
 
         <div class="card">
             <span>💰 Valor total</span>
+
             <strong id="encomendas-valor-total">
                 R$ 0,00
             </strong>
@@ -620,340 +706,380 @@
     <h3>Cadastrar encomenda</h3>
 
     <div class="formulario">
-
         <div class="linha">
 
-            <div class="campo">
-                <label for="cliente-encomenda">
-                    Cliente
-                </label>
+    <div class="campo">
 
-                <select id="cliente-encomenda">
-                    <option value="">
-                        Selecione o cliente
-                    </option>
-                </select>
-            </div>
+        <label for="cliente-encomenda">
+            Cliente
+        </label>
 
-            <div class="campo">
-                <label for="produto-encomenda">
-                    Produto
-                </label>
+        <select id="cliente-encomenda">
 
-                <select id="produto-encomenda">
-                    <option value="">
-                        Selecione o produto
-                    </option>
-                </select>
-            </div>
+            <option value="">
+                Selecione o cliente
+            </option>
 
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="quantidade-encomenda">
-                    Quantidade
-                </label>
-
-                <input
-                    type="number"
-                    id="quantidade-encomenda"
-                    min="1"
-                    step="1"
-                    value="1">
-            </div>
-
-            <div class="campo">
-                <label for="valor-unitario-encomenda">
-                    Valor unitário
-                </label>
-
-                <input
-                    type="text"
-                    id="valor-unitario-encomenda"
-                    value="R$ 0,00"
-                    readonly>
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="valor-total-encomenda">
-                    Valor total
-                </label>
-
-                <input
-                    type="text"
-                    id="valor-total-encomenda"
-                    value="R$ 0,00"
-                    readonly>
-            </div>
-
-            <div class="campo">
-                <label for="prioridade-encomenda">
-                    Prioridade
-                </label>
-
-                <select id="prioridade-encomenda">
-
-                    <option value="Normal">
-                        Normal
-                    </option>
-
-                    <option value="Alta">
-                        Alta
-                    </option>
-
-                    <option value="Urgente">
-                        Urgente
-                    </option>
-
-                </select>
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="data-pedido-encomenda">
-                    Data do pedido
-                </label>
-
-                <input
-                    type="date"
-                    id="data-pedido-encomenda">
-            </div>
-
-            <div class="campo">
-                <label for="data-entrega-encomenda">
-                    Previsão de entrega
-                </label>
-
-                <input
-                    type="date"
-                    id="data-entrega-encomenda">
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="status-encomenda">
-                    Status
-                </label>
-
-                <select id="status-encomenda">
-
-                    <option value="Aguardando">
-                        Aguardando
-                    </option>
-
-                    <option value="Em produção">
-                        Em produção
-                    </option>
-
-                    <option value="Finalizada">
-                        Finalizada
-                    </option>
-
-                    <option value="Entregue">
-                        Entregue
-                    </option>
-
-                    <option value="Cancelada">
-                        Cancelada
-                    </option>
-
-                </select>
-            </div>
-
-            <div class="campo">
-                <label for="pagamento-encomenda">
-                    Forma de pagamento
-                </label>
-
-                <select id="pagamento-encomenda">
-
-                    <option value="">
-                        Selecione
-                    </option>
-
-                    <option value="Pix">
-                        Pix
-                    </option>
-
-                    <option value="Dinheiro">
-                        Dinheiro
-                    </option>
-
-                    <option value="Cartão de crédito">
-                        Cartão de crédito
-                    </option>
-
-                    <option value="Cartão de débito">
-                        Cartão de débito
-                    </option>
-
-                    <option value="Transferência">
-                        Transferência
-                    </option>
-
-                    <option value="Outro">
-                        Outro
-                    </option>
-
-                </select>
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="situacao-pagamento-encomenda">
-                    Situação do pagamento
-                </label>
-
-                <select id="situacao-pagamento-encomenda">
-
-                    <option value="Pendente">
-                        Pendente
-                    </option>
-
-                    <option value="Parcial">
-                        Parcial
-                    </option>
-
-                    <option value="Pago">
-                        Pago
-                    </option>
-
-                </select>
-            </div>
-
-            <div class="campo">
-                <label for="valor-pago-encomenda">
-                    Valor pago
-                </label>
-
-                <input
-                    type="number"
-                    id="valor-pago-encomenda"
-                    min="0"
-                    step="0.01"
-                    placeholder="Ex.: 50,00">
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="encomenda-filamento">
-                    Filamento utilizado
-                </label>
-
-                <select id="encomenda-filamento">
-                    <option value="">
-                        Nenhum filamento selecionado
-                    </option>
-                </select>
-
-                <small>
-                    Serão mostrados o material,
-                    a cor e o peso disponível.
-                </small>
-            </div>
-
-            <div class="campo">
-                <label for="encomenda-consumo-filamento">
-                    Consumo de filamento
-                </label>
-
-                <input
-                    type="number"
-                    id="encomenda-consumo-filamento"
-                    min="0"
-                    step="1"
-                    placeholder="Ex.: 125">
-
-                <small>
-                    Informe o consumo em gramas.
-                </small>
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="encomenda-filamento-disponivel">
-                    Peso disponível
-                </label>
-
-                <input
-                    type="text"
-                    id="encomenda-filamento-disponivel"
-                    value="Nenhum filamento selecionado"
-                    readonly>
-            </div>
-
-            <div class="campo">
-                <label for="encomenda-filamento-restante">
-                    Peso após a encomenda
-                </label>
-
-                <input
-                    type="text"
-                    id="encomenda-filamento-restante"
-                    value="0 g"
-                    readonly>
-            </div>
-
-        </div>
-
-        <div class="campo">
-            <label for="observacoes-encomenda">
-                Observações
-            </label>
-
-            <textarea
-                id="observacoes-encomenda"
-                rows="3"
-                placeholder="Detalhes da personalização, cor, medidas ou outras informações"></textarea>
-        </div>
-
-        <button
-            id="salvar-encomenda"
-            class="botao-principal"
-            type="button">
-            Salvar Encomenda
-        </button>
-
-        <button
-            id="limpar-formulario-encomenda"
-            type="button">
-            Limpar Formulário
-        </button>
+        </select>
 
     </div>
 
-    <h3>Encomendas cadastradas</h3>
+    <div class="campo">
 
-    <div id="lista-encomendas">
+        <label for="produto-encomenda">
+            Produto
+        </label>
 
-        <p>
-            Nenhuma encomenda cadastrada.
-        </p>
+        <select id="produto-encomenda">
+
+            <option value="">
+                Selecione o produto
+            </option>
+
+        </select>
 
     </div>
+
+</div>
+
+<div class="linha">
+
+    <div class="campo">
+
+        <label for="quantidade-encomenda">
+            Quantidade
+        </label>
+
+        <input
+            type="number"
+            id="quantidade-encomenda"
+            min="1"
+            step="1"
+            value="1">
+
+    </div>
+
+    <div class="campo">
+
+        <label for="valor-unitario-encomenda">
+            Valor unitário
+        </label>
+
+        <input
+            type="text"
+            id="valor-unitario-encomenda"
+            value="R$ 0,00"
+            readonly>
+
+    </div>
+
+</div>
+
+<div class="linha">
+
+    <div class="campo">
+
+        <label for="valor-total-encomenda">
+            Valor total
+        </label>
+
+        <input
+            type="text"
+            id="valor-total-encomenda"
+            value="R$ 0,00"
+            readonly>
+
+    </div>
+
+    <div class="campo">
+
+        <label for="prioridade-encomenda">
+            Prioridade
+        </label>
+
+        <select id="prioridade-encomenda">
+
+            <option value="Normal">
+                Normal
+            </option>
+
+            <option value="Alta">
+                Alta
+            </option>
+
+            <option value="Urgente">
+                Urgente
+            </option>
+
+        </select>
+
+    </div>
+
+</div>
+
+<div class="linha">
+
+    <div class="campo">
+
+        <label for="data-pedido-encomenda">
+            Data do pedido
+        </label>
+
+        <input
+            type="date"
+            id="data-pedido-encomenda">
+
+    </div>
+
+    <div class="campo">
+
+        <label for="data-entrega-encomenda">
+            Previsão de entrega
+        </label>
+
+        <input
+            type="date"
+            id="data-entrega-encomenda">
+
+    </div>
+
+</div>
+<div class="linha">
+
+    <div class="campo">
+
+        <label for="status-encomenda">
+            Status
+        </label>
+
+        <select id="status-encomenda">
+
+            <option value="Aguardando">
+                Aguardando
+            </option>
+
+            <option value="Em produção">
+                Em produção
+            </option>
+
+            <option value="Finalizada">
+                Finalizada
+            </option>
+
+            <option value="Entregue">
+                Entregue
+            </option>
+
+            <option value="Cancelada">
+                Cancelada
+            </option>
+
+        </select>
+
+    </div>
+
+    <div class="campo">
+
+        <label for="pagamento-encomenda">
+            Forma de pagamento
+        </label>
+
+        <select id="pagamento-encomenda">
+
+            <option value="">
+                Selecione
+            </option>
+
+            <option value="Pix">
+                Pix
+            </option>
+
+            <option value="Dinheiro">
+                Dinheiro
+            </option>
+
+            <option value="Cartão de crédito">
+                Cartão de crédito
+            </option>
+
+            <option value="Cartão de débito">
+                Cartão de débito
+            </option>
+
+            <option value="Transferência">
+                Transferência
+            </option>
+
+            <option value="Outro">
+                Outro
+            </option>
+
+        </select>
+
+    </div>
+
+</div>
+
+<div class="linha">
+
+    <div class="campo">
+
+        <label for="situacao-pagamento-encomenda">
+            Situação do pagamento
+        </label>
+
+        <select id="situacao-pagamento-encomenda">
+
+            <option value="Pendente">
+                Pendente
+            </option>
+
+            <option value="Parcial">
+                Parcial
+            </option>
+
+            <option value="Pago">
+                Pago
+            </option>
+
+        </select>
+
+    </div>
+
+    <div class="campo">
+
+        <label for="valor-pago-encomenda">
+            Valor pago
+        </label>
+
+        <input
+            type="number"
+            id="valor-pago-encomenda"
+            min="0"
+            step="0.01"
+            placeholder="Ex.: 50,00">
+
+    </div>
+
+</div>
+
+<div class="linha">
+
+    <div class="campo">
+
+        <label for="encomenda-filamento">
+            Filamento utilizado
+        </label>
+
+        <select id="encomenda-filamento">
+
+            <option value="">
+                Nenhum filamento selecionado
+            </option>
+
+        </select>
+
+        <small>
+            Serão mostrados o material,
+            a cor e o peso disponível.
+        </small>
+
+    </div>
+
+    <div class="campo">
+
+        <label for="encomenda-consumo-filamento">
+            Consumo de filamento
+        </label>
+
+        <input
+            type="number"
+            id="encomenda-consumo-filamento"
+            min="0"
+            step="1"
+            placeholder="Ex.: 125">
+
+        <small>
+            Informe o consumo em gramas.
+        </small>
+
+    </div>
+
+</div>
+
+<div class="linha">
+
+    <div class="campo">
+
+        <label for="encomenda-filamento-disponivel">
+            Peso disponível
+        </label>
+
+        <input
+            type="text"
+            id="encomenda-filamento-disponivel"
+            value="Nenhum filamento selecionado"
+            readonly>
+
+    </div>
+
+    <div class="campo">
+
+        <label for="encomenda-filamento-restante">
+            Peso após a encomenda
+        </label>
+
+        <input
+            type="text"
+            id="encomenda-filamento-restante"
+            value="0 g"
+            readonly>
+
+    </div>
+
+</div>
+<div class="campo">
+
+    <label for="observacoes-encomenda">
+        Observações
+    </label>
+
+    <textarea
+        id="observacoes-encomenda"
+        rows="3"
+        placeholder="Detalhes da personalização, cor, medidas ou outras informações"></textarea>
+
+</div>
+
+<button
+    id="salvar-encomenda"
+    class="botao-principal"
+    type="button">
+    Salvar Encomenda
+</button>
+
+<button
+    id="limpar-formulario-encomenda"
+    type="button">
+    Limpar Formulário
+</button>
+
+</div>
+
+<h3>Encomendas cadastradas</h3>
+
+<div id="lista-encomendas">
+
+    <p>
+        Nenhuma encomenda cadastrada.
+    </p>
+
+</div>
 
 </section>
+<!-- ===================================================== -->
+<!-- FILAMENTOS -->
+<!-- ===================================================== -->
 
 <section id="filamentos" class="pagina">
 
@@ -963,311 +1089,318 @@
         Cadastre os rolos de filamento, acompanhe o peso
         disponível e identifique estoques baixos.
     </p>
+
     <div class="formulario">
 
-    <h3>Áreas do módulo</h3>
+        <h3>Áreas do módulo</h3>
 
-    <div class="linha">
+        <div class="linha">
 
-        <button
-            type="button"
-            class="botao-principal aba-filamento"
-            data-aba-filamento="aba-filamentos">
-            🧵 Filamentos
-        </button>
+            <button
+                type="button"
+                class="botao-principal aba-filamento"
+                data-aba-filamento="aba-filamentos">
+                🧵 Filamentos
+            </button>
 
-        <button
-            type="button"
-            class="aba-filamento"
-            data-aba-filamento="aba-acessorios">
-            🔩 Acessórios
-        </button>
+            <button
+                type="button"
+                class="aba-filamento"
+                data-aba-filamento="aba-acessorios">
+                🔩 Acessórios
+            </button>
 
-        <button
-            type="button"
-            class="aba-filamento"
-            data-aba-filamento="aba-embalagens">
-            📦 Embalagens
-        </button>
+            <button
+                type="button"
+                class="aba-filamento"
+                data-aba-filamento="aba-embalagens">
+                📦 Embalagens
+            </button>
+
+        </div>
+
+    </div>
+
+    <div
+        id="aba-filamentos"
+        class="conteudo-aba-filamento ativo">
+
+        <h3>Resumo dos filamentos</h3>
+
+        <div class="cards">
+
+            <div class="card">
+                <span>🧵 Total de rolos</span>
+
+                <strong id="filamentos-total-rolos">
+                    0
+                </strong>
+            </div>
+
+            <div class="card">
+                <span>✨ Novos</span>
+
+                <strong id="filamentos-total-novos">
+                    0
+                </strong>
+            </div>
+
+            <div class="card">
+                <span>⚙️ Em uso</span>
+
+                <strong id="filamentos-total-em-uso">
+                    0
+                </strong>
+            </div>
+
+            <div class="card">
+                <span>⚠️ Estoque baixo</span>
+
+                <strong id="filamentos-total-baixo">
+                    0
+                </strong>
+            </div>
+
+            <div class="card">
+                <span>❌ Finalizados</span>
+
+                <strong id="filamentos-total-finalizados">
+                    0
+                </strong>
+            </div>
+
+            <div class="card">
+                <span>⚖️ Peso disponível</span>
+
+                <strong id="filamentos-peso-disponivel">
+                    0 g
+                </strong>
+            </div>
+
+        </div>
+
+        <h3>Cadastrar filamento</h3>
+
+        <div class="formulario">
+            <div class="linha">
+
+    <div class="campo">
+
+        <label for="filamento-fabricante">
+            Fabricante
+        </label>
+
+        <input
+            type="text"
+            id="filamento-fabricante"
+            placeholder="Ex.: Voolt3D">
+
+    </div>
+
+    <div class="campo">
+
+        <label for="filamento-material">
+            Material
+        </label>
+
+        <select id="filamento-material">
+
+            <option value="">
+                Selecione
+            </option>
+
+            <option>PLA</option>
+            <option>PETG</option>
+            <option>ABS</option>
+            <option>ASA</option>
+            <option>TPU</option>
+            <option>Outro</option>
+
+        </select>
 
     </div>
 
 </div>
-<div
-    id="aba-filamentos"
-    class="conteudo-aba-filamento ativo">
 
-    <h3>Resumo dos filamentos</h3>
+<div class="linha">
 
-    <div class="cards">
+    <div class="campo">
 
-        <div class="card">
-            <span>🧵 Total de rolos</span>
-            <strong id="filamentos-total-rolos">
-                0
-            </strong>
-        </div>
+        <label for="filamento-cor">
+            Cor
+        </label>
 
-        <div class="card">
-            <span>✨ Novos</span>
-            <strong id="filamentos-total-novos">
-                0
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>⚙️ Em uso</span>
-            <strong id="filamentos-total-em-uso">
-                0
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>⚠️ Estoque baixo</span>
-            <strong id="filamentos-total-baixo">
-                0
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>❌ Finalizados</span>
-            <strong id="filamentos-total-finalizados">
-                0
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>⚖️ Peso disponível</span>
-            <strong id="filamentos-peso-disponivel">
-                0 g
-            </strong>
-        </div>
+        <input
+            type="text"
+            id="filamento-cor"
+            placeholder="Ex.: Branco Fosco">
 
     </div>
 
-    <h3>Cadastrar filamento</h3>
+    <div class="campo">
 
-    <div class="formulario">
+        <label for="filamento-lote">
+            Lote
+        </label>
 
-        <div class="linha">
-
-            <div class="campo">
-                <label for="filamento-fabricante">
-                    Fabricante
-                </label>
-
-                <input
-                    type="text"
-                    id="filamento-fabricante"
-                    placeholder="Ex.: Voolt3D">
-            </div>
-
-            <div class="campo">
-                <label for="filamento-material">
-                    Material
-                </label>
-
-                <select id="filamento-material">
-
-                    <option value="">
-                        Selecione o material
-                    </option>
-
-                    <option value="PLA">
-                        PLA
-                    </option>
-
-                    <option value="PLA Silk">
-                        PLA Silk
-                    </option>
-
-                    <option value="PLA Matte">
-                        PLA Matte
-                    </option>
-
-                    <option value="PETG">
-                        PETG
-                    </option>
-
-                    <option value="ABS">
-                        ABS
-                    </option>
-
-                    <option value="ASA">
-                        ASA
-                    </option>
-
-                    <option value="TPU">
-                        TPU
-                    </option>
-
-                    <option value="Nylon">
-                        Nylon
-                    </option>
-
-                    <option value="Outro">
-                        Outro
-                    </option>
-
-                </select>
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="filamento-cor">
-                    Cor
-                </label>
-
-                <input
-                    type="text"
-                    id="filamento-cor"
-                    placeholder="Ex.: Branco">
-            </div>
-
-            <div class="campo">
-                <label for="filamento-valor">
-                    Valor de compra
-                </label>
-
-                <input
-                    type="number"
-                    id="filamento-valor"
-                    min="0"
-                    step="0.01"
-                    placeholder="Ex.: 89,90">
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="filamento-peso-inicial">
-                    Peso inicial
-                </label>
-
-                <input
-                    type="number"
-                    id="filamento-peso-inicial"
-                    min="1"
-                    step="1"
-                    placeholder="Ex.: 1000">
-
-                <small>
-                    Informe o peso em gramas.
-                </small>
-            </div>
-
-            <div class="campo">
-                <label for="filamento-peso-restante">
-                    Peso restante
-                </label>
-
-                <input
-                    type="number"
-                    id="filamento-peso-restante"
-                    min="0"
-                    step="1"
-                    placeholder="Ex.: 1000">
-
-                <small>
-                    Informe o peso disponível em gramas.
-                </small>
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="filamento-percentual">
-                    Percentual disponível
-                </label>
-
-                <input
-                    type="text"
-                    id="filamento-percentual"
-                    value="0%"
-                    readonly>
-            </div>
-
-            <div class="campo">
-                <label for="filamento-status">
-                    Status
-                </label>
-
-                <input
-                    type="text"
-                    id="filamento-status"
-                    value="Finalizado"
-                    readonly>
-
-                <small>
-                    O status será calculado automaticamente.
-                </small>
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="filamento-data-compra">
-                    Data da compra
-                </label>
-
-                <input
-                    type="date"
-                    id="filamento-data-compra">
-            </div>
-
-            <div class="campo">
-                <label for="filamento-fornecedor">
-                    Fornecedor
-                </label>
-
-                <input
-                    type="text"
-                    id="filamento-fornecedor"
-                    placeholder="Ex.: Loja de filamentos">
-            </div>
-
-        </div>
-
-        <div class="campo">
-            <label for="filamento-observacoes">
-                Observações
-            </label>
-
-            <textarea
-                id="filamento-observacoes"
-                rows="3"
-                placeholder="Lote, temperatura recomendada ou outras informações"></textarea>
-        </div>
-
-        <button
-            id="salvar-filamento"
-            class="botao-principal"
-            type="button">
-            Salvar Filamento
-        </button>
-
-        <button
-            id="limpar-formulario-filamento"
-            type="button">
-            Limpar Formulário
-        </button>
+        <input
+            type="text"
+            id="filamento-lote"
+            placeholder="Número do lote">
 
     </div>
 
-    <h3>Filamentos cadastrados</h3>
+</div>
 
+<div class="linha">
+
+    <div class="campo">
+
+        <label for="filamento-peso-inicial">
+            Peso inicial (g)
+        </label>
+
+        <input
+            type="number"
+            id="filamento-peso-inicial"
+            min="0">
+
+    </div>
+
+    <div class="campo">
+
+        <label for="filamento-peso-restante">
+            Peso restante (g)
+        </label>
+
+        <input
+            type="number"
+            id="filamento-peso-restante"
+            min="0">
+
+    </div>
+
+</div>
+<div class="linha">
+
+    <div class="campo">
+
+        <label for="filamento-valor">
+            Valor de compra
+        </label>
+
+        <input
+            type="number"
+            id="filamento-valor"
+            min="0"
+            step="0.01"
+            placeholder="Ex.: 89,90">
+
+    </div>
+
+    <div class="campo">
+
+        <label for="filamento-percentual">
+            Percentual disponível
+        </label>
+
+        <input
+            type="text"
+            id="filamento-percentual"
+            value="0%"
+            readonly>
+
+    </div>
+
+</div>
+
+<div class="linha">
+
+    <div class="campo">
+
+        <label for="filamento-status">
+            Status
+        </label>
+
+        <input
+            type="text"
+            id="filamento-status"
+            value="Finalizado"
+            readonly>
+
+        <small>
+            O status será calculado automaticamente.
+        </small>
+
+    </div>
+
+    <div class="campo">
+
+        <label for="filamento-data-compra">
+            Data da compra
+        </label>
+
+        <input
+            type="date"
+            id="filamento-data-compra">
+
+    </div>
+
+</div>
+
+<div class="linha">
+
+    <div class="campo">
+
+        <label for="filamento-fornecedor">
+            Fornecedor
+        </label>
+
+        <input
+            type="text"
+            id="filamento-fornecedor"
+            placeholder="Ex.: Loja de filamentos">
+
+    </div>
+
+</div>
+
+<div class="campo">
+
+    <label for="filamento-observacoes">
+        Observações
+    </label>
+
+    <textarea
+        id="filamento-observacoes"
+        rows="3"
+        placeholder="Temperatura recomendada ou outras informações"></textarea>
+
+</div>
+
+<button
+    id="salvar-filamento"
+    class="botao-principal"
+    type="button">
+    Salvar Filamento
+</button>
+
+<button
+    id="limpar-formulario-filamento"
+    type="button">
+    Limpar Formulário
+</button>
+
+</div>
+
+<h3>Filamentos cadastrados</h3>
 
 <div id="lista-filamentos">
-    <p>Nenhum filamento cadastrado.</p>
+
+    <p>
+        Nenhum filamento cadastrado.
+    </p>
+
 </div>
 
 </div>
@@ -1282,6 +1415,7 @@
 
         <div class="card">
             <span>🔩 Itens cadastrados</span>
+
             <strong id="acessorios-total-itens">
                 0
             </strong>
@@ -1289,6 +1423,7 @@
 
         <div class="card">
             <span>📦 Quantidade em estoque</span>
+
             <strong id="acessorios-quantidade-estoque">
                 0
             </strong>
@@ -1296,6 +1431,7 @@
 
         <div class="card">
             <span>⚠️ Estoque baixo</span>
+
             <strong id="acessorios-estoque-baixo">
                 0
             </strong>
@@ -1303,6 +1439,7 @@
 
         <div class="card">
             <span>💰 Valor em estoque</span>
+
             <strong id="acessorios-valor-estoque">
                 R$ 0,00
             </strong>
@@ -1317,6 +1454,7 @@
         <div class="linha">
 
             <div class="campo">
+
                 <label for="acessorio-nome">
                     Nome
                 </label>
@@ -1324,10 +1462,12 @@
                 <input
                     type="text"
                     id="acessorio-nome"
-                    placeholder="Ex.: Argola para chaveiro">
+                    placeholder="Ex.: Argola 25 mm">
+
             </div>
 
             <div class="campo">
+
                 <label for="acessorio-categoria">
                     Categoria
                 </label>
@@ -1335,181 +1475,192 @@
                 <select id="acessorio-categoria">
 
                     <option value="">
-                        Selecione a categoria
+                        Selecione
                     </option>
 
-                    <option value="Argolas e Correntes">
-                        Argolas e Correntes
-                    </option>
-
-                    <option value="Parafusos">
-                        Parafusos
-                    </option>
-
-                    <option value="Ímãs">
-                        Ímãs
-                    </option>
+                    <option>Parafuso</option>
+                    <option>Argola</option>
+                    <option>Ímã</option>
+                    <option>Mola</option>
+                    <option>Rolamento</option>
+                    <option>Outro</option>
 
                 </select>
+
             </div>
 
         </div>
-
         <div class="linha">
 
-            <div class="linha">
+    <div class="campo">
 
-            <div class="campo">
-                <label for="acessorio-quantidade">
-                    Quantidade
-                </label>
+        <label for="acessorio-quantidade">
+            Quantidade
+        </label>
 
-                <input
-                    type="number"
-                    id="acessorio-quantidade"
-                    min="1"
-                    step="1"
-                    placeholder="Ex.: 100">
-            </div>
-
-            <div class="campo">
-                <label for="acessorio-estoque-minimo">
-                    Estoque mínimo
-                </label>
-
-                <input
-                    type="number"
-                    id="acessorio-estoque-minimo"
-                    min="0"
-                    step="1"
-                    placeholder="Ex.: 20">
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="acessorio-unidade-compra">
-                    Unidade de compra
-                </label>
-
-                <select id="acessorio-unidade-compra">
-
-                    <option value="">
-                        Selecione a unidade
-                    </option>
-
-                    <option value="Unidade">
-                        Unidade
-                    </option>
-
-                    <option value="Pacote">
-                        Pacote
-                    </option>
-
-                    <option value="Caixa">
-                        Caixa
-                    </option>
-
-                    <option value="Cartela">
-                        Cartela
-                    </option>
-
-                </select>
-            </div>
-
-            <div class="campo">
-                <label for="acessorio-valor-compra">
-                    Valor da compra
-                </label>
-
-                <input
-                    type="number"
-                    id="acessorio-valor-compra"
-                    min="0"
-                    step="0.01"
-                    placeholder="Ex.: 35,90">
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="acessorio-valor-unitario">
-                    Valor unitário
-                </label>
-
-                <input
-                    type="text"
-                    id="acessorio-valor-unitario"
-                    value="R$ 0,00"
-                    readonly>
-
-                <small>
-                    Calculado automaticamente.
-                </small>
-            </div>
-
-            <div class="campo">
-                <label for="acessorio-data-compra">
-                    Data da compra
-                </label>
-
-                <input
-                    type="date"
-                    id="acessorio-data-compra">
-            </div>
-
-        </div>
-
-        <div class="campo">
-            <label for="acessorio-fornecedor">
-                Fornecedor
-            </label>
-
-            <input
-                type="text"
-                id="acessorio-fornecedor"
-                placeholder="Ex.: Loja de acessórios">
-        </div>
-
-        <div class="campo">
-            <label for="acessorio-observacoes">
-                Observações
-            </label>
-
-            <textarea
-                id="acessorio-observacoes"
-                rows="3"
-                placeholder="Tamanho, modelo, cor ou outras informações"></textarea>
-        </div>
-
-        <button
-            id="salvar-acessorio"
-            class="botao-principal"
-            type="button">
-            Salvar Acessório
-        </button>
-
-        <button
-            id="limpar-formulario-acessorio"
-            type="button">
-            Limpar Formulário
-        </button>
+        <input
+            type="number"
+            id="acessorio-quantidade"
+            min="1"
+            step="1"
+            placeholder="Ex.: 100">
 
     </div>
 
-    <h3>Acessórios cadastrados</h3>
+    <div class="campo">
 
-    <div id="lista-acessorios">
-        <p>Nenhum acessório cadastrado.</p>
+        <label for="acessorio-estoque-minimo">
+            Estoque mínimo
+        </label>
+
+        <input
+            type="number"
+            id="acessorio-estoque-minimo"
+            min="0"
+            step="1"
+            placeholder="Ex.: 20">
+
     </div>
 
 </div>
 
+<div class="linha">
 
+    <div class="campo">
+
+        <label for="acessorio-unidade-compra">
+            Unidade de compra
+        </label>
+
+        <select id="acessorio-unidade-compra">
+
+            <option value="">
+                Selecione a unidade
+            </option>
+
+            <option value="Unidade">
+                Unidade
+            </option>
+
+            <option value="Pacote">
+                Pacote
+            </option>
+
+            <option value="Caixa">
+                Caixa
+            </option>
+
+            <option value="Cartela">
+                Cartela
+            </option>
+
+        </select>
+
+    </div>
+
+    <div class="campo">
+
+        <label for="acessorio-valor-compra">
+            Valor da compra
+        </label>
+
+        <input
+            type="number"
+            id="acessorio-valor-compra"
+            min="0"
+            step="0.01"
+            placeholder="Ex.: 35,90">
+
+    </div>
+
+</div>
+
+<div class="linha">
+
+    <div class="campo">
+
+        <label for="acessorio-valor-unitario">
+            Valor unitário
+        </label>
+
+        <input
+            type="text"
+            id="acessorio-valor-unitario"
+            value="R$ 0,00"
+            readonly>
+
+        <small>
+            Calculado automaticamente.
+        </small>
+
+    </div>
+
+    <div class="campo">
+
+        <label for="acessorio-data-compra">
+            Data da compra
+        </label>
+
+        <input
+            type="date"
+            id="acessorio-data-compra">
+
+    </div>
+
+</div>
+
+<div class="campo">
+
+    <label for="acessorio-fornecedor">
+        Fornecedor
+    </label>
+
+    <input
+        type="text"
+        id="acessorio-fornecedor"
+        placeholder="Ex.: Loja de acessórios">
+
+</div>
+
+<div class="campo">
+
+    <label for="acessorio-observacoes">
+        Observações
+    </label>
+
+    <textarea
+        id="acessorio-observacoes"
+        rows="3"
+        placeholder="Tamanho, modelo, cor ou outras informações"></textarea>
+
+</div>
+
+<button
+    id="salvar-acessorio"
+    class="botao-principal"
+    type="button">
+    Salvar Acessório
+</button>
+
+<button
+    id="limpar-formulario-acessorio"
+    type="button">
+    Limpar Formulário
+</button>
+
+</div>
+
+<h3>Acessórios cadastrados</h3>
+
+<div id="lista-acessorios">
+
+    <p>
+        Nenhum acessório cadastrado.
+    </p>
+
+</div>
+
+</div>
 <!-- ========================= -->
 <!-- ABA EMBALAGENS -->
 <!-- ========================= -->
@@ -1524,31 +1675,43 @@
     <div class="cards">
 
         <div class="card">
+
             <span>📦 Embalagens cadastradas</span>
+
             <strong id="embalagens-total-itens">
                 0
             </strong>
+
         </div>
 
         <div class="card">
+
             <span>📊 Quantidade em estoque</span>
+
             <strong id="embalagens-quantidade-estoque">
                 0
             </strong>
+
         </div>
 
         <div class="card">
+
             <span>⚠️ Estoque baixo</span>
+
             <strong id="embalagens-estoque-baixo">
                 0
             </strong>
+
         </div>
 
         <div class="card">
+
             <span>💰 Valor em estoque</span>
+
             <strong id="embalagens-valor-estoque">
                 R$ 0,00
             </strong>
+
         </div>
 
     </div>
@@ -1560,6 +1723,7 @@
         <div class="linha">
 
             <div class="campo">
+
                 <label for="embalagem-nome">
                     Nome da embalagem
                 </label>
@@ -1568,9 +1732,11 @@
                     type="text"
                     id="embalagem-nome"
                     placeholder="Ex.: Caixa para chaveiro">
+
             </div>
 
             <div class="campo">
+
                 <label for="embalagem-categoria">
                     Categoria
                 </label>
@@ -1585,2674 +1751,165 @@
                         Caixa
                     </option>
 
-                    <option value="Sacola">
-                        Sacola
+                    <option value="Saco">
+                        Saco
                     </option>
 
                     <option value="Envelope">
                         Envelope
                     </option>
 
-                    <option value="Saco plástico">
-                        Saco plástico
-                    </option>
-
-                    <option value="Papel">
-                        Papel
-                    </option>
-
                     <option value="Etiqueta">
                         Etiqueta
                     </option>
 
-                    <option value="Fita">
-                        Fita
-                    </option>
-
                     <option value="Outro">
                         Outro
                     </option>
 
                 </select>
+
             </div>
 
         </div>
-
         <div class="linha">
 
-            <div class="campo">
-                <label for="embalagem-quantidade">
-                    Quantidade
-                </label>
+    <div class="campo">
 
-                <input
-                    type="number"
-                    id="embalagem-quantidade"
-                    min="1"
-                    step="1"
-                    placeholder="Ex.: 50">
-            </div>
+        <label for="embalagem-quantidade">
+            Quantidade
+        </label>
 
-            <div class="campo">
-                <label for="embalagem-estoque-minimo">
-                    Estoque mínimo
-                </label>
-
-                <input
-                    type="number"
-                    id="embalagem-estoque-minimo"
-                    min="0"
-                    step="1"
-                    placeholder="Ex.: 10">
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="embalagem-valor-compra">
-                    Valor da compra
-                </label>
-
-                <input
-                    type="number"
-                    id="embalagem-valor-compra"
-                    min="0"
-                    step="0.01"
-                    placeholder="Ex.: 45,90">
-            </div>
-
-            <div class="campo">
-                <label for="embalagem-valor-unitario">
-                    Valor unitário
-                </label>
-
-                <input
-                    type="text"
-                    id="embalagem-valor-unitario"
-                    value="R$ 0,0000"
-                    readonly>
-
-                <small>
-                    Calculado automaticamente.
-                </small>
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="embalagem-data-compra">
-                    Data da compra
-                </label>
-
-                <input
-                    type="date"
-                    id="embalagem-data-compra">
-            </div>
-
-            <div class="campo">
-                <label for="embalagem-fornecedor">
-                    Fornecedor
-                </label>
-
-                <input
-                    type="text"
-                    id="embalagem-fornecedor"
-                    placeholder="Ex.: Loja de embalagens">
-            </div>
-
-        </div>
-
-        <div class="campo">
-            <label for="embalagem-observacoes">
-                Observações
-            </label>
-
-            <textarea
-                id="embalagem-observacoes"
-                rows="3"
-                placeholder="Medidas, material, cor ou outras informações"></textarea>
-        </div>
-
-        <button
-            id="salvar-embalagem"
-            class="botao-principal"
-            type="button">
-            Salvar Embalagem
-        </button>
-
-        <button
-            id="limpar-formulario-embalagem"
-            type="button">
-            Limpar Formulário
-        </button>
+        <input
+            type="number"
+            id="embalagem-quantidade"
+            min="1"
+            step="1"
+            placeholder="Ex.: 50">
 
     </div>
 
-    <h3>Embalagens cadastradas</h3>
+    <div class="campo">
 
-    <div id="lista-embalagens">
-        <p>Nenhuma embalagem cadastrada.</p>
+        <label for="embalagem-estoque-minimo">
+            Estoque mínimo
+        </label>
+
+        <input
+            type="number"
+            id="embalagem-estoque-minimo"
+            min="0"
+            step="1"
+            placeholder="Ex.: 10">
+
     </div>
 
 </div>
-</section>
 
-<section id="impressoras" class="pagina">
+<div class="linha">
 
-    <h2>Equipamentos</h2>
+    <div class="campo">
+
+        <label for="embalagem-valor-compra">
+            Valor da compra
+        </label>
+
+        <input
+            type="number"
+            id="embalagem-valor-compra"
+            min="0"
+            step="0.01"
+            placeholder="Ex.: 45,90">
+
+    </div>
+
+    <div class="campo">
+
+        <label for="embalagem-valor-unitario">
+            Valor unitário
+        </label>
+
+        <input
+            type="text"
+            id="embalagem-valor-unitario"
+            value="R$ 0,0000"
+            readonly>
+
+        <small>
+            Calculado automaticamente.
+        </small>
+
+    </div>
+
+</div>
+
+<div class="linha">
+
+    <div class="campo">
+
+        <label for="embalagem-data-compra">
+            Data da compra
+        </label>
+
+        <input
+            type="date"
+            id="embalagem-data-compra">
+
+    </div>
+
+    <div class="campo">
+
+        <label for="embalagem-fornecedor">
+            Fornecedor
+        </label>
+
+        <input
+            type="text"
+            id="embalagem-fornecedor"
+            placeholder="Ex.: Loja de embalagens">
+
+    </div>
+
+</div>
+
+<div class="campo">
+
+    <label for="embalagem-observacoes">
+        Observações
+    </label>
+
+    <textarea
+        id="embalagem-observacoes"
+        rows="3"
+        placeholder="Medidas, material, cor ou outras informações"></textarea>
+
+</div>
+
+<button
+    id="salvar-embalagem"
+    class="botao-principal"
+    type="button">
+    Salvar Embalagem
+</button>
+
+<button
+    id="limpar-formulario-embalagem"
+    type="button">
+    Limpar Formulário
+</button>
+
+</div>
+
+<h3>Embalagens cadastradas</h3>
+
+<div id="lista-embalagens">
 
     <p>
-        Cadastre as impressoras e acompanhe peças,
-        lubrificantes, manutenções, horas de uso e ocorrências.
+        Nenhuma embalagem cadastrada.
     </p>
 
-    <!-- ========================= -->
-    <!-- NAVEGAÇÃO DAS ABAS -->
-    <!-- ========================= -->
+</div>
 
-    <div class="formulario equipamentos-navegacao">
-
-        <h3>Áreas do módulo</h3>
-
-        <div class="botoes-abas-equipamentos">
-
-            <button
-                type="button"
-                class="botao-principal aba-equipamento"
-                data-aba-equipamento="aba-impressoras">
-                🖨️ Impressoras
-            </button>
-
-            <button
-                type="button"
-                class="aba-equipamento"
-                data-aba-equipamento="aba-pecas">
-                🔧 Peças
-            </button>
-
-            <button
-                type="button"
-                class="aba-equipamento"
-                data-aba-equipamento="aba-lubrificantes">
-                🛢️ Lubrificantes
-            </button>
-
-            <button
-                type="button"
-                class="aba-equipamento"
-                data-aba-equipamento="aba-manutencoes">
-                📅 Manutenções
-            </button>
-
-            <button
-                type="button"
-                class="aba-equipamento"
-                data-aba-equipamento="aba-horas">
-                ⏱️ Horas de uso
-            </button>
-
-            <button
-                type="button"
-                class="aba-equipamento"
-                data-aba-equipamento="aba-diario">
-                📖 Diário
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- ========================= -->
-    <!-- ABA IMPRESSORAS -->
-    <!-- ========================= -->
-
-    <div
-        id="aba-impressoras"
-        class="conteudo-aba-equipamento ativo">
-
-        <h3>Resumo das impressoras</h3>
-
-        <div class="cards">
-
-            <div class="card">
-                <span>🖨️ Total de impressoras</span>
-                <strong id="equipamentos-total-impressoras">
-                    0
-                </strong>
-            </div>
-
-            <div class="card">
-                <span>✅ Ativas</span>
-                <strong id="equipamentos-impressoras-ativas">
-                    0
-                </strong>
-            </div>
-
-            <div class="card">
-                <span>🔧 Em manutenção</span>
-                <strong id="equipamentos-impressoras-manutencao">
-                    0
-                </strong>
-            </div>
-
-            <div class="card">
-                <span>⏱️ Horas acumuladas</span>
-                <strong id="equipamentos-total-horas">
-                    0h
-                </strong>
-            </div>
-
-        </div>
-
-        <h3>Cadastrar impressora</h3>
-
-        <div class="formulario">
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="nome-impressora">
-                        Nome da impressora
-                    </label>
-
-                    <input
-                        type="text"
-                        id="nome-impressora"
-                        placeholder="Ex.: Impressora principal">
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="marca-impressora">
-                        Marca
-                    </label>
-
-                    <input
-                        type="text"
-                        id="marca-impressora"
-                        placeholder="Ex.: Bambu Lab">
-
-                </div>
-
-            </div>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="modelo-impressora">
-                        Modelo
-                    </label>
-
-                    <select id="modelo-impressora">
-
-                        <option value="">
-                            Selecione o modelo
-                        </option>
-
-                        <option value="Bambu Lab A1">
-                            Bambu Lab A1
-                        </option>
-
-                        <option value="Bambu Lab A1 Mini">
-                            Bambu Lab A1 Mini
-                        </option>
-
-                        <option value="Bambu Lab P1S">
-                            Bambu Lab P1S
-                        </option>
-
-                        <option value="Bambu Lab X1 Carbon">
-                            Bambu Lab X1 Carbon
-                        </option>
-
-                        <option value="Creality K1">
-                            Creality K1
-                        </option>
-
-                        <option value="Outro">
-                            Outro
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="serie-impressora">
-                        Número de série
-                    </label>
-
-                    <input
-                        type="text"
-                        id="serie-impressora"
-                        placeholder="Ex.: A1-000123">
-
-                </div>
-
-            </div>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="data-compra-impressora">
-                        Data da compra
-                    </label>
-
-                    <input
-                        type="date"
-                        id="data-compra-impressora">
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="valor-impressora">
-                        Valor pago
-                    </label>
-
-                    <input
-                        type="number"
-                        id="valor-impressora"
-                        min="0"
-                        step="0.01"
-                        placeholder="Ex.: 2500,00">
-
-                </div>
-
-            </div>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="status-impressora">
-                        Status
-                    </label>
-
-                    <select id="status-impressora">
-
-                        <option value="Ativa">
-                            Ativa
-                        </option>
-
-                        <option value="Em manutenção">
-                            Em manutenção
-                        </option>
-
-                        <option value="Parada">
-                            Parada
-                        </option>
-
-                        <option value="Desativada">
-                            Desativada
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="horas-iniciais-impressora">
-                        Horas de uso iniciais
-                    </label>
-
-                    <input
-                        type="number"
-                        id="horas-iniciais-impressora"
-                        min="0"
-                        step="0.01"
-                        placeholder="Ex.: 150">
-
-                    <small>
-                        Informe as horas que a impressora já possui
-                        antes de começar o controle pelo aplicativo.
-                    </small>
-
-                </div>
-
-            </div>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="ultima-manutencao-impressora">
-                        Última manutenção
-                    </label>
-
-                    <input
-                        type="date"
-                        id="ultima-manutencao-impressora">
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="proxima-manutencao-impressora">
-                        Próxima manutenção prevista
-                    </label>
-
-                    <input
-                        type="date"
-                        id="proxima-manutencao-impressora">
-
-                </div>
-
-            </div>
-
-            <div class="campo">
-
-                <label for="observacoes-impressora">
-                    Observações
-                </label>
-
-                <textarea
-                    id="observacoes-impressora"
-                    rows="3"
-                    placeholder="Condições do equipamento, acessórios, garantia ou outras informações"></textarea>
-
-            </div>
-
-            <button
-                id="salvar-impressora"
-                class="botao-principal"
-                type="button">
-                Salvar Impressora
-            </button>
-
-            <button
-                id="limpar-formulario-impressora"
-                type="button">
-                Limpar Formulário
-            </button>
-
-        </div>
-
-        <h3>Impressoras cadastradas</h3>
-
-        <div id="lista-impressoras">
-
-            <p>
-                Nenhuma impressora cadastrada.
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <!-- ========================= -->
-    <!-- ABA PEÇAS -->
-    <!-- ========================= -->
-
-    <div
-        id="aba-pecas"
-        class="conteudo-aba-equipamento"
-        hidden>
-
-        <h3>Resumo das peças</h3>
-
-        <div class="cards">
-
-            <div class="card">
-                <span>🔧 Peças cadastradas</span>
-                <strong id="equipamentos-total-pecas">
-                    0
-                </strong>
-            </div>
-
-            <div class="card">
-                <span>📦 Unidades em estoque</span>
-                <strong id="equipamentos-pecas-quantidade">
-                    0
-                </strong>
-            </div>
-
-            <div class="card">
-                <span>⚠️ Estoque baixo</span>
-                <strong id="equipamentos-pecas-estoque-baixo">
-                    0
-                </strong>
-            </div>
-
-            <div class="card">
-                <span>💰 Valor em estoque</span>
-                <strong id="equipamentos-pecas-valor-estoque">
-                    R$ 0,00
-                </strong>
-            </div>
-
-        </div>
-
-        <h3>Cadastrar peça</h3>
-
-        <div class="formulario">
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="peca-nome">
-                        Nome da peça
-                    </label>
-
-                    <input
-                        type="text"
-                        id="peca-nome"
-                        placeholder="Ex.: Bico de impressão">
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="peca-categoria">
-                        Categoria
-                    </label>
-
-                    <select id="peca-categoria">
-
-                        <option value="">
-                            Selecione
-                        </option>
-
-                        <option value="Bico">
-                            Bico
-                        </option>
-
-                        <option value="Hotend">
-                            Hotend
-                        </option>
-
-                        <option value="Correia">
-                            Correia
-                        </option>
-
-                        <option value="Ventoinha">
-                            Ventoinha
-                        </option>
-
-                        <option value="Tubo PTFE">
-                            Tubo PTFE
-                        </option>
-
-                        <option value="Placa">
-                            Placa
-                        </option>
-
-                        <option value="Sensor">
-                            Sensor
-                        </option>
-
-                        <option value="Motor">
-                            Motor
-                        </option>
-
-                        <option value="Engrenagem">
-                            Engrenagem
-                        </option>
-
-                        <option value="Parafuso">
-                            Parafuso
-                        </option>
-
-                        <option value="Outro">
-                            Outro
-                        </option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="peca-marca">
-                        Marca ou fabricante
-                    </label>
-
-                    <input
-                        type="text"
-                        id="peca-marca"
-                        placeholder="Ex.: Bambu Lab">
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="peca-codigo">
-                        Código ou referência
-                    </label>
-
-                    <input
-                        type="text"
-                        id="peca-codigo"
-                        placeholder="Ex.: FAH001">
-
-                </div>
-
-            </div>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="peca-quantidade">
-                        Quantidade comprada
-                    </label>
-
-                    <input
-                        type="number"
-                        id="peca-quantidade"
-                        min="1"
-                        step="1"
-                        placeholder="Ex.: 5">
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="peca-estoque-minimo">
-                        Estoque mínimo
-                    </label>
-
-                    <input
-                        type="number"
-                        id="peca-estoque-minimo"
-                        min="0"
-                        step="1"
-                        placeholder="Ex.: 1">
-
-                </div>
-
-            </div>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="peca-valor-total">
-                        Valor total da compra
-                    </label>
-
-                    <input
-                        type="number"
-                        id="peca-valor-total"
-                        min="0"
-                        step="0.01"
-                        placeholder="Ex.: 75,00">
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="peca-valor-unitario">
-                        Valor por unidade
-                    </label>
-
-                    <input
-                        type="text"
-                        id="peca-valor-unitario"
-                        value="R$ 0,00"
-                        readonly>
-
-                    <small>
-                        Calculado automaticamente.
-                    </small>
-
-                </div>
-
-            </div>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="peca-data-compra">
-                        Data da compra
-                    </label>
-
-                    <input
-                        type="date"
-                        id="peca-data-compra">
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="peca-fornecedor">
-                        Fornecedor
-                    </label>
-
-                    <input
-                        type="text"
-                        id="peca-fornecedor"
-                        placeholder="Ex.: Loja oficial Bambu Lab">
-
-                </div>
-
-            </div>
-
-            <div class="campo">
-
-                <label for="peca-compatibilidade">
-                    Compatibilidade
-                </label>
-
-                <input
-                    type="text"
-                    id="peca-compatibilidade"
-                    placeholder="Ex.: Bambu Lab A1 e A1 Mini">
-
-            </div>
-
-            <div class="campo">
-
-                <label for="peca-observacoes">
-                    Observações
-                </label>
-
-                <textarea
-                    id="peca-observacoes"
-                    rows="3"
-                    placeholder="Lote, medidas, local de armazenamento ou outras informações"></textarea>
-
-            </div>
-
-            <button
-                id="salvar-peca"
-                class="botao-principal"
-                type="button">
-                Salvar Peça
-            </button>
-
-            <button
-                id="limpar-formulario-peca"
-                type="button">
-                Limpar Formulário
-            </button>
-
-        </div>
-
-        <h3>Peças cadastradas</h3>
-
-        <div id="lista-pecas">
-
-            <p>
-                Nenhuma peça cadastrada.
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <!-- ========================= -->
-    <!-- ABA LUBRIFICANTES -->
-    <!-- ========================= -->
-
-    <div
-        id="aba-lubrificantes"
-        class="conteudo-aba-equipamento"
-        hidden>
-
-        <h3>Resumo dos lubrificantes</h3>
-
-        <div class="cards">
-
-            <div class="card">
-                <span>🛢️ Produtos cadastrados</span>
-                <strong id="equipamentos-total-lubrificantes">
-                    0
-                </strong>
-            </div>
-
-            <div class="card">
-                <span>📦 Quantidade disponível</span>
-                <strong id="equipamentos-lubrificantes-quantidade">
-                    0
-                </strong>
-            </div>
-
-            <div class="card">
-                <span>⚠️ Estoque baixo</span>
-                <strong id="equipamentos-lubrificantes-estoque-baixo">
-                    0
-                </strong>
-            </div>
-
-            <div class="card">
-                <span>💰 Valor em estoque</span>
-                <strong id="equipamentos-lubrificantes-valor-estoque">
-                    R$ 0,00
-                </strong>
-            </div>
-
-        </div>
-
-        <h3>Cadastrar lubrificante ou produto</h3>
-
-        <div class="formulario">
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="lubrificante-nome">
-                        Nome do produto
-                    </label>
-
-                    <input
-                        type="text"
-                        id="lubrificante-nome"
-                        placeholder="Ex.: Graxa lubrificante">
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="lubrificante-tipo">
-                        Tipo
-                    </label>
-
-                    <select id="lubrificante-tipo">
-
-                        <option value="">
-                            Selecione
-                        </option>
-
-                        <option value="Graxa">
-                            Graxa
-                        </option>
-
-                        <option value="Óleo">
-                            Óleo
-                        </option>
-
-                        <option value="Produto de limpeza">
-                            Produto de limpeza
-                        </option>
-
-                        <option value="Álcool isopropílico">
-                            Álcool isopropílico
-                        </option>
-
-                        <option value="Adesivo">
-                            Adesivo
-                        </option>
-
-                        <option value="Outro">
-                            Outro
-                        </option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="lubrificante-marca">
-                        Marca ou fabricante
-                    </label>
-
-                    <input
-                        type="text"
-                        id="lubrificante-marca"
-                        placeholder="Ex.: Bambu Lab">
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="lubrificante-unidade">
-                        Unidade de controle
-                    </label>
-
-                    <select id="lubrificante-unidade">
-
-                        <option value="">
-                            Selecione
-                        </option>
-
-                        <option value="Unidade">
-                            Unidade
-                        </option>
-
-                        <option value="Grama">
-                            Grama
-                        </option>
-
-                        <option value="Mililitro">
-                            Mililitro
-                        </option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="lubrificante-quantidade">
-                        Quantidade comprada
-                    </label>
-
-                    <input
-                        type="number"
-                        id="lubrificante-quantidade"
-                        min="0"
-                        step="0.01"
-                        placeholder="Ex.: 100">
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="lubrificante-estoque-minimo">
-                        Estoque mínimo
-                    </label>
-
-                    <input
-                        type="number"
-                        id="lubrificante-estoque-minimo"
-                        min="0"
-                        step="0.01"
-                        placeholder="Ex.: 20">
-
-                </div>
-
-            </div>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="lubrificante-valor-total">
-                        Valor total da compra
-                    </label>
-
-                    <input
-                        type="number"
-                        id="lubrificante-valor-total"
-                        min="0"
-                        step="0.01"
-                        placeholder="Ex.: 35,00">
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="lubrificante-valor-unitario">
-                        Valor por unidade de controle
-                    </label>
-
-                    <input
-                        type="text"
-                        id="lubrificante-valor-unitario"
-                        value="R$ 0,00"
-                        readonly>
-
-                    <small>
-                        Calculado automaticamente.
-                    </small>
-
-                </div>
-
-            </div>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="lubrificante-data-compra">
-                        Data da compra
-                    </label>
-
-                    <input
-                        type="date"
-                        id="lubrificante-data-compra">
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="lubrificante-fornecedor">
-                        Fornecedor
-                    </label>
-
-                    <input
-                        type="text"
-                        id="lubrificante-fornecedor"
-                        placeholder="Ex.: Loja de manutenção">
-
-                </div>
-
-            </div>
-
-            <div class="campo">
-
-                <label for="lubrificante-aplicacao">
-                    Aplicação recomendada
-                </label>
-
-                <input
-                    type="text"
-                    id="lubrificante-aplicacao"
-                    placeholder="Ex.: Eixo X, eixo Y e trilhos">
-
-            </div>
-
-            <div class="campo">
-
-                <label for="lubrificante-observacoes">
-                    Observações
-                </label>
-
-                <textarea
-                    id="lubrificante-observacoes"
-                    rows="3"
-                    placeholder="Validade, modo de uso, local de armazenamento ou outras informações"></textarea>
-
-            </div>
-
-            <button
-                id="salvar-lubrificante"
-                class="botao-principal"
-                type="button">
-                Salvar Lubrificante
-            </button>
-
-            <button
-                id="limpar-formulario-lubrificante"
-                type="button">
-                Limpar Formulário
-            </button>
-
-        </div>
-
-        <h3>Lubrificantes e produtos cadastrados</h3>
-
-        <div id="lista-lubrificantes">
-
-            <p>
-                Nenhum lubrificante cadastrado.
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <!-- ========================= -->
-    <!-- ABA MANUTENÇÕES -->
-    <!-- ========================= -->
-
-    <div
-        id="aba-manutencoes"
-        class="conteudo-aba-equipamento"
-        hidden>
-
-        <h3>Resumo das manutenções</h3>
-
-        <div class="cards">
-
-            <div class="card">
-                <span>📅 Manutenções registradas</span>
-                <strong id="equipamentos-total-manutencoes">
-                    0
-                </strong>
-            </div>
-
-            <div class="card">
-                <span>🛡️ Preventivas</span>
-                <strong id="equipamentos-manutencoes-preventivas">
-                    0
-                </strong>
-            </div>
-
-            <div class="card">
-                <span>🧰 Corretivas</span>
-                <strong id="equipamentos-manutencoes-corretivas">
-                    0
-                </strong>
-            </div>
-
-            <div class="card">
-                <span>💰 Custo total</span>
-                <strong id="equipamentos-manutencoes-custo">
-                    R$ 0,00
-                </strong>
-            </div>
-
-        </div>
-
-        <h3>Registrar manutenção</h3>
-
-        <div class="formulario">
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="manutencao-impressora">
-                        Impressora
-                    </label>
-
-                    <select id="manutencao-impressora">
-
-                        <option value="">
-                            Selecione a impressora
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="manutencao-tipo">
-                        Tipo de manutenção
-                    </label>
-
-                    <select id="manutencao-tipo">
-
-                        <option value="">
-                            Selecione
-                        </option>
-
-                        <option value="Preventiva">
-                            Preventiva
-                        </option>
-
-                        <option value="Corretiva">
-                            Corretiva
-                        </option>
-
-                        <option value="Limpeza">
-                            Limpeza
-                        </option>
-
-                        <option value="Calibração">
-                            Calibração
-                        </option>
-
-                        <option value="Troca de peça">
-                            Troca de peça
-                        </option>
-
-                        <option value="Lubrificação">
-                            Lubrificação
-                        </option>
-
-                        <option value="Outra">
-                            Outra
-                        </option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="manutencao-data">
-                        Data da manutenção
-                    </label>
-
-                    <input
-                        type="date"
-                        id="manutencao-data">
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="manutencao-horas-impressora">
-                        Horas da impressora
-                    </label>
-
-                    <input
-                        type="number"
-                        id="manutencao-horas-impressora"
-                        min="0"
-                        step="0.01"
-                        placeholder="Ex.: 500">
-
-                </div>
-
-            </div>
-
-            <div class="campo">
-
-                <label for="manutencao-descricao">
-                    Serviço realizado
-                </label>
-
-                <textarea
-                    id="manutencao-descricao"
-                    rows="3"
-                    placeholder="Descreva a limpeza, troca, ajuste ou reparo realizado"></textarea>
-
-            </div>
-
-            <h4>Material utilizado</h4>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="manutencao-peca">
-                        Peça utilizada
-                    </label>
-
-                    <select id="manutencao-peca">
-
-                        <option value="">
-                            Nenhuma peça utilizada
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="manutencao-quantidade-peca">
-                        Quantidade da peça
-                    </label>
-
-                    <input
-                        type="number"
-                        id="manutencao-quantidade-peca"
-                        min="0"
-                        step="1"
-                        value="0">
-
-                </div>
-
-            </div>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="manutencao-lubrificante">
-                        Lubrificante utilizado
-                    </label>
-
-                    <select id="manutencao-lubrificante">
-
-                        <option value="">
-                            Nenhum lubrificante utilizado
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="manutencao-quantidade-lubrificante">
-                        Quantidade utilizada
-                    </label>
-
-                    <input
-                        type="number"
-                        id="manutencao-quantidade-lubrificante"
-                        min="0"
-                        step="0.01"
-                        value="0">
-
-                </div>
-
-            </div>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="manutencao-custo-servico">
-                        Outros custos
-                    </label>
-
-                    <input
-                        type="number"
-                        id="manutencao-custo-servico"
-                        min="0"
-                        step="0.01"
-                        placeholder="Ex.: 50,00">
-
-                    <small>
-                        Mão de obra, frete ou serviço técnico.
-                    </small>
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="manutencao-responsavel">
-                        Responsável
-                    </label>
-
-                    <input
-                        type="text"
-                        id="manutencao-responsavel"
-                        placeholder="Ex.: Proprietária ou assistência técnica">
-
-                </div>
-
-            </div>
-
-            <h4>Próxima manutenção</h4>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="manutencao-proxima-data">
-                        Próxima data prevista
-                    </label>
-
-                    <input
-                        type="date"
-                        id="manutencao-proxima-data">
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="manutencao-proximas-horas">
-                        Próxima manutenção com quantas horas
-                    </label>
-
-                    <input
-                        type="number"
-                        id="manutencao-proximas-horas"
-                        min="0"
-                        step="0.01"
-                        placeholder="Ex.: 1000">
-
-                </div>
-
-            </div>
-
-            <div class="campo">
-
-                <label for="manutencao-observacoes">
-                    Observações
-                </label>
-
-                <textarea
-                    id="manutencao-observacoes"
-                    rows="3"
-                    placeholder="Problemas encontrados, recomendações ou informações adicionais"></textarea>
-
-            </div>
-
-            <button
-                id="salvar-manutencao"
-                class="botao-principal"
-                type="button">
-                Salvar Manutenção
-            </button>
-
-            <button
-                id="limpar-formulario-manutencao"
-                type="button">
-                Limpar Formulário
-            </button>
-
-        </div>
-
-        <h3>Histórico de manutenções</h3>
-
-        <div id="lista-manutencoes">
-
-            <p>
-                Nenhuma manutenção registrada.
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <!-- ========================= -->
-    <!-- ABA HORAS DE USO -->
-    <!-- ========================= -->
-
-    <div
-        id="aba-horas"
-        class="conteudo-aba-equipamento"
-        hidden>
-
-        <h3>Resumo das horas de uso</h3>
-
-        <div class="cards">
-
-            <div class="card">
-                <span>⏱️ Total acumulado</span>
-                <strong id="equipamentos-horas-total">
-                    0h
-                </strong>
-            </div>
-
-            <div class="card">
-                <span>📝 Registros manuais</span>
-                <strong id="equipamentos-horas-registros">
-                    0
-                </strong>
-            </div>
-
-            <div class="card">
-                <span>➕ Horas adicionadas</span>
-                <strong id="equipamentos-horas-adicionadas">
-                    0h
-                </strong>
-            </div>
-
-            <div class="card">
-                <span>🏭 Horas de produção</span>
-                <strong id="equipamentos-horas-producoes">
-                    0h
-                </strong>
-            </div>
-
-        </div>
-
-        <h3>Registrar horas manualmente</h3>
-
-        <div class="formulario">
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="horas-impressora">
-                        Impressora
-                    </label>
-
-                    <select id="horas-impressora">
-
-                        <option value="">
-                            Selecione a impressora
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="horas-data">
-                        Data
-                    </label>
-
-                    <input
-                        type="date"
-                        id="horas-data">
-
-                </div>
-
-            </div>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="horas-quantidade">
-                        Quantidade de horas
-                    </label>
-
-                    <input
-                        type="number"
-                        id="horas-quantidade"
-                        step="0.01"
-                        placeholder="Ex.: 3,5">
-
-                    <small>
-                        Use um valor positivo para adicionar ou negativo
-                        para corrigir horas.
-                    </small>
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="horas-motivo">
-                        Motivo
-                    </label>
-
-                    <select id="horas-motivo">
-
-                        <option value="">
-                            Selecione
-                        </option>
-
-                        <option value="Impressão não cadastrada">
-                            Impressão não cadastrada
-                        </option>
-
-                        <option value="Teste">
-                            Teste
-                        </option>
-
-                        <option value="Calibração">
-                            Calibração
-                        </option>
-
-                        <option value="Manutenção">
-                            Manutenção
-                        </option>
-
-                        <option value="Correção de horas">
-                            Correção de horas
-                        </option>
-
-                        <option value="Outro">
-                            Outro
-                        </option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-            <div class="campo">
-
-                <label for="horas-observacoes">
-                    Observações
-                </label>
-
-                <textarea
-                    id="horas-observacoes"
-                    rows="3"
-                    placeholder="Explique o motivo do lançamento ou da correção"></textarea>
-
-            </div>
-
-            <button
-                id="salvar-registro-horas"
-                class="botao-principal"
-                type="button">
-                Salvar Registro de Horas
-            </button>
-
-            <button
-                id="limpar-formulario-horas"
-                type="button">
-                Limpar Formulário
-            </button>
-
-        </div>
-
-        <h3>Histórico de horas</h3>
-
-        <div class="formulario">
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="filtro-horas-impressora">
-                        Filtrar por impressora
-                    </label>
-
-                    <select id="filtro-horas-impressora">
-
-                        <option value="">
-                            Todas as impressoras
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="filtro-horas-motivo">
-                        Filtrar por motivo
-                    </label>
-
-                    <select id="filtro-horas-motivo">
-
-                        <option value="">
-                            Todos os motivos
-                        </option>
-
-                        <option value="Produção">
-                            Produção
-                        </option>
-
-                        <option value="Impressão não cadastrada">
-                            Impressão não cadastrada
-                        </option>
-
-                        <option value="Teste">
-                            Teste
-                        </option>
-
-                        <option value="Calibração">
-                            Calibração
-                        </option>
-
-                        <option value="Manutenção">
-                            Manutenção
-                        </option>
-
-                        <option value="Correção de horas">
-                            Correção de horas
-                        </option>
-
-                        <option value="Outro">
-                            Outro
-                        </option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-            <button
-                id="aplicar-filtros-horas"
-                class="botao-principal"
-                type="button">
-                Aplicar Filtros
-            </button>
-
-            <button
-                id="limpar-filtros-horas"
-                type="button">
-                Limpar Filtros
-            </button>
-
-        </div>
-
-        <div id="lista-horas-equipamentos">
-
-            <p>
-                Nenhum registro de horas encontrado.
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <!-- ========================= -->
-    <!-- ABA DIÁRIO -->
-    <!-- ========================= -->
-
-    <div
-        id="aba-diario"
-        class="conteudo-aba-equipamento"
-        hidden>
-
-        <h3>Diário dos equipamentos</h3>
-
-        <p>
-            O diário reúne automaticamente os cadastros, ajustes de horas,
-            manutenções, trocas de peças, lubrificações e outras ocorrências.
-        </p>
-
-        <div class="formulario">
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="filtro-diario-impressora">
-                        Impressora
-                    </label>
-
-                    <select id="filtro-diario-impressora">
-
-                        <option value="">
-                            Todas as impressoras
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="filtro-diario-tipo">
-                        Tipo de ocorrência
-                    </label>
-
-                    <select id="filtro-diario-tipo">
-
-                        <option value="">
-                            Todas as ocorrências
-                        </option>
-
-                        <option value="Cadastro">
-                            Cadastro
-                        </option>
-
-                        <option value="Produção">
-                            Produção
-                        </option>
-
-                        <option value="Horas">
-                            Horas
-                        </option>
-
-                        <option value="Manutenção">
-                            Manutenção
-                        </option>
-
-                        <option value="Peça">
-                            Peça
-                        </option>
-
-                        <option value="Lubrificante">
-                            Lubrificante
-                        </option>
-
-                        <option value="Status">
-                            Status
-                        </option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="filtro-diario-data-inicial">
-                        Data inicial
-                    </label>
-
-                    <input
-                        type="date"
-                        id="filtro-diario-data-inicial">
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="filtro-diario-data-final">
-                        Data final
-                    </label>
-
-                    <input
-                        type="date"
-                        id="filtro-diario-data-final">
-
-                </div>
-
-            </div>
-
-            <button
-                id="aplicar-filtros-diario"
-                class="botao-principal"
-                type="button">
-                Aplicar Filtros
-            </button>
-
-            <button
-                id="limpar-filtros-diario"
-                type="button">
-                Limpar Filtros
-            </button>
-
-        </div>
-
-        <div id="lista-diario-equipamentos">
-
-            <p>
-                Nenhuma ocorrência registrada.
-            </p>
-
-        </div>
-
-    </div>
+</div>
 
 </section>
-
-<section id="financeiro" class="pagina">
-    
-
-
-    <h2>Financeiro 2.0</h2>
-
-    <p>
-        Registre entradas e despesas,
-        acompanhe pagamentos e controle
-        o saldo do negócio.
-    </p>
-
-    <h3>Resumo financeiro</h3>
-
-    <div class="cards">
-
-        <div class="card">
-            <span>💰 Entradas</span>
-            <strong id="financeiro-total-entradas">
-                R$ 0,00
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>💸 Despesas</span>
-            <strong id="financeiro-total-despesas">
-                R$ 0,00
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>📊 Saldo</span>
-            <strong id="financeiro-saldo">
-                R$ 0,00
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>⏳ Valores pendentes</span>
-            <strong id="financeiro-total-pendente">
-                R$ 0,00
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>📥 Entradas pendentes</span>
-            <strong id="financeiro-entradas-pendentes">
-                R$ 0,00
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>📤 Despesas pendentes</span>
-            <strong id="financeiro-despesas-pendentes">
-                R$ 0,00
-            </strong>
-        </div>
-
-    </div>
-
-    <h3>Novo lançamento</h3>
-
-    <div class="formulario">
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="tipo-lancamento">
-                    Tipo
-                </label>
-
-                <select id="tipo-lancamento">
-
-                    <option value="Entrada">
-                        Entrada
-                    </option>
-
-                    <option value="Despesa">
-                        Despesa
-                    </option>
-
-                </select>
-            </div>
-
-            <div class="campo">
-                <label for="categoria-lancamento">
-                    Categoria
-                </label>
-
-                <select id="categoria-lancamento">
-
-                    <option value="">
-                        Selecione uma categoria
-                    </option>
-
-                    <option value="Venda">
-                        Venda
-                    </option>
-
-                    <option value="Filamento">
-                        Filamento
-                    </option>
-
-                    <option value="Manutenção">
-                        Manutenção
-                    </option>
-
-                    <option value="Energia">
-                        Energia elétrica
-                    </option>
-
-                    <option value="Embalagem">
-                        Embalagem
-                    </option>
-
-                    <option value="Frete">
-                        Frete
-                    </option>
-
-                    <option value="Equipamentos">
-                        Equipamentos
-                    </option>
-
-                    <option value="Serviços">
-                        Serviços
-                    </option>
-
-                    <option value="Impostos">
-                        Impostos
-                    </option>
-
-                    <option value="Outros">
-                        Outros
-                    </option>
-
-                </select>
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="descricao-lancamento">
-                    Descrição
-                </label>
-
-                <input
-                    type="text"
-                    id="descricao-lancamento"
-                    placeholder="Ex.: Venda de suporte personalizado">
-            </div>
-
-            <div class="campo">
-                <label for="valor-lancamento">
-                    Valor
-                </label>
-
-                <input
-                    type="number"
-                    id="valor-lancamento"
-                    min="0"
-                    step="0.01"
-                    placeholder="Ex.: 150,00">
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="data-lancamento">
-                    Data
-                </label>
-
-                <input
-                    type="date"
-                    id="data-lancamento">
-            </div>
-
-            <div class="campo">
-                <label for="forma-pagamento-lancamento">
-                    Forma de pagamento
-                </label>
-
-                <select id="forma-pagamento-lancamento">
-
-                    <option value="">
-                        Selecione
-                    </option>
-
-                    <option value="Pix">
-                        Pix
-                    </option>
-
-                    <option value="Dinheiro">
-                        Dinheiro
-                    </option>
-
-                    <option value="Cartão de crédito">
-                        Cartão de crédito
-                    </option>
-
-                    <option value="Cartão de débito">
-                        Cartão de débito
-                    </option>
-
-                    <option value="Transferência">
-                        Transferência
-                    </option>
-
-                    <option value="Boleto">
-                        Boleto
-                    </option>
-
-                    <option value="Outro">
-                        Outro
-                    </option>
-
-                </select>
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="situacao-lancamento">
-                    Situação
-                </label>
-
-                <select id="situacao-lancamento">
-
-                    <option value="Pago">
-                        Pago
-                    </option>
-
-                    <option value="Pendente">
-                        Pendente
-                    </option>
-
-                    <option value="Parcial">
-                        Parcial
-                    </option>
-
-                </select>
-            </div>
-
-            <div class="campo">
-                <label for="valor-pago-lancamento">
-                    Valor pago
-                </label>
-
-                <input
-                    type="number"
-                    id="valor-pago-lancamento"
-                    min="0"
-                    step="0.01"
-                    placeholder="Ex.: 100,00">
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="encomenda-lancamento">
-                    Encomenda vinculada
-                </label>
-
-                <select id="encomenda-lancamento">
-
-                    <option value="">
-                        Nenhuma encomenda vinculada
-                    </option>
-
-                </select>
-            </div>
-
-            <div class="campo">
-                <label for="origem-lancamento">
-                    Origem
-                </label>
-
-                <select id="origem-lancamento">
-
-                    <option value="Manual">
-                        Manual
-                    </option>
-
-                    <option value="Encomenda">
-                        Encomenda
-                    </option>
-
-                    <option value="Filamento">
-                        Filamento
-                    </option>
-
-                    <option value="Impressora">
-                        Impressora
-                    </option>
-
-                    <option value="Outro">
-                        Outro
-                    </option>
-
-                </select>
-            </div>
-
-        </div>
-
-        <div class="campo">
-            <label for="observacoes-lancamento">
-                Observações
-            </label>
-
-            <textarea
-                id="observacoes-lancamento"
-                rows="3"
-                placeholder="Informações adicionais sobre o lançamento"></textarea>
-        </div>
-
-        <button
-            id="salvar-lancamento"
-            class="botao-principal"
-            type="button">
-            Salvar Lançamento
-        </button>
-
-        <button
-            id="limpar-formulario-lancamento"
-            type="button">
-            Limpar Formulário
-        </button>
-
-    </div>
-
-    <h3>Filtros</h3>
-
-    <div class="formulario">
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="filtro-tipo-financeiro">
-                    Tipo
-                </label>
-
-                <select id="filtro-tipo-financeiro">
-
-                    <option value="">
-                        Todos
-                    </option>
-
-                    <option value="Entrada">
-                        Entradas
-                    </option>
-
-                    <option value="Despesa">
-                        Despesas
-                    </option>
-
-                </select>
-            </div>
-
-            <div class="campo">
-                <label for="filtro-situacao-financeiro">
-                    Situação
-                </label>
-
-                <select id="filtro-situacao-financeiro">
-
-                    <option value="">
-                        Todas
-                    </option>
-
-                    <option value="Pago">
-                        Pago
-                    </option>
-
-                    <option value="Pendente">
-                        Pendente
-                    </option>
-
-                    <option value="Parcial">
-                        Parcial
-                    </option>
-
-                </select>
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="filtro-data-inicial-financeiro">
-                    Data inicial
-                </label>
-
-                <input
-                    type="date"
-                    id="filtro-data-inicial-financeiro">
-            </div>
-
-            <div class="campo">
-                <label for="filtro-data-final-financeiro">
-                    Data final
-                </label>
-
-                <input
-                    type="date"
-                    id="filtro-data-final-financeiro">
-            </div>
-
-        </div>
-
-        <button
-            id="aplicar-filtros-financeiro"
-            class="botao-principal"
-            type="button">
-            Aplicar Filtros
-        </button>
-
-        <button
-            id="limpar-filtros-financeiro"
-            type="button">
-            Limpar Filtros
-        </button>
-
-    </div>
-
-    <h3>Lançamentos cadastrados</h3>
-
-    <div id="lista-lancamentos">
-
-        <p>
-            Nenhum lançamento cadastrado.
-        </p>
-
-    </div>
-
-</section>
-
-<section id="relatorios" class="pagina">
-
-    <h2>Relatórios 2.0</h2>
-
-    <p>
-        Analise os principais dados da empresa,
-        acompanhe o desempenho e identifique
-        pontos que precisam de atenção.
-    </p>
-
-    <div class="linha">
-
-        <div class="campo">
-            <label for="relatorio-periodo-inicial">
-                Data inicial
-            </label>
-
-            <input
-                type="date"
-                id="relatorio-periodo-inicial">
-        </div>
-
-        <div class="campo">
-            <label for="relatorio-periodo-final">
-                Data final
-            </label>
-
-            <input
-                type="date"
-                id="relatorio-periodo-final">
-        </div>
-
-    </div>
-
-    <button
-        id="atualizar-relatorios"
-        class="botao-principal"
-        type="button">
-        Atualizar Relatórios
-    </button>
-
-    <button
-        id="limpar-periodo-relatorios"
-        type="button">
-        Limpar Período
-    </button>
-
-    <h3>Visão geral</h3>
-
-    <div class="cards">
-
-        <div class="card">
-            <span>📦 Produtos</span>
-
-            <strong id="relatorio-produtos">
-                0
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>👥 Clientes</span>
-
-            <strong id="relatorio-clientes">
-                0
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>📋 Encomendas</span>
-
-            <strong id="relatorio-encomendas">
-                0
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>🧵 Filamentos</span>
-
-            <strong id="relatorio-filamentos">
-                0
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>🖨️ Impressoras</span>
-
-            <strong id="relatorio-impressoras">
-                0
-            </strong>
-        </div>
-
-    </div>
-
-    <h3>Situação das encomendas</h3>
-
-    <div class="cards">
-
-        <div class="card">
-            <span>⏳ Aguardando</span>
-
-            <strong id="relatorio-aguardando">
-                0
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>⚙️ Em produção</span>
-
-            <strong id="relatorio-producao">
-                0
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>✅ Finalizadas</span>
-
-            <strong id="relatorio-finalizadas">
-                0
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>📦 Entregues</span>
-
-            <strong id="relatorio-entregues">
-                0
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>❌ Canceladas</span>
-
-            <strong id="relatorio-canceladas">
-                0
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>⚠️ Atrasadas</span>
-
-            <strong id="relatorio-atrasadas">
-                0
-            </strong>
-        </div>
-
-    </div>
-
-    <h3>Resultado financeiro</h3>
-
-    <div class="cards">
-
-        <div class="card">
-            <span>💰 Entradas realizadas</span>
-
-            <strong id="relatorio-entradas">
-                R$ 0,00
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>💸 Despesas realizadas</span>
-
-            <strong id="relatorio-despesas">
-                R$ 0,00
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>📊 Saldo realizado</span>
-
-            <strong id="relatorio-saldo">
-                R$ 0,00
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>📥 Entradas pendentes</span>
-
-            <strong id="relatorio-entradas-pendentes">
-                R$ 0,00
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>📤 Despesas pendentes</span>
-
-            <strong id="relatorio-despesas-pendentes">
-                R$ 0,00
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>🧾 Valor das encomendas</span>
-
-            <strong id="relatorio-valor-encomendas">
-                R$ 0,00
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>💳 Recebido em encomendas</span>
-
-            <strong id="relatorio-valor-recebido">
-                R$ 0,00
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>⏳ A receber</span>
-
-            <strong id="relatorio-valor-a-receber">
-                R$ 0,00
-            </strong>
-        </div>
-
-    </div>
-
-    <h3>Indicadores de desempenho</h3>
-
-    <div class="cards">
-
-        <div class="card">
-            <span>🧾 Ticket médio</span>
-
-            <strong id="relatorio-ticket-medio">
-                R$ 0,00
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>🏆 Produto mais vendido</span>
-
-            <strong id="relatorio-produto-mais-vendido">
-                Nenhum
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>🌟 Melhor cliente</span>
-
-            <strong id="relatorio-melhor-cliente">
-                Nenhum
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>🧵 Maior estoque</span>
-
-            <strong id="relatorio-maior-estoque">
-                Nenhum
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>⚠️ Filamentos com estoque baixo</span>
-
-            <strong id="relatorio-filamentos-baixos">
-                0
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>🖨️ Impressoras ativas</span>
-
-            <strong id="relatorio-impressoras-ativas">
-                0
-            </strong>
-        </div>
-
-    </div>
-
-    <h3>Últimos registros</h3>
-
-    <div class="cards">
-
-        <div class="card">
-            <span>👤 Último cliente</span>
-
-            <strong id="relatorio-ultimo-cliente">
-                Nenhum
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>📋 Última encomenda</span>
-
-            <strong id="relatorio-ultima-encomenda">
-                Nenhuma
-            </strong>
-        </div>
-
-        <div class="card">
-            <span>💰 Último lançamento</span>
-
-            <strong id="relatorio-ultimo-lancamento">
-                Nenhum
-            </strong>
-        </div>
-
-    </div>
-
-    <h3>Detalhamento</h3>
-
-    <div class="formulario">
-
-        <div class="linha">
-
-            <div class="campo">
-                <label for="tipo-detalhamento-relatorio">
-                    Exibir detalhes de
-                </label>
-
-                <select id="tipo-detalhamento-relatorio">
-
-                    <option value="encomendas">
-                        Encomendas
-                    </option>
-
-                    <option value="financeiro">
-                        Financeiro
-                    </option>
-
-                    <option value="produtos">
-                        Produtos
-                    </option>
-
-                    <option value="clientes">
-                        Clientes
-                    </option>
-
-                    <option value="filamentos">
-                        Filamentos
-                    </option>
-
-                    <option value="impressoras">
-                        Impressoras
-                    </option>
-
-                </select>
-            </div>
-
-        </div>
-
-        <button
-            id="gerar-detalhamento-relatorio"
-            class="botao-principal"
-            type="button">
-            Gerar Detalhamento
-        </button>
-
-    </div>
-
-    <div id="lista-detalhamento-relatorio">
-
-        <p>
-            Selecione uma opção para visualizar
-            o detalhamento.
-        </p>
-
-    </div>
-
-</section>
-
-        </main>
-
-    </div>
-
-    <script src="app.js?v=4"></script>
-
-</body>
-</html>
