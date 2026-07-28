@@ -3427,16 +3427,57 @@
                     Valor
                 </label>
 
-            <input
-    type="number"
-    id="valor-lancamento"
-    min="0"
-    step="0.01"
-    placeholder="Ex.: 45,90">
+                <input
+                    type="number"
+                    id="valor-lancamento">
+                                        min="0"
+                    step="0.01"
+                    placeholder="Ex.: 150,00">
 
-</div>
+            </div>
 
-</div>
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+
+                <label for="data-lancamento">
+                    Data
+                </label>
+
+                <input
+                    type="date"
+                    id="data-lancamento">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="forma-pagamento-lancamento">
+                    Forma de pagamento
+                </label>
+
+                <select id="forma-pagamento-lancamento">
+
+                    <option value="">
+                        Selecione
+                    </option>
+
+                    <option value="Pix">Pix</option>
+                    <option value="Dinheiro">Dinheiro</option>
+                    <option value="Cartão de crédito">Cartão de crédito</option>
+                    <option value="Cartão de débito">Cartão de débito</option>
+                    <option value="Transferência">Transferência</option>
+                    <option value="Boleto">Boleto</option>
+                    <option value="Outro">Outro</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
         <div class="linha">
 
             <div class="campo">
@@ -3464,7 +3505,79 @@
                 <input
                     type="number"
                     id="valor-pago-lancamento"
-                    
+                    min="0"
+                    step="0.01"
+                    placeholder="Ex.: 100,00">
+
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+
+                <label for="encomenda-lancamento">
+                    Encomenda vinculada
+                </label>
+
+                <select id="encomenda-lancamento">
+
+                    <option value="">
+                        Nenhuma encomenda vinculada
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="origem-lancamento">
+                    Origem
+                </label>
+
+                <select id="origem-lancamento">
+
+                    <option value="Manual">Manual</option>
+                    <option value="Encomenda">Encomenda</option>
+                    <option value="Filamento">Filamento</option>
+                    <option value="Impressora">Impressora</option>
+                    <option value="Outro">Outro</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <div class="campo">
+
+            <label for="observacoes-lancamento">
+                Observações
+            </label>
+
+            <textarea
+                id="observacoes-lancamento"
+                rows="3"
+                placeholder="Informações adicionais sobre o lançamento"></textarea>
+
+        </div>
+
+        <button
+            id="salvar-lancamento"
+            class="botao-principal"
+            type="button">
+            Salvar Lançamento
+        </button>
+
+        <button
+            id="limpar-formulario-lancamento"
+            type="button">
+            Limpar Formulário
+        </button>
+
+    </div>
     <h3>Filtros</h3>
 
 <div class="formulario">
@@ -3524,31 +3637,30 @@
         </div>
 
     </div>
-    <h3>Filtros</h3>
-
-<div class="formulario">
-
-    <div class="linha">
+        <div class="linha">
 
         <div class="campo">
 
-            <label for="filtro-tipo-financeiro">
-                Tipo
+            <label for="filtro-categoria-financeiro">
+                Categoria
             </label>
 
-            <select id="filtro-tipo-financeiro">
+            <select id="filtro-categoria-financeiro">
 
                 <option value="">
-                    Todos
+                    Todas
                 </option>
 
-                <option value="Entrada">
-                    Entradas
-                </option>
-
-                <option value="Despesa">
-                    Despesas
-                </option>
+                <option value="Venda">Venda</option>
+                <option value="Filamento">Filamento</option>
+                <option value="Manutenção">Manutenção</option>
+                <option value="Energia">Energia elétrica</option>
+                <option value="Embalagem">Embalagem</option>
+                <option value="Frete">Frete</option>
+                <option value="Equipamentos">Equipamentos</option>
+                <option value="Serviços">Serviços</option>
+                <option value="Impostos">Impostos</option>
+                <option value="Outros">Outros</option>
 
             </select>
 
@@ -3556,29 +3668,53 @@
 
         <div class="campo">
 
-            <label for="filtro-situacao-financeiro">
-                Situação
+            <label for="filtro-forma-pagamento-financeiro">
+                Forma de pagamento
             </label>
 
-            <select id="filtro-situacao-financeiro">
+            <select id="filtro-forma-pagamento-financeiro">
 
                 <option value="">
                     Todas
                 </option>
 
-                <option value="Pago">
-                    Pago
-                </option>
-
-                <option value="Pendente">
-                    Pendente
-                </option>
-
-                <option value="Parcial">
-                    Parcial
-                </option>
+                <option value="Pix">Pix</option>
+                <option value="Dinheiro">Dinheiro</option>
+                <option value="Cartão de crédito">Cartão de crédito</option>
+                <option value="Cartão de débito">Cartão de débito</option>
+                <option value="Transferência">Transferência</option>
+                <option value="Boleto">Boleto</option>
+                <option value="Outro">Outro</option>
 
             </select>
+
+        </div>
+
+    </div>
+
+    <div class="linha">
+
+        <div class="campo">
+
+            <label for="filtro-data-inicial-financeiro">
+                Data inicial
+            </label>
+
+            <input
+                type="date"
+                id="filtro-data-inicial-financeiro">
+
+        </div>
+
+        <div class="campo">
+
+            <label for="filtro-data-final-financeiro">
+                Data final
+            </label>
+
+            <input
+                type="date"
+                id="filtro-data-final-financeiro">
 
         </div>
 
