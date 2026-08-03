@@ -1,7 +1,7 @@
 // =========================
 // FILAMENTOS 2.0
 // =========================
-
+function iniciarFilamento() {
 // =========================
 // ABAS DOS FILAMENTOS
 // =========================
@@ -2756,7 +2756,6 @@ if (
 // =========================
 
 calcularValorUnitarioEmbalagem();
-
 mostrarEmbalagens();
-
 limparFormularioEmbalagem();
+}
