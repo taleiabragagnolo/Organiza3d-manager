@@ -823,8 +823,1693 @@
                 </div>
 
             </div>
+            <!-- ================================================= -->
+            <!-- IMPRESSORA, TEMPO E ENERGIA -->
+            <!-- ================================================= -->
 
-            
+            <h3>Impressão e custos da máquina</h3>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="produto-impressora-utilizada">
+                        Impressora utilizada
+                    </label>
+
+                    <select id="produto-impressora-utilizada">
+
+                        <option value="">
+                            Selecione a impressora
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="produto-tempo-impressao-horas">
+                        Tempo de impressão — horas
+                    </label>
+
+                    <input
+                        type="number"
+                        id="produto-tempo-impressao-horas"
+                        min="0"
+                        step="1"
+                        placeholder="Ex.: 3">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="produto-tempo-impressao-minutos">
+                        Tempo de impressão — minutos
+                    </label>
+
+                    <input
+                        type="number"
+                        id="produto-tempo-impressao-minutos"
+                        min="0"
+                        max="59"
+                        step="1"
+                        placeholder="Ex.: 30">
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="produto-potencia-impressora">
+                        Potência média da impressora (W)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="produto-potencia-impressora"
+                        min="0"
+                        step="0.01"
+                        placeholder="Ex.: 150">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="produto-tarifa-energia">
+                        Tarifa de energia (R$/kWh)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="produto-tarifa-energia"
+                        min="0"
+                        step="0.0001"
+                        placeholder="Ex.: 0,95">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="produto-consumo-energia">
+                        Consumo calculado
+                    </label>
+
+                    <input
+                        type="text"
+                        id="produto-consumo-energia"
+                        value="0 kWh"
+                        readonly>
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="produto-custo-energia">
+                        Custo de energia
+                    </label>
+
+                    <input
+                        type="text"
+                        id="produto-custo-energia"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="produto-custo-hora-impressora">
+                        Custo da impressora por hora
+                    </label>
+
+                    <input
+                        type="number"
+                        id="produto-custo-hora-impressora"
+                        min="0"
+                        step="0.01"
+                        placeholder="Ex.: 1,50">
+
+                    <small>
+                        Pode representar depreciação, desgaste e manutenção.
+                    </small>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="produto-custo-maquina">
+                        Custo da máquina nesta produção
+                    </label>
+
+                    <input
+                        type="text"
+                        id="produto-custo-maquina"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="produto-tempo-total-impressao">
+                        Tempo total calculado
+                    </label>
+
+                    <input
+                        type="text"
+                        id="produto-tempo-total-impressao"
+                        value="0h 0min"
+                        readonly>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="produto-horas-decimais">
+                        Horas em formato decimal
+                    </label>
+
+                    <input
+                        type="text"
+                        id="produto-horas-decimais"
+                        value="0,00 h"
+                        readonly>
+
+                </div>
+
+            </div>
+                        <!-- ================================================= -->
+            <!-- CUSTOS FINAIS DA PRODUÇÃO -->
+            <!-- ================================================= -->
+
+            <h3>Resumo financeiro da produção</h3>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="produto-custo-insumos">
+                        Custo total dos insumos
+                    </label>
+
+                    <input
+                        type="text"
+                        id="produto-custo-insumos"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="produto-custo-total-producao">
+                        Custo total da produção
+                    </label>
+
+                    <input
+                        type="text"
+                        id="produto-custo-total-producao"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="produto-custo-unitario-real">
+                        Custo unitário real
+                    </label>
+
+                    <input
+                        type="text"
+                        id="produto-custo-unitario-real"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="produto-preco-venda">
+                        Preço de venda por unidade
+                    </label>
+
+                    <input
+                        type="number"
+                        id="produto-preco-venda"
+                        min="0"
+                        step="0.01"
+                        placeholder="Ex.: 15,00">
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="produto-lucro-unitario">
+                        Lucro por unidade
+                    </label>
+
+                    <input
+                        type="text"
+                        id="produto-lucro-unitario"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="produto-margem-real">
+                        Margem real
+                    </label>
+
+                    <input
+                        type="text"
+                        id="produto-margem-real"
+                        value="0%"
+                        readonly>
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="produto-valor-total-estoque">
+                        Valor total de venda do lote
+                    </label>
+
+                    <input
+                        type="text"
+                        id="produto-valor-total-estoque"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="produto-quantidade-disponivel">
+                        Quantidade disponível
+                    </label>
+
+                    <input
+                        type="number"
+                        id="produto-quantidade-disponivel"
+                        min="0"
+                        step="1"
+                        value="0"
+                        readonly>
+
+                </div>
+
+            </div>
+
+            <div class="campo campo-completo">
+
+                <label for="produto-produzido-observacoes">
+                    Observações da produção
+                </label>
+
+                <textarea
+                    id="produto-produzido-observacoes"
+                    rows="3"
+                    placeholder="Falhas durante a impressão, ajustes, acabamento ou outras informações"></textarea>
+
+            </div>
+
+            <button
+                id="salvar-produto-produzido"
+                class="botao-principal"
+                type="button">
+                Salvar Produção
+            </button>
+
+            <button
+                id="limpar-formulario-produto-produzido"
+                type="button">
+                Limpar Formulário
+            </button>
+
+        </div>
+
+        <h3>Lotes produzidos</h3>
+
+        <div id="lista-produtos-produzidos">
+
+            <p>
+                Nenhum lote produzido cadastrado.
+            </p>
+
+        </div>
+
+    </div>
+        <!-- ================================================= -->
+    <!-- ABA ORÇAMENTOS -->
+    <!-- ================================================= -->
+
+    <div
+        id="aba-orcamentos"
+        class="conteudo-aba-produto"
+        hidden>
+
+        <h3>Resumo dos orçamentos</h3>
+
+        <div class="cards">
+
+            <div class="card">
+
+                <span>📝 Total de orçamentos</span>
+
+                <strong id="orcamentos-total">
+                    0
+                </strong>
+
+            </div>
+
+            <div class="card">
+
+                <span>⏳ Aguardando resposta</span>
+
+                <strong id="orcamentos-aguardando">
+                    0
+                </strong>
+
+            </div>
+
+            <div class="card">
+
+                <span>✅ Aprovados</span>
+
+                <strong id="orcamentos-aprovados">
+                    0
+                </strong>
+
+            </div>
+
+            <div class="card">
+
+                <span>❌ Recusados</span>
+
+                <strong id="orcamentos-recusados">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+        <h3>Criar orçamento</h3>
+
+        <div class="formulario">
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="orcamento-cliente">
+                        Cliente
+                    </label>
+
+                    <select id="orcamento-cliente">
+
+                        <option value="">
+                            Cliente não informado
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="orcamento-data">
+                        Data do orçamento
+                    </label>
+
+                    <input
+                        type="date"
+                        id="orcamento-data">
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="orcamento-validade">
+                        Validade
+                    </label>
+
+                    <input
+                        type="date"
+                        id="orcamento-validade">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="orcamento-status">
+                        Status
+                    </label>
+
+                    <select id="orcamento-status">
+
+                        <option value="Rascunho">
+                            Rascunho
+                        </option>
+
+                        <option value="Enviado">
+                            Enviado
+                        </option>
+
+                        <option value="Aguardando resposta">
+                            Aguardando resposta
+                        </option>
+
+                        <option value="Aprovado">
+                            Aprovado
+                        </option>
+
+                        <option value="Recusado">
+                            Recusado
+                        </option>
+
+                        <option value="Cancelado">
+                            Cancelado
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="orcamento-produto-nome">
+                        Nome do produto
+                    </label>
+
+                    <input
+                        type="text"
+                        id="orcamento-produto-nome"
+                        placeholder="Ex.: Chaveiro personalizado">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="orcamento-quantidade">
+                        Quantidade
+                    </label>
+
+                    <input
+                        type="number"
+                        id="orcamento-quantidade"
+                        min="1"
+                        step="1"
+                        placeholder="Ex.: 20">
+
+                </div>
+
+            </div>
+
+            <div class="campo campo-completo">
+
+                <label for="orcamento-descricao">
+                    Descrição do pedido
+                </label>
+
+                <textarea
+                    id="orcamento-descricao"
+                    rows="3"
+                    placeholder="Modelo, tamanho, cores, personalização e demais detalhes"></textarea>
+
+            </div>
+
+            <h3>Filamentos estimados</h3>
+
+            <div id="lista-filamentos-orcamento">
+
+                <div
+                    class="linha item-filamento-orcamento"
+                    data-item-filamento-orcamento>
+
+                    <div class="campo">
+
+                        <label>
+                            Filamento / lote
+                        </label>
+
+                        <select class="orcamento-filamento-select">
+
+                            <option value="">
+                                Selecione o filamento
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="campo">
+
+                        <label>
+                            Quantidade estimada (g)
+                        </label>
+
+                        <input
+                            type="number"
+                            class="orcamento-filamento-quantidade"
+                            min="0.01"
+                            step="0.01"
+                            placeholder="Ex.: 80">
+
+                    </div>
+
+                    <div class="campo">
+
+                        <label>
+                            Custo estimado
+                        </label>
+
+                        <input
+                            type="text"
+                            class="orcamento-filamento-custo"
+                            value="R$ 0,00"
+                            readonly>
+
+                    </div>
+
+                    <div class="campo">
+
+                        <label>
+                            Ação
+                        </label>
+
+                        <button
+                            type="button"
+                            class="botao-excluir remover-filamento-orcamento">
+                            Remover
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <button
+                id="adicionar-filamento-orcamento"
+                type="button">
+                + Adicionar outro filamento
+            </button>
+                        <!-- ================================================= -->
+            <!-- ACESSÓRIOS ESTIMADOS -->
+            <!-- ================================================= -->
+
+            <h3>Acessórios estimados</h3>
+
+            <div id="lista-acessorios-orcamento">
+
+                <div
+                    class="linha item-acessorio-orcamento"
+                    data-item-acessorio-orcamento>
+
+                    <div class="campo">
+
+                        <label>
+                            Acessório
+                        </label>
+
+                        <select class="orcamento-acessorio-select">
+
+                            <option value="">
+                                Selecione o acessório
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="campo">
+
+                        <label>
+                            Quantidade estimada
+                        </label>
+
+                        <input
+                            type="number"
+                            class="orcamento-acessorio-quantidade"
+                            min="1"
+                            step="1"
+                            placeholder="Ex.: 20">
+
+                    </div>
+
+                    <div class="campo">
+
+                        <label>
+                            Custo estimado
+                        </label>
+
+                        <input
+                            type="text"
+                            class="orcamento-acessorio-custo"
+                            value="R$ 0,00"
+                            readonly>
+
+                    </div>
+
+                    <div class="campo">
+
+                        <label>
+                            Ação
+                        </label>
+
+                        <button
+                            type="button"
+                            class="botao-excluir remover-acessorio-orcamento">
+                            Remover
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <button
+                id="adicionar-acessorio-orcamento"
+                type="button">
+                + Adicionar outro acessório
+            </button>
+
+            <!-- ================================================= -->
+            <!-- EMBALAGENS ESTIMADAS -->
+            <!-- ================================================= -->
+
+            <h3>Embalagens estimadas</h3>
+
+            <div id="lista-embalagens-orcamento">
+
+                <div
+                    class="linha item-embalagem-orcamento"
+                    data-item-embalagem-orcamento>
+
+                    <div class="campo">
+
+                        <label>
+                            Embalagem
+                        </label>
+
+                        <select class="orcamento-embalagem-select">
+
+                            <option value="">
+                                Selecione a embalagem
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="campo">
+
+                        <label>
+                            Quantidade estimada
+                        </label>
+
+                        <input
+                            type="number"
+                            class="orcamento-embalagem-quantidade"
+                            min="1"
+                            step="1"
+                            placeholder="Ex.: 20">
+
+                    </div>
+
+                    <div class="campo">
+
+                        <label>
+                            Custo estimado
+                        </label>
+
+                        <input
+                            type="text"
+                            class="orcamento-embalagem-custo"
+                            value="R$ 0,00"
+                            readonly>
+
+                    </div>
+
+                    <div class="campo">
+
+                        <label>
+                            Ação
+                        </label>
+
+                        <button
+                            type="button"
+                            class="botao-excluir remover-embalagem-orcamento">
+                            Remover
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <button
+                id="adicionar-embalagem-orcamento"
+                type="button">
+                + Adicionar outra embalagem
+            </button>
+
+            <!-- ================================================= -->
+            <!-- TEMPO, ENERGIA E IMPRESSORA -->
+            <!-- ================================================= -->
+
+            <h3>Estimativa de impressão</h3>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="orcamento-impressora">
+                        Impressora prevista
+                    </label>
+
+                    <select id="orcamento-impressora">
+
+                        <option value="">
+                            Selecione a impressora
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="orcamento-tempo-horas">
+                        Tempo estimado — horas
+                    </label>
+
+                    <input
+                        type="number"
+                        id="orcamento-tempo-horas"
+                        min="0"
+                        step="1"
+                        placeholder="Ex.: 4">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="orcamento-tempo-minutos">
+                        Tempo estimado — minutos
+                    </label>
+
+                    <input
+                        type="number"
+                        id="orcamento-tempo-minutos"
+                        min="0"
+                        max="59"
+                        step="1"
+                        placeholder="Ex.: 30">
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="orcamento-potencia-impressora">
+                        Potência média (W)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="orcamento-potencia-impressora"
+                        min="0"
+                        step="0.01"
+                        placeholder="Ex.: 150">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="orcamento-tarifa-energia">
+                        Tarifa de energia (R$/kWh)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="orcamento-tarifa-energia"
+                        min="0"
+                        step="0.0001"
+                        placeholder="Ex.: 0,95">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="orcamento-custo-hora-impressora">
+                        Custo da impressora por hora
+                    </label>
+
+                    <input
+                        type="number"
+                        id="orcamento-custo-hora-impressora"
+                        min="0"
+                        step="0.01"
+                        placeholder="Ex.: 1,50">
+
+                </div>
+
+            </div>
+
+            <!-- ================================================= -->
+            <!-- RESUMO DO ORÇAMENTO -->
+            <!-- ================================================= -->
+
+            <h3>Resumo financeiro do orçamento</h3>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="orcamento-custo-insumos">
+                        Custo estimado dos insumos
+                    </label>
+
+                    <input
+                        type="text"
+                        id="orcamento-custo-insumos"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="orcamento-custo-energia">
+                        Custo estimado de energia
+                    </label>
+
+                    <input
+                        type="text"
+                        id="orcamento-custo-energia"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="orcamento-custo-maquina">
+                        Custo estimado da máquina
+                    </label>
+
+                    <input
+                        type="text"
+                        id="orcamento-custo-maquina"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="orcamento-custo-total">
+                        Custo total estimado
+                    </label>
+
+                    <input
+                        type="text"
+                        id="orcamento-custo-total"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="orcamento-custo-unitario">
+                        Custo unitário estimado
+                    </label>
+
+                    <input
+                        type="text"
+                        id="orcamento-custo-unitario"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="orcamento-margem-desejada">
+                        Margem desejada (%)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="orcamento-margem-desejada"
+                        min="0"
+                        step="0.01"
+                        placeholder="Ex.: 60">
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="orcamento-preco-sugerido">
+                        Preço sugerido por unidade
+                    </label>
+
+                    <input
+                        type="text"
+                        id="orcamento-preco-sugerido"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="orcamento-preco-final">
+                        Preço final por unidade
+                    </label>
+
+                    <input
+                        type="number"
+                        id="orcamento-preco-final"
+                        min="0"
+                        step="0.01"
+                        placeholder="Ex.: 15,00">
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="orcamento-valor-total">
+                        Valor total do orçamento
+                    </label>
+
+                    <input
+                        type="text"
+                        id="orcamento-valor-total"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="orcamento-margem-real">
+                        Margem real
+                    </label>
+
+                    <input
+                        type="text"
+                        id="orcamento-margem-real"
+                        value="0%"
+                        readonly>
+
+                </div>
+
+            </div>
+
+            <div class="campo campo-completo">
+
+                <label for="orcamento-observacoes">
+                    Observações
+                </label>
+
+                <textarea
+                    id="orcamento-observacoes"
+                    rows="3"
+                    placeholder="Condições de pagamento, prazo, alterações solicitadas ou outras informações"></textarea>
+
+            </div>
+
+            <button
+                id="salvar-orcamento"
+                class="botao-principal"
+                type="button">
+                Salvar Orçamento
+            </button>
+
+            <button
+                id="limpar-formulario-orcamento"
+                type="button">
+                Limpar Formulário
+            </button>
+
+        </div>
+
+        <h3>Orçamentos cadastrados</h3>
+
+        <div id="lista-orcamentos">
+
+            <p>
+                Nenhum orçamento cadastrado.
+            </p>
+
+        </div>
+
+    </div>
+        <!-- ================================================= -->
+    <!-- ABA PEÇAS COM FALHA -->
+    <!-- ================================================= -->
+
+    <div
+        id="aba-perdas"
+        class="conteudo-aba-produto"
+        hidden>
+
+        <h3>Resumo das perdas</h3>
+
+        <div class="cards">
+
+            <div class="card">
+
+                <span>⚠️ Registros de perda</span>
+
+                <strong id="perdas-total-registros">
+                    0
+                </strong>
+
+            </div>
+
+            <div class="card">
+
+                <span>📦 Unidades perdidas</span>
+
+                <strong id="perdas-total-unidades">
+                    0
+                </strong>
+
+            </div>
+
+            <div class="card">
+
+                <span>💰 Custo total perdido</span>
+
+                <strong id="perdas-custo-total">
+                    R$ 0,00
+                </strong>
+
+            </div>
+
+            <div class="card">
+
+                <span>♻️ Unidades reaproveitáveis</span>
+
+                <strong id="perdas-total-reaproveitaveis">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+        <h3>Registrar peça com falha</h3>
+
+        <div class="formulario">
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="perda-produto-lote">
+                        Produto / lote
+                    </label>
+
+                    <select id="perda-produto-lote">
+
+                        <option value="">
+                            Selecione o lote produzido
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="perda-data">
+                        Data da ocorrência
+                    </label>
+
+                    <input
+                        type="date"
+                        id="perda-data">
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="perda-quantidade">
+                        Quantidade com falha
+                    </label>
+
+                    <input
+                        type="number"
+                        id="perda-quantidade"
+                        min="1"
+                        step="1"
+                        placeholder="Ex.: 2">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="perda-tipo">
+                        Tipo de falha
+                    </label>
+
+                    <select id="perda-tipo">
+
+                        <option value="">
+                            Selecione
+                        </option>
+
+                        <option value="Falha de impressão">
+                            Falha de impressão
+                        </option>
+
+                        <option value="Erro de configuração">
+                            Erro de configuração
+                        </option>
+
+                        <option value="Problema no filamento">
+                            Problema no filamento
+                        </option>
+
+                        <option value="Problema na impressora">
+                            Problema na impressora
+                        </option>
+
+                        <option value="Erro de acabamento">
+                            Erro de acabamento
+                        </option>
+
+                        <option value="Dano no armazenamento">
+                            Dano no armazenamento
+                        </option>
+
+                        <option value="Outro">
+                            Outro
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="perda-reaproveitavel">
+                        Pode ser reaproveitada?
+                    </label>
+
+                    <select id="perda-reaproveitavel">
+
+                        <option value="Não">
+                            Não
+                        </option>
+
+                        <option value="Sim">
+                            Sim
+                        </option>
+
+                        <option value="Parcialmente">
+                            Parcialmente
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="perda-quantidade-reaproveitavel">
+                        Quantidade reaproveitável
+                    </label>
+
+                    <input
+                        type="number"
+                        id="perda-quantidade-reaproveitavel"
+                        min="0"
+                        step="1"
+                        value="0">
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="perda-custo-unitario">
+                        Custo unitário do lote
+                    </label>
+
+                    <input
+                        type="text"
+                        id="perda-custo-unitario"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="perda-custo-total">
+                        Custo total da perda
+                    </label>
+
+                    <input
+                        type="text"
+                        id="perda-custo-total"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+            </div>
+
+            <div class="campo campo-completo">
+
+                <label for="perda-motivo">
+                    Descrição da falha
+                </label>
+
+                <textarea
+                    id="perda-motivo"
+                    rows="3"
+                    placeholder="Explique o que aconteceu e a possível causa"></textarea>
+
+            </div>
+
+            <div class="campo campo-completo">
+
+                <label for="perda-destino">
+                    Destino da peça
+                </label>
+
+                <select id="perda-destino">
+
+                    <option value="Descarte">
+                        Descarte
+                    </option>
+
+                    <option value="Reaproveitamento interno">
+                        Reaproveitamento interno
+                    </option>
+
+                    <option value="Amostra">
+                        Amostra
+                    </option>
+
+                    <option value="Teste">
+                        Teste
+                    </option>
+
+                    <option value="Outro">
+                        Outro
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="campo campo-completo">
+
+                <label for="perda-observacoes">
+                    Observações
+                </label>
+
+                <textarea
+                    id="perda-observacoes"
+                    rows="3"
+                    placeholder="Providências tomadas, ajustes realizados ou outras informações"></textarea>
+
+            </div>
+
+            <button
+                id="salvar-perda-produto"
+                class="botao-principal"
+                type="button">
+                Salvar Perda
+            </button>
+
+            <button
+                id="limpar-formulario-perda"
+                type="button">
+                Limpar Formulário
+            </button>
+
+        </div>
+
+        <h3>Perdas registradas</h3>
+
+        <div id="lista-perdas-produtos">
+
+            <p>
+                Nenhuma perda registrada.
+            </p>
+
+        </div>
+
+    </div>
+        <!-- ================================================= -->
+    <!-- ABA CONSUMO PRÓPRIO -->
+    <!-- ================================================= -->
+
+    <div
+        id="aba-consumo-proprio"
+        class="conteudo-aba-produto"
+        hidden>
+
+        <h3>Resumo do consumo próprio</h3>
+
+        <div class="cards">
+
+            <div class="card">
+
+                <span>🏠 Registros internos</span>
+
+                <strong id="consumo-proprio-total-registros">
+                    0
+                </strong>
+
+            </div>
+
+            <div class="card">
+
+                <span>📦 Unidades utilizadas</span>
+
+                <strong id="consumo-proprio-total-unidades">
+                    0
+                </strong>
+
+            </div>
+
+            <div class="card">
+
+                <span>💰 Custo interno total</span>
+
+                <strong id="consumo-proprio-custo-total">
+                    R$ 0,00
+                </strong>
+
+            </div>
+
+            <div class="card">
+
+                <span>🧰 Itens em uso</span>
+
+                <strong id="consumo-proprio-itens-em-uso">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+        <h3>Registrar consumo próprio</h3>
+
+        <div class="formulario">
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="consumo-proprio-produto-lote">
+                        Produto / lote
+                    </label>
+
+                    <select id="consumo-proprio-produto-lote">
+
+                        <option value="">
+                            Selecione o lote produzido
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="consumo-proprio-data">
+                        Data da retirada
+                    </label>
+
+                    <input
+                        type="date"
+                        id="consumo-proprio-data">
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="consumo-proprio-quantidade">
+                        Quantidade utilizada
+                    </label>
+
+                    <input
+                        type="number"
+                        id="consumo-proprio-quantidade"
+                        min="1"
+                        step="1"
+                        placeholder="Ex.: 1">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="consumo-proprio-finalidade">
+                        Finalidade
+                    </label>
+
+                    <select id="consumo-proprio-finalidade">
+
+                        <option value="">
+                            Selecione
+                        </option>
+
+                        <option value="Organização interna">
+                            Organização interna
+                        </option>
+
+                        <option value="Suporte para produção">
+                            Suporte para produção
+                        </option>
+
+                        <option value="Manutenção">
+                            Manutenção
+                        </option>
+
+                        <option value="Exposição">
+                            Exposição
+                        </option>
+
+                        <option value="Teste">
+                            Teste
+                        </option>
+
+                        <option value="Amostra">
+                            Amostra
+                        </option>
+
+                        <option value="Outro">
+                            Outro
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="consumo-proprio-local">
+                        Local de uso
+                    </label>
+
+                    <input
+                        type="text"
+                        id="consumo-proprio-local"
+                        placeholder="Ex.: Bancada de produção">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="consumo-proprio-responsavel">
+                        Responsável
+                    </label>
+
+                    <input
+                        type="text"
+                        id="consumo-proprio-responsavel"
+                        placeholder="Nome do responsável">
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="consumo-proprio-custo-unitario">
+                        Custo unitário do lote
+                    </label>
+
+                    <input
+                        type="text"
+                        id="consumo-proprio-custo-unitario"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="consumo-proprio-custo-total">
+                        Custo total interno
+                    </label>
+
+                    <input
+                        type="text"
+                        id="consumo-proprio-custo-total"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+            </div>
+
+            <div class="campo campo-completo">
+
+                <label for="consumo-proprio-descricao">
+                    Descrição do uso
+                </label>
+
+                <textarea
+                    id="consumo-proprio-descricao"
+                    rows="3"
+                    placeholder="Explique como o item será utilizado internamente"></textarea>
+
+            </div>
+
+            <div class="campo campo-completo">
+
+                <label for="consumo-proprio-observacoes">
+                    Observações
+                </label>
+
+                <textarea
+                    id="consumo-proprio-observacoes"
+                    rows="3"
+                    placeholder="Informações adicionais"></textarea>
+
+            </div>
+
+            <button
+                id="salvar-consumo-proprio"
+                class="botao-principal"
+                type="button">
+                Salvar Consumo Próprio
+            </button>
+
+            <button
+                id="limpar-formulario-consumo-proprio"
+                type="button">
+                Limpar Formulário
+            </button>
+
+        </div>
+
+        <h3>Registros de consumo próprio</h3>
+
+        <div id="lista-consumo-proprio">
+
+            <p>
+                Nenhum consumo próprio registrado.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
 <!-- ===================================================== -->
 <!-- CLIENTES -->
 <!-- ===================================================== -->
