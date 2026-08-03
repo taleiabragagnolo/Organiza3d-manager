@@ -3841,4 +3841,1275 @@ function iniciarProduto() {
         );
 
     }
+    // ==================================================
+    // PARTE 7A
+    // VALIDAÇÃO DOS INSUMOS DA PRODUÇÃO
+    // ==================================================
+
+    function validarItensRepetidosProducao(
+        calculos
+    ) {
+
+        if (
+            possuiIdRepetido(
+                calculos.filamentos,
+                "filamentoId"
+            )
+        ) {
+
+            alert(
+                "O mesmo lote de filamento foi adicionado mais de uma vez."
+            );
+
+            return false;
+
+        }
+
+        if (
+            possuiIdRepetido(
+                calculos.acessorios,
+                "acessorioId"
+            )
+        ) {
+
+            alert(
+                "O mesmo acessório foi adicionado mais de uma vez."
+            );
+
+            return false;
+
+        }
+
+        if (
+            possuiIdRepetido(
+                calculos.embalagens,
+                "embalagemId"
+            )
+        ) {
+
+            alert(
+                "A mesma embalagem foi adicionada mais de uma vez."
+            );
+
+            return false;
+
+        }
+
+        return true;
+
+    }
+
+    // ==================================================
+    // VALIDAR FILAMENTOS
+    // ==================================================
+
+    function validarFilamentosProducao(
+        filamentosUsados
+    ) {
+
+        if (
+            !Array.isArray(
+                filamentosUsados
+            ) ||
+            filamentosUsados.length === 0
+        ) {
+
+            alert(
+                "Adicione pelo menos um filamento utilizado."
+            );
+
+            return false;
+
+        }
+
+        for (
+            const consumo of
+            filamentosUsados
+        ) {
+
+            const filamento =
+                encontrarFilamento(
+                    consumo.filamentoId
+                );
+
+            if (!filamento) {
+
+                alert(
+                    "Um dos filamentos selecionados não foi encontrado."
+                );
+
+                return false;
+
+            }
+
+            const quantidadeUsada =
+                numeroPositivo(
+                    consumo.quantidade
+                );
+
+            const quantidadeDisponivel =
+                pesoRestanteFilamento(
+                    filamento
+                );
+
+            if (
+                quantidadeUsada <= 0
+            ) {
+
+                alert(
+                    "Informe uma quantidade válida para cada filamento."
+                );
+
+                return false;
+
+            }
+
+            if (
+                quantidadeUsada >
+                quantidadeDisponivel
+            ) {
+
+                alert(
+                    "Estoque insuficiente para o filamento:\n\n" +
+                    textoFilamento(
+                        filamento
+                    ) +
+                    "\n\nDisponível: " +
+                    numeroFormatado(
+                        quantidadeDisponivel,
+                        2
+                    ) +
+                    " g" +
+                    "\nNecessário: " +
+                    numeroFormatado(
+                        quantidadeUsada,
+                        2
+                    ) +
+                    " g"
+                );
+
+                return false;
+
+            }
+
+        }
+
+        return true;
+
+    }
+
+    // ==================================================
+    // VALIDAR ACESSÓRIOS
+    // ==================================================
+
+    function validarAcessoriosProducao(
+        acessoriosUsados
+    ) {
+
+        if (
+            !Array.isArray(
+                acessoriosUsados
+            )
+        ) {
+            return true;
+        }
+
+        for (
+            const consumo of
+            acessoriosUsados
+        ) {
+
+            const acessorio =
+                encontrarAcessorio(
+                    consumo.acessorioId
+                );
+
+            if (!acessorio) {
+
+                alert(
+                    "Um dos acessórios selecionados não foi encontrado."
+                );
+
+                return false;
+
+            }
+
+            const quantidadeUsada =
+                numeroPositivo(
+                    consumo.quantidade
+                );
+
+            const quantidadeDisponivel =
+                quantidadeAcessorio(
+                    acessorio
+                );
+
+            if (
+                quantidadeUsada <= 0
+            ) {
+
+                alert(
+                    "Informe uma quantidade válida para cada acessório."
+                );
+
+                return false;
+
+            }
+
+            if (
+                quantidadeUsada >
+                quantidadeDisponivel
+            ) {
+
+                alert(
+                    "Estoque insuficiente para o acessório:\n\n" +
+                    (
+                        acessorio.nome ||
+                        "Acessório sem nome"
+                    ) +
+                    "\n\nDisponível: " +
+                    numeroFormatado(
+                        quantidadeDisponivel,
+                        0
+                    ) +
+                    "\nNecessário: " +
+                    numeroFormatado(
+                        quantidadeUsada,
+                        0
+                    )
+                );
+
+                return false;
+
+            }
+
+        }
+
+        return true;
+
+    }
+
+    // ==================================================
+    // VALIDAR EMBALAGENS
+    // ==================================================
+
+    function validarEmbalagensProducao(
+        embalagensUsadas
+    ) {
+
+        if (
+            !Array.isArray(
+                embalagensUsadas
+            )
+        ) {
+            return true;
+        }
+
+        for (
+            const consumo of
+            embalagensUsadas
+        ) {
+
+            const embalagem =
+                encontrarEmbalagem(
+                    consumo.embalagemId
+                );
+
+            if (!embalagem) {
+
+                alert(
+                    "Uma das embalagens selecionadas não foi encontrada."
+                );
+
+                return false;
+
+            }
+
+            const quantidadeUsada =
+                numeroPositivo(
+                    consumo.quantidade
+                );
+
+            const quantidadeDisponivel =
+                quantidadeEmbalagem(
+                    embalagem
+                );
+
+            if (
+                quantidadeUsada <= 0
+            ) {
+
+                alert(
+                    "Informe uma quantidade válida para cada embalagem."
+                );
+
+                return false;
+
+            }
+
+            if (
+                quantidadeUsada >
+                quantidadeDisponivel
+            ) {
+
+                alert(
+                    "Estoque insuficiente para a embalagem:\n\n" +
+                    (
+                        embalagem.nome ||
+                        "Embalagem sem nome"
+                    ) +
+                    "\n\nDisponível: " +
+                    numeroFormatado(
+                        quantidadeDisponivel,
+                        0
+                    ) +
+                    "\nNecessário: " +
+                    numeroFormatado(
+                        quantidadeUsada,
+                        0
+                    )
+                );
+
+                return false;
+
+            }
+
+        }
+
+        return true;
+
+    }
+
+    // ==================================================
+    // VALIDAR TODO O ESTOQUE DA PRODUÇÃO
+    // ==================================================
+
+    function validarEstoqueProducao(
+        calculos
+    ) {
+
+        if (!calculos) {
+
+            alert(
+                "Não foi possível calcular os dados da produção."
+            );
+
+            return false;
+
+        }
+
+        if (
+            !validarItensRepetidosProducao(
+                calculos
+            )
+        ) {
+            return false;
+        }
+
+        if (
+            !validarFilamentosProducao(
+                calculos.filamentos
+            )
+        ) {
+            return false;
+        }
+
+        if (
+            !validarAcessoriosProducao(
+                calculos.acessorios
+            )
+        ) {
+            return false;
+        }
+
+        if (
+            !validarEmbalagensProducao(
+                calculos.embalagens
+            )
+        ) {
+            return false;
+        }
+
+        return true;
+
+    }
+        // ==================================================
+    // PARTE 7B
+    // BAIXA DOS INSUMOS DA PRODUÇÃO
+    // ==================================================
+
+    function atualizarStatusFilamento(
+        filamento
+    ) {
+
+        if (!filamento) {
+            return;
+        }
+
+        const pesoInicial =
+            pesoInicialFilamento(
+                filamento
+            );
+
+        const pesoRestante =
+            Math.max(
+                0,
+                pesoRestanteFilamento(
+                    filamento
+                )
+            );
+
+        const percentual =
+            pesoInicial > 0
+                ? (
+                    pesoRestante /
+                    pesoInicial
+                ) * 100
+                : 0;
+
+        filamento.pesoRestante =
+            pesoRestante;
+
+        filamento.percentualRestante =
+            percentual;
+
+        filamento.percentual =
+            percentual;
+
+        if (pesoRestante <= 0) {
+
+            filamento.status =
+                "Finalizado";
+
+        } else if (percentual <= 20) {
+
+            filamento.status =
+                "Baixo estoque";
+
+        } else if (
+            pesoRestante <
+            pesoInicial
+        ) {
+
+            filamento.status =
+                "Em uso";
+
+        } else {
+
+            filamento.status =
+                "Novo";
+
+        }
+
+    }
+
+    // ==================================================
+    // BAIXAR FILAMENTOS
+    // ==================================================
+
+    function baixarFilamentosProducao(
+        filamentosUsados
+    ) {
+
+        filamentosUsados.forEach(
+            function (consumo) {
+
+                const filamento =
+                    encontrarFilamento(
+                        consumo.filamentoId
+                    );
+
+                if (!filamento) {
+                    return;
+                }
+
+                const saldoAtual =
+                    pesoRestanteFilamento(
+                        filamento
+                    );
+
+                const quantidadeUsada =
+                    numeroPositivo(
+                        consumo.quantidade
+                    );
+
+                filamento.pesoRestante =
+                    Math.max(
+                        0,
+                        saldoAtual -
+                        quantidadeUsada
+                    );
+
+                atualizarStatusFilamento(
+                    filamento
+                );
+
+            }
+        );
+
+        salvarFilamentos();
+
+    }
+
+    // ==================================================
+    // BAIXAR ACESSÓRIOS
+    // ==================================================
+
+    function baixarAcessoriosProducao(
+        acessoriosUsados
+    ) {
+
+        acessoriosUsados.forEach(
+            function (consumo) {
+
+                const acessorio =
+                    encontrarAcessorio(
+                        consumo.acessorioId
+                    );
+
+                if (!acessorio) {
+                    return;
+                }
+
+                const saldoAtual =
+                    quantidadeAcessorio(
+                        acessorio
+                    );
+
+                const quantidadeUsada =
+                    numeroPositivo(
+                        consumo.quantidade
+                    );
+
+                const novoSaldo =
+                    Math.max(
+                        0,
+                        saldoAtual -
+                        quantidadeUsada
+                    );
+
+                acessorio.quantidade =
+                    novoSaldo;
+
+                if (
+                    Object.prototype.hasOwnProperty.call(
+                        acessorio,
+                        "estoque"
+                    )
+                ) {
+
+                    acessorio.estoque =
+                        novoSaldo;
+
+                }
+
+            }
+        );
+
+        salvarAcessorios();
+
+    }
+
+    // ==================================================
+    // BAIXAR EMBALAGENS
+    // ==================================================
+
+    function baixarEmbalagensProducao(
+        embalagensUsadas
+    ) {
+
+        embalagensUsadas.forEach(
+            function (consumo) {
+
+                const embalagem =
+                    encontrarEmbalagem(
+                        consumo.embalagemId
+                    );
+
+                if (!embalagem) {
+                    return;
+                }
+
+                const saldoAtual =
+                    quantidadeEmbalagem(
+                        embalagem
+                    );
+
+                const quantidadeUsada =
+                    numeroPositivo(
+                        consumo.quantidade
+                    );
+
+                const novoSaldo =
+                    Math.max(
+                        0,
+                        saldoAtual -
+                        quantidadeUsada
+                    );
+
+                embalagem.quantidade =
+                    novoSaldo;
+
+                if (
+                    Object.prototype.hasOwnProperty.call(
+                        embalagem,
+                        "estoque"
+                    )
+                ) {
+
+                    embalagem.estoque =
+                        novoSaldo;
+
+                }
+
+            }
+        );
+
+        salvarEmbalagens();
+
+    }
+
+    // ==================================================
+    // BAIXAR TODOS OS INSUMOS
+    // ==================================================
+
+    function baixarInsumosProducao(
+        calculos
+    ) {
+
+        baixarFilamentosProducao(
+            calculos.filamentos
+        );
+
+        baixarAcessoriosProducao(
+            calculos.acessorios
+        );
+
+        baixarEmbalagensProducao(
+            calculos.embalagens
+        );
+
+        recarregarDadosDeApoio();
+        atualizarSelectsFixos();
+
+    }
+    // ==================================================
+    // PARTE 7C
+    // MOVIMENTAÇÕES DE ESTOQUE DA PRODUÇÃO
+    // ==================================================
+
+    function registrarMovimentacaoProducao(
+        produto
+    ) {
+
+        if (!produto) {
+            return;
+        }
+
+        movimentacoes.push({
+
+            id:
+                criarId(),
+
+            data:
+                produto.dataProducao,
+
+            tipo:
+                "Entrada por produção",
+
+            produtoId:
+                produto.id,
+
+            produto:
+                produto.nome,
+
+            lote:
+                produto.lote,
+
+            quantidade:
+                produto.quantidadeProduzida,
+
+            quantidadeAnterior:
+                0,
+
+            quantidadePosterior:
+                produto.quantidadeDisponivel,
+
+            custoUnitario:
+                produto.custoUnitario,
+
+            custoTotal:
+                produto.custoTotalProducao,
+
+            observacoes:
+                "Entrada inicial do lote produzido.",
+
+            criadoEm:
+                new Date().toISOString()
+
+        });
+
+        salvarMovimentacoes();
+
+    }
+
+    function registrarMovimentacaoSaida(
+        dados
+    ) {
+
+        movimentacoes.push({
+
+            id:
+                criarId(),
+
+            data:
+                dados.data,
+
+            tipo:
+                dados.tipo,
+
+            produtoId:
+                dados.produtoId,
+
+            produto:
+                dados.produto,
+
+            lote:
+                dados.lote,
+
+            quantidade:
+                numeroPositivo(
+                    dados.quantidade
+                ),
+
+            quantidadeAnterior:
+                numeroPositivo(
+                    dados.quantidadeAnterior
+                ),
+
+            quantidadePosterior:
+                numeroPositivo(
+                    dados.quantidadePosterior
+                ),
+
+            custoUnitario:
+                numeroPositivo(
+                    dados.custoUnitario
+                ),
+
+            custoTotal:
+                numeroPositivo(
+                    dados.custoTotal
+                ),
+
+            observacoes:
+                dados.observacoes || "",
+
+            criadoEm:
+                new Date().toISOString()
+
+        });
+
+        salvarMovimentacoes();
+
+    }
+        // ==================================================
+    // PARTE 7D
+    // CADASTRO DO LOTE PRODUZIDO
+    // ==================================================
+
+    const campoNomeProduto =
+        document.getElementById(
+            "produto-produzido-nome"
+        );
+
+    const campoCategoriaProduto =
+        document.getElementById(
+            "produto-produzido-categoria"
+        );
+
+    const campoLoteProduto =
+        document.getElementById(
+            "produto-produzido-lote"
+        );
+
+    const campoDataProduto =
+        document.getElementById(
+            "produto-produzido-data"
+        );
+
+    const campoEstoqueMinimoProduto =
+        document.getElementById(
+            "produto-produzido-estoque-minimo"
+        );
+
+    const campoDescricaoProduto =
+        document.getElementById(
+            "produto-produzido-descricao"
+        );
+
+    const campoObservacoesProduto =
+        document.getElementById(
+            "produto-produzido-observacoes"
+        );
+
+    const botaoSalvarProduto =
+        document.getElementById(
+            "salvar-produto-produzido"
+        );
+
+    const botaoLimparProduto =
+        document.getElementById(
+            "limpar-formulario-produto-produzido"
+        );
+
+    // ==================================================
+    // VALIDAR DADOS PRINCIPAIS
+    // ==================================================
+
+    function validarDadosProduto(
+        calculos
+    ) {
+
+        const nome =
+            campoNomeProduto
+                ? campoNomeProduto.value.trim()
+                : "";
+
+        const categoria =
+            campoCategoriaProduto
+                ? campoCategoriaProduto.value
+                : "";
+
+        const lote =
+            campoLoteProduto
+                ? campoLoteProduto.value.trim()
+                : "";
+
+        const data =
+            campoDataProduto
+                ? campoDataProduto.value
+                : "";
+
+        const impressoraId =
+            campoImpressoraProduto
+                ? campoImpressoraProduto.value
+                : "";
+
+        if (!nome) {
+
+            alert(
+                "Informe o nome do produto."
+            );
+
+            return false;
+
+        }
+
+        if (!categoria) {
+
+            alert(
+                "Selecione a categoria do produto."
+            );
+
+            return false;
+
+        }
+
+        if (!lote) {
+
+            alert(
+                "Informe o lote de produção."
+            );
+
+            return false;
+
+        }
+
+        const loteDuplicado =
+            produtos.some(
+                function (produto) {
+
+                    return (
+                        String(
+                            produto.lote || ""
+                        ).toLowerCase() ===
+                            lote.toLowerCase() &&
+                        String(produto.id) !==
+                            String(
+                                produtoEmEdicaoId
+                            )
+                    );
+
+                }
+            );
+
+        if (loteDuplicado) {
+
+            alert(
+                "Já existe um lote com este código."
+            );
+
+            return false;
+
+        }
+
+        if (!data) {
+
+            alert(
+                "Informe a data da produção."
+            );
+
+            return false;
+
+        }
+
+        if (
+            calculos.quantidadeProduzida <= 0
+        ) {
+
+            alert(
+                "Informe uma quantidade produzida válida."
+            );
+
+            return false;
+
+        }
+
+        if (!impressoraId) {
+
+            alert(
+                "Selecione a impressora utilizada."
+            );
+
+            return false;
+
+        }
+
+        if (
+            calculos.horasDecimais <= 0
+        ) {
+
+            alert(
+                "Informe o tempo de impressão."
+            );
+
+            return false;
+
+        }
+
+        return true;
+
+    }
+
+    // ==================================================
+    // CRIAR OBJETO DO PRODUTO
+    // ==================================================
+
+    function criarObjetoProduto(
+        calculos
+    ) {
+
+        const impressoraId =
+            campoImpressoraProduto
+                ? campoImpressoraProduto.value
+                : "";
+
+        const impressora =
+            encontrarImpressora(
+                impressoraId
+            );
+
+        const quantidadeDisponivelAtual =
+            campoQuantidadeDisponivel
+                ? numeroPositivo(
+                    campoQuantidadeDisponivel.value
+                )
+                : calculos.quantidadeProduzida;
+
+        return {
+
+            id:
+                produtoEmEdicaoId ||
+                criarId(),
+
+            nome:
+                campoNomeProduto
+                    ? campoNomeProduto.value.trim()
+                    : "",
+
+            categoria:
+                campoCategoriaProduto
+                    ? campoCategoriaProduto.value
+                    : "",
+
+            lote:
+                campoLoteProduto
+                    ? campoLoteProduto.value.trim()
+                    : "",
+
+            dataProducao:
+                campoDataProduto
+                    ? campoDataProduto.value
+                    : "",
+
+            quantidadeProduzida:
+                calculos.quantidadeProduzida,
+
+            quantidadeDisponivel:
+                produtoEmEdicaoId
+                    ? quantidadeDisponivelAtual
+                    : calculos.quantidadeProduzida,
+
+            estoqueMinimo:
+                campoEstoqueMinimoProduto
+                    ? numeroPositivo(
+                        campoEstoqueMinimoProduto.value
+                    )
+                    : 0,
+
+            descricao:
+                campoDescricaoProduto
+                    ? campoDescricaoProduto.value.trim()
+                    : "",
+
+            observacoes:
+                campoObservacoesProduto
+                    ? campoObservacoesProduto.value.trim()
+                    : "",
+
+            filamentos:
+                calculos.filamentos,
+
+            acessorios:
+                calculos.acessorios,
+
+            embalagens:
+                calculos.embalagens,
+
+            custoFilamentos:
+                calculos.custoFilamentos,
+
+            custoAcessorios:
+                calculos.custoAcessorios,
+
+            custoEmbalagens:
+                calculos.custoEmbalagens,
+
+            custoInsumos:
+                calculos.custoInsumos,
+
+            impressoraId:
+                impressora
+                    ? impressora.id
+                    : impressoraId,
+
+            impressoraNome:
+                impressora
+                    ? textoImpressora(
+                        impressora
+                    )
+                    : "",
+
+            horas:
+                calculos.horas,
+
+            minutos:
+                calculos.minutos,
+
+            horasDecimais:
+                calculos.horasDecimais,
+
+            potenciaWatts:
+                calculos.potenciaWatts,
+
+            tarifaEnergia:
+                calculos.tarifaEnergia,
+
+            consumoKwh:
+                calculos.consumoKwh,
+
+            custoEnergia:
+                calculos.custoEnergia,
+
+            custoHoraImpressora:
+                calculos.custoHoraImpressora,
+
+            custoMaquina:
+                calculos.custoMaquina,
+
+            custoTotalProducao:
+                calculos.custoTotalProducao,
+
+            custoUnitario:
+                calculos.custoUnitario,
+
+            precoVenda:
+                calculos.precoVenda,
+
+            lucroUnitario:
+                calculos.lucroUnitario,
+
+            margemReal:
+                calculos.margemReal,
+
+            valorTotalEstoque:
+                calculos.valorTotalEstoque,
+
+            orcamentoOrigemId:
+                orcamentoOrigemProducaoId ||
+                null,
+
+            criadoEm:
+                new Date().toISOString(),
+
+            atualizadoEm:
+                new Date().toISOString()
+
+        };
+
+    }
+
+    // ==================================================
+    // SALVAR PRODUÇÃO
+    // ==================================================
+
+    function salvarProdutoProduzido() {
+
+        recarregarDadosDeApoio();
+
+        const calculos =
+            atualizarCalculosProduto();
+
+        if (
+            !validarDadosProduto(
+                calculos
+            )
+        ) {
+            return;
+        }
+
+        const editando =
+            produtoEmEdicaoId !== null;
+
+        if (!editando) {
+
+            if (
+                !validarEstoqueProducao(
+                    calculos
+                )
+            ) {
+                return;
+            }
+
+        }
+
+        const produto =
+            criarObjetoProduto(
+                calculos
+            );
+
+        if (editando) {
+
+            const indice =
+                produtos.findIndex(
+                    function (item) {
+
+                        return String(item.id) ===
+                            String(
+                                produtoEmEdicaoId
+                            );
+
+                    }
+                );
+
+            if (indice === -1) {
+
+                alert(
+                    "Produto não encontrado."
+                );
+
+                return;
+
+            }
+
+            produto.criadoEm =
+                produtos[indice].criadoEm ||
+                produto.criadoEm;
+
+            produtos[indice] =
+                produto;
+
+        } else {
+
+            baixarInsumosProducao(
+                calculos
+            );
+
+            produtos.push(
+                produto
+            );
+
+            registrarMovimentacaoProducao(
+                produto
+            );
+
+        }
+
+        salvarProdutos();
+
+        registrarHorasImpressoraProduto(
+            produto,
+            editando
+        );
+
+        marcarOrcamentoComoProduzido(
+            produto,
+            editando
+        );
+
+        mostrarProdutos();
+
+        atualizarResumoProdutos();
+
+        limparFormularioProduto();
+
+        if (
+            typeof atualizarDashboardCompleto ===
+            "function"
+        ) {
+
+            atualizarDashboardCompleto();
+
+        }
+
+        alert(
+            editando
+                ? "Produção atualizada com sucesso!"
+                : "Produção registrada com sucesso!"
+        );
+
+    }
+
+    // ==================================================
+    // EVENTOS DOS BOTÕES
+    // ==================================================
+
+    if (botaoSalvarProduto) {
+
+        botaoSalvarProduto.addEventListener(
+            "click",
+            salvarProdutoProduzido
+        );
+
+    }
+
+    if (botaoLimparProduto) {
+
+        botaoLimparProduto.addEventListener(
+            "click",
+            limparFormularioProduto
+        );
+
+    }
     
