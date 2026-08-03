@@ -219,308 +219,612 @@
 
         </section>
 
- <!-- ===================================================== -->
+<!-- ===================================================== -->
+<!-- PRODUTOS -->
+<!-- ===================================================== -->
+<!-- ===================================================== -->
 <!-- PRODUTOS -->
 <!-- ===================================================== -->
 
 <section id="produto" class="pagina">
-        <h2>Produtos 2.0</h2>
+
+    <h2>Produtos</h2>
 
     <p>
-        Cadastre os produtos, acompanhe o estoque
-        e calcule automaticamente a margem de lucro.
+        Registre produtos produzidos, orçamentos,
+        perdas de produção e itens destinados ao uso próprio.
     </p>
 
-    <h3>Resumo dos produto</h3>
+    <!-- ================================================= -->
+    <!-- NAVEGAÇÃO DAS ABAS -->
+    <!-- ================================================= -->
 
-    <div class="cards">
+    <div class="formulario produto-navegacao">
 
-        <div class="card">
-            <span>📦 Total de produto</span>
-            <strong id="produto-total">
-                0
-            </strong>
-        </div>
+        <h3>Áreas do módulo</h3>
 
-        <div class="card">
-            <span>✅ Disponíveis</span>
-            <strong id="produto-disponiveis">
-                0
-            </strong>
-        </div>
+        <div class="botoes-abas-produto">
 
-        <div class="card">
-            <span>⚠️ Estoque baixo</span>
-            <strong id="produto-estoque-baixo">
-                0
-            </strong>
-        </div>
+            <button
+                type="button"
+                class="botao-principal aba-produto"
+                data-aba-produto="aba-produtos-produzidos">
+                📦 Produtos produzidos
+            </button>
 
-        <div class="card">
-            <span>❌ Sem estoque</span>
-            <strong id="produto-sem-estoque">
-                0
-            </strong>
-        </div>
+            <button
+                type="button"
+                class="aba-produto"
+                data-aba-produto="aba-orcamentos">
+                📝 Orçamentos
+            </button>
 
-        <div class="card">
-            <span>💰 Valor em estoque</span>
-            <strong id="produto-valor-estoque">
-                R$ 0,00
-            </strong>
+            <button
+                type="button"
+                class="aba-produto"
+                data-aba-produto="aba-perdas">
+                ⚠️ Peças com falha
+            </button>
+
+            <button
+                type="button"
+                class="aba-produto"
+                data-aba-produto="aba-consumo-proprio">
+                🏠 Consumo próprio
+            </button>
+
         </div>
 
     </div>
 
-    <h3>Cadastrar produto</h3>
+    <!-- ================================================= -->
+    <!-- ABA PRODUTOS PRODUZIDOS -->
+    <!-- ================================================= -->
 
-    <div class="formulario">
+    <div
+        id="aba-produtos-produzidos"
+        class="conteudo-aba-produto ativo">
 
-        <div class="linha">
+        <h3>Resumo dos produtos produzidos</h3>
 
-            <div class="campo">
+        <div class="cards">
 
-                <label for="produto-nome">
-                    Nome do produto
-                </label>
+            <div class="card">
 
-                <input
-                    type="text"
-                    id="produto-nome"
-                    placeholder="Ex.: Vaso decorativo">
+                <span>📦 Lotes produzidos</span>
+
+                <strong id="produtos-total-lotes">
+                    0
+                </strong>
 
             </div>
 
-            <div class="campo">
+            <div class="card">
 
-                <label for="produto-categoria">
-                    Categoria
-                </label>
+                <span>✅ Unidades disponíveis</span>
 
-                <select id="produto-categoria">
+                <strong id="produtos-unidades-disponiveis">
+                    0
+                </strong>
 
-                    <option value="">
-                        Selecione
-                    </option>
+            </div>
 
-                    <option value="Decoração">
-                        Decoração
-                    </option>
+            <div class="card">
 
-                    <option value="Brinquedos">
-                        Brinquedos
-                    </option>
+                <span>💰 Valor do estoque</span>
 
-                    <option value="Utilidades">
-                        Utilidades
-                    </option>
+                <strong id="produtos-valor-estoque">
+                    R$ 0,00
+                </strong>
 
-                    <option value="Organização">
-                        Organização
-                    </option>
+            </div>
 
-                    <option value="Personalizados">
-                        Personalizados
-                    </option>
+            <div class="card">
 
-                    <option value="Peças técnicas">
-                        Peças técnicas
-                    </option>
+                <span>📊 Custo total produzido</span>
 
-                    <option value="Outros">
-                        Outros
-                    </option>
-
-                </select>
+                <strong id="produtos-custo-total">
+                    R$ 0,00
+                </strong>
 
             </div>
 
         </div>
 
-        <div class="campo">
+        <h3>Registrar produção</h3>
 
-            <label for="produto-descricao">
-                Descrição
-            </label>
+        <div class="formulario">
 
-            <textarea
-                id="produto-descricao"
-                rows="3"
-                placeholder="Descreva o produto"></textarea>
+            <div class="linha">
 
-        </div>
-                <div class="linha">
-
-            <div class="campo">
-
-                <label for="produto-custo">
-                    Custo de produção
-                </label>
-
-                <input
-                    type="number"
-                    id="produto-custo"
-                    min="0"
-                    step="0.01"
-                    placeholder="Ex.: 12,50">
-
-            </div>
-
-            <div class="campo">
-
-                <label for="produto-preco">
-                    Preço de venda
-                </label>
-
-                <input
-                    type="number"
-                    id="produto-preco"
-                    min="0"
-                    step="0.01"
-                    placeholder="Ex.: 35,00">
-
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-
-                <label for="produto-lucro">
-                    Lucro por unidade
-                </label>
-
-                <input
-                    type="text"
-                    id="produto-lucro"
-                    value="R$ 0,00"
-                    readonly>
-
-            </div>
-
-            <div class="campo">
-
-                <label for="produto-margem">
-                    Margem de lucro
-                </label>
-
-                <input
-                    type="text"
-                    id="produto-margem"
-                    value="0%"
-                    readonly>
-
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-
-                <label for="produto-estoque">
-                    Quantidade em estoque
-                </label>
-
-                <input
-                    type="number"
-                    id="produto-estoque"
-                    min="0"
-                    step="1"
-                    placeholder="Ex.: 10">
-
-            </div>
-
-            <div class="campo">
-
-                <label for="produto-estoque-minimo">
-                    Estoque mínimo
-                </label>
-
-                <input
-                    type="number"
-                    id="produto-estoque-minimo"
-                    min="0"
-                    step="1"
-                    placeholder="Ex.: 3">
-
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-
-                <label for="produto-status">
-                    Status
-                </label>
-
-                <input
-                    type="text"
-                    id="produto-status"
-                    value="Sem estoque"
-                    readonly>
-
-                <small>
-                    O status será definido automaticamente.
-                </small>
-
-            </div>
-
-            <div class="campo">
-
-                <label for="produto-data-cadastro">
-                    Data de cadastro
-                </label>
-
-                <input
-                    type="date"
-                    id="produto-data-cadastro">
-
-            </div>
-
-        </div>
                 <div class="campo">
 
-            <label for="produto-observacoes">
-                Observações
-            </label>
+                    <label for="produto-produzido-nome">
+                        Nome do produto
+                    </label>
 
-            <textarea
-                id="produto-observacoes"
-                rows="3"
-                placeholder="Informações adicionais"></textarea>
+                    <input
+                        type="text"
+                        id="produto-produzido-nome"
+                        placeholder="Ex.: Chaveiro personalizado">
 
-        </div>
+                </div>
 
-        <button
-            id="salvar-produto"
-            class="botao-principal"
-            type="button">
-            Salvar Produto
-        </button>
+                <div class="campo">
 
-        <button
-            id="limpar-formulario-produto"
-            type="button">
-            Limpar Formulário
-        </button>
+                    <label for="produto-produzido-categoria">
+                        Categoria
+                    </label>
 
-    </div>
+                    <select id="produto-produzido-categoria">
 
-    <h3>Produtos cadastrados</h3>
+                        <option value="">
+                            Selecione
+                        </option>
 
-    <div id="lista-produto">
+                        <option value="Decoração">
+                            Decoração
+                        </option>
 
-        <p>
-            Nenhum produto cadastrado.
-        </p>
+                        <option value="Brinquedo">
+                            Brinquedo
+                        </option>
 
-    </div>
+                        <option value="Utilidade">
+                            Utilidade
+                        </option>
 
-</section>
+                        <option value="Organização">
+                            Organização
+                        </option>
+
+                        <option value="Personalizado">
+                            Personalizado
+                        </option>
+
+                        <option value="Peça técnica">
+                            Peça técnica
+                        </option>
+
+                        <option value="Outro">
+                            Outro
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="produto-produzido-lote">
+                        Lote de produção
+                    </label>
+
+                    <input
+                        type="text"
+                        id="produto-produzido-lote"
+                        placeholder="Ex.: PROD-2026-001">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="produto-produzido-data">
+                        Data da produção
+                    </label>
+
+                    <input
+                        type="date"
+                        id="produto-produzido-data">
+
+                </div>
+
+            </div>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="produto-produzido-quantidade">
+                        Quantidade produzida
+                    </label>
+
+                    <input
+                        type="number"
+                        id="produto-produzido-quantidade"
+                        min="1"
+                        step="1"
+                        placeholder="Ex.: 10">
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="produto-produzido-estoque-minimo">
+                        Estoque mínimo
+                    </label>
+
+                    <input
+                        type="number"
+                        id="produto-produzido-estoque-minimo"
+                        min="0"
+                        step="1"
+                        placeholder="Ex.: 2">
+
+                </div>
+
+            </div>
+
+            <div class="campo campo-completo">
+
+                <label for="produto-produzido-descricao">
+                    Descrição
+                </label>
+
+                <textarea
+                    id="produto-produzido-descricao"
+                    rows="3"
+                    placeholder="Descreva o produto, tamanho, modelo, cores ou personalização"></textarea>
+
+            </div>
+                        <!-- ================================================= -->
+            <!-- FILAMENTOS UTILIZADOS -->
+            <!-- ================================================= -->
+
+            <h3>Filamentos utilizados</h3>
+
+            <p>
+                Adicione todos os lotes de filamento usados
+                nesta produção.
+            </p>
+
+            <div id="lista-filamentos-produto">
+
+                <div
+                    class="linha item-filamento-produto"
+                    data-item-filamento>
+
+                    <div class="campo">
+
+                        <label>
+                            Filamento / lote
+                        </label>
+
+                        <select
+                            class="produto-filamento-select">
+
+                            <option value="">
+                                Selecione o filamento
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="campo">
+
+                        <label>
+                            Quantidade utilizada (g)
+                        </label>
+
+                        <input
+                            type="number"
+                            class="produto-filamento-quantidade"
+                            min="0.01"
+                            step="0.01"
+                            placeholder="Ex.: 80">
+
+                    </div>
+
+                    <div class="campo">
+
+                        <label>
+                            Custo desta linha
+                        </label>
+
+                        <input
+                            type="text"
+                            class="produto-filamento-custo"
+                            value="R$ 0,00"
+                            readonly>
+
+                    </div>
+
+                    <div class="campo">
+
+                        <label>
+                            Ação
+                        </label>
+
+                        <button
+                            type="button"
+                            class="botao-excluir remover-filamento-produto">
+                            Remover
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <button
+                id="adicionar-filamento-produto"
+                type="button">
+                + Adicionar outro filamento
+            </button>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="produto-custo-filamentos">
+                        Custo total dos filamentos
+                    </label>
+
+                    <input
+                        type="text"
+                        id="produto-custo-filamentos"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="produto-peso-total-filamentos">
+                        Peso total utilizado
+                    </label>
+
+                    <input
+                        type="text"
+                        id="produto-peso-total-filamentos"
+                        value="0 g"
+                        readonly>
+
+                </div>
+
+            </div>
+                        <!-- ================================================= -->
+            <!-- ACESSÓRIOS UTILIZADOS -->
+            <!-- ================================================= -->
+
+            <h3>Acessórios utilizados</h3>
+
+            <p>
+                Adicione todos os acessórios usados nesta produção.
+            </p>
+
+            <div id="lista-acessorios-produto">
+
+                <div
+                    class="linha item-acessorio-produto"
+                    data-item-acessorio>
+
+                    <div class="campo">
+
+                        <label>
+                            Acessório
+                        </label>
+
+                        <select
+                            class="produto-acessorio-select">
+
+                            <option value="">
+                                Selecione o acessório
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="campo">
+
+                        <label>
+                            Quantidade utilizada
+                        </label>
+
+                        <input
+                            type="number"
+                            class="produto-acessorio-quantidade"
+                            min="1"
+                            step="1"
+                            placeholder="Ex.: 10">
+
+                    </div>
+
+                    <div class="campo">
+
+                        <label>
+                            Custo desta linha
+                        </label>
+
+                        <input
+                            type="text"
+                            class="produto-acessorio-custo"
+                            value="R$ 0,00"
+                            readonly>
+
+                    </div>
+
+                    <div class="campo">
+
+                        <label>
+                            Ação
+                        </label>
+
+                        <button
+                            type="button"
+                            class="botao-excluir remover-acessorio-produto">
+                            Remover
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <button
+                id="adicionar-acessorio-produto"
+                type="button">
+                + Adicionar outro acessório
+            </button>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="produto-custo-acessorios">
+                        Custo total dos acessórios
+                    </label>
+
+                    <input
+                        type="text"
+                        id="produto-custo-acessorios"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="produto-quantidade-total-acessorios">
+                        Quantidade total utilizada
+                    </label>
+
+                    <input
+                        type="text"
+                        id="produto-quantidade-total-acessorios"
+                        value="0"
+                        readonly>
+
+                </div>
+
+            </div>
+                        <!-- ================================================= -->
+            <!-- EMBALAGENS UTILIZADAS -->
+            <!-- ================================================= -->
+
+            <h3>Embalagens utilizadas</h3>
+
+            <p>
+                Adicione as embalagens usadas nesta produção.
+            </p>
+
+            <div id="lista-embalagens-produto">
+
+                <div
+                    class="linha item-embalagem-produto"
+                    data-item-embalagem>
+
+                    <div class="campo">
+
+                        <label>
+                            Embalagem
+                        </label>
+
+                        <select
+                            class="produto-embalagem-select">
+
+                            <option value="">
+                                Selecione a embalagem
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="campo">
+
+                        <label>
+                            Quantidade utilizada
+                        </label>
+
+                        <input
+                            type="number"
+                            class="produto-embalagem-quantidade"
+                            min="1"
+                            step="1"
+                            placeholder="Ex.: 10">
+
+                    </div>
+
+                    <div class="campo">
+
+                        <label>
+                            Custo desta linha
+                        </label>
+
+                        <input
+                            type="text"
+                            class="produto-embalagem-custo"
+                            value="R$ 0,00"
+                            readonly>
+
+                    </div>
+
+                    <div class="campo">
+
+                        <label>
+                            Ação
+                        </label>
+
+                        <button
+                            type="button"
+                            class="botao-excluir remover-embalagem-produto">
+                            Remover
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <button
+                id="adicionar-embalagem-produto"
+                type="button">
+                + Adicionar outra embalagem
+            </button>
+
+            <div class="linha">
+
+                <div class="campo">
+
+                    <label for="produto-custo-embalagens">
+                        Custo total das embalagens
+                    </label>
+
+                    <input
+                        type="text"
+                        id="produto-custo-embalagens"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="produto-quantidade-total-embalagens">
+                        Quantidade total utilizada
+                    </label>
+
+                    <input
+                        type="text"
+                        id="produto-quantidade-total-embalagens"
+                        value="0"
+                        readonly>
+
+                </div>
+
+            </div>
+
+            
 <!-- ===================================================== -->
 <!-- CLIENTES -->
 <!-- ===================================================== -->
