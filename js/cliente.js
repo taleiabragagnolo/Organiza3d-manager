@@ -8,6 +8,7 @@ function iniciarCliente() {
     let cliente = JSON.parse(
         localStorage.getItem("organiza3d_cliente")
     ) || [];
+        let clienteEmEdicaoId = null;
 
     const botaoSalvarCliente =
         document.getElementById("salvar-cliente");
@@ -93,12 +94,20 @@ function iniciarCliente() {
                         </p>
 
                         <button
-                            type="button"
-                            class="botao-excluir"
-                            onclick="excluirCliente(${cliente.id})"
-                        >
-                            Excluir
-                        </button>
+    type="button"
+    class="botao-principal"
+    onclick="editarCliente(${cliente.id})"
+>
+    Editar
+</button>
+
+<button
+    type="button"
+    class="botao-excluir"
+    onclick="excluirCliente(${cliente.id})"
+>
+    Excluir
+</button>
 
                     </div>
                 `;
@@ -107,7 +116,42 @@ function iniciarCliente() {
             .join("");
 
     }
+window.editarCliente = function (id) {
 
+    const clienteEncontrado = cliente.find(
+        function (item) {
+            return item.id === id;
+        }
+    );
+
+    if (!clienteEncontrado) {
+        alert("Cliente não encontrado.");
+        return;
+    }
+
+    clienteEmEdicaoId = id;
+
+    document.getElementById("nome-cliente").value =
+        clienteEncontrado.nome || "";
+
+    document.getElementById("telefone-cliente").value =
+        clienteEncontrado.telefone || "";
+
+    document.getElementById("email-cliente").value =
+        clienteEncontrado.email || "";
+
+    document.getElementById("cidade-cliente").value =
+        clienteEncontrado.cidade || "";
+
+    document.getElementById("observacoes-cliente").value =
+        clienteEncontrado.observacoes || "";
+
+    if (botaoSalvarCliente) {
+        botaoSalvarCliente.textContent =
+            "Atualizar Cliente";
+    }
+
+};
     window.excluirCliente = function (id) {
 
         const confirmar = confirm(
@@ -190,20 +234,50 @@ function iniciarCliente() {
 
                 }
 
-                const novoCliente = {
-    id: Date.now(),
-    nome: nome,
-    telefone: telefone,
-    email: email,
-    cidade: cidade,
-    observacoes: observacoes
-};
+                if (clienteEmEdicaoId !== null) {
 
-cliente.push(novoCliente);
+    const clienteEncontrado = cliente.find(
+        function (item) {
+            return item.id === clienteEmEdicaoId;
+        }
+    );
 
-                salvarCliente();
-                mostrarCliente();
-                atualizarTotalCliente();
+    if (!clienteEncontrado) {
+        alert("Cliente não encontrado.");
+        return;
+    }
+
+    clienteEncontrado.nome = nome;
+    clienteEncontrado.telefone = telefone;
+    clienteEncontrado.email = email;
+    clienteEncontrado.cidade = cidade;
+    clienteEncontrado.observacoes = observacoes;
+
+} else {
+
+    const novoCliente = {
+        id: Date.now(),
+        nome: nome,
+        telefone: telefone,
+        email: email,
+        cidade: cidade,
+        observacoes: observacoes
+    };
+
+    cliente.push(novoCliente);
+
+}
+
+salvarClientes();
+mostrarClientes();
+atualizarTotalClientes();
+
+clienteEmEdicaoId = null;
+
+if (botaoSalvarCliente) {
+    botaoSalvarCliente.textContent =
+        "Salvar Cliente";
+}
 
                 campoNome.value = "";
 
@@ -232,8 +306,8 @@ cliente.push(novoCliente);
 
     }
 
-    mostrarCliente();
-    atualizarTotalCliente();
-    
+    mostrarClientes();
+    atualizarTotalClientes();
+
 
 }
