@@ -13,7 +13,17 @@ function iniciarCliente() {
 
     const botaoSalvarCliente =
         document.getElementById("salvar-cliente");
+const listaClientes =
+    document.getElementById("lista-cliente");
 
+const totalClientes =
+    document.getElementById("total-cliente");
+    function salvarClientes() {
+    localStorage.setItem(
+        "organiza3d_cliente",
+        JSON.stringify(cliente)
+    );
+}
     function atualizarTotalClientes() {
 
         if (totalClientes) {
@@ -220,9 +230,16 @@ window.editarCliente = function (id) {
 
                 }
 
-                if (clienteEmEdicaoId !== null) {
-        const estavaEditando =
-         clienteEmEdicaoId !== null;
+         const estavaEditando =
+    clienteEmEdicaoId !== null;
+
+if (estavaEditando) {
+
+    const clienteEncontrado = cliente.find(
+        function (item) {
+            return item.id === clienteEmEdicaoId;
+        }
+    );
         const clienteEncontrado = cliente.find(
         function (item) {
             return item.id === clienteEmEdicaoId;
