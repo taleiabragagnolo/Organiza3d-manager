@@ -2038,8 +2038,159 @@
 
         <h3>Cadastrar impressora</h3>
 
-        <div class="formulario">
-            </div>
+       <div class="formulario">
+
+    <div class="linha">
+
+        <div class="campo">
+            <label for="nome-impressora">
+                Nome da impressora
+            </label>
+
+            <input
+                type="text"
+                id="nome-impressora"
+                placeholder="Ex.: Primeira">
+        </div>
+
+        <div class="campo">
+            <label for="marca-impressora">
+                Marca
+            </label>
+
+            <input
+                type="text"
+                id="marca-impressora"
+                placeholder="Ex.: Bambu Lab">
+        </div>
+
+    </div>
+
+    <div class="linha">
+
+        <div class="campo">
+            <label for="modelo-impressora">
+                Modelo
+            </label>
+
+            <input
+                type="text"
+                id="modelo-impressora"
+                placeholder="Ex.: A1">
+        </div>
+
+        <div class="campo">
+            <label for="serie-impressora">
+                Número de série
+            </label>
+
+            <input
+                type="text"
+                id="serie-impressora"
+                placeholder="Número de série">
+        </div>
+
+    </div>
+
+    <div class="linha">
+
+        <div class="campo">
+            <label for="data-compra-impressora">
+                Data da compra
+            </label>
+
+            <input
+                type="date"
+                id="data-compra-impressora">
+        </div>
+
+        <div class="campo">
+            <label for="valor-impressora">
+                Valor pago
+            </label>
+
+            <input
+                type="number"
+                id="valor-impressora"
+                min="0"
+                step="0.01"
+                placeholder="Ex.: 3500,00">
+        </div>
+
+    </div>
+
+    <div class="linha">
+
+        <div class="campo">
+            <label for="status-impressora">
+                Status
+            </label>
+
+            <select id="status-impressora">
+                <option value="Ativa">Ativa</option>
+                <option value="Em manutenção">
+                    Em manutenção
+                </option>
+                <option value="Parada">Parada</option>
+                <option value="Desativada">
+                    Desativada
+                </option>
+            </select>
+        </div>
+
+        <div class="campo">
+            <label for="horas-iniciais-impressora">
+                Horas iniciais
+            </label>
+
+            <input
+                type="number"
+                id="horas-iniciais-impressora"
+                min="0"
+                step="0.01"
+                placeholder="Ex.: 0">
+        </div>
+
+    </div>
+
+    <div class="linha">
+
+        <div class="campo">
+            <label for="ultima-manutencao-impressora">
+                Última manutenção
+            </label>
+
+            <input
+                type="date"
+                id="ultima-manutencao-impressora">
+        </div>
+
+        <div class="campo">
+            <label for="proxima-manutencao-impressora">
+                Próxima manutenção
+            </label>
+
+            <input
+                type="date"
+                id="proxima-manutencao-impressora">
+        </div>
+
+    </div>
+
+    <div class="campo campo-completo">
+
+        <label for="observacoes-impressora">
+            Observações
+        </label>
+
+        <textarea
+            id="observacoes-impressora"
+            rows="3"
+            placeholder="Informações adicionais sobre a impressora"></textarea>
+
+    </div>
+
+</div>
 
 <button
     id="salvar-impressora"
