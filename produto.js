@@ -267,7 +267,7 @@ function iniciarProduto() {
     // As próximas partes serão inseridas aqui,
     // antes da chave final da função.
 
-}
+
     // ==================================================
     // CHAVES DO LOCALSTORAGE
     // ==================================================
