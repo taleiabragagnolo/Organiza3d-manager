@@ -221,8 +221,9 @@ window.editarCliente = function (id) {
                 }
 
                 if (clienteEmEdicaoId !== null) {
-
-    const clienteEncontrado = cliente.find(
+        const estavaEditando =
+         clienteEmEdicaoId !== null;
+        const clienteEncontrado = cliente.find(
         function (item) {
             return item.id === clienteEmEdicaoId;
         }
