@@ -234,5 +234,6 @@ cliente.push(novoCliente);
 
     mostrarCliente();
     atualizarTotalCliente();
+    
 
 }

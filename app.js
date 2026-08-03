@@ -114,8 +114,8 @@ function iniciarModulos() {
         iniciarFinanceiro();
     }
 
-    if (typeof iniciarRelatorios === "function") {
-        iniciarRelatorios();
+    if (typeof iniciarRelatorio === "function") {
+        iniciarRelatorio();
     }
 
     if (typeof iniciarDashboard === "function") {
