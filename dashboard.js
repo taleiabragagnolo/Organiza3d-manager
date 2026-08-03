@@ -258,13 +258,16 @@ function atualizarDashboardCompleto() {
             : 0
     );
 
-    definirTextoDashboard(
-        "total-filamentos",
-        typeof filamentos !== "undefined" &&
-        Array.isArray(filamentos)
-            ? filamentos.length
-            : 0
-    );
+    const filamentosDashboard = JSON.parse(
+    localStorage.getItem("organiza3d_filamentos")
+) || [];
+
+definirTextoDashboard(
+    "total-filamento",
+    Array.isArray(filamentosDashboard)
+        ? filamentosDashboard.length
+        : 0
+);
 
     definirTextoDashboard(
         "total-encomendas",
