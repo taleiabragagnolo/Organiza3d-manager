@@ -245,9 +245,9 @@ function atualizarDashboardCompleto() {
     );
 
     definirTextoDashboard(
-        "total-clientes",
+        "total-cliente",
         Array.isArray(cliente)
-            ? clientes.length
+            ? cliente.length
             : 0
     );
 
