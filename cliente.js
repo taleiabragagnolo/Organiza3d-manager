@@ -11,7 +11,7 @@ function iniciarCliente() {
     // DADOS DO MÓDULO
     // ==================================================
 
-    let clientes = carregarClientes();
+    let cliente = carregarCliente();
 
     let clienteEmEdicaoId = null;
 
@@ -44,7 +44,7 @@ function iniciarCliente() {
     // CARREGAR CLIENTES
     // ==================================================
 
-    function carregarClientes() {
+    function carregarCliente() {
 
         try {
 
@@ -62,7 +62,7 @@ function iniciarCliente() {
         } catch (erro) {
 
             console.error(
-                "Não foi possível carregar os clientes.",
+                "Não foi possível carregar os cliente.",
                 erro
             );
 
@@ -75,11 +75,11 @@ function iniciarCliente() {
     // SALVAR CLIENTES
     // ==================================================
 
-    function salvarClientes() {
+    function salvarCliente() {
 
         localStorage.setItem(
             "organiza3d_cliente",
-            JSON.stringify(clientes)
+            JSON.stringify(cliente)
         );
 
     }
@@ -88,10 +88,10 @@ function iniciarCliente() {
     // ATUALIZAR TOTAL
     // ==================================================
 
-    function atualizarTotalClientes() {
+    function atualizarTotalCliente() {
 
         if (totalCliente) {
-            totalCliente.textContent = clientes.length;
+            totalCliente.textContent = cliente.length;
         }
 
     }
@@ -130,13 +130,13 @@ function iniciarCliente() {
     // MOSTRAR CLIENTES
     // ==================================================
 
-    function mostrarClientes() {
+    function mostrarCliente() {
 
         if (!listaCliente) {
             return;
         }
 
-        if (clientes.length === 0) {
+        if (cliente.length === 0) {
 
             listaCliente.innerHTML =
                 "<p>Nenhum cliente cadastrado.</p>";
@@ -145,7 +145,7 @@ function iniciarCliente() {
 
         }
 
-        listaCliente.innerHTML = clientes
+        listaCliente.innerHTML = cliente
             .map(function (cliente) {
 
                 return `
@@ -208,7 +208,7 @@ function iniciarCliente() {
 
     window.editarCliente = function (id) {
 
-        const clienteEncontrado = clientes.find(
+        const clienteEncontrado = cliente.find(
             function (cliente) {
                 return cliente.id === id;
             }
@@ -262,15 +262,15 @@ function iniciarCliente() {
             return;
         }
 
-        clientes = clientes.filter(
+        cliente = cliente.filter(
             function (cliente) {
                 return cliente.id !== id;
             }
         );
 
-        salvarClientes();
-        mostrarClientes();
-        atualizarTotalClientes();
+        salvarCliente();
+        mostrarCliente();
+        atualizarTotalCliente();
 
         if (clienteEmEdicaoId === id) {
             limparFormularioCliente();
@@ -318,7 +318,7 @@ function iniciarCliente() {
                 if (estavaEditando) {
 
                     const clienteEncontrado =
-                        clientes.find(
+                        cliente.find(
                             function (cliente) {
                                 return cliente.id ===
                                     clienteEmEdicaoId;
@@ -346,13 +346,13 @@ function iniciarCliente() {
                         observacoes: observacoes
                     };
 
-                    clientes.push(novoCliente);
+                    cliente.push(novoCliente);
 
                 }
 
-                salvarClientes();
-                mostrarClientes();
-                atualizarTotalClientes();
+                salvarCliente();
+                mostrarCliente();
+                atualizarTotalCliente();
                 limparFormularioCliente();
 
                 alert(
@@ -370,7 +370,7 @@ function iniciarCliente() {
     // INICIALIZAÇÃO DO MÓDULO
     // ==================================================
 
-    mostrarClientes();
-    atualizarTotalClientes();
+    mostrarCliente();
+    atualizarTotalCliente();
 
 }
