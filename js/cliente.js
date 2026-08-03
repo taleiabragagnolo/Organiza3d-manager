@@ -8,7 +8,8 @@ function iniciarCliente() {
     let cliente = JSON.parse(
         localStorage.getItem("organiza3d_cliente")
     ) || [];
-        let clienteEmEdicaoId = null;
+        const estavaEditando =
+    clienteEmEdicaoId !== null;
 
     const botaoSalvarCliente =
         document.getElementById("salvar-cliente");
@@ -298,9 +299,10 @@ if (botaoSalvarCliente) {
                 }
 
                 alert(
-                    "Cliente cadastrado com sucesso!"
-                );
-
+    estavaEditando
+        ? "Cliente atualizado com sucesso!"
+        : "Cliente cadastrado com sucesso!"
+);
             }
         );
 
