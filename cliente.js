@@ -5,29 +5,16 @@
 
 function iniciarCliente() {
 
+    function iniciarCliente() {
+
     let cliente = JSON.parse(
         localStorage.getItem("organiza3d_cliente")
     ) || [];
-        const estavaEditando =
-    clienteEmEdicaoId !== null;
+
+    let clienteEmEdicaoId = null;
 
     const botaoSalvarCliente =
         document.getElementById("salvar-cliente");
-
-    const listaClientes =
-        document.getElementById("lista-cliente");
-
-    const totalClientes =
-        document.getElementById("total-cliente");
-
-    function salvarClientes() {
-
-        localStorage.setItem(
-            "organiza3d_cliente",
-            JSON.stringify(cliente)
-        );
-
-    }
 
     function atualizarTotalClientes() {
 
