@@ -190,18 +190,16 @@ function iniciarCliente() {
 
                 }
 
-                const cliente = {
+                const novoCliente = {
+    id: Date.now(),
+    nome: nome,
+    telefone: telefone,
+    email: email,
+    cidade: cidade,
+    observacoes: observacoes
+};
 
-                    id: Date.now(),
-                    nome: nome,
-                    telefone: telefone,
-                    email: email,
-                    cidade: cidade,
-                    observacoes: observacoes
-
-                };
-
-                cliente.push(cliente);
+cliente.push(novoCliente);
 
                 salvarClientes();
                 mostrarClientes();
