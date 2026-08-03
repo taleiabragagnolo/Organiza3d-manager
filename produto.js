@@ -4985,11 +4985,14 @@ function iniciarProduto() {
 
             margemReal:
                 calculos.margemReal,
+        valorTotalEstoque:
+      calculos.valorTotalEstoque,
 
-            valorTotalEstoque:
-                calculos.valorTotalEstoque,
+        orcamentoOrigemId:
+        orcamentoOrigemProducaoId ||
+            null,
 
-            criadoEm:
+                criadoEm:
                 new Date().toISOString(),
 
             atualizadoEm:
@@ -5091,7 +5094,9 @@ function iniciarProduto() {
             registrarMovimentacaoProducao(
                 produto
             );
-
+            marcarOrcamentoOrigemComoProduzido(
+            produto
+            );
         }
 
         salvarProdutosProduzidos();
@@ -5278,6 +5283,8 @@ function iniciarProduto() {
         }
 
         produtoProduzidoEmEdicaoId = null;
+
+        orcamentoOrigemProducaoId = null;
 
         if (botaoSalvarProdutoProduzido) {
 
@@ -8476,4 +8483,2133 @@ function iniciarProduto() {
     // ==================================================
 
     mostrarOrcamentos();
-    
+        // ==================================================
+    // ELEMENTOS — PEÇAS COM FALHA
+    // ==================================================
+
+    const campoPerdaProdutoLote =
+        document.getElementById(
+            "perda-produto-lote"
+        );
+
+    const campoPerdaData =
+        document.getElementById(
+            "perda-data"
+        );
+
+    const campoPerdaQuantidade =
+        document.getElementById(
+            "perda-quantidade"
+        );
+
+    const campoPerdaTipo =
+        document.getElementById(
+            "perda-tipo"
+        );
+
+    const campoPerdaReaproveitavel =
+        document.getElementById(
+            "perda-reaproveitavel"
+        );
+
+    const campoPerdaQuantidadeReaproveitavel =
+        document.getElementById(
+            "perda-quantidade-reaproveitavel"
+        );
+
+    const campoPerdaCustoUnitario =
+        document.getElementById(
+            "perda-custo-unitario"
+        );
+
+    const campoPerdaCustoTotal =
+        document.getElementById(
+            "perda-custo-total"
+        );
+
+    const campoPerdaMotivo =
+        document.getElementById(
+            "perda-motivo"
+        );
+
+    const campoPerdaDestino =
+        document.getElementById(
+            "perda-destino"
+        );
+
+    const campoPerdaObservacoes =
+        document.getElementById(
+            "perda-observacoes"
+        );
+
+    const botaoSalvarPerda =
+        document.getElementById(
+            "salvar-perda-produto"
+        );
+
+    const botaoLimparPerda =
+        document.getElementById(
+            "limpar-formulario-perda"
+        );
+
+    const listaPerdasProdutos =
+        document.getElementById(
+            "lista-perdas-produtos"
+        );
+
+    const campoPerdasTotalRegistros =
+        document.getElementById(
+            "perdas-total-registros"
+        );
+
+    const campoPerdasTotalUnidades =
+        document.getElementById(
+            "perdas-total-unidades"
+        );
+
+    const campoPerdasCustoTotal =
+        document.getElementById(
+            "perdas-custo-total"
+        );
+
+    const campoPerdasTotalReaproveitaveis =
+        document.getElementById(
+            "perdas-total-reaproveitaveis"
+        );
+
+    // ==================================================
+    // ENCONTRAR PRODUTO PRODUZIDO
+    // ==================================================
+
+    function encontrarProdutoProduzidoPorId(id) {
+
+        return produtosProduzidos.find(
+            function (produto) {
+
+                return String(produto.id) ===
+                    String(id);
+
+            }
+        );
+
+    }
+
+    // ==================================================
+    // PREENCHER SELECT DE LOTES PARA PERDA
+    // ==================================================
+
+    function preencherSelectLotesPerda(
+        valorSelecionado
+    ) {
+
+        if (!campoPerdaProdutoLote) {
+            return;
+        }
+
+        campoPerdaProdutoLote.innerHTML =
+            '<option value="">' +
+            "Selecione o lote produzido" +
+            "</option>";
+
+        produtosProduzidos
+            .filter(
+                function (produto) {
+
+                    return (
+                        converterNumero(
+                            produto.quantidadeDisponivel
+                        ) > 0
+                    );
+
+                }
+            )
+            .sort(
+                function (a, b) {
+
+                    return String(
+                        a.dataProducao || ""
+                    ).localeCompare(
+                        String(
+                            b.dataProducao || ""
+                        )
+                    );
+
+                }
+            )
+            .forEach(
+                function (produto) {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+                    option.value =
+                        String(produto.id);
+
+                    option.textContent =
+                        (
+                            produto.nome ||
+                            "Produto sem nome"
+                        ) +
+                        " — lote " +
+                        (
+                            produto.lote ||
+                            "não informado"
+                        ) +
+                        " — " +
+                        formatarNumeroProduto(
+                            produto.quantidadeDisponivel,
+                            0
+                        ) +
+                        " disponíveis";
+
+                    if (
+                        String(valorSelecionado) ===
+                        String(produto.id)
+                    ) {
+
+                        option.selected = true;
+
+                    }
+
+                    campoPerdaProdutoLote
+                        .appendChild(option);
+
+                }
+            );
+
+    }
+
+    // ==================================================
+    // CALCULAR CUSTO DA PERDA
+    // ==================================================
+
+    function atualizarCalculosPerda() {
+
+        const produto =
+            encontrarProdutoProduzidoPorId(
+                campoPerdaProdutoLote
+                    ? campoPerdaProdutoLote.value
+                    : ""
+            );
+
+        const quantidade =
+            limitarNumero(
+                campoPerdaQuantidade
+                    ? campoPerdaQuantidade.value
+                    : 0,
+                0
+            );
+
+        const custoUnitario =
+            produto
+                ? converterNumero(
+                    produto.custoUnitario
+                )
+                : 0;
+
+        const custoTotal =
+            quantidade *
+            custoUnitario;
+
+        if (campoPerdaCustoUnitario) {
+
+            campoPerdaCustoUnitario.value =
+                formatarDinheiroProduto(
+                    custoUnitario
+                );
+
+        }
+
+        if (campoPerdaCustoTotal) {
+
+            campoPerdaCustoTotal.value =
+                formatarDinheiroProduto(
+                    custoTotal
+                );
+
+        }
+
+        return {
+
+            produto: produto,
+
+            quantidade: quantidade,
+
+            custoUnitario:
+                custoUnitario,
+
+            custoTotal:
+                custoTotal,
+
+            quantidadeReaproveitavel:
+                limitarNumero(
+                    campoPerdaQuantidadeReaproveitavel
+                        ? campoPerdaQuantidadeReaproveitavel.value
+                        : 0,
+                    0
+                )
+
+        };
+
+    }
+
+    // ==================================================
+    // VALIDAR PERDA
+    // ==================================================
+
+    function validarPerda(
+        calculos
+    ) {
+
+        if (!calculos.produto) {
+
+            alert(
+                "Selecione o lote produzido."
+            );
+
+            return false;
+
+        }
+
+        if (!campoPerdaData?.value) {
+
+            alert(
+                "Informe a data da ocorrência."
+            );
+
+            return false;
+
+        }
+
+        if (
+            calculos.quantidade <= 0
+        ) {
+
+            alert(
+                "Informe uma quantidade com falha válida."
+            );
+
+            return false;
+
+        }
+
+        const quantidadeDisponivel =
+            converterNumero(
+                calculos.produto
+                    .quantidadeDisponivel
+            );
+
+        if (
+            calculos.quantidade >
+            quantidadeDisponivel
+        ) {
+
+            alert(
+                "A quantidade da perda é maior que o estoque disponível.\n\n" +
+                "Disponível: " +
+                formatarNumeroProduto(
+                    quantidadeDisponivel,
+                    0
+                ) +
+                "\nInformado: " +
+                formatarNumeroProduto(
+                    calculos.quantidade,
+                    0
+                )
+            );
+
+            return false;
+
+        }
+
+        if (!campoPerdaTipo?.value) {
+
+            alert(
+                "Selecione o tipo de falha."
+            );
+
+            return false;
+
+        }
+
+        if (
+            calculos.quantidadeReaproveitavel >
+            calculos.quantidade
+        ) {
+
+            alert(
+                "A quantidade reaproveitável não pode ser maior que a quantidade com falha."
+            );
+
+            return false;
+
+        }
+
+        if (
+            campoPerdaReaproveitavel?.value ===
+                "Não" &&
+            calculos.quantidadeReaproveitavel > 0
+        ) {
+
+            alert(
+                'Se a peça não pode ser reaproveitada, informe "0" na quantidade reaproveitável.'
+            );
+
+            return false;
+
+        }
+
+        if (
+            !campoPerdaMotivo?.value.trim()
+        ) {
+
+            alert(
+                "Descreva a falha ocorrida."
+            );
+
+            return false;
+
+        }
+
+        return true;
+
+    }
+
+    // ==================================================
+    // CRIAR OBJETO DA PERDA
+    // ==================================================
+
+    function criarObjetoPerda(
+        calculos
+    ) {
+
+        const produto =
+            calculos.produto;
+
+        return {
+
+            id:
+                perdaEmEdicaoId ??
+                criarIdProduto(),
+
+            produtoId:
+                produto.id,
+
+            produtoNome:
+                produto.nome || "",
+
+            lote:
+                produto.lote || "",
+
+            data:
+                campoPerdaData
+                    ? campoPerdaData.value
+                    : "",
+
+            quantidade:
+                calculos.quantidade,
+
+            tipo:
+                campoPerdaTipo
+                    ? campoPerdaTipo.value
+                    : "",
+
+            reaproveitavel:
+                campoPerdaReaproveitavel
+                    ? campoPerdaReaproveitavel.value
+                    : "Não",
+
+            quantidadeReaproveitavel:
+                calculos
+                    .quantidadeReaproveitavel,
+
+            custoUnitario:
+                calculos.custoUnitario,
+
+            custoTotal:
+                calculos.custoTotal,
+
+            motivo:
+                campoPerdaMotivo
+                    ? campoPerdaMotivo
+                        .value
+                        .trim()
+                    : "",
+
+            destino:
+                campoPerdaDestino
+                    ? campoPerdaDestino.value
+                    : "Descarte",
+
+            observacoes:
+                campoPerdaObservacoes
+                    ? campoPerdaObservacoes
+                        .value
+                        .trim()
+                    : "",
+
+            criadoEm:
+                new Date().toISOString(),
+
+            atualizadoEm:
+                new Date().toISOString()
+
+        };
+
+    }
+
+    // ==================================================
+    // REGISTRAR MOVIMENTAÇÃO DA PERDA
+    // ==================================================
+
+    function registrarMovimentacaoPerda(
+        perda,
+        quantidadeAnterior,
+        quantidadePosterior
+    ) {
+
+        movimentacoesProdutos.push({
+
+            id: criarIdProduto(),
+
+            data:
+                perda.data,
+
+            tipo:
+                "Saída por perda",
+
+            produtoId:
+                perda.produtoId,
+
+            produto:
+                perda.produtoNome,
+
+            lote:
+                perda.lote,
+
+            quantidade:
+                perda.quantidade,
+
+            quantidadeAnterior:
+                quantidadeAnterior,
+
+            quantidadePosterior:
+                quantidadePosterior,
+
+            custoUnitario:
+                perda.custoUnitario,
+
+            custoTotal:
+                perda.custoTotal,
+
+            observacoes:
+                perda.motivo
+
+        });
+
+        salvarMovimentacoesProdutos();
+
+    }
+
+    // ==================================================
+    // SALVAR PERDA
+    // ==================================================
+
+    function salvarPerdaProduto() {
+
+        const calculos =
+            atualizarCalculosPerda();
+
+        if (
+            !validarPerda(
+                calculos
+            )
+        ) {
+            return;
+        }
+
+        const estavaEditando =
+            perdaEmEdicaoId !== null;
+
+        const perda =
+            criarObjetoPerda(
+                calculos
+            );
+
+        if (estavaEditando) {
+
+            const indice =
+                perdasProdutos.findIndex(
+                    function (item) {
+
+                        return item.id ===
+                            perdaEmEdicaoId;
+
+                    }
+                );
+
+            if (indice === -1) {
+
+                alert(
+                    "Registro de perda não encontrado."
+                );
+
+                return;
+
+            }
+
+            const perdaAnterior =
+                perdasProdutos[indice];
+
+            perda.criadoEm =
+                perdaAnterior.criadoEm ||
+                perda.criadoEm;
+
+            perdasProdutos[indice] =
+                perda;
+
+        } else {
+
+            const produto =
+                calculos.produto;
+
+            const quantidadeAnterior =
+                converterNumero(
+                    produto.quantidadeDisponivel
+                );
+
+            produto.quantidadeDisponivel =
+                Math.max(
+                    0,
+                    quantidadeAnterior -
+                    perda.quantidade
+                );
+
+            const quantidadePosterior =
+                produto.quantidadeDisponivel;
+
+            perdasProdutos.push(
+                perda
+            );
+
+            salvarProdutosProduzidos();
+
+            registrarMovimentacaoPerda(
+                perda,
+                quantidadeAnterior,
+                quantidadePosterior
+            );
+
+        }
+
+        salvarPerdasProdutos();
+
+        mostrarPerdasProdutos();
+
+        atualizarResumoPerdas();
+
+        mostrarProdutosProduzidos();
+
+        atualizarResumoProdutosProduzidos();
+
+        preencherSelectLotesPerda();
+
+        preencherSelectLotesConsumoProprio();
+
+        limparFormularioPerda();
+
+        if (
+            typeof atualizarDashboardCompleto ===
+            "function"
+        ) {
+
+            atualizarDashboardCompleto();
+
+        }
+
+        if (
+            typeof atualizarRelatorios ===
+            "function"
+        ) {
+
+            atualizarRelatorios();
+
+        }
+
+        alert(
+            estavaEditando
+                ? "Registro de perda atualizado com sucesso!"
+                : "Perda registrada com sucesso!"
+        );
+
+    }
+
+    // ==================================================
+    // LIMPAR FORMULÁRIO DA PERDA
+    // ==================================================
+
+    function limparFormularioPerda() {
+
+        perdaEmEdicaoId =
+            null;
+
+        preencherSelectLotesPerda();
+
+        if (campoPerdaData) {
+
+            campoPerdaData.value =
+                obterDataHojeProduto();
+
+        }
+
+        if (campoPerdaQuantidade) {
+            campoPerdaQuantidade.value = "";
+        }
+
+        if (campoPerdaTipo) {
+            campoPerdaTipo.value = "";
+        }
+
+        if (campoPerdaReaproveitavel) {
+            campoPerdaReaproveitavel.value = "Não";
+        }
+
+        if (campoPerdaQuantidadeReaproveitavel) {
+            campoPerdaQuantidadeReaproveitavel.value = "0";
+        }
+
+        if (campoPerdaMotivo) {
+            campoPerdaMotivo.value = "";
+        }
+
+        if (campoPerdaDestino) {
+            campoPerdaDestino.value = "Descarte";
+        }
+
+        if (campoPerdaObservacoes) {
+            campoPerdaObservacoes.value = "";
+        }
+
+        if (botaoSalvarPerda) {
+
+            botaoSalvarPerda.textContent =
+                "Salvar Perda";
+
+        }
+
+        atualizarCalculosPerda();
+
+    }
+
+    // ==================================================
+    // ATUALIZAR RESUMO DAS PERDAS
+    // ==================================================
+
+    function atualizarResumoPerdas() {
+
+        const totalUnidades =
+            perdasProdutos.reduce(
+                function (total, perda) {
+
+                    return total +
+                        converterNumero(
+                            perda.quantidade
+                        );
+
+                },
+                0
+            );
+
+        const custoTotal =
+            perdasProdutos.reduce(
+                function (total, perda) {
+
+                    return total +
+                        converterNumero(
+                            perda.custoTotal
+                        );
+
+                },
+                0
+            );
+
+        const totalReaproveitaveis =
+            perdasProdutos.reduce(
+                function (total, perda) {
+
+                    return total +
+                        converterNumero(
+                            perda.quantidadeReaproveitavel
+                        );
+
+                },
+                0
+            );
+
+        if (campoPerdasTotalRegistros) {
+
+            campoPerdasTotalRegistros.textContent =
+                perdasProdutos.length;
+
+        }
+
+        if (campoPerdasTotalUnidades) {
+
+            campoPerdasTotalUnidades.textContent =
+                formatarNumeroProduto(
+                    totalUnidades,
+                    0
+                );
+
+        }
+
+        if (campoPerdasCustoTotal) {
+
+            campoPerdasCustoTotal.textContent =
+                formatarDinheiroProduto(
+                    custoTotal
+                );
+
+        }
+
+        if (campoPerdasTotalReaproveitaveis) {
+
+            campoPerdasTotalReaproveitaveis.textContent =
+                formatarNumeroProduto(
+                    totalReaproveitaveis,
+                    0
+                );
+
+        }
+
+    }
+
+    // ==================================================
+    // MOSTRAR PERDAS
+    // ==================================================
+
+    function mostrarPerdasProdutos() {
+
+        if (!listaPerdasProdutos) {
+            return;
+        }
+
+        if (perdasProdutos.length === 0) {
+
+            listaPerdasProdutos.innerHTML =
+                "<p>Nenhuma perda registrada.</p>";
+
+            atualizarResumoPerdas();
+
+            return;
+
+        }
+
+        listaPerdasProdutos.innerHTML =
+            [...perdasProdutos]
+                .sort(
+                    function (a, b) {
+
+                        return String(
+                            b.data || ""
+                        ).localeCompare(
+                            String(
+                                a.data || ""
+                            )
+                        );
+
+                    }
+                )
+                .map(
+                    function (perda) {
+
+                        return `
+                            <div class="card-item">
+
+                                <h4>
+                                    ${escaparTexto(
+                                        perda.produtoNome ||
+                                        "Produto não informado"
+                                    )}
+                                </h4>
+
+                                <p>
+                                    <strong>Lote:</strong>
+                                    ${escaparTexto(
+                                        perda.lote ||
+                                        "Não informado"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Data:</strong>
+                                    ${formatarDataProduto(
+                                        perda.data
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Quantidade perdida:</strong>
+                                    ${formatarNumeroProduto(
+                                        perda.quantidade,
+                                        0
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Tipo de falha:</strong>
+                                    ${escaparTexto(
+                                        perda.tipo ||
+                                        "Não informado"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Reaproveitável:</strong>
+                                    ${escaparTexto(
+                                        perda.reaproveitavel ||
+                                        "Não"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Quantidade reaproveitável:</strong>
+                                    ${formatarNumeroProduto(
+                                        perda.quantidadeReaproveitavel,
+                                        0
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Custo total perdido:</strong>
+                                    ${formatarDinheiroProduto(
+                                        perda.custoTotal
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Destino:</strong>
+                                    ${escaparTexto(
+                                        perda.destino ||
+                                        "Não informado"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Descrição:</strong>
+                                    ${escaparTexto(
+                                        perda.motivo ||
+                                        "Não informada"
+                                    )}
+                                </p>
+
+                            </div>
+                        `;
+
+                    }
+                )
+                .join("");
+
+        atualizarResumoPerdas();
+
+    }
+
+    // ==================================================
+    // EVENTOS DA PERDA
+    // ==================================================
+
+    [
+        campoPerdaProdutoLote,
+        campoPerdaQuantidade,
+        campoPerdaQuantidadeReaproveitavel,
+        campoPerdaReaproveitavel
+    ].forEach(
+        function (campo) {
+
+            if (!campo) {
+                return;
+            }
+
+            campo.addEventListener(
+                "input",
+                atualizarCalculosPerda
+            );
+
+            campo.addEventListener(
+                "change",
+                atualizarCalculosPerda
+            );
+
+        }
+    );
+
+    if (botaoSalvarPerda) {
+
+        botaoSalvarPerda.addEventListener(
+            "click",
+            salvarPerdaProduto
+        );
+
+    }
+
+    if (botaoLimparPerda) {
+
+        botaoLimparPerda.addEventListener(
+            "click",
+            limparFormularioPerda
+        );
+
+    }
+
+    // ==================================================
+    // PRIMEIRO CARREGAMENTO DAS PERDAS
+    // ==================================================
+
+    preencherSelectLotesPerda();
+
+    mostrarPerdasProdutos();
+
+    atualizarResumoPerdas();
+
+    if (campoPerdaData) {
+
+        campoPerdaData.value =
+            campoPerdaData.value ||
+            obterDataHojeProduto();
+
+    }
+
+    atualizarCalculosPerda();
+        // ==================================================
+    // ELEMENTOS — CONSUMO PRÓPRIO
+    // ==================================================
+
+    const campoConsumoProdutoLote =
+        document.getElementById(
+            "consumo-proprio-produto-lote"
+        );
+
+    const campoConsumoData =
+        document.getElementById(
+            "consumo-proprio-data"
+        );
+
+    const campoConsumoQuantidade =
+        document.getElementById(
+            "consumo-proprio-quantidade"
+        );
+
+    const campoConsumoFinalidade =
+        document.getElementById(
+            "consumo-proprio-finalidade"
+        );
+
+    const campoConsumoLocal =
+        document.getElementById(
+            "consumo-proprio-local"
+        );
+
+    const campoConsumoResponsavel =
+        document.getElementById(
+            "consumo-proprio-responsavel"
+        );
+
+    const campoConsumoCustoUnitario =
+        document.getElementById(
+            "consumo-proprio-custo-unitario"
+        );
+
+    const campoConsumoCustoTotal =
+        document.getElementById(
+            "consumo-proprio-custo-total"
+        );
+
+    const campoConsumoDescricao =
+        document.getElementById(
+            "consumo-proprio-descricao"
+        );
+
+    const campoConsumoObservacoes =
+        document.getElementById(
+            "consumo-proprio-observacoes"
+        );
+
+    const botaoSalvarConsumoProprio =
+        document.getElementById(
+            "salvar-consumo-proprio"
+        );
+
+    const botaoLimparConsumoProprio =
+        document.getElementById(
+            "limpar-formulario-consumo-proprio"
+        );
+
+    const listaConsumoProprio =
+        document.getElementById(
+            "lista-consumo-proprio"
+        );
+
+    const campoConsumoTotalRegistros =
+        document.getElementById(
+            "consumo-proprio-total-registros"
+        );
+
+    const campoConsumoTotalUnidades =
+        document.getElementById(
+            "consumo-proprio-total-unidades"
+        );
+
+    const campoConsumoCustoInternoTotal =
+    document.getElementById(
+        "consumo-proprio-custo-interno-total"
+    );
+
+    const campoConsumoItensEmUso =
+        document.getElementById(
+            "consumo-proprio-itens-em-uso"
+        );
+
+    // ==================================================
+    // PREENCHER SELECT DOS LOTES
+    // ==================================================
+
+    function preencherSelectLotesConsumoProprio(
+        valorSelecionado
+    ) {
+
+        if (!campoConsumoProdutoLote) {
+            return;
+        }
+
+        campoConsumoProdutoLote.innerHTML =
+            '<option value="">' +
+            "Selecione o lote produzido" +
+            "</option>";
+
+        produtosProduzidos
+            .filter(
+                function (produto) {
+
+                    return (
+                        converterNumero(
+                            produto.quantidadeDisponivel
+                        ) > 0
+                    );
+
+                }
+            )
+            .sort(
+                function (a, b) {
+
+                    return String(
+                        a.dataProducao || ""
+                    ).localeCompare(
+                        String(
+                            b.dataProducao || ""
+                        )
+                    );
+
+                }
+            )
+            .forEach(
+                function (produto) {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+                    option.value =
+                        String(produto.id);
+
+                    option.textContent =
+                        (
+                            produto.nome ||
+                            "Produto sem nome"
+                        ) +
+                        " — lote " +
+                        (
+                            produto.lote ||
+                            "não informado"
+                        ) +
+                        " — " +
+                        formatarNumeroProduto(
+                            produto.quantidadeDisponivel,
+                            0
+                        ) +
+                        " disponíveis";
+
+                    if (
+                        String(valorSelecionado) ===
+                        String(produto.id)
+                    ) {
+
+                        option.selected = true;
+
+                    }
+
+                    campoConsumoProdutoLote
+                        .appendChild(option);
+
+                }
+            );
+
+    }
+
+    // ==================================================
+    // CALCULAR CONSUMO PRÓPRIO
+    // ==================================================
+
+    function atualizarCalculosConsumoProprio() {
+
+        const produto =
+            encontrarProdutoProduzidoPorId(
+                campoConsumoProdutoLote
+                    ? campoConsumoProdutoLote.value
+                    : ""
+            );
+
+        const quantidade =
+            limitarNumero(
+                campoConsumoQuantidade
+                    ? campoConsumoQuantidade.value
+                    : 0,
+                0
+            );
+
+        const custoUnitario =
+            produto
+                ? converterNumero(
+                    produto.custoUnitario
+                )
+                : 0;
+
+        const custoTotal =
+            quantidade *
+            custoUnitario;
+
+        if (campoConsumoCustoUnitario) {
+
+            campoConsumoCustoUnitario.value =
+                formatarDinheiroProduto(
+                    custoUnitario
+                );
+
+        }
+
+        if (campoConsumoCustoTotal) {
+
+            campoConsumoCustoTotal.value =
+                formatarDinheiroProduto(
+                    custoTotal
+                );
+
+        }
+
+        return {
+
+            produto: produto,
+
+            quantidade: quantidade,
+
+            custoUnitario:
+                custoUnitario,
+
+            custoTotal:
+                custoTotal
+
+        };
+
+    }
+
+    // ==================================================
+    // VALIDAR CONSUMO PRÓPRIO
+    // ==================================================
+
+    function validarConsumoProprio(
+        calculos
+    ) {
+
+        if (!calculos.produto) {
+
+            alert(
+                "Selecione o lote produzido."
+            );
+
+            return false;
+
+        }
+
+        if (!campoConsumoData?.value) {
+
+            alert(
+                "Informe a data da retirada."
+            );
+
+            return false;
+
+        }
+
+        if (
+            calculos.quantidade <= 0
+        ) {
+
+            alert(
+                "Informe uma quantidade válida."
+            );
+
+            return false;
+
+        }
+
+        const quantidadeDisponivel =
+            converterNumero(
+                calculos.produto
+                    .quantidadeDisponivel
+            );
+
+        if (
+            calculos.quantidade >
+            quantidadeDisponivel
+        ) {
+
+            alert(
+                "A quantidade informada é maior que o estoque disponível.\n\n" +
+                "Disponível: " +
+                formatarNumeroProduto(
+                    quantidadeDisponivel,
+                    0
+                ) +
+                "\nInformado: " +
+                formatarNumeroProduto(
+                    calculos.quantidade,
+                    0
+                )
+            );
+
+            return false;
+
+        }
+
+        if (!campoConsumoFinalidade?.value) {
+
+            alert(
+                "Selecione a finalidade do consumo próprio."
+            );
+
+            return false;
+
+        }
+
+        if (
+            !campoConsumoDescricao?.value.trim()
+        ) {
+
+            alert(
+                "Descreva como o produto será utilizado."
+            );
+
+            return false;
+
+        }
+
+        return true;
+
+    }
+
+    // ==================================================
+    // CRIAR OBJETO DO CONSUMO PRÓPRIO
+    // ==================================================
+
+    function criarObjetoConsumoProprio(
+        calculos
+    ) {
+
+        const produto =
+            calculos.produto;
+
+        return {
+
+            id:
+                consumoProprioEmEdicaoId ??
+                criarIdProduto(),
+
+            produtoId:
+                produto.id,
+
+            produtoNome:
+                produto.nome || "",
+
+            lote:
+                produto.lote || "",
+
+            data:
+                campoConsumoData
+                    ? campoConsumoData.value
+                    : "",
+
+            quantidade:
+                calculos.quantidade,
+
+            finalidade:
+                campoConsumoFinalidade
+                    ? campoConsumoFinalidade.value
+                    : "",
+
+            local:
+                campoConsumoLocal
+                    ? campoConsumoLocal
+                        .value
+                        .trim()
+                    : "",
+
+            responsavel:
+                campoConsumoResponsavel
+                    ? campoConsumoResponsavel
+                        .value
+                        .trim()
+                    : "",
+
+            custoUnitario:
+                calculos.custoUnitario,
+
+            custoTotal:
+                calculos.custoTotal,
+
+            descricao:
+                campoConsumoDescricao
+                    ? campoConsumoDescricao
+                        .value
+                        .trim()
+                    : "",
+
+            observacoes:
+                campoConsumoObservacoes
+                    ? campoConsumoObservacoes
+                        .value
+                        .trim()
+                    : "",
+
+            status:
+                "Em uso",
+
+            criadoEm:
+                new Date().toISOString(),
+
+            atualizadoEm:
+                new Date().toISOString()
+
+        };
+
+    }
+
+    // ==================================================
+    // REGISTRAR MOVIMENTAÇÃO DO CONSUMO PRÓPRIO
+    // ==================================================
+
+    function registrarMovimentacaoConsumoProprio(
+        consumo,
+        quantidadeAnterior,
+        quantidadePosterior
+    ) {
+
+        movimentacoesProdutos.push({
+
+            id: criarIdProduto(),
+
+            data:
+                consumo.data,
+
+            tipo:
+                "Saída por consumo próprio",
+
+            produtoId:
+                consumo.produtoId,
+
+            produto:
+                consumo.produtoNome,
+
+            lote:
+                consumo.lote,
+
+            quantidade:
+                consumo.quantidade,
+
+            quantidadeAnterior:
+                quantidadeAnterior,
+
+            quantidadePosterior:
+                quantidadePosterior,
+
+            custoUnitario:
+                consumo.custoUnitario,
+
+            custoTotal:
+                consumo.custoTotal,
+
+            observacoes:
+                consumo.finalidade +
+                (
+                    consumo.descricao
+                        ? " — " +
+                            consumo.descricao
+                        : ""
+                )
+
+        });
+
+        salvarMovimentacoesProdutos();
+
+    }
+
+    // ==================================================
+    // SALVAR CONSUMO PRÓPRIO
+    // ==================================================
+
+    function salvarConsumoProprioProduto() {
+
+        const calculos =
+            atualizarCalculosConsumoProprio();
+
+        if (
+            !validarConsumoProprio(
+                calculos
+            )
+        ) {
+            return;
+        }
+
+        const estavaEditando =
+            consumoProprioEmEdicaoId !==
+            null;
+
+        const consumo =
+            criarObjetoConsumoProprio(
+                calculos
+            );
+
+        if (estavaEditando) {
+
+            const indice =
+                consumosProprios.findIndex(
+                    function (item) {
+
+                        return item.id ===
+                            consumoProprioEmEdicaoId;
+
+                    }
+                );
+
+            if (indice === -1) {
+
+                alert(
+                    "Registro de consumo próprio não encontrado."
+                );
+
+                return;
+
+            }
+
+            const consumoAnterior =
+                consumosProprios[indice];
+
+            consumo.criadoEm =
+                consumoAnterior.criadoEm ||
+                consumo.criadoEm;
+
+            consumosProprios[indice] =
+                consumo;
+
+        } else {
+
+            const produto =
+                calculos.produto;
+
+            const quantidadeAnterior =
+                converterNumero(
+                    produto.quantidadeDisponivel
+                );
+
+            produto.quantidadeDisponivel =
+                Math.max(
+                    0,
+                    quantidadeAnterior -
+                    consumo.quantidade
+                );
+
+            const quantidadePosterior =
+                produto.quantidadeDisponivel;
+
+            consumosProprios.push(
+                consumo
+            );
+
+            salvarProdutosProduzidos();
+
+            registrarMovimentacaoConsumoProprio(
+                consumo,
+                quantidadeAnterior,
+                quantidadePosterior
+            );
+
+        }
+
+        salvarConsumosProprios();
+
+        mostrarConsumosProprios();
+
+        atualizarResumoConsumoProprio();
+
+        mostrarProdutosProduzidos();
+
+        atualizarResumoProdutosProduzidos();
+
+        preencherSelectLotesPerda();
+
+        preencherSelectLotesConsumoProprio();
+
+        limparFormularioConsumoProprio();
+
+        if (
+            typeof atualizarDashboardCompleto ===
+            "function"
+        ) {
+
+            atualizarDashboardCompleto();
+
+        }
+
+        if (
+            typeof atualizarRelatorios ===
+            "function"
+        ) {
+
+            atualizarRelatorios();
+
+        }
+
+        alert(
+            estavaEditando
+                ? "Consumo próprio atualizado com sucesso!"
+                : "Consumo próprio registrado com sucesso!"
+        );
+
+    }
+
+    // ==================================================
+    // LIMPAR FORMULÁRIO DO CONSUMO PRÓPRIO
+    // ==================================================
+
+    function limparFormularioConsumoProprio() {
+
+        consumoProprioEmEdicaoId =
+            null;
+
+        preencherSelectLotesConsumoProprio();
+
+        if (campoConsumoData) {
+
+            campoConsumoData.value =
+                obterDataHojeProduto();
+
+        }
+
+        if (campoConsumoQuantidade) {
+            campoConsumoQuantidade.value = "";
+        }
+
+        if (campoConsumoFinalidade) {
+            campoConsumoFinalidade.value = "";
+        }
+
+        if (campoConsumoLocal) {
+            campoConsumoLocal.value = "";
+        }
+
+        if (campoConsumoResponsavel) {
+            campoConsumoResponsavel.value = "";
+        }
+
+        if (campoConsumoDescricao) {
+            campoConsumoDescricao.value = "";
+        }
+
+        if (campoConsumoObservacoes) {
+            campoConsumoObservacoes.value = "";
+        }
+
+        if (botaoSalvarConsumoProprio) {
+
+            botaoSalvarConsumoProprio.textContent =
+                "Salvar Consumo Próprio";
+
+        }
+
+        atualizarCalculosConsumoProprio();
+
+    }
+
+    // ==================================================
+    // ATUALIZAR RESUMO DO CONSUMO PRÓPRIO
+    // ==================================================
+
+    function atualizarResumoConsumoProprio() {
+
+        const totalUnidades =
+            consumosProprios.reduce(
+                function (total, consumo) {
+
+                    return total +
+                        converterNumero(
+                            consumo.quantidade
+                        );
+
+                },
+                0
+            );
+
+        const custoTotal =
+            consumosProprios.reduce(
+                function (total, consumo) {
+
+                    return total +
+                        converterNumero(
+                            consumo.custoTotal
+                        );
+
+                },
+                0
+            );
+
+        const itensEmUso =
+            consumosProprios.filter(
+                function (consumo) {
+
+                    return consumo.status !==
+                        "Descartado";
+
+                }
+            ).length;
+
+        if (campoConsumoTotalRegistros) {
+
+            campoConsumoTotalRegistros.textContent =
+                consumosProprios.length;
+
+        }
+
+        if (campoConsumoTotalUnidades) {
+
+            campoConsumoTotalUnidades.textContent =
+                formatarNumeroProduto(
+                    totalUnidades,
+                    0
+                );
+
+        }
+
+        if (campoConsumoCustoInternoTotal) {
+
+            campoConsumoCustoInternoTotal.textContent =
+                formatarDinheiroProduto(
+                    custoTotal
+                );
+
+        }
+
+        if (campoConsumoItensEmUso) {
+
+            campoConsumoItensEmUso.textContent =
+                itensEmUso;
+
+        }
+
+    }
+
+    // ==================================================
+    // MOSTRAR CONSUMOS PRÓPRIOS
+    // ==================================================
+
+    function mostrarConsumosProprios() {
+
+        if (!listaConsumoProprio) {
+            return;
+        }
+
+        if (consumosProprios.length === 0) {
+
+            listaConsumoProprio.innerHTML =
+                "<p>Nenhum consumo próprio registrado.</p>";
+
+            atualizarResumoConsumoProprio();
+
+            return;
+
+        }
+
+        listaConsumoProprio.innerHTML =
+            [...consumosProprios]
+                .sort(
+                    function (a, b) {
+
+                        return String(
+                            b.data || ""
+                        ).localeCompare(
+                            String(
+                                a.data || ""
+                            )
+                        );
+
+                    }
+                )
+                .map(
+                    function (consumo) {
+
+                        return `
+                            <div class="card-item">
+
+                                <h4>
+                                    ${escaparTexto(
+                                        consumo.produtoNome ||
+                                        "Produto não informado"
+                                    )}
+                                </h4>
+
+                                <p>
+                                    <strong>Lote:</strong>
+                                    ${escaparTexto(
+                                        consumo.lote ||
+                                        "Não informado"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Data:</strong>
+                                    ${formatarDataProduto(
+                                        consumo.data
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Quantidade:</strong>
+                                    ${formatarNumeroProduto(
+                                        consumo.quantidade,
+                                        0
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Finalidade:</strong>
+                                    ${escaparTexto(
+                                        consumo.finalidade ||
+                                        "Não informada"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Local de uso:</strong>
+                                    ${escaparTexto(
+                                        consumo.local ||
+                                        "Não informado"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Responsável:</strong>
+                                    ${escaparTexto(
+                                        consumo.responsavel ||
+                                        "Não informado"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Custo unitário:</strong>
+                                    ${formatarDinheiroProduto(
+                                        consumo.custoUnitario
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Custo interno total:</strong>
+                                    ${formatarDinheiroProduto(
+                                        consumo.custoTotal
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Descrição:</strong>
+                                    ${escaparTexto(
+                                        consumo.descricao ||
+                                        "Não informada"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Status:</strong>
+                                    ${escaparTexto(
+                                        consumo.status ||
+                                        "Em uso"
+                                    )}
+                                </p>
+
+                            </div>
+                        `;
+
+                    }
+                )
+                .join("");
+
+        atualizarResumoConsumoProprio();
+
+    }
+
+    // ==================================================
+    // EVENTOS DO CONSUMO PRÓPRIO
+    // ==================================================
+
+    [
+        campoConsumoProdutoLote,
+        campoConsumoQuantidade
+    ].forEach(
+        function (campo) {
+
+            if (!campo) {
+                return;
+            }
+
+            campo.addEventListener(
+                "input",
+                atualizarCalculosConsumoProprio
+            );
+
+            campo.addEventListener(
+                "change",
+                atualizarCalculosConsumoProprio
+            );
+
+        }
+    );
+
+    if (botaoSalvarConsumoProprio) {
+
+        botaoSalvarConsumoProprio
+            .addEventListener(
+                "click",
+                salvarConsumoProprioProduto
+            );
+
+    }
+
+    if (botaoLimparConsumoProprio) {
+
+        botaoLimparConsumoProprio
+            .addEventListener(
+                "click",
+                limparFormularioConsumoProprio
+            );
+
+    }
+
+    // ==================================================
+    // PRIMEIRO CARREGAMENTO DO CONSUMO PRÓPRIO
+    // ==================================================
+
+    preencherSelectLotesConsumoProprio();
+
+    mostrarConsumosProprios();
+
+    atualizarResumoConsumoProprio();
+
+    if (campoConsumoData) {
+
+        campoConsumoData.value =
+            campoConsumoData.value ||
+            obterDataHojeProduto();
+
+    }
+
+    atualizarCalculosConsumoProprio();
+        // ==================================================
+    // MARCAR ORÇAMENTO COMO PRODUZIDO
+    // ==================================================
+
+    function marcarOrcamentoOrigemComoProduzido(
+        produto
+    ) {
+
+        if (!orcamentoOrigemProducaoId) {
+            return;
+        }
+
+        const orcamento =
+            orcamentos.find(
+                function (item) {
+
+                    return String(item.id) ===
+                        String(
+                            orcamentoOrigemProducaoId
+                        );
+
+                }
+            );
+
+        if (!orcamento) {
+
+            console.warn(
+                "O orçamento de origem não foi encontrado."
+            );
+
+            return;
+
+        }
+
+        orcamento.status =
+            "Produzido";
+
+        orcamento.produtoProduzidoId =
+            produto.id;
+
+        orcamento.loteProduzido =
+            produto.lote;
+
+        orcamento.dataProducao =
+            produto.dataProducao;
+
+        orcamento.custoRealProducao =
+            produto.custoTotalProducao;
+
+        orcamento.custoUnitarioReal =
+            produto.custoUnitario;
+
+        orcamento.atualizadoEm =
+            new Date().toISOString();
+
+        salvarOrcamentos();
+
+        mostrarOrcamentos();
+
+        atualizarResumoOrcamentos();
+
+    }
+
+    // ==================================================
+    // ATUALIZAR TODO O MÓDULO
+    // ==================================================
+
+    function atualizarModuloProduto() {
+
+        recarregarDadosDeApoio();
+
+        atualizarSelectsProduto();
+
+        mostrarProdutosProduzidos();
+
+        atualizarResumoProdutosProduzidos();
+
+        mostrarOrcamentos();
+
+        atualizarResumoOrcamentos();
+
+        mostrarPerdasProdutos();
+
+        atualizarResumoPerdas();
+
+        mostrarConsumosProprios();
+
+        atualizarResumoConsumoProprio();
+
+        preencherSelectLotesPerda();
+
+        preencherSelectLotesConsumoProprio();
+
+        atualizarCalculosProduto();
+
+        atualizarCalculosOrcamento();
+
+        atualizarCalculosPerda();
+
+        atualizarCalculosConsumoProprio();
+
+    }
+
+    // ==================================================
+    // DISPONIBILIZAR ATUALIZAÇÃO PARA OUTROS MÓDULOS
+    // ==================================================
+
+    window.atualizarModuloProduto =
+        atualizarModuloProduto;
+
+    // ==================================================
+    // ATUALIZAR QUANDO O LOCALSTORAGE MUDAR
+    // ==================================================
+
+    window.addEventListener(
+        "storage",
+        function (evento) {
+
+            const chavesRelacionadas = [
+
+                CHAVE_PRODUTOS_PRODUZIDOS,
+                CHAVE_ORCAMENTOS,
+                CHAVE_PERDAS,
+                CHAVE_CONSUMO_PROPRIO,
+                CHAVE_MOVIMENTACOES,
+                CHAVE_FILAMENTOS,
+                CHAVE_ACESSORIOS,
+                CHAVE_EMBALAGENS,
+                CHAVE_IMPRESSORAS,
+                CHAVE_CLIENTES
+
+            ];
+
+            if (
+                evento.key &&
+                chavesRelacionadas.includes(
+                    evento.key
+                )
+            ) {
+
+                produtosProduzidos =
+                    lerListaLocalStorage(
+                        CHAVE_PRODUTOS_PRODUZIDOS
+                    );
+
+                orcamentos =
+                    lerListaLocalStorage(
+                        CHAVE_ORCAMENTOS
+                    );
+
+                perdasProdutos =
+                    lerListaLocalStorage(
+                        CHAVE_PERDAS
+                    );
+
+                consumosProprios =
+                    lerListaLocalStorage(
+                        CHAVE_CONSUMO_PROPRIO
+                    );
+
+                movimentacoesProdutos =
+                    lerListaLocalStorage(
+                        CHAVE_MOVIMENTACOES
+                    );
+
+                atualizarModuloProduto();
+
+            }
+
+        }
+    );
+
+    // ==================================================
+    // INICIALIZAÇÃO FINAL
+    // ==================================================
+
+    atualizarModuloProduto();
+
+    abrirAbaProduto(
+        "aba-produtos-produzidos"
+    );
+}
