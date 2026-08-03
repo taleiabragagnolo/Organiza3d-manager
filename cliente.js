@@ -296,6 +296,4 @@ if (botaoSalvarCliente) {
 
     mostrarClientes();
     atualizarTotalClientes();
-
-
 }
