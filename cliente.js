@@ -357,7 +357,7 @@ function iniciarCliente() {
 
                 alert(
                     estavaEditando
-                        ? "Cliente atualizado com sucesso!"
+                
                         : "Cliente cadastrado com sucesso!"
                 );
 
