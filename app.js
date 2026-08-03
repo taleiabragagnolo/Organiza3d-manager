@@ -90,20 +90,20 @@ function iniciarMenu() {
 
 function iniciarModulos() {
 
-    if (typeof iniciarClientes === "function") {
-        iniciarClientes();
+    if (typeof iniciarCliente === "function") {
+        iniciarCliente();
     }
 
-    if (typeof iniciarProdutos === "function") {
-        iniciarProdutos();
+    if (typeof iniciarProduto === "function") {
+        iniciarProduto();
     }
 
-    if (typeof iniciarEncomendas === "function") {
-        iniciarEncomendas();
+    if (typeof iniciarEncomenda === "function") {
+        iniciarEncomenda();
     }
 
-    if (typeof iniciarFilamentos === "function") {
-        iniciarFilamentos();
+    if (typeof iniciarFilamento === "function") {
+        iniciarFilamento();
     }
 
     if (typeof iniciarEquipamento === "function") {
