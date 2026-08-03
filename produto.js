@@ -10151,4 +10151,184 @@ function iniciarProduto() {
             );
 
     }
-    
+       // ==================================================
+    // PARTE 12
+    // INICIALIZAÇÃO FINAL DO MÓDULO
+    // ==================================================
+
+    function atualizarModuloProduto() {
+
+        produtos =
+            lerLista(
+                CHAVE_PRODUTOS
+            );
+
+        orcamentos =
+            lerLista(
+                CHAVE_ORCAMENTOS
+            );
+
+        perdas =
+            lerLista(
+                CHAVE_PERDAS
+            );
+
+        consumosProprios =
+            lerLista(
+                CHAVE_CONSUMO_PROPRIO
+            );
+
+        movimentacoes =
+            lerLista(
+                CHAVE_MOVIMENTACOES
+            );
+
+        recarregarDadosDeApoio();
+
+        atualizarSelectsFixos();
+
+        mostrarProdutos();
+
+        atualizarResumoProdutos();
+
+        mostrarOrcamentos();
+
+        atualizarResumoOrcamentos();
+
+        mostrarPerdas();
+
+        atualizarResumoPerdas();
+
+        mostrarConsumosProprios();
+
+        atualizarResumoConsumoProprio();
+
+        preencherSelectLotesPerda();
+
+        preencherSelectLotesConsumoProprio();
+
+        atualizarCalculosProduto();
+
+        atualizarCalculosOrcamento();
+
+        atualizarCalculosPerda();
+
+        atualizarCalculosConsumoProprio();
+
+    }
+
+    // ==================================================
+    // DATAS INICIAIS
+    // ==================================================
+
+    if (
+        campoDataProduto &&
+        !campoDataProduto.value
+    ) {
+
+        campoDataProduto.value =
+            dataHoje();
+
+    }
+
+    if (
+        campoDataOrcamento &&
+        !campoDataOrcamento.value
+    ) {
+
+        campoDataOrcamento.value =
+            dataHoje();
+
+    }
+
+    if (
+        campoPerdaData &&
+        !campoPerdaData.value
+    ) {
+
+        campoPerdaData.value =
+            dataHoje();
+
+    }
+
+    if (
+        campoConsumoData &&
+        !campoConsumoData.value
+    ) {
+
+        campoConsumoData.value =
+            dataHoje();
+
+    }
+
+    // ==================================================
+    // LINHAS INICIAIS
+    // ==================================================
+
+    limparLinhasFilamentosProduto();
+
+    limparLinhasAcessoriosProduto();
+
+    limparLinhasEmbalagensProduto();
+
+    limparLinhasFilamentosOrcamento();
+
+    limparLinhasAcessoriosOrcamento();
+
+    limparLinhasEmbalagensOrcamento();
+
+    // ==================================================
+    // EXPOR ATUALIZAÇÃO PARA OUTROS MÓDULOS
+    // ==================================================
+
+    window.atualizarModuloProduto =
+        atualizarModuloProduto;
+
+    // ==================================================
+    // ATUALIZAR QUANDO O LOCALSTORAGE MUDAR
+    // ==================================================
+
+    window.addEventListener(
+        "storage",
+        function (evento) {
+
+            const chavesRelacionadas = [
+
+                CHAVE_PRODUTOS,
+                CHAVE_ORCAMENTOS,
+                CHAVE_PERDAS,
+                CHAVE_CONSUMO_PROPRIO,
+                CHAVE_MOVIMENTACOES,
+                CHAVE_FILAMENTOS,
+                CHAVE_ACESSORIOS,
+                CHAVE_EMBALAGENS,
+                CHAVE_IMPRESSORAS,
+                CHAVE_CLIENTES
+
+            ];
+
+            if (
+                evento.key &&
+                chavesRelacionadas.includes(
+                    evento.key
+                )
+            ) {
+
+                atualizarModuloProduto();
+
+            }
+
+        }
+    );
+
+    // ==================================================
+    // PRIMEIRA ATUALIZAÇÃO
+    // ==================================================
+
+    atualizarModuloProduto();
+
+    abrirAba(
+        "aba-produtos-produzidos"
+    );
+
+} 
