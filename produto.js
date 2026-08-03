@@ -5112,4 +5112,5043 @@ function iniciarProduto() {
         );
 
     }
+        // ==================================================
+    // PARTE 7E
+    // ATUALIZAÇÃO DAS HORAS DA IMPRESSORA
+    // ==================================================
+
+    function obterHorasAtuaisImpressora(
+        impressora
+    ) {
+
+        if (!impressora) {
+            return 0;
+        }
+
+        return numeroPositivo(
+
+            impressora.horasUso ??
+            impressora.horasAcumuladas ??
+            impressora.horas ??
+            impressora.horasIniciais ??
+            0
+
+        );
+
+    }
+
+    function definirHorasImpressora(
+        impressora,
+        totalHoras
+    ) {
+
+        const horas =
+            numeroPositivo(
+                totalHoras
+            );
+
+        impressora.horasUso =
+            horas;
+
+        impressora.horasAcumuladas =
+            horas;
+
+        if (
+            Object.prototype.hasOwnProperty.call(
+                impressora,
+                "horas"
+            )
+        ) {
+
+            impressora.horas =
+                horas;
+
+        }
+
+    }
+
+    function adicionarHistoricoHorasImpressora(
+        impressora,
+        produto,
+        horasAdicionadas
+    ) {
+
+        if (!impressora) {
+            return;
+        }
+
+        if (
+            !Array.isArray(
+                impressora.historicoHoras
+            )
+        ) {
+
+            impressora.historicoHoras =
+                [];
+
+        }
+
+        impressora.historicoHoras.push({
+
+            id:
+                criarId(),
+
+            data:
+                produto.dataProducao ||
+                dataHoje(),
+
+            origem:
+                "Produção",
+
+            produtoId:
+                produto.id,
+
+            produto:
+                produto.nome,
+
+            lote:
+                produto.lote,
+
+            horas:
+                numeroPositivo(
+                    horasAdicionadas
+                ),
+
+            criadoEm:
+                new Date().toISOString()
+
+        });
+
+    }
+
+    function atualizarControleManutencaoImpressora(
+        impressora
+    ) {
+
+        if (!impressora) {
+            return;
+        }
+
+        const horasAtuais =
+            obterHorasAtuaisImpressora(
+                impressora
+            );
+
+        const intervaloManutencao =
+            numeroPositivo(
+
+                impressora.intervaloManutencaoHoras ??
+                impressora.intervaloManutencao ??
+                impressora.horasManutencaoPreventiva ??
+                0
+
+            );
+
+        const horasUltimaManutencao =
+            numeroPositivo(
+
+                impressora.horasUltimaManutencao ??
+                impressora.ultimaManutencaoHoras ??
+                0
+
+            );
+
+        const horasDesdeUltimaManutencao =
+            Math.max(
+                0,
+                horasAtuais -
+                horasUltimaManutencao
+            );
+
+        impressora.horasDesdeUltimaManutencao =
+            horasDesdeUltimaManutencao;
+
+        if (
+            intervaloManutencao > 0
+        ) {
+
+            impressora.horasParaProximaManutencao =
+                Math.max(
+                    0,
+                    intervaloManutencao -
+                    horasDesdeUltimaManutencao
+                );
+
+            impressora.manutencaoPendente =
+                horasDesdeUltimaManutencao >=
+                intervaloManutencao;
+
+        }
+
+    }
+
+    function atualizarDepreciacaoImpressora(
+        impressora
+    ) {
+
+        if (!impressora) {
+            return;
+        }
+
+        const horasAtuais =
+            obterHorasAtuaisImpressora(
+                impressora
+            );
+
+        const custoPorHora =
+            numeroPositivo(
+
+                impressora.custoHora ??
+                impressora.custoPorHora ??
+                0
+
+            );
+
+        impressora.depreciacaoAcumulada =
+            horasAtuais *
+            custoPorHora;
+
+    }
+
+    function registrarHorasImpressoraProduto(
+        produto,
+        editando
+    ) {
+
+        if (!produto) {
+            return;
+        }
+
+        const impressora =
+            encontrarImpressora(
+                produto.impressoraId
+            );
+
+        if (!impressora) {
+
+            console.warn(
+                "A impressora utilizada não foi encontrada."
+            );
+
+            return;
+
+        }
+
+        const horasProduto =
+            numeroPositivo(
+                produto.horasDecimais
+            );
+
+        if (editando) {
+
+            const produtoAnterior =
+                produtos.find(
+                    function (item) {
+
+                        return String(item.id) ===
+                            String(produto.id);
+
+                    }
+                );
+
+            const horasAnteriores =
+                produtoAnterior
+                    ? numeroPositivo(
+                        produtoAnterior.horasDecimais
+                    )
+                    : horasProduto;
+
+            const diferencaHoras =
+                horasProduto -
+                horasAnteriores;
+
+            if (diferencaHoras !== 0) {
+
+                const horasAtuais =
+                    obterHorasAtuaisImpressora(
+                        impressora
+                    );
+
+                definirHorasImpressora(
+
+                    impressora,
+
+                    Math.max(
+                        0,
+                        horasAtuais +
+                        diferencaHoras
+                    )
+
+                );
+
+                adicionarHistoricoHorasImpressora(
+
+                    impressora,
+
+                    produto,
+
+                    diferencaHoras
+
+                );
+
+            }
+
+        } else {
+
+            const horasAtuais =
+                obterHorasAtuaisImpressora(
+                    impressora
+                );
+
+            definirHorasImpressora(
+
+                impressora,
+
+                horasAtuais +
+                horasProduto
+
+            );
+
+            adicionarHistoricoHorasImpressora(
+
+                impressora,
+
+                produto,
+
+                horasProduto
+
+            );
+
+        }
+
+        atualizarControleManutencaoImpressora(
+            impressora
+        );
+
+        atualizarDepreciacaoImpressora(
+            impressora
+        );
+
+        salvarImpressoras();
+
+    }
+        // ==================================================
+    // PARTE 7F
+    // INTEGRAÇÃO DA PRODUÇÃO COM O ORÇAMENTO
+    // ==================================================
+
+    function encontrarOrcamento(id) {
+
+        return orcamentos.find(
+            function (item) {
+
+                return String(item.id) ===
+                    String(id);
+
+            }
+        );
+
+    }
+
+    function marcarOrcamentoComoProduzido(
+        produto,
+        editando
+    ) {
+
+        if (editando) {
+            return;
+        }
+
+        if (
+            !produto ||
+            !produto.orcamentoOrigemId
+        ) {
+            return;
+        }
+
+        const orcamento =
+            encontrarOrcamento(
+                produto.orcamentoOrigemId
+            );
+
+        if (!orcamento) {
+
+            console.warn(
+                "O orçamento de origem da produção não foi encontrado."
+            );
+
+            return;
+
+        }
+
+        orcamento.status =
+            "Produzido";
+
+        orcamento.produtoProduzidoId =
+            produto.id;
+
+        orcamento.loteProduzido =
+            produto.lote;
+
+        orcamento.dataProducao =
+            produto.dataProducao;
+
+        orcamento.custoRealProducao =
+            produto.custoTotalProducao;
+
+        orcamento.custoUnitarioReal =
+            produto.custoUnitario;
+
+        orcamento.quantidadeProduzida =
+            produto.quantidadeProduzida;
+
+        orcamento.impressoraRealId =
+            produto.impressoraId;
+
+        orcamento.impressoraRealNome =
+            produto.impressoraNome;
+
+        orcamento.horasReais =
+            produto.horasDecimais;
+
+        orcamento.atualizadoEm =
+            new Date().toISOString();
+
+        salvarOrcamentos();
+
+    }
+
+    function gerarCodigoLoteOrcamento(
+        orcamento
+    ) {
+
+        const data =
+            new Date();
+
+        const ano =
+            data.getFullYear();
+
+        const mes =
+            String(
+                data.getMonth() + 1
+            ).padStart(2, "0");
+
+        const dia =
+            String(
+                data.getDate()
+            ).padStart(2, "0");
+
+        const finalId =
+            String(
+                orcamento.id
+            ).slice(-4);
+
+        return (
+            "PROD-" +
+            ano +
+            mes +
+            dia +
+            "-" +
+            finalId
+        );
+
+    }
+
+    function copiarOrcamentoParaProducao(
+        orcamento
+    ) {
+
+        if (!orcamento) {
+            return;
+        }
+
+        produtoEmEdicaoId =
+            null;
+
+        orcamentoOrigemProducaoId =
+            orcamento.id;
+
+        if (campoNomeProduto) {
+
+            campoNomeProduto.value =
+                orcamento.produtoNome ||
+                "";
+
+        }
+
+        if (campoCategoriaProduto) {
+
+            campoCategoriaProduto.value =
+                "";
+
+        }
+
+        if (campoLoteProduto) {
+
+            campoLoteProduto.value =
+                gerarCodigoLoteOrcamento(
+                    orcamento
+                );
+
+        }
+
+        if (campoDataProduto) {
+
+            campoDataProduto.value =
+                dataHoje();
+
+        }
+
+        if (campoQuantidadeProduzida) {
+
+            campoQuantidadeProduzida.value =
+                orcamento.quantidade ||
+                "";
+
+        }
+
+        if (campoQuantidadeDisponivel) {
+
+            campoQuantidadeDisponivel.value =
+                orcamento.quantidade ||
+                0;
+
+        }
+
+        if (campoDescricaoProduto) {
+
+            campoDescricaoProduto.value =
+                orcamento.descricao ||
+                "";
+
+        }
+
+        if (campoObservacoesProduto) {
+
+            campoObservacoesProduto.value =
+                orcamento.observacoes ||
+                "";
+
+        }
+
+        preencherSelectImpressoras(
+
+            campoImpressoraProduto,
+
+            orcamento.impressoraId ||
+            ""
+
+        );
+
+        if (campoHorasProduto) {
+
+            campoHorasProduto.value =
+                orcamento.horas ||
+                "";
+
+        }
+
+        if (campoMinutosProduto) {
+
+            campoMinutosProduto.value =
+                orcamento.minutos ||
+                "";
+
+        }
+
+        if (campoPotenciaProduto) {
+
+            campoPotenciaProduto.value =
+                orcamento.potenciaWatts ||
+                "";
+
+        }
+
+        if (campoTarifaProduto) {
+
+            campoTarifaProduto.value =
+                orcamento.tarifaEnergia ||
+                "";
+
+        }
+
+        if (campoCustoHoraProduto) {
+
+            campoCustoHoraProduto.value =
+                orcamento.custoHoraImpressora ||
+                "";
+
+        }
+
+        if (campoPrecoVendaProduto) {
+
+            campoPrecoVendaProduto.value =
+                orcamento.precoFinal ||
+                orcamento.precoSugerido ||
+                "";
+
+        }
+
+        limparLinhasFilamentosProduto(
+            orcamento.filamentos ||
+            []
+        );
+
+        if (listaAcessoriosProduto) {
+
+            listaAcessoriosProduto.innerHTML =
+                "";
+
+            if (
+                Array.isArray(
+                    orcamento.acessorios
+                ) &&
+                orcamento.acessorios.length > 0
+            ) {
+
+                orcamento.acessorios.forEach(
+                    function (item) {
+
+                        adicionarLinhaAcessorioProduto(
+                            item
+                        );
+
+                    }
+                );
+
+            } else {
+
+                adicionarLinhaAcessorioProduto();
+
+            }
+
+        }
+
+        if (listaEmbalagensProduto) {
+
+            listaEmbalagensProduto.innerHTML =
+                "";
+
+            if (
+                Array.isArray(
+                    orcamento.embalagens
+                ) &&
+                orcamento.embalagens.length > 0
+            ) {
+
+                orcamento.embalagens.forEach(
+                    function (item) {
+
+                        adicionarLinhaEmbalagemProduto(
+                            item
+                        );
+
+                    }
+                );
+
+            } else {
+
+                adicionarLinhaEmbalagemProduto();
+
+            }
+
+        }
+
+        if (botaoSalvarProduto) {
+
+            botaoSalvarProduto.textContent =
+                "Confirmar Produção";
+
+        }
+
+        abrirAba(
+            "aba-produtos-produzidos"
+        );
+
+        atualizarCalculosProduto();
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+        // ==================================================
+    // PARTE 8A
+    // LIMPEZA, RESUMO E LISTAGEM DOS PRODUTOS
+    // ==================================================
+
+    const listaProdutos =
+        document.getElementById(
+            "lista-produtos-produzidos"
+        );
+
+    const campoTotalLotes =
+        document.getElementById(
+            "produtos-total-lotes"
+        );
+
+    const campoTotalUnidadesDisponiveis =
+        document.getElementById(
+            "produtos-unidades-disponiveis"
+        );
+
+    const campoValorEstoque =
+        document.getElementById(
+            "produtos-valor-estoque"
+        );
+
+    const campoCustoTotalProduzido =
+        document.getElementById(
+            "produtos-custo-total"
+        );
+
+    // ==================================================
+    // LIMPAR LINHAS DE ACESSÓRIOS
+    // ==================================================
+
+    function limparLinhasAcessoriosProduto(
+        lista = []
+    ) {
+
+        if (!listaAcessoriosProduto) {
+            return;
+        }
+
+        listaAcessoriosProduto.innerHTML =
+            "";
+
+        if (
+            Array.isArray(lista) &&
+            lista.length > 0
+        ) {
+
+            lista.forEach(
+                function (item) {
+
+                    adicionarLinhaAcessorioProduto(
+                        item
+                    );
+
+                }
+            );
+
+        } else {
+
+            adicionarLinhaAcessorioProduto();
+
+        }
+
+    }
+
+    // ==================================================
+    // LIMPAR LINHAS DE EMBALAGENS
+    // ==================================================
+
+    function limparLinhasEmbalagensProduto(
+        lista = []
+    ) {
+
+        if (!listaEmbalagensProduto) {
+            return;
+        }
+
+        listaEmbalagensProduto.innerHTML =
+            "";
+
+        if (
+            Array.isArray(lista) &&
+            lista.length > 0
+        ) {
+
+            lista.forEach(
+                function (item) {
+
+                    adicionarLinhaEmbalagemProduto(
+                        item
+                    );
+
+                }
+            );
+
+        } else {
+
+            adicionarLinhaEmbalagemProduto();
+
+        }
+
+    }
+
+    // ==================================================
+    // LIMPAR FORMULÁRIO
+    // ==================================================
+
+    function limparFormularioProduto() {
+
+        produtoEmEdicaoId =
+            null;
+
+        orcamentoOrigemProducaoId =
+            null;
+
+        if (campoNomeProduto) {
+            campoNomeProduto.value = "";
+        }
+
+        if (campoCategoriaProduto) {
+            campoCategoriaProduto.value = "";
+        }
+
+        if (campoLoteProduto) {
+            campoLoteProduto.value = "";
+        }
+
+        if (campoDataProduto) {
+
+            campoDataProduto.value =
+                dataHoje();
+
+        }
+
+        if (campoQuantidadeProduzida) {
+            campoQuantidadeProduzida.value = "";
+        }
+
+        if (campoQuantidadeDisponivel) {
+            campoQuantidadeDisponivel.value = "0";
+        }
+
+        if (campoEstoqueMinimoProduto) {
+            campoEstoqueMinimoProduto.value = "";
+        }
+
+        if (campoDescricaoProduto) {
+            campoDescricaoProduto.value = "";
+        }
+
+        if (campoObservacoesProduto) {
+            campoObservacoesProduto.value = "";
+        }
+
+        if (campoImpressoraProduto) {
+            campoImpressoraProduto.value = "";
+        }
+
+        if (campoHorasProduto) {
+            campoHorasProduto.value = "";
+        }
+
+        if (campoMinutosProduto) {
+            campoMinutosProduto.value = "";
+        }
+
+        if (campoPotenciaProduto) {
+            campoPotenciaProduto.value = "";
+        }
+
+        if (campoTarifaProduto) {
+            campoTarifaProduto.value = "";
+        }
+
+        if (campoCustoHoraProduto) {
+            campoCustoHoraProduto.value = "";
+        }
+
+        if (campoPrecoVendaProduto) {
+            campoPrecoVendaProduto.value = "";
+        }
+
+        limparLinhasFilamentosProduto();
+
+        limparLinhasAcessoriosProduto();
+
+        limparLinhasEmbalagensProduto();
+
+        if (botaoSalvarProduto) {
+
+            botaoSalvarProduto.textContent =
+                "Salvar Produção";
+
+        }
+
+        atualizarSelectsFixos();
+
+        atualizarCalculosProduto();
+
+    }
+
+    // ==================================================
+    // ATUALIZAR RESUMO
+    // ==================================================
+
+    function atualizarResumoProdutos() {
+
+        const totalLotes =
+            produtos.length;
+
+        const totalUnidades =
+            produtos.reduce(
+                function (total, produto) {
+
+                    return (
+                        total +
+                        numeroPositivo(
+                            produto.quantidadeDisponivel
+                        )
+                    );
+
+                },
+                0
+            );
+
+        const valorTotalEstoque =
+            produtos.reduce(
+                function (total, produto) {
+
+                    return (
+                        total +
+                        (
+                            numeroPositivo(
+                                produto.quantidadeDisponivel
+                            ) *
+                            numeroPositivo(
+                                produto.precoVenda
+                            )
+                        )
+                    );
+
+                },
+                0
+            );
+
+        const custoTotal =
+            produtos.reduce(
+                function (total, produto) {
+
+                    return (
+                        total +
+                        numeroPositivo(
+                            produto.custoTotalProducao
+                        )
+                    );
+
+                },
+                0
+            );
+
+        if (campoTotalLotes) {
+
+            campoTotalLotes.textContent =
+                totalLotes;
+
+        }
+
+        if (campoTotalUnidadesDisponiveis) {
+
+            campoTotalUnidadesDisponiveis.textContent =
+                numeroFormatado(
+                    totalUnidades,
+                    0
+                );
+
+        }
+
+        if (campoValorEstoque) {
+
+            campoValorEstoque.textContent =
+                dinheiro(
+                    valorTotalEstoque
+                );
+
+        }
+
+        if (campoCustoTotalProduzido) {
+
+            campoCustoTotalProduzido.textContent =
+                dinheiro(
+                    custoTotal
+                );
+
+        }
+
+    }
+
+    // ==================================================
+    // TEXTO DOS FILAMENTOS
+    // ==================================================
+
+    function montarTextoFilamentos(
+        lista
+    ) {
+
+        if (
+            !Array.isArray(lista) ||
+            lista.length === 0
+        ) {
+
+            return "Nenhum filamento informado.";
+
+        }
+
+        return lista
+            .map(
+                function (item) {
+
+                    const descricao = [
+
+                        item.material,
+
+                        item.cor,
+
+                        item.lote
+                            ? "Lote " + item.lote
+                            : ""
+
+                    ]
+                        .filter(Boolean)
+                        .join(" — ");
+
+                    return (
+                        textoSeguro(
+                            descricao ||
+                            "Filamento"
+                        ) +
+                        ": " +
+                        numeroFormatado(
+                            item.quantidade,
+                            2
+                        ) +
+                        " g"
+                    );
+
+                }
+            )
+            .join("<br>");
+
+    }
+
+    // ==================================================
+    // TEXTO DOS ACESSÓRIOS
+    // ==================================================
+
+    function montarTextoAcessorios(
+        lista
+    ) {
+
+        if (
+            !Array.isArray(lista) ||
+            lista.length === 0
+        ) {
+
+            return "Nenhum acessório utilizado.";
+
+        }
+
+        return lista
+            .map(
+                function (item) {
+
+                    return (
+                        textoSeguro(
+                            item.nome ||
+                            "Acessório"
+                        ) +
+                        ": " +
+                        numeroFormatado(
+                            item.quantidade,
+                            0
+                        )
+                    );
+
+                }
+            )
+            .join("<br>");
+
+    }
+
+    // ==================================================
+    // TEXTO DAS EMBALAGENS
+    // ==================================================
+
+    function montarTextoEmbalagens(
+        lista
+    ) {
+
+        if (
+            !Array.isArray(lista) ||
+            lista.length === 0
+        ) {
+
+            return "Nenhuma embalagem utilizada.";
+
+        }
+
+        return lista
+            .map(
+                function (item) {
+
+                    return (
+                        textoSeguro(
+                            item.nome ||
+                            "Embalagem"
+                        ) +
+                        ": " +
+                        numeroFormatado(
+                            item.quantidade,
+                            0
+                        )
+                    );
+
+                }
+            )
+            .join("<br>");
+
+    }
+
+    // ==================================================
+    // DEFINIR STATUS DO LOTE
+    // ==================================================
+
+    function obterStatusProduto(
+        produto
+    ) {
+
+        const quantidadeDisponivel =
+            numeroPositivo(
+                produto.quantidadeDisponivel
+            );
+
+        const estoqueMinimo =
+            numeroPositivo(
+                produto.estoqueMinimo
+            );
+
+        if (quantidadeDisponivel <= 0) {
+
+            return "Sem estoque";
+
+        }
+
+        if (
+            estoqueMinimo > 0 &&
+            quantidadeDisponivel <=
+                estoqueMinimo
+        ) {
+
+            return "Estoque baixo";
+
+        }
+
+        return "Disponível";
+
+    }
+
+    // ==================================================
+    // MOSTRAR PRODUTOS
+    // ==================================================
+
+    function mostrarProdutos() {
+
+        if (!listaProdutos) {
+            return;
+        }
+
+        if (
+            !Array.isArray(produtos) ||
+            produtos.length === 0
+        ) {
+
+            listaProdutos.innerHTML =
+                "<p>Nenhum lote produzido cadastrado.</p>";
+
+            atualizarResumoProdutos();
+
+            return;
+
+        }
+
+        const produtosOrdenados =
+            [...produtos].sort(
+                function (a, b) {
+
+                    const dataA =
+                        String(
+                            a.dataProducao ||
+                            ""
+                        );
+
+                    const dataB =
+                        String(
+                            b.dataProducao ||
+                            ""
+                        );
+
+                    if (dataA !== dataB) {
+
+                        return dataA.localeCompare(
+                            dataB
+                        );
+
+                    }
+
+                    return (
+                        numero(a.id) -
+                        numero(b.id)
+                    );
+
+                }
+            );
+
+        listaProdutos.innerHTML =
+            produtosOrdenados
+                .map(
+                    function (produto) {
+
+                        return `
+                            <div class="card-item">
+
+                                <h4>
+                                    ${textoSeguro(
+                                        produto.nome ||
+                                        "Produto sem nome"
+                                    )}
+                                </h4>
+
+                                <p>
+                                    <strong>Lote:</strong>
+                                    ${textoSeguro(
+                                        produto.lote ||
+                                        "Não informado"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Categoria:</strong>
+                                    ${textoSeguro(
+                                        produto.categoria ||
+                                        "Não informada"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Data da produção:</strong>
+                                    ${dataFormatada(
+                                        produto.dataProducao
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Quantidade produzida:</strong>
+                                    ${numeroFormatado(
+                                        produto.quantidadeProduzida,
+                                        0
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Quantidade disponível:</strong>
+                                    ${numeroFormatado(
+                                        produto.quantidadeDisponivel,
+                                        0
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Status:</strong>
+                                    ${textoSeguro(
+                                        obterStatusProduto(
+                                            produto
+                                        )
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Impressora:</strong>
+                                    ${textoSeguro(
+                                        produto.impressoraNome ||
+                                        "Não informada"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Tempo de impressão:</strong>
+                                    ${numeroFormatado(
+                                        produto.horas,
+                                        0
+                                    )}h
+                                    ${numeroFormatado(
+                                        produto.minutos,
+                                        0
+                                    )}min
+                                </p>
+
+                                <p>
+                                    <strong>Filamentos:</strong><br>
+                                    ${montarTextoFilamentos(
+                                        produto.filamentos
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Acessórios:</strong><br>
+                                    ${montarTextoAcessorios(
+                                        produto.acessorios
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Embalagens:</strong><br>
+                                    ${montarTextoEmbalagens(
+                                        produto.embalagens
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Custo dos insumos:</strong>
+                                    ${dinheiro(
+                                        produto.custoInsumos
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Custo de energia:</strong>
+                                    ${dinheiro(
+                                        produto.custoEnergia
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Custo da máquina:</strong>
+                                    ${dinheiro(
+                                        produto.custoMaquina
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Custo total:</strong>
+                                    ${dinheiro(
+                                        produto.custoTotalProducao
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Custo unitário:</strong>
+                                    ${dinheiro(
+                                        produto.custoUnitario
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Preço de venda:</strong>
+                                    ${dinheiro(
+                                        produto.precoVenda
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Margem real:</strong>
+                                    ${numeroFormatado(
+                                        produto.margemReal,
+                                        2
+                                    )}%
+                                </p>
+
+                                <div class="acoes-card">
+
+                                    <button
+                                        type="button"
+                                        class="botao-principal"
+                                        data-editar-produto="${produto.id}">
+                                        Editar
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="botao-excluir"
+                                        data-excluir-produto="${produto.id}">
+                                        Excluir
+                                    </button>
+
+                                </div>
+
+                            </div>
+                        `;
+
+                    }
+                )
+                .join("");
+
+        listaProdutos
+            .querySelectorAll(
+                "[data-editar-produto]"
+            )
+            .forEach(
+                function (botao) {
+
+                    botao.addEventListener(
+                        "click",
+                        function () {
+
+                            editarProduto(
+                                botao.dataset
+                                    .editarProduto
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
+        listaProdutos
+            .querySelectorAll(
+                "[data-excluir-produto]"
+            )
+            .forEach(
+                function (botao) {
+
+                    botao.addEventListener(
+                        "click",
+                        function () {
+
+                            excluirProduto(
+                                botao.dataset
+                                    .excluirProduto
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
+        atualizarResumoProdutos();
+
+    }
+        // ==================================================
+    // PARTE 8B
+    // EDIÇÃO E EXCLUSÃO DOS PRODUTOS PRODUZIDOS
+    // ==================================================
+
+    function editarProduto(id) {
+
+        const produto =
+            encontrarProduto(id);
+
+        if (!produto) {
+
+            alert(
+                "Produto não encontrado."
+            );
+
+            return;
+
+        }
+
+        produtoEmEdicaoId =
+            produto.id;
+
+        orcamentoOrigemProducaoId =
+            produto.orcamentoOrigemId ||
+            null;
+
+        if (campoNomeProduto) {
+
+            campoNomeProduto.value =
+                produto.nome || "";
+
+        }
+
+        if (campoCategoriaProduto) {
+
+            campoCategoriaProduto.value =
+                produto.categoria || "";
+
+        }
+
+        if (campoLoteProduto) {
+
+            campoLoteProduto.value =
+                produto.lote || "";
+
+        }
+
+        if (campoDataProduto) {
+
+            campoDataProduto.value =
+                produto.dataProducao || "";
+
+        }
+
+        if (campoQuantidadeProduzida) {
+
+            campoQuantidadeProduzida.value =
+                produto.quantidadeProduzida ||
+                "";
+
+        }
+
+        if (campoQuantidadeDisponivel) {
+
+            campoQuantidadeDisponivel.value =
+                produto.quantidadeDisponivel ??
+                0;
+
+        }
+
+        if (campoEstoqueMinimoProduto) {
+
+            campoEstoqueMinimoProduto.value =
+                produto.estoqueMinimo ||
+                "";
+
+        }
+
+        if (campoDescricaoProduto) {
+
+            campoDescricaoProduto.value =
+                produto.descricao || "";
+
+        }
+
+        if (campoObservacoesProduto) {
+
+            campoObservacoesProduto.value =
+                produto.observacoes || "";
+
+        }
+
+        preencherSelectImpressoras(
+
+            campoImpressoraProduto,
+
+            produto.impressoraId ||
+            ""
+
+        );
+
+        if (campoHorasProduto) {
+
+            campoHorasProduto.value =
+                produto.horas || "";
+
+        }
+
+        if (campoMinutosProduto) {
+
+            campoMinutosProduto.value =
+                produto.minutos || "";
+
+        }
+
+        if (campoPotenciaProduto) {
+
+            campoPotenciaProduto.value =
+                produto.potenciaWatts ||
+                "";
+
+        }
+
+        if (campoTarifaProduto) {
+
+            campoTarifaProduto.value =
+                produto.tarifaEnergia ||
+                "";
+
+        }
+
+        if (campoCustoHoraProduto) {
+
+            campoCustoHoraProduto.value =
+                produto.custoHoraImpressora ||
+                "";
+
+        }
+
+        if (campoPrecoVendaProduto) {
+
+            campoPrecoVendaProduto.value =
+                produto.precoVenda ||
+                "";
+
+        }
+
+        limparLinhasFilamentosProduto(
+            produto.filamentos || []
+        );
+
+        limparLinhasAcessoriosProduto(
+            produto.acessorios || []
+        );
+
+        limparLinhasEmbalagensProduto(
+            produto.embalagens || []
+        );
+
+        if (botaoSalvarProduto) {
+
+            botaoSalvarProduto.textContent =
+                "Atualizar Produção";
+
+        }
+
+        abrirAba(
+            "aba-produtos-produzidos"
+        );
+
+        atualizarCalculosProduto();
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+
+    // ==================================================
+    // VERIFICAR MOVIMENTAÇÕES DE SAÍDA
+    // ==================================================
+
+    function produtoPossuiSaidas(
+        produtoId
+    ) {
+
+        return movimentacoes.some(
+            function (movimentacao) {
+
+                return (
+                    String(
+                        movimentacao.produtoId
+                    ) ===
+                    String(produtoId) &&
+                    movimentacao.tipo !==
+                        "Entrada por produção"
+                );
+
+            }
+        );
+
+    }
+
+    // ==================================================
+    // EXCLUIR PRODUTO
+    // ==================================================
+
+    function excluirProduto(id) {
+
+        const produto =
+            encontrarProduto(id);
+
+        if (!produto) {
+
+            alert(
+                "Produto não encontrado."
+            );
+
+            return;
+
+        }
+
+        if (
+            produtoPossuiSaidas(
+                produto.id
+            )
+        ) {
+
+            alert(
+                "Este lote já possui movimentações de saída e não pode ser excluído."
+            );
+
+            return;
+
+        }
+
+        const confirmar =
+            confirm(
+                'Deseja excluir o lote "' +
+                (
+                    produto.lote ||
+                    "não informado"
+                ) +
+                '" do produto "' +
+                (
+                    produto.nome ||
+                    "produto sem nome"
+                ) +
+                '"?\n\n' +
+                "Os insumos consumidos e as horas da impressora não serão devolvidos automaticamente."
+            );
+
+        if (!confirmar) {
+            return;
+        }
+
+        produtos =
+            produtos.filter(
+                function (item) {
+
+                    return String(item.id) !==
+                        String(produto.id);
+
+                }
+            );
+
+        movimentacoes =
+            movimentacoes.filter(
+                function (movimentacao) {
+
+                    return !(
+                        String(
+                            movimentacao.produtoId
+                        ) ===
+                            String(produto.id) &&
+                        movimentacao.tipo ===
+                            "Entrada por produção"
+                    );
+
+                }
+            );
+
+        salvarProdutos();
+
+        salvarMovimentacoes();
+
+        if (
+            String(produtoEmEdicaoId) ===
+            String(produto.id)
+        ) {
+
+            limparFormularioProduto();
+
+        }
+
+        mostrarProdutos();
+
+        atualizarResumoProdutos();
+
+        preencherSelectLotesPerda();
+
+        preencherSelectLotesConsumoProprio();
+
+        if (
+            typeof atualizarDashboardCompleto ===
+            "function"
+        ) {
+
+            atualizarDashboardCompleto();
+
+        }
+
+        alert(
+            "Produto excluído com sucesso."
+        );
+
+    }
+        // ==================================================
+    // PARTE 9A
+    // CADASTRO, SALVAMENTO E RESUMO DOS ORÇAMENTOS
+    // ==================================================
+
+    const campoDataOrcamento =
+        document.getElementById(
+            "orcamento-data"
+        );
+
+    const campoValidadeOrcamento =
+        document.getElementById(
+            "orcamento-validade"
+        );
+
+    const campoStatusOrcamento =
+        document.getElementById(
+            "orcamento-status"
+        );
+
+    const campoNomeProdutoOrcamento =
+        document.getElementById(
+            "orcamento-produto-nome"
+        );
+
+    const campoDescricaoOrcamento =
+        document.getElementById(
+            "orcamento-descricao"
+        );
+
+    const campoObservacoesOrcamento =
+        document.getElementById(
+            "orcamento-observacoes"
+        );
+
+    const botaoSalvarOrcamento =
+        document.getElementById(
+            "salvar-orcamento"
+        );
+
+    const botaoLimparOrcamento =
+        document.getElementById(
+            "limpar-formulario-orcamento"
+        );
+
+    const listaOrcamentos =
+        document.getElementById(
+            "lista-orcamentos"
+        );
+
+    const campoTotalOrcamentos =
+        document.getElementById(
+            "orcamentos-total"
+        );
+
+    const campoOrcamentosAguardando =
+        document.getElementById(
+            "orcamentos-aguardando"
+        );
+
+    const campoOrcamentosAprovados =
+        document.getElementById(
+            "orcamentos-aprovados"
+        );
+
+    const campoOrcamentosRecusados =
+        document.getElementById(
+            "orcamentos-recusados"
+        );
+
+    // ==================================================
+    // STATUS ADICIONAIS DO ORÇAMENTO
+    // ==================================================
+
+    function garantirStatusOrcamento(
+        valor
+    ) {
+
+        if (!campoStatusOrcamento) {
+            return;
+        }
+
+        const existe =
+            Array.from(
+                campoStatusOrcamento.options
+            ).some(
+                function (option) {
+
+                    return option.value ===
+                        valor;
+
+                }
+            );
+
+        if (existe) {
+            return;
+        }
+
+        const option =
+            document.createElement(
+                "option"
+            );
+
+        option.value =
+            valor;
+
+        option.textContent =
+            valor;
+
+        campoStatusOrcamento.appendChild(
+            option
+        );
+
+    }
+
+    garantirStatusOrcamento(
+        "Aguardando produção"
+    );
+
+    garantirStatusOrcamento(
+        "Produzido"
+    );
+
+    // ==================================================
+    // LINHAS DE ACESSÓRIOS DO ORÇAMENTO
+    // ==================================================
+
+    function limparLinhasAcessoriosOrcamento(
+        lista = []
+    ) {
+
+        if (!listaAcessoriosOrcamento) {
+            return;
+        }
+
+        listaAcessoriosOrcamento.innerHTML =
+            "";
+
+        if (
+            Array.isArray(lista) &&
+            lista.length > 0
+        ) {
+
+            lista.forEach(
+                function (item) {
+
+                    adicionarLinhaAcessorioOrcamento(
+                        item
+                    );
+
+                }
+            );
+
+        } else {
+
+            adicionarLinhaAcessorioOrcamento();
+
+        }
+
+    }
+
+    // ==================================================
+    // LINHAS DE EMBALAGENS DO ORÇAMENTO
+    // ==================================================
+
+    function limparLinhasEmbalagensOrcamento(
+        lista = []
+    ) {
+
+        if (!listaEmbalagensOrcamento) {
+            return;
+        }
+
+        listaEmbalagensOrcamento.innerHTML =
+            "";
+
+        if (
+            Array.isArray(lista) &&
+            lista.length > 0
+        ) {
+
+            lista.forEach(
+                function (item) {
+
+                    adicionarLinhaEmbalagemOrcamento(
+                        item
+                    );
+
+                }
+            );
+
+        } else {
+
+            adicionarLinhaEmbalagemOrcamento();
+
+        }
+
+    }
+
+    // ==================================================
+    // VALIDAR ORÇAMENTO
+    // ==================================================
+
+    function validarDadosOrcamento(
+        calculos
+    ) {
+
+        const nomeProduto =
+            campoNomeProdutoOrcamento
+                ? campoNomeProdutoOrcamento
+                    .value
+                    .trim()
+                : "";
+
+        const data =
+            campoDataOrcamento
+                ? campoDataOrcamento.value
+                : "";
+
+        if (!nomeProduto) {
+
+            alert(
+                "Informe o nome do produto do orçamento."
+            );
+
+            return false;
+
+        }
+
+        if (!data) {
+
+            alert(
+                "Informe a data do orçamento."
+            );
+
+            return false;
+
+        }
+
+        if (
+            calculos.quantidade <= 0
+        ) {
+
+            alert(
+                "Informe uma quantidade válida para o orçamento."
+            );
+
+            return false;
+
+        }
+
+        if (
+            calculos.filamentos.length ===
+            0
+        ) {
+
+            alert(
+                "Adicione pelo menos um filamento estimado."
+            );
+
+            return false;
+
+        }
+
+        if (
+            possuiIdRepetido(
+                calculos.filamentos,
+                "filamentoId"
+            )
+        ) {
+
+            alert(
+                "O mesmo lote de filamento foi adicionado mais de uma vez."
+            );
+
+            return false;
+
+        }
+
+        if (
+            possuiIdRepetido(
+                calculos.acessorios,
+                "acessorioId"
+            )
+        ) {
+
+            alert(
+                "O mesmo acessório foi adicionado mais de uma vez."
+            );
+
+            return false;
+
+        }
+
+        if (
+            possuiIdRepetido(
+                calculos.embalagens,
+                "embalagemId"
+            )
+        ) {
+
+            alert(
+                "A mesma embalagem foi adicionada mais de uma vez."
+            );
+
+            return false;
+
+        }
+
+        return true;
+
+    }
+
+    // ==================================================
+    // CRIAR OBJETO DO ORÇAMENTO
+    // ==================================================
+
+    function criarObjetoOrcamento(
+        calculos
+    ) {
+
+        const clienteId =
+            campoClienteOrcamento
+                ? campoClienteOrcamento.value
+                : "";
+
+        const cliente =
+            encontrarCliente(
+                clienteId
+            );
+
+        const impressoraId =
+            campoImpressoraOrcamento
+                ? campoImpressoraOrcamento.value
+                : "";
+
+        const impressora =
+            encontrarImpressora(
+                impressoraId
+            );
+
+        return {
+
+            id:
+                orcamentoEmEdicaoId ||
+                criarId(),
+
+            clienteId:
+                cliente
+                    ? cliente.id
+                    : "",
+
+            clienteNome:
+                cliente
+                    ? cliente.nome || ""
+                    : "",
+
+            data:
+                campoDataOrcamento
+                    ? campoDataOrcamento.value
+                    : "",
+
+            validade:
+                campoValidadeOrcamento
+                    ? campoValidadeOrcamento.value
+                    : "",
+
+            status:
+                campoStatusOrcamento
+                    ? campoStatusOrcamento.value
+                    : "Rascunho",
+
+            produtoNome:
+                campoNomeProdutoOrcamento
+                    ? campoNomeProdutoOrcamento
+                        .value
+                        .trim()
+                    : "",
+
+            quantidade:
+                calculos.quantidade,
+
+            descricao:
+                campoDescricaoOrcamento
+                    ? campoDescricaoOrcamento
+                        .value
+                        .trim()
+                    : "",
+
+            filamentos:
+                calculos.filamentos,
+
+            acessorios:
+                calculos.acessorios,
+
+            embalagens:
+                calculos.embalagens,
+
+            impressoraId:
+                impressora
+                    ? impressora.id
+                    : "",
+
+            impressoraNome:
+                impressora
+                    ? textoImpressora(
+                        impressora
+                    )
+                    : "",
+
+            horas:
+                calculos.horas,
+
+            minutos:
+                calculos.minutos,
+
+            horasDecimais:
+                calculos.horasDecimais,
+
+            potenciaWatts:
+                calculos.potenciaWatts,
+
+            tarifaEnergia:
+                calculos.tarifaEnergia,
+
+            consumoKwh:
+                calculos.consumoKwh,
+
+            custoFilamentos:
+                calculos.custoFilamentos,
+
+            custoAcessorios:
+                calculos.custoAcessorios,
+
+            custoEmbalagens:
+                calculos.custoEmbalagens,
+
+            custoInsumos:
+                calculos.custoInsumos,
+
+            custoEnergia:
+                calculos.custoEnergia,
+
+            custoHoraImpressora:
+                calculos.custoHoraImpressora,
+
+            custoMaquina:
+                calculos.custoMaquina,
+
+            custoTotal:
+                calculos.custoTotal,
+
+            custoUnitario:
+                calculos.custoUnitario,
+
+            margemDesejada:
+                calculos.margemDesejada,
+
+            precoSugerido:
+                calculos.precoSugerido,
+
+            precoFinal:
+                calculos.precoFinal,
+
+            valorTotal:
+                calculos.valorTotal,
+
+            margemReal:
+                calculos.margemReal,
+
+            observacoes:
+                campoObservacoesOrcamento
+                    ? campoObservacoesOrcamento
+                        .value
+                        .trim()
+                    : "",
+
+            criadoEm:
+                new Date().toISOString(),
+
+            atualizadoEm:
+                new Date().toISOString()
+
+        };
+
+    }
+
+    // ==================================================
+    // SALVAR ORÇAMENTO
+    // ==================================================
+
+    function salvarOrcamento() {
+
+        recarregarDadosDeApoio();
+
+        const calculos =
+            atualizarCalculosOrcamento();
+
+        if (
+            !validarDadosOrcamento(
+                calculos
+            )
+        ) {
+            return;
+        }
+
+        const editando =
+            orcamentoEmEdicaoId !==
+            null;
+
+        const orcamento =
+            criarObjetoOrcamento(
+                calculos
+            );
+
+        if (editando) {
+
+            const indice =
+                orcamentos.findIndex(
+                    function (item) {
+
+                        return String(item.id) ===
+                            String(
+                                orcamentoEmEdicaoId
+                            );
+
+                    }
+                );
+
+            if (indice === -1) {
+
+                alert(
+                    "Orçamento não encontrado."
+                );
+
+                return;
+
+            }
+
+            orcamento.criadoEm =
+                orcamentos[indice]
+                    .criadoEm ||
+                orcamento.criadoEm;
+
+            orcamentos[indice] =
+                orcamento;
+
+        } else {
+
+            orcamentos.push(
+                orcamento
+            );
+
+        }
+
+        salvarOrcamentos();
+
+        mostrarOrcamentos();
+
+        atualizarResumoOrcamentos();
+
+        limparFormularioOrcamento();
+
+        alert(
+            editando
+                ? "Orçamento atualizado com sucesso!"
+                : "Orçamento cadastrado com sucesso!"
+        );
+
+    }
+
+    // ==================================================
+    // LIMPAR FORMULÁRIO DO ORÇAMENTO
+    // ==================================================
+
+    function limparFormularioOrcamento() {
+
+        orcamentoEmEdicaoId =
+            null;
+
+        if (campoClienteOrcamento) {
+            campoClienteOrcamento.value = "";
+        }
+
+        if (campoDataOrcamento) {
+
+            campoDataOrcamento.value =
+                dataHoje();
+
+        }
+
+        if (campoValidadeOrcamento) {
+            campoValidadeOrcamento.value = "";
+        }
+
+        if (campoStatusOrcamento) {
+            campoStatusOrcamento.value = "Rascunho";
+        }
+
+        if (campoNomeProdutoOrcamento) {
+            campoNomeProdutoOrcamento.value = "";
+        }
+
+        if (campoQuantidadeOrcamento) {
+            campoQuantidadeOrcamento.value = "";
+        }
+
+        if (campoDescricaoOrcamento) {
+            campoDescricaoOrcamento.value = "";
+        }
+
+        if (campoImpressoraOrcamento) {
+            campoImpressoraOrcamento.value = "";
+        }
+
+        if (campoHorasOrcamento) {
+            campoHorasOrcamento.value = "";
+        }
+
+        if (campoMinutosOrcamento) {
+            campoMinutosOrcamento.value = "";
+        }
+
+        if (campoPotenciaOrcamento) {
+            campoPotenciaOrcamento.value = "";
+        }
+
+        if (campoTarifaOrcamento) {
+            campoTarifaOrcamento.value = "";
+        }
+
+        if (campoCustoHoraOrcamento) {
+            campoCustoHoraOrcamento.value = "";
+        }
+
+        if (campoMargemDesejadaOrcamento) {
+            campoMargemDesejadaOrcamento.value = "";
+        }
+
+        if (campoPrecoFinalOrcamento) {
+            campoPrecoFinalOrcamento.value = "";
+        }
+
+        if (campoObservacoesOrcamento) {
+            campoObservacoesOrcamento.value = "";
+        }
+
+        limparLinhasFilamentosOrcamento();
+
+        limparLinhasAcessoriosOrcamento();
+
+        limparLinhasEmbalagensOrcamento();
+
+        if (botaoSalvarOrcamento) {
+
+            botaoSalvarOrcamento.textContent =
+                "Salvar Orçamento";
+
+        }
+
+        atualizarSelectsFixos();
+
+        atualizarCalculosOrcamento();
+
+    }
+
+    // ==================================================
+    // ATUALIZAR RESUMO DOS ORÇAMENTOS
+    // ==================================================
+
+    function atualizarResumoOrcamentos() {
+
+        const aguardando =
+            orcamentos.filter(
+                function (orcamento) {
+
+                    return [
+                        "Enviado",
+                        "Aguardando resposta",
+                        "Aguardando produção"
+                    ].includes(
+                        orcamento.status
+                    );
+
+                }
+            ).length;
+
+        const aprovados =
+            orcamentos.filter(
+                function (orcamento) {
+
+                    return (
+                        orcamento.status ===
+                            "Aprovado" ||
+                        orcamento.status ===
+                            "Aguardando produção" ||
+                        orcamento.status ===
+                            "Produzido"
+                    );
+
+                }
+            ).length;
+
+        const recusados =
+            orcamentos.filter(
+                function (orcamento) {
+
+                    return orcamento.status ===
+                        "Recusado";
+
+                }
+            ).length;
+
+        if (campoTotalOrcamentos) {
+
+            campoTotalOrcamentos.textContent =
+                orcamentos.length;
+
+        }
+
+        if (campoOrcamentosAguardando) {
+
+            campoOrcamentosAguardando.textContent =
+                aguardando;
+
+        }
+
+        if (campoOrcamentosAprovados) {
+
+            campoOrcamentosAprovados.textContent =
+                aprovados;
+
+        }
+
+        if (campoOrcamentosRecusados) {
+
+            campoOrcamentosRecusados.textContent =
+                recusados;
+
+        }
+
+    }
+
+    // ==================================================
+    // EVENTOS DOS BOTÕES DO ORÇAMENTO
+    // ==================================================
+
+    if (botaoSalvarOrcamento) {
+
+        botaoSalvarOrcamento.addEventListener(
+            "click",
+            salvarOrcamento
+        );
+
+    }
+
+    if (botaoLimparOrcamento) {
+
+        botaoLimparOrcamento.addEventListener(
+            "click",
+            limparFormularioOrcamento
+        );
+
+    }
+        // ==================================================
+    // PARTE 9B
+    // LISTAGEM E AÇÕES DOS ORÇAMENTOS
+    // ==================================================
+
+    function mostrarOrcamentos() {
+
+        if (!listaOrcamentos) {
+            return;
+        }
+
+        if (
+            !Array.isArray(orcamentos) ||
+            orcamentos.length === 0
+        ) {
+
+            listaOrcamentos.innerHTML =
+                "<p>Nenhum orçamento cadastrado.</p>";
+
+            atualizarResumoOrcamentos();
+
+            return;
+
+        }
+
+        const listaOrdenada =
+            [...orcamentos].sort(
+                function (a, b) {
+
+                    return String(
+                        b.data || ""
+                    ).localeCompare(
+                        String(
+                            a.data || ""
+                        )
+                    );
+
+                }
+            );
+
+        listaOrcamentos.innerHTML =
+            listaOrdenada
+                .map(
+                    function (orcamento) {
+
+                        const podeProduzir =
+                            orcamento.status !==
+                            "Produzido";
+
+                        return `
+                            <div class="card-item">
+
+                                <h4>
+                                    ${textoSeguro(
+                                        orcamento.produtoNome ||
+                                        "Produto não informado"
+                                    )}
+                                </h4>
+
+                                <p>
+                                    <strong>Cliente:</strong>
+                                    ${textoSeguro(
+                                        orcamento.clienteNome ||
+                                        "Não informado"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Data:</strong>
+                                    ${dataFormatada(
+                                        orcamento.data
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Validade:</strong>
+                                    ${dataFormatada(
+                                        orcamento.validade
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Status:</strong>
+                                    ${textoSeguro(
+                                        orcamento.status ||
+                                        "Rascunho"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Quantidade:</strong>
+                                    ${numeroFormatado(
+                                        orcamento.quantidade,
+                                        0
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Custo unitário estimado:</strong>
+                                    ${dinheiro(
+                                        orcamento.custoUnitario
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Preço sugerido:</strong>
+                                    ${dinheiro(
+                                        orcamento.precoSugerido
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Preço final:</strong>
+                                    ${dinheiro(
+                                        orcamento.precoFinal
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Valor total:</strong>
+                                    ${dinheiro(
+                                        orcamento.valorTotal
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Margem real:</strong>
+                                    ${numeroFormatado(
+                                        orcamento.margemReal,
+                                        2
+                                    )}%
+                                </p>
+
+                                <div class="acoes-card">
+
+                                    ${
+                                        podeProduzir
+                                            ? `
+                                                <button
+                                                    type="button"
+                                                    data-aprovar-orcamento="${orcamento.id}">
+                                                    Aprovar
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    class="botao-principal"
+                                                    data-produzir-orcamento="${orcamento.id}">
+                                                    Enviar para Produção
+                                                </button>
+                                            `
+                                            : ""
+                                    }
+
+                                    <button
+                                        type="button"
+                                        data-editar-orcamento="${orcamento.id}">
+                                        Editar
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="botao-excluir"
+                                        data-excluir-orcamento="${orcamento.id}">
+                                        Excluir
+                                    </button>
+
+                                </div>
+
+                            </div>
+                        `;
+
+                    }
+                )
+                .join("");
+
+        listaOrcamentos
+            .querySelectorAll(
+                "[data-editar-orcamento]"
+            )
+            .forEach(
+                function (botao) {
+
+                    botao.addEventListener(
+                        "click",
+                        function () {
+
+                            editarOrcamento(
+                                botao.dataset
+                                    .editarOrcamento
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
+        listaOrcamentos
+            .querySelectorAll(
+                "[data-excluir-orcamento]"
+            )
+            .forEach(
+                function (botao) {
+
+                    botao.addEventListener(
+                        "click",
+                        function () {
+
+                            excluirOrcamento(
+                                botao.dataset
+                                    .excluirOrcamento
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
+        listaOrcamentos
+            .querySelectorAll(
+                "[data-aprovar-orcamento]"
+            )
+            .forEach(
+                function (botao) {
+
+                    botao.addEventListener(
+                        "click",
+                        function () {
+
+                            aprovarOrcamento(
+                                botao.dataset
+                                    .aprovarOrcamento
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
+        listaOrcamentos
+            .querySelectorAll(
+                "[data-produzir-orcamento]"
+            )
+            .forEach(
+                function (botao) {
+
+                    botao.addEventListener(
+                        "click",
+                        function () {
+
+                            enviarOrcamentoParaProducao(
+                                botao.dataset
+                                    .produzirOrcamento
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
+        atualizarResumoOrcamentos();
+
+    }
+
+    // ==================================================
+    // EDITAR ORÇAMENTO
+    // ==================================================
+
+    function editarOrcamento(id) {
+
+        recarregarDadosDeApoio();
+
+        const orcamento =
+            encontrarOrcamento(id);
+
+        if (!orcamento) {
+
+            alert(
+                "Orçamento não encontrado."
+            );
+
+            return;
+
+        }
+
+        orcamentoEmEdicaoId =
+            orcamento.id;
+
+        preencherSelectClientes(
+
+            campoClienteOrcamento,
+
+            orcamento.clienteId ||
+            ""
+
+        );
+
+        if (campoDataOrcamento) {
+
+            campoDataOrcamento.value =
+                orcamento.data || "";
+
+        }
+
+        if (campoValidadeOrcamento) {
+
+            campoValidadeOrcamento.value =
+                orcamento.validade || "";
+
+        }
+
+        if (campoStatusOrcamento) {
+
+            garantirStatusOrcamento(
+                orcamento.status ||
+                "Rascunho"
+            );
+
+            campoStatusOrcamento.value =
+                orcamento.status ||
+                "Rascunho";
+
+        }
+
+        if (campoNomeProdutoOrcamento) {
+
+            campoNomeProdutoOrcamento.value =
+                orcamento.produtoNome ||
+                "";
+
+        }
+
+        if (campoQuantidadeOrcamento) {
+
+            campoQuantidadeOrcamento.value =
+                orcamento.quantidade ||
+                "";
+
+        }
+
+        if (campoDescricaoOrcamento) {
+
+            campoDescricaoOrcamento.value =
+                orcamento.descricao ||
+                "";
+
+        }
+
+        limparLinhasFilamentosOrcamento(
+            orcamento.filamentos ||
+            []
+        );
+
+        limparLinhasAcessoriosOrcamento(
+            orcamento.acessorios ||
+            []
+        );
+
+        limparLinhasEmbalagensOrcamento(
+            orcamento.embalagens ||
+            []
+        );
+
+        preencherSelectImpressoras(
+
+            campoImpressoraOrcamento,
+
+            orcamento.impressoraId ||
+            ""
+
+        );
+
+        if (campoHorasOrcamento) {
+
+            campoHorasOrcamento.value =
+                orcamento.horas ||
+                "";
+
+        }
+
+        if (campoMinutosOrcamento) {
+
+            campoMinutosOrcamento.value =
+                orcamento.minutos ||
+                "";
+
+        }
+
+        if (campoPotenciaOrcamento) {
+
+            campoPotenciaOrcamento.value =
+                orcamento.potenciaWatts ||
+                "";
+
+        }
+
+        if (campoTarifaOrcamento) {
+
+            campoTarifaOrcamento.value =
+                orcamento.tarifaEnergia ||
+                "";
+
+        }
+
+        if (campoCustoHoraOrcamento) {
+
+            campoCustoHoraOrcamento.value =
+                orcamento.custoHoraImpressora ||
+                "";
+
+        }
+
+        if (campoMargemDesejadaOrcamento) {
+
+            campoMargemDesejadaOrcamento.value =
+                orcamento.margemDesejada ||
+                "";
+
+        }
+
+        if (campoPrecoFinalOrcamento) {
+
+            campoPrecoFinalOrcamento.value =
+                orcamento.precoFinal ||
+                "";
+
+        }
+
+        if (campoObservacoesOrcamento) {
+
+            campoObservacoesOrcamento.value =
+                orcamento.observacoes ||
+                "";
+
+        }
+
+        if (botaoSalvarOrcamento) {
+
+            botaoSalvarOrcamento.textContent =
+                "Atualizar Orçamento";
+
+        }
+
+        abrirAba(
+            "aba-orcamentos"
+        );
+
+        atualizarCalculosOrcamento();
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+
+    // ==================================================
+    // EXCLUIR ORÇAMENTO
+    // ==================================================
+
+    function excluirOrcamento(id) {
+
+        const orcamento =
+            encontrarOrcamento(id);
+
+        if (!orcamento) {
+
+            alert(
+                "Orçamento não encontrado."
+            );
+
+            return;
+
+        }
+
+        if (
+            orcamento.status ===
+            "Produzido"
+        ) {
+
+            alert(
+                "Um orçamento já produzido não pode ser excluído."
+            );
+
+            return;
+
+        }
+
+        const confirmar =
+            confirm(
+                'Deseja excluir o orçamento de "' +
+                (
+                    orcamento.produtoNome ||
+                    "produto não informado"
+                ) +
+                '"?'
+            );
+
+        if (!confirmar) {
+            return;
+        }
+
+        orcamentos =
+            orcamentos.filter(
+                function (item) {
+
+                    return String(item.id) !==
+                        String(orcamento.id);
+
+                }
+            );
+
+        salvarOrcamentos();
+
+        if (
+            String(
+                orcamentoEmEdicaoId
+            ) ===
+            String(
+                orcamento.id
+            )
+        ) {
+
+            limparFormularioOrcamento();
+
+        }
+
+        mostrarOrcamentos();
+
+        atualizarResumoOrcamentos();
+
+        alert(
+            "Orçamento excluído com sucesso."
+        );
+
+    }
+
+    // ==================================================
+    // APROVAR ORÇAMENTO
+    // ==================================================
+
+    function aprovarOrcamento(id) {
+
+        const orcamento =
+            encontrarOrcamento(id);
+
+        if (!orcamento) {
+
+            alert(
+                "Orçamento não encontrado."
+            );
+
+            return;
+
+        }
+
+        if (
+            orcamento.status ===
+            "Produzido"
+        ) {
+
+            alert(
+                "Este orçamento já foi produzido."
+            );
+
+            return;
+
+        }
+
+        const confirmar =
+            confirm(
+                "Deseja aprovar este orçamento e deixá-lo aguardando produção?"
+            );
+
+        if (!confirmar) {
+            return;
+        }
+
+        orcamento.status =
+            "Aguardando produção";
+
+        orcamento.atualizadoEm =
+            new Date().toISOString();
+
+        salvarOrcamentos();
+
+        mostrarOrcamentos();
+
+        atualizarResumoOrcamentos();
+
+        alert(
+            "Orçamento aprovado e enviado para a fila de produção."
+        );
+
+    }
+
+    // ==================================================
+    // ENVIAR ORÇAMENTO PARA PRODUÇÃO
+    // ==================================================
+
+    function enviarOrcamentoParaProducao(
+        id
+    ) {
+
+        recarregarDadosDeApoio();
+
+        const orcamento =
+            encontrarOrcamento(id);
+
+        if (!orcamento) {
+
+            alert(
+                "Orçamento não encontrado."
+            );
+
+            return;
+
+        }
+
+        if (
+            orcamento.status ===
+            "Produzido"
+        ) {
+
+            alert(
+                "Este orçamento já foi produzido."
+            );
+
+            return;
+
+        }
+
+        orcamento.status =
+            "Aguardando produção";
+
+        orcamento.atualizadoEm =
+            new Date().toISOString();
+
+        salvarOrcamentos();
+
+        copiarOrcamentoParaProducao(
+            orcamento
+        );
+
+        mostrarOrcamentos();
+
+        atualizarResumoOrcamentos();
+
+        alert(
+            "Dados do orçamento copiados para a produção. Confira os consumos reais antes de confirmar."
+        );
+
+    }
+        // ==================================================
+    // PARTE 10A
+    // PEÇAS COM FALHA — CAMPOS E CÁLCULOS
+    // ==================================================
+
+    const campoPerdaProdutoLote =
+        document.getElementById(
+            "perda-produto-lote"
+        );
+
+    const campoPerdaData =
+        document.getElementById(
+            "perda-data"
+        );
+
+    const campoPerdaQuantidade =
+        document.getElementById(
+            "perda-quantidade"
+        );
+
+    const campoPerdaTipo =
+        document.getElementById(
+            "perda-tipo"
+        );
+
+    const campoPerdaReaproveitavel =
+        document.getElementById(
+            "perda-reaproveitavel"
+        );
+
+    const campoPerdaQuantidadeReaproveitavel =
+        document.getElementById(
+            "perda-quantidade-reaproveitavel"
+        );
+
+    const campoPerdaCustoUnitario =
+        document.getElementById(
+            "perda-custo-unitario"
+        );
+
+    const campoPerdaCustoTotal =
+        document.getElementById(
+            "perda-custo-total"
+        );
+
+    const campoPerdaMotivo =
+        document.getElementById(
+            "perda-motivo"
+        );
+
+    const campoPerdaDestino =
+        document.getElementById(
+            "perda-destino"
+        );
+
+    const campoPerdaObservacoes =
+        document.getElementById(
+            "perda-observacoes"
+        );
+
+    const botaoSalvarPerda =
+        document.getElementById(
+            "salvar-perda-produto"
+        );
+
+    const botaoLimparPerda =
+        document.getElementById(
+            "limpar-formulario-perda"
+        );
+
+    const listaPerdas =
+        document.getElementById(
+            "lista-perdas-produtos"
+        );
+
+    const campoTotalRegistrosPerdas =
+        document.getElementById(
+            "perdas-total-registros"
+        );
+
+    const campoTotalUnidadesPerdidas =
+        document.getElementById(
+            "perdas-total-unidades"
+        );
+
+    const campoCustoTotalPerdas =
+        document.getElementById(
+            "perdas-custo-total"
+        );
+
+    const campoTotalReaproveitaveis =
+        document.getElementById(
+            "perdas-total-reaproveitaveis"
+        );
+
+    // ==================================================
+    // PREENCHER LOTES DISPONÍVEIS
+    // ==================================================
+
+    function preencherSelectLotesPerda(
+        valorSelecionado = ""
+    ) {
+
+        if (!campoPerdaProdutoLote) {
+            return;
+        }
+
+        campoPerdaProdutoLote.innerHTML =
+            '<option value="">' +
+            "Selecione o lote produzido" +
+            "</option>";
+
+        produtos
+            .filter(
+                function (produto) {
+
+                    return (
+                        numeroPositivo(
+                            produto.quantidadeDisponivel
+                        ) > 0
+                    );
+
+                }
+            )
+            .sort(
+                function (a, b) {
+
+                    return String(
+                        a.dataProducao || ""
+                    ).localeCompare(
+                        String(
+                            b.dataProducao || ""
+                        )
+                    );
+
+                }
+            )
+            .forEach(
+                function (produto) {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+                    option.value =
+                        String(produto.id);
+
+                    option.textContent =
+                        (
+                            produto.nome ||
+                            "Produto sem nome"
+                        ) +
+                        " — lote " +
+                        (
+                            produto.lote ||
+                            "não informado"
+                        ) +
+                        " — " +
+                        numeroFormatado(
+                            produto.quantidadeDisponivel,
+                            0
+                        ) +
+                        " disponíveis";
+
+                    option.selected =
+                        String(valorSelecionado) ===
+                        String(produto.id);
+
+                    campoPerdaProdutoLote
+                        .appendChild(option);
+
+                }
+            );
+
+    }
+
+    // ==================================================
+    // CALCULAR PERDA
+    // ==================================================
+
+    function atualizarCalculosPerda() {
+
+        const produto =
+            encontrarProduto(
+                campoPerdaProdutoLote
+                    ? campoPerdaProdutoLote.value
+                    : ""
+            );
+
+        const quantidade =
+            numeroPositivo(
+                campoPerdaQuantidade
+                    ? campoPerdaQuantidade.value
+                    : 0
+            );
+
+        const quantidadeReaproveitavel =
+            numeroPositivo(
+                campoPerdaQuantidadeReaproveitavel
+                    ? campoPerdaQuantidadeReaproveitavel.value
+                    : 0
+            );
+
+        const custoUnitario =
+            produto
+                ? numeroPositivo(
+                    produto.custoUnitario
+                )
+                : 0;
+
+        const custoTotal =
+            quantidade *
+            custoUnitario;
+
+        if (campoPerdaCustoUnitario) {
+
+            campoPerdaCustoUnitario.value =
+                dinheiro(
+                    custoUnitario
+                );
+
+        }
+
+        if (campoPerdaCustoTotal) {
+
+            campoPerdaCustoTotal.value =
+                dinheiro(
+                    custoTotal
+                );
+
+        }
+
+        return {
+
+            produto:
+                produto,
+
+            quantidade:
+                quantidade,
+
+            quantidadeReaproveitavel:
+                quantidadeReaproveitavel,
+
+            custoUnitario:
+                custoUnitario,
+
+            custoTotal:
+                custoTotal
+
+        };
+
+    }
+
+    // ==================================================
+    // VALIDAR PERDA
+    // ==================================================
+
+    function validarPerda(
+        calculos
+    ) {
+
+        if (!calculos.produto) {
+
+            alert(
+                "Selecione o lote produzido."
+            );
+
+            return false;
+
+        }
+
+        if (
+            !campoPerdaData ||
+            !campoPerdaData.value
+        ) {
+
+            alert(
+                "Informe a data da ocorrência."
+            );
+
+            return false;
+
+        }
+
+        if (
+            calculos.quantidade <= 0
+        ) {
+
+            alert(
+                "Informe uma quantidade com falha válida."
+            );
+
+            return false;
+
+        }
+
+        const quantidadeDisponivel =
+            numeroPositivo(
+                calculos.produto
+                    .quantidadeDisponivel
+            );
+
+        if (
+            calculos.quantidade >
+            quantidadeDisponivel
+        ) {
+
+            alert(
+                "A quantidade com falha é maior que o estoque disponível.\n\n" +
+                "Disponível: " +
+                numeroFormatado(
+                    quantidadeDisponivel,
+                    0
+                ) +
+                "\nInformado: " +
+                numeroFormatado(
+                    calculos.quantidade,
+                    0
+                )
+            );
+
+            return false;
+
+        }
+
+        if (
+            !campoPerdaTipo ||
+            !campoPerdaTipo.value
+        ) {
+
+            alert(
+                "Selecione o tipo de falha."
+            );
+
+            return false;
+
+        }
+
+        if (
+            calculos.quantidadeReaproveitavel >
+            calculos.quantidade
+        ) {
+
+            alert(
+                "A quantidade reaproveitável não pode ser maior que a quantidade com falha."
+            );
+
+            return false;
+
+        }
+
+        if (
+            campoPerdaReaproveitavel &&
+            campoPerdaReaproveitavel.value ===
+                "Não" &&
+            calculos.quantidadeReaproveitavel > 0
+        ) {
+
+            alert(
+                'Quando a peça não for reaproveitável, informe "0" na quantidade reaproveitável.'
+            );
+
+            return false;
+
+        }
+
+        if (
+            !campoPerdaMotivo ||
+            !campoPerdaMotivo.value.trim()
+        ) {
+
+            alert(
+                "Descreva a falha ocorrida."
+            );
+
+            return false;
+
+        }
+
+        return true;
+
+    }
+
+    // ==================================================
+    // CRIAR OBJETO DA PERDA
+    // ==================================================
+
+    function criarObjetoPerda(
+        calculos
+    ) {
+
+        const produto =
+            calculos.produto;
+
+        return {
+
+            id:
+                perdaEmEdicaoId ||
+                criarId(),
+
+            produtoId:
+                produto.id,
+
+            produtoNome:
+                produto.nome || "",
+
+            lote:
+                produto.lote || "",
+
+            data:
+                campoPerdaData
+                    ? campoPerdaData.value
+                    : "",
+
+            quantidade:
+                calculos.quantidade,
+
+            tipo:
+                campoPerdaTipo
+                    ? campoPerdaTipo.value
+                    : "",
+
+            reaproveitavel:
+                campoPerdaReaproveitavel
+                    ? campoPerdaReaproveitavel.value
+                    : "Não",
+
+            quantidadeReaproveitavel:
+                calculos.quantidadeReaproveitavel,
+
+            custoUnitario:
+                calculos.custoUnitario,
+
+            custoTotal:
+                calculos.custoTotal,
+
+            motivo:
+                campoPerdaMotivo
+                    ? campoPerdaMotivo.value.trim()
+                    : "",
+
+            destino:
+                campoPerdaDestino
+                    ? campoPerdaDestino.value
+                    : "Descarte",
+
+            observacoes:
+                campoPerdaObservacoes
+                    ? campoPerdaObservacoes.value.trim()
+                    : "",
+
+            criadoEm:
+                new Date().toISOString(),
+
+            atualizadoEm:
+                new Date().toISOString()
+
+        };
+
+    }
+
+    // ==================================================
+    // EVENTOS DE CÁLCULO
+    // ==================================================
+
+    [
+        campoPerdaProdutoLote,
+        campoPerdaQuantidade,
+        campoPerdaQuantidadeReaproveitavel,
+        campoPerdaReaproveitavel
+    ].forEach(
+        function (campo) {
+
+            if (!campo) {
+                return;
+            }
+
+            campo.addEventListener(
+                "input",
+                atualizarCalculosPerda
+            );
+
+            campo.addEventListener(
+                "change",
+                atualizarCalculosPerda
+            );
+
+        }
+    );
+        // ==================================================
+    // PARTE 10B
+    // SALVAMENTO, MOVIMENTAÇÃO E LISTAGEM DAS PERDAS
+    // ==================================================
+
+    function salvarPerdaProduto() {
+
+        const calculos =
+            atualizarCalculosPerda();
+
+        if (
+            !validarPerda(
+                calculos
+            )
+        ) {
+            return;
+        }
+
+        const editando =
+            perdaEmEdicaoId !== null;
+
+        const perda =
+            criarObjetoPerda(
+                calculos
+            );
+
+        if (editando) {
+
+            const indice =
+                perdas.findIndex(
+                    function (item) {
+
+                        return String(item.id) ===
+                            String(
+                                perdaEmEdicaoId
+                            );
+
+                    }
+                );
+
+            if (indice === -1) {
+
+                alert(
+                    "Registro de perda não encontrado."
+                );
+
+                return;
+
+            }
+
+            perda.criadoEm =
+                perdas[indice].criadoEm ||
+                perda.criadoEm;
+
+            perdas[indice] =
+                perda;
+
+        } else {
+
+            const produto =
+                calculos.produto;
+
+            const quantidadeAnterior =
+                numeroPositivo(
+                    produto.quantidadeDisponivel
+                );
+
+            produto.quantidadeDisponivel =
+                Math.max(
+                    0,
+                    quantidadeAnterior -
+                    perda.quantidade
+                );
+
+            const quantidadePosterior =
+                produto.quantidadeDisponivel;
+
+            perdas.push(
+                perda
+            );
+
+            salvarProdutos();
+
+            registrarMovimentacaoSaida({
+
+                data:
+                    perda.data,
+
+                tipo:
+                    "Saída por perda",
+
+                produtoId:
+                    perda.produtoId,
+
+                produto:
+                    perda.produtoNome,
+
+                lote:
+                    perda.lote,
+
+                quantidade:
+                    perda.quantidade,
+
+                quantidadeAnterior:
+                    quantidadeAnterior,
+
+                quantidadePosterior:
+                    quantidadePosterior,
+
+                custoUnitario:
+                    perda.custoUnitario,
+
+                custoTotal:
+                    perda.custoTotal,
+
+                observacoes:
+                    perda.motivo
+
+            });
+
+        }
+
+        salvarPerdas();
+
+        mostrarPerdas();
+
+        atualizarResumoPerdas();
+
+        mostrarProdutos();
+
+        atualizarResumoProdutos();
+
+        preencherSelectLotesPerda();
+
+        preencherSelectLotesConsumoProprio();
+
+        limparFormularioPerda();
+
+        if (
+            typeof atualizarDashboardCompleto ===
+            "function"
+        ) {
+
+            atualizarDashboardCompleto();
+
+        }
+
+        alert(
+            editando
+                ? "Registro de perda atualizado com sucesso!"
+                : "Perda registrada com sucesso!"
+        );
+
+    }
+
+    // ==================================================
+    // LIMPAR FORMULÁRIO DA PERDA
+    // ==================================================
+
+    function limparFormularioPerda() {
+
+        perdaEmEdicaoId =
+            null;
+
+        preencherSelectLotesPerda();
+
+        if (campoPerdaData) {
+
+            campoPerdaData.value =
+                dataHoje();
+
+        }
+
+        if (campoPerdaQuantidade) {
+            campoPerdaQuantidade.value = "";
+        }
+
+        if (campoPerdaTipo) {
+            campoPerdaTipo.value = "";
+        }
+
+        if (campoPerdaReaproveitavel) {
+
+            campoPerdaReaproveitavel.value =
+                "Não";
+
+        }
+
+        if (campoPerdaQuantidadeReaproveitavel) {
+
+            campoPerdaQuantidadeReaproveitavel.value =
+                "0";
+
+        }
+
+        if (campoPerdaMotivo) {
+            campoPerdaMotivo.value = "";
+        }
+
+        if (campoPerdaDestino) {
+
+            campoPerdaDestino.value =
+                "Descarte";
+
+        }
+
+        if (campoPerdaObservacoes) {
+            campoPerdaObservacoes.value = "";
+        }
+
+        if (botaoSalvarPerda) {
+
+            botaoSalvarPerda.textContent =
+                "Salvar Perda";
+
+        }
+
+        atualizarCalculosPerda();
+
+    }
+
+    // ==================================================
+    // ATUALIZAR RESUMO DAS PERDAS
+    // ==================================================
+
+    function atualizarResumoPerdas() {
+
+        const totalUnidades =
+            perdas.reduce(
+                function (total, perda) {
+
+                    return (
+                        total +
+                        numeroPositivo(
+                            perda.quantidade
+                        )
+                    );
+
+                },
+                0
+            );
+
+        const custoTotal =
+            perdas.reduce(
+                function (total, perda) {
+
+                    return (
+                        total +
+                        numeroPositivo(
+                            perda.custoTotal
+                        )
+                    );
+
+                },
+                0
+            );
+
+        const totalReaproveitavel =
+            perdas.reduce(
+                function (total, perda) {
+
+                    return (
+                        total +
+                        numeroPositivo(
+                            perda.quantidadeReaproveitavel
+                        )
+                    );
+
+                },
+                0
+            );
+
+        if (campoTotalRegistrosPerdas) {
+
+            campoTotalRegistrosPerdas.textContent =
+                perdas.length;
+
+        }
+
+        if (campoTotalUnidadesPerdidas) {
+
+            campoTotalUnidadesPerdidas.textContent =
+                numeroFormatado(
+                    totalUnidades,
+                    0
+                );
+
+        }
+
+        if (campoCustoTotalPerdas) {
+
+            campoCustoTotalPerdas.textContent =
+                dinheiro(
+                    custoTotal
+                );
+
+        }
+
+        if (campoTotalReaproveitaveis) {
+
+            campoTotalReaproveitaveis.textContent =
+                numeroFormatado(
+                    totalReaproveitavel,
+                    0
+                );
+
+        }
+
+    }
+
+    // ==================================================
+    // MOSTRAR PERDAS
+    // ==================================================
+
+    function mostrarPerdas() {
+
+        if (!listaPerdas) {
+            return;
+        }
+
+        if (
+            !Array.isArray(perdas) ||
+            perdas.length === 0
+        ) {
+
+            listaPerdas.innerHTML =
+                "<p>Nenhuma perda registrada.</p>";
+
+            atualizarResumoPerdas();
+
+            return;
+
+        }
+
+        listaPerdas.innerHTML =
+            [...perdas]
+                .sort(
+                    function (a, b) {
+
+                        return String(
+                            b.data || ""
+                        ).localeCompare(
+                            String(
+                                a.data || ""
+                            )
+                        );
+
+                    }
+                )
+                .map(
+                    function (perda) {
+
+                        return `
+                            <div class="card-item">
+
+                                <h4>
+                                    ${textoSeguro(
+                                        perda.produtoNome ||
+                                        "Produto não informado"
+                                    )}
+                                </h4>
+
+                                <p>
+                                    <strong>Lote:</strong>
+                                    ${textoSeguro(
+                                        perda.lote ||
+                                        "Não informado"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Data:</strong>
+                                    ${dataFormatada(
+                                        perda.data
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Quantidade perdida:</strong>
+                                    ${numeroFormatado(
+                                        perda.quantidade,
+                                        0
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Tipo de falha:</strong>
+                                    ${textoSeguro(
+                                        perda.tipo ||
+                                        "Não informado"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Reaproveitável:</strong>
+                                    ${textoSeguro(
+                                        perda.reaproveitavel ||
+                                        "Não"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Quantidade reaproveitável:</strong>
+                                    ${numeroFormatado(
+                                        perda.quantidadeReaproveitavel,
+                                        0
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Custo unitário:</strong>
+                                    ${dinheiro(
+                                        perda.custoUnitario
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Custo total perdido:</strong>
+                                    ${dinheiro(
+                                        perda.custoTotal
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Destino:</strong>
+                                    ${textoSeguro(
+                                        perda.destino ||
+                                        "Não informado"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Descrição:</strong>
+                                    ${textoSeguro(
+                                        perda.motivo ||
+                                        "Não informada"
+                                    )}
+                                </p>
+
+                            </div>
+                        `;
+
+                    }
+                )
+                .join("");
+
+        atualizarResumoPerdas();
+
+    }
+
+    // ==================================================
+    // EVENTOS DOS BOTÕES DA PERDA
+    // ==================================================
+
+    if (botaoSalvarPerda) {
+
+        botaoSalvarPerda.addEventListener(
+            "click",
+            salvarPerdaProduto
+        );
+
+    }
+
+    if (botaoLimparPerda) {
+
+        botaoLimparPerda.addEventListener(
+            "click",
+            limparFormularioPerda
+        );
+
+    }
+        // ==================================================
+    // PARTE 11A
+    // CONSUMO PRÓPRIO — CAMPOS, CÁLCULOS E VALIDAÇÃO
+    // ==================================================
+
+    const campoConsumoProdutoLote =
+        document.getElementById(
+            "consumo-proprio-produto-lote"
+        );
+
+    const campoConsumoData =
+        document.getElementById(
+            "consumo-proprio-data"
+        );
+
+    const campoConsumoQuantidade =
+        document.getElementById(
+            "consumo-proprio-quantidade"
+        );
+
+    const campoConsumoFinalidade =
+        document.getElementById(
+            "consumo-proprio-finalidade"
+        );
+
+    const campoConsumoLocal =
+        document.getElementById(
+            "consumo-proprio-local"
+        );
+
+    const campoConsumoResponsavel =
+        document.getElementById(
+            "consumo-proprio-responsavel"
+        );
+
+    const campoConsumoCustoUnitario =
+        document.getElementById(
+            "consumo-proprio-custo-unitario"
+        );
+
+    const campoConsumoCustoTotal =
+        document.getElementById(
+            "consumo-proprio-custo-total"
+        );
+
+    const campoConsumoDescricao =
+        document.getElementById(
+            "consumo-proprio-descricao"
+        );
+
+    const campoConsumoObservacoes =
+        document.getElementById(
+            "consumo-proprio-observacoes"
+        );
+
+    const botaoSalvarConsumoProprio =
+        document.getElementById(
+            "salvar-consumo-proprio"
+        );
+
+    const botaoLimparConsumoProprio =
+        document.getElementById(
+            "limpar-formulario-consumo-proprio"
+        );
+
+    const listaConsumoProprio =
+        document.getElementById(
+            "lista-consumo-proprio"
+        );
+
+    const campoTotalRegistrosConsumo =
+        document.getElementById(
+            "consumo-proprio-total-registros"
+        );
+
+    const campoTotalUnidadesConsumo =
+        document.getElementById(
+            "consumo-proprio-total-unidades"
+        );
+
+    const campoCustoInternoTotalConsumo =
+        document.getElementById(
+            "consumo-proprio-custo-interno-total"
+        );
+
+    const campoItensEmUsoConsumo =
+        document.getElementById(
+            "consumo-proprio-itens-em-uso"
+        );
+
+    // ==================================================
+    // PREENCHER LOTES DISPONÍVEIS
+    // ==================================================
+
+    function preencherSelectLotesConsumoProprio(
+        valorSelecionado = ""
+    ) {
+
+        if (!campoConsumoProdutoLote) {
+            return;
+        }
+
+        campoConsumoProdutoLote.innerHTML =
+            '<option value="">' +
+            "Selecione o lote produzido" +
+            "</option>";
+
+        produtos
+            .filter(
+                function (produto) {
+
+                    return (
+                        numeroPositivo(
+                            produto.quantidadeDisponivel
+                        ) > 0
+                    );
+
+                }
+            )
+            .sort(
+                function (a, b) {
+
+                    return String(
+                        a.dataProducao || ""
+                    ).localeCompare(
+                        String(
+                            b.dataProducao || ""
+                        )
+                    );
+
+                }
+            )
+            .forEach(
+                function (produto) {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+                    option.value =
+                        String(produto.id);
+
+                    option.textContent =
+                        (
+                            produto.nome ||
+                            "Produto sem nome"
+                        ) +
+                        " — lote " +
+                        (
+                            produto.lote ||
+                            "não informado"
+                        ) +
+                        " — " +
+                        numeroFormatado(
+                            produto.quantidadeDisponivel,
+                            0
+                        ) +
+                        " disponíveis";
+
+                    option.selected =
+                        String(valorSelecionado) ===
+                        String(produto.id);
+
+                    campoConsumoProdutoLote
+                        .appendChild(option);
+
+                }
+            );
+
+    }
+
+    // ==================================================
+    // CALCULAR CONSUMO PRÓPRIO
+    // ==================================================
+
+    function atualizarCalculosConsumoProprio() {
+
+        const produto =
+            encontrarProduto(
+                campoConsumoProdutoLote
+                    ? campoConsumoProdutoLote.value
+                    : ""
+            );
+
+        const quantidade =
+            numeroPositivo(
+                campoConsumoQuantidade
+                    ? campoConsumoQuantidade.value
+                    : 0
+            );
+
+        const custoUnitario =
+            produto
+                ? numeroPositivo(
+                    produto.custoUnitario
+                )
+                : 0;
+
+        const custoTotal =
+            quantidade *
+            custoUnitario;
+
+        if (campoConsumoCustoUnitario) {
+
+            campoConsumoCustoUnitario.value =
+                dinheiro(
+                    custoUnitario
+                );
+
+        }
+
+        if (campoConsumoCustoTotal) {
+
+            campoConsumoCustoTotal.value =
+                dinheiro(
+                    custoTotal
+                );
+
+        }
+
+        return {
+
+            produto:
+                produto,
+
+            quantidade:
+                quantidade,
+
+            custoUnitario:
+                custoUnitario,
+
+            custoTotal:
+                custoTotal
+
+        };
+
+    }
+
+    // ==================================================
+    // VALIDAR CONSUMO PRÓPRIO
+    // ==================================================
+
+    function validarConsumoProprio(
+        calculos
+    ) {
+
+        if (!calculos.produto) {
+
+            alert(
+                "Selecione o lote produzido."
+            );
+
+            return false;
+
+        }
+
+        if (
+            !campoConsumoData ||
+            !campoConsumoData.value
+        ) {
+
+            alert(
+                "Informe a data da retirada."
+            );
+
+            return false;
+
+        }
+
+        if (
+            calculos.quantidade <= 0
+        ) {
+
+            alert(
+                "Informe uma quantidade válida."
+            );
+
+            return false;
+
+        }
+
+        const quantidadeDisponivel =
+            numeroPositivo(
+                calculos.produto
+                    .quantidadeDisponivel
+            );
+
+        if (
+            calculos.quantidade >
+            quantidadeDisponivel
+        ) {
+
+            alert(
+                "A quantidade informada é maior que o estoque disponível.\n\n" +
+                "Disponível: " +
+                numeroFormatado(
+                    quantidadeDisponivel,
+                    0
+                ) +
+                "\nInformado: " +
+                numeroFormatado(
+                    calculos.quantidade,
+                    0
+                )
+            );
+
+            return false;
+
+        }
+
+        if (
+            !campoConsumoFinalidade ||
+            !campoConsumoFinalidade.value
+        ) {
+
+            alert(
+                "Selecione a finalidade do consumo próprio."
+            );
+
+            return false;
+
+        }
+
+        if (
+            !campoConsumoDescricao ||
+            !campoConsumoDescricao.value.trim()
+        ) {
+
+            alert(
+                "Descreva como o produto será utilizado."
+            );
+
+            return false;
+
+        }
+
+        return true;
+
+    }
+
+    // ==================================================
+    // CRIAR OBJETO DO CONSUMO PRÓPRIO
+    // ==================================================
+
+    function criarObjetoConsumoProprio(
+        calculos
+    ) {
+
+        const produto =
+            calculos.produto;
+
+        return {
+
+            id:
+                consumoProprioEmEdicaoId ||
+                criarId(),
+
+            produtoId:
+                produto.id,
+
+            produtoNome:
+                produto.nome || "",
+
+            lote:
+                produto.lote || "",
+
+            data:
+                campoConsumoData
+                    ? campoConsumoData.value
+                    : "",
+
+            quantidade:
+                calculos.quantidade,
+
+            finalidade:
+                campoConsumoFinalidade
+                    ? campoConsumoFinalidade.value
+                    : "",
+
+            local:
+                campoConsumoLocal
+                    ? campoConsumoLocal.value.trim()
+                    : "",
+
+            responsavel:
+                campoConsumoResponsavel
+                    ? campoConsumoResponsavel.value.trim()
+                    : "",
+
+            custoUnitario:
+                calculos.custoUnitario,
+
+            custoTotal:
+                calculos.custoTotal,
+
+            descricao:
+                campoConsumoDescricao
+                    ? campoConsumoDescricao.value.trim()
+                    : "",
+
+            observacoes:
+                campoConsumoObservacoes
+                    ? campoConsumoObservacoes.value.trim()
+                    : "",
+
+            status:
+                "Em uso",
+
+            criadoEm:
+                new Date().toISOString(),
+
+            atualizadoEm:
+                new Date().toISOString()
+
+        };
+
+    }
+
+    // ==================================================
+    // EVENTOS DE CÁLCULO
+    // ==================================================
+
+    [
+        campoConsumoProdutoLote,
+        campoConsumoQuantidade
+    ].forEach(
+        function (campo) {
+
+            if (!campo) {
+                return;
+            }
+
+            campo.addEventListener(
+                "input",
+                atualizarCalculosConsumoProprio
+            );
+
+            campo.addEventListener(
+                "change",
+                atualizarCalculosConsumoProprio
+            );
+
+        }
+    );
+        // ==================================================
+    // PARTE 11B
+    // SALVAMENTO E LISTAGEM DO CONSUMO PRÓPRIO
+    // ==================================================
+
+    function salvarConsumoProprioProduto() {
+
+        const calculos =
+            atualizarCalculosConsumoProprio();
+
+        if (
+            !validarConsumoProprio(
+                calculos
+            )
+        ) {
+            return;
+        }
+
+        const editando =
+            consumoProprioEmEdicaoId !==
+            null;
+
+        const consumo =
+            criarObjetoConsumoProprio(
+                calculos
+            );
+
+        if (editando) {
+
+            const indice =
+                consumosProprios.findIndex(
+                    function (item) {
+
+                        return String(item.id) ===
+                            String(
+                                consumoProprioEmEdicaoId
+                            );
+
+                    }
+                );
+
+            if (indice === -1) {
+
+                alert(
+                    "Registro de consumo próprio não encontrado."
+                );
+
+                return;
+
+            }
+
+            consumo.criadoEm =
+                consumosProprios[indice]
+                    .criadoEm ||
+                consumo.criadoEm;
+
+            consumosProprios[indice] =
+                consumo;
+
+        } else {
+
+            const produto =
+                calculos.produto;
+
+            const quantidadeAnterior =
+                numeroPositivo(
+                    produto.quantidadeDisponivel
+                );
+
+            produto.quantidadeDisponivel =
+                Math.max(
+                    0,
+                    quantidadeAnterior -
+                    consumo.quantidade
+                );
+
+            const quantidadePosterior =
+                produto.quantidadeDisponivel;
+
+            consumosProprios.push(
+                consumo
+            );
+
+            salvarProdutos();
+
+            registrarMovimentacaoSaida({
+
+                data:
+                    consumo.data,
+
+                tipo:
+                    "Saída por consumo próprio",
+
+                produtoId:
+                    consumo.produtoId,
+
+                produto:
+                    consumo.produtoNome,
+
+                lote:
+                    consumo.lote,
+
+                quantidade:
+                    consumo.quantidade,
+
+                quantidadeAnterior:
+                    quantidadeAnterior,
+
+                quantidadePosterior:
+                    quantidadePosterior,
+
+                custoUnitario:
+                    consumo.custoUnitario,
+
+                custoTotal:
+                    consumo.custoTotal,
+
+                observacoes:
+                    consumo.finalidade +
+                    (
+                        consumo.descricao
+                            ? " — " +
+                                consumo.descricao
+                            : ""
+                    )
+
+            });
+
+        }
+
+        salvarConsumosProprios();
+
+        mostrarConsumosProprios();
+
+        atualizarResumoConsumoProprio();
+
+        mostrarProdutos();
+
+        atualizarResumoProdutos();
+
+        preencherSelectLotesPerda();
+
+        preencherSelectLotesConsumoProprio();
+
+        limparFormularioConsumoProprio();
+
+        if (
+            typeof atualizarDashboardCompleto ===
+            "function"
+        ) {
+
+            atualizarDashboardCompleto();
+
+        }
+
+        alert(
+            editando
+                ? "Consumo próprio atualizado com sucesso!"
+                : "Consumo próprio registrado com sucesso!"
+        );
+
+    }
+
+    // ==================================================
+    // LIMPAR FORMULÁRIO DO CONSUMO PRÓPRIO
+    // ==================================================
+
+    function limparFormularioConsumoProprio() {
+
+        consumoProprioEmEdicaoId =
+            null;
+
+        preencherSelectLotesConsumoProprio();
+
+        if (campoConsumoData) {
+
+            campoConsumoData.value =
+                dataHoje();
+
+        }
+
+        if (campoConsumoQuantidade) {
+
+            campoConsumoQuantidade.value =
+                "";
+
+        }
+
+        if (campoConsumoFinalidade) {
+
+            campoConsumoFinalidade.value =
+                "";
+
+        }
+
+        if (campoConsumoLocal) {
+
+            campoConsumoLocal.value =
+                "";
+
+        }
+
+        if (campoConsumoResponsavel) {
+
+            campoConsumoResponsavel.value =
+                "";
+
+        }
+
+        if (campoConsumoDescricao) {
+
+            campoConsumoDescricao.value =
+                "";
+
+        }
+
+        if (campoConsumoObservacoes) {
+
+            campoConsumoObservacoes.value =
+                "";
+
+        }
+
+        if (botaoSalvarConsumoProprio) {
+
+            botaoSalvarConsumoProprio.textContent =
+                "Salvar Consumo Próprio";
+
+        }
+
+        atualizarCalculosConsumoProprio();
+
+    }
+
+    // ==================================================
+    // ATUALIZAR RESUMO DO CONSUMO PRÓPRIO
+    // ==================================================
+
+    function atualizarResumoConsumoProprio() {
+
+        const totalUnidades =
+            consumosProprios.reduce(
+                function (total, consumo) {
+
+                    return (
+                        total +
+                        numeroPositivo(
+                            consumo.quantidade
+                        )
+                    );
+
+                },
+                0
+            );
+
+        const custoTotal =
+            consumosProprios.reduce(
+                function (total, consumo) {
+
+                    return (
+                        total +
+                        numeroPositivo(
+                            consumo.custoTotal
+                        )
+                    );
+
+                },
+                0
+            );
+
+        const itensEmUso =
+            consumosProprios.filter(
+                function (consumo) {
+
+                    return consumo.status !==
+                        "Descartado";
+
+                }
+            ).length;
+
+        if (campoTotalRegistrosConsumo) {
+
+            campoTotalRegistrosConsumo.textContent =
+                consumosProprios.length;
+
+        }
+
+        if (campoTotalUnidadesConsumo) {
+
+            campoTotalUnidadesConsumo.textContent =
+                numeroFormatado(
+                    totalUnidades,
+                    0
+                );
+
+        }
+
+        if (campoCustoInternoTotalConsumo) {
+
+            campoCustoInternoTotalConsumo.textContent =
+                dinheiro(
+                    custoTotal
+                );
+
+        }
+
+        if (campoItensEmUsoConsumo) {
+
+            campoItensEmUsoConsumo.textContent =
+                itensEmUso;
+
+        }
+
+    }
+
+    // ==================================================
+    // MOSTRAR CONSUMOS PRÓPRIOS
+    // ==================================================
+
+    function mostrarConsumosProprios() {
+
+        if (!listaConsumoProprio) {
+            return;
+        }
+
+        if (
+            !Array.isArray(
+                consumosProprios
+            ) ||
+            consumosProprios.length === 0
+        ) {
+
+            listaConsumoProprio.innerHTML =
+                "<p>Nenhum consumo próprio registrado.</p>";
+
+            atualizarResumoConsumoProprio();
+
+            return;
+
+        }
+
+        listaConsumoProprio.innerHTML =
+            [...consumosProprios]
+                .sort(
+                    function (a, b) {
+
+                        return String(
+                            b.data || ""
+                        ).localeCompare(
+                            String(
+                                a.data || ""
+                            )
+                        );
+
+                    }
+                )
+                .map(
+                    function (consumo) {
+
+                        return `
+                            <div class="card-item">
+
+                                <h4>
+                                    ${textoSeguro(
+                                        consumo.produtoNome ||
+                                        "Produto não informado"
+                                    )}
+                                </h4>
+
+                                <p>
+                                    <strong>Lote:</strong>
+                                    ${textoSeguro(
+                                        consumo.lote ||
+                                        "Não informado"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Data:</strong>
+                                    ${dataFormatada(
+                                        consumo.data
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Quantidade:</strong>
+                                    ${numeroFormatado(
+                                        consumo.quantidade,
+                                        0
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Finalidade:</strong>
+                                    ${textoSeguro(
+                                        consumo.finalidade ||
+                                        "Não informada"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Local de uso:</strong>
+                                    ${textoSeguro(
+                                        consumo.local ||
+                                        "Não informado"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Responsável:</strong>
+                                    ${textoSeguro(
+                                        consumo.responsavel ||
+                                        "Não informado"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Custo unitário:</strong>
+                                    ${dinheiro(
+                                        consumo.custoUnitario
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Custo interno total:</strong>
+                                    ${dinheiro(
+                                        consumo.custoTotal
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Descrição:</strong>
+                                    ${textoSeguro(
+                                        consumo.descricao ||
+                                        "Não informada"
+                                    )}
+                                </p>
+
+                                <p>
+                                    <strong>Status:</strong>
+                                    ${textoSeguro(
+                                        consumo.status ||
+                                        "Em uso"
+                                    )}
+                                </p>
+
+                            </div>
+                        `;
+
+                    }
+                )
+                .join("");
+
+        atualizarResumoConsumoProprio();
+
+    }
+
+    // ==================================================
+    // EVENTOS DOS BOTÕES DO CONSUMO PRÓPRIO
+    // ==================================================
+
+    if (botaoSalvarConsumoProprio) {
+
+        botaoSalvarConsumoProprio
+            .addEventListener(
+                "click",
+                salvarConsumoProprioProduto
+            );
+
+    }
+
+    if (botaoLimparConsumoProprio) {
+
+        botaoLimparConsumoProprio
+            .addEventListener(
+                "click",
+                limparFormularioConsumoProprio
+            );
+
+    }
     
