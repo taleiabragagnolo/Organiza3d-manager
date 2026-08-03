@@ -201,9 +201,9 @@ function iniciarCliente() {
 
 cliente.push(novoCliente);
 
-                salvarClientes();
-                mostrarClientes();
-                atualizarTotalClientes();
+                salvarCliente();
+                mostrarCliente();
+                atualizarTotalCliente();
 
                 campoNome.value = "";
 
@@ -232,7 +232,7 @@ cliente.push(novoCliente);
 
     }
 
-    mostrarClientes();
-    atualizarTotalClientes();
+    mostrarCliente();
+    atualizarTotalCliente();
 
 }
