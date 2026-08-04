@@ -5277,7 +5277,7 @@ function iniciarProduto() {
         salvarMovimentacoes();
 
     }
-        // ==================================================
+    // ==================================================
     // PARTE 7D
     // CADASTRO DO LOTE PRODUZIDO
     // ==================================================
@@ -5292,11 +5292,7 @@ function iniciarProduto() {
             "produto-produzido-categoria"
         );
 
-    const campoLoteProduto =
-        document.getElementById(
-            "produto-produzido-lote"
-        );
-
+    
     const campoDataProduto =
         document.getElementById(
             "produto-produzido-data"
@@ -5345,12 +5341,7 @@ function iniciarProduto() {
                 ? campoCategoriaProduto.value
                 : "";
 
-        const lote =
-            campoLoteProduto
-                ? campoLoteProduto.value.trim()
-                : "";
-
-        const data =
+            const data =
             campoDataProduto
                 ? campoDataProduto.value
                 : "";
@@ -5380,39 +5371,7 @@ function iniciarProduto() {
 
         }
 
-        if (!lote) {
-
-            alert(
-                "Informe o lote de produção."
-            );
-
-            return false;
-
-        }
-
-        const loteDuplicado =
-            produtos.some(
-                function (produto) {
-
-                    return (
-                        String(
-                            produto.lote || ""
-                        ).toLowerCase() ===
-                            lote.toLowerCase() &&
-                        String(produto.id) !==
-                            String(
-                                produtoEmEdicaoId
-                            )
-                    );
-
-                }
-            );
-
-        if (loteDuplicado) {
-
-            alert(
-                "Já existe um lote com este código."
-            );
+    
 
             return false;
 
@@ -5507,11 +5466,7 @@ function iniciarProduto() {
                     ? campoCategoriaProduto.value
                     : "",
 
-            lote:
-                campoLoteProduto
-                    ? campoLoteProduto.value.trim()
-                    : "",
-
+            
             dataProducao:
                 campoDataProduto
                     ? campoDataProduto.value
@@ -6151,9 +6106,6 @@ function iniciarProduto() {
         orcamento.produtoProduzidoId =
             produto.id;
 
-        orcamento.loteProduzido =
-            produto.lote;
-
         orcamento.dataProducao =
             produto.dataProducao;
 
@@ -6179,42 +6131,6 @@ function iniciarProduto() {
             new Date().toISOString();
 
         salvarOrcamentos();
-
-    }
-
-    function gerarCodigoLoteOrcamento(
-        orcamento
-    ) {
-
-        const data =
-            new Date();
-
-        const ano =
-            data.getFullYear();
-
-        const mes =
-            String(
-                data.getMonth() + 1
-            ).padStart(2, "0");
-
-        const dia =
-            String(
-                data.getDate()
-            ).padStart(2, "0");
-
-        const finalId =
-            String(
-                orcamento.id
-            ).slice(-4);
-
-        return (
-            "PROD-" +
-            ano +
-            mes +
-            dia +
-            "-" +
-            finalId
-        );
 
     }
 
@@ -6244,15 +6160,6 @@ function iniciarProduto() {
 
             campoCategoriaProduto.value =
                 "";
-
-        }
-
-        if (campoLoteProduto) {
-
-            campoLoteProduto.value =
-                gerarCodigoLoteOrcamento(
-                    orcamento
-                );
 
         }
 
@@ -6563,9 +6470,6 @@ function iniciarProduto() {
             campoCategoriaProduto.value = "";
         }
 
-        if (campoLoteProduto) {
-            campoLoteProduto.value = "";
-        }
 
         if (campoDataProduto) {
 
@@ -6978,12 +6882,6 @@ function iniciarProduto() {
                                     )}
                                 </h4>
 
-                                <p>
-                                    <strong>Lote:</strong>
-                                    ${textoSeguro(
-                                        produto.lote ||
-                                        "Não informado"
-                                    )}
                                 </p>
 
                                 <p>
@@ -7230,14 +7128,7 @@ function iniciarProduto() {
 
         }
 
-        if (campoLoteProduto) {
-
-            campoLoteProduto.value =
-                produto.lote || "";
-
-        }
-
-        if (campoDataProduto) {
+            if (campoDataProduto) {
 
             campoDataProduto.value =
                 produto.dataProducao || "";
