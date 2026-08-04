@@ -3940,11 +3940,276 @@ function iniciarProduto() {
         };
 
     }
-        // ==================================================
+    
+    // ==================================================
     // PARTE 6D
     // EVENTOS AUTOMÁTICOS DOS CÁLCULOS
     // ==================================================
+    // ==================================================
+    // CÁLCULO COMPLETO DO ORÇAMENTO
+    // ==================================================
 
+    function atualizarCalculosOrcamento() {
+
+        const filamentosEstimados =
+            obterFilamentosOrcamento();
+
+        const acessoriosEstimados =
+            obterAcessoriosOrcamento();
+
+        const embalagensEstimadas =
+            obterEmbalagensOrcamento();
+
+        const custoFilamentos =
+            somar(
+                filamentosEstimados,
+                "custoTotal"
+            );
+
+        const custoAcessorios =
+            somar(
+                acessoriosEstimados,
+                "custoTotal"
+            );
+
+        const custoEmbalagens =
+            somar(
+                embalagensEstimadas,
+                "custoTotal"
+            );
+
+        const custoInsumos =
+            custoFilamentos +
+            custoAcessorios +
+            custoEmbalagens;
+
+        const tempo =
+            calcularTempoDecimal(
+                campoHorasOrcamento,
+                campoMinutosOrcamento
+            );
+
+        const energia =
+            calcularEnergia(
+                campoPotenciaOrcamento
+                    ? campoPotenciaOrcamento.value
+                    : 0,
+
+                tempo.horasDecimais,
+
+                campoTarifaOrcamento
+                    ? campoTarifaOrcamento.value
+                    : 0
+            );
+
+        const maquina =
+            calcularCustoMaquina(
+                tempo.horasDecimais,
+
+                campoCustoHoraOrcamento
+                    ? campoCustoHoraOrcamento.value
+                    : 0
+            );
+
+        const custoTotal =
+            custoInsumos +
+            energia.custoEnergia +
+            maquina.custoTotal;
+
+        const quantidade =
+            numeroPositivo(
+                campoQuantidadeOrcamento
+                    ? campoQuantidadeOrcamento.value
+                    : 0
+            );
+
+        const custoUnitario =
+            quantidade > 0
+                ? custoTotal / quantidade
+                : 0;
+
+        const margemDesejada =
+            numeroPositivo(
+                campoMargemDesejadaOrcamento
+                    ? campoMargemDesejadaOrcamento.value
+                    : 0
+            );
+
+        const precoSugerido =
+            calcularPrecoPelaMargem(
+                custoUnitario,
+                margemDesejada
+            );
+
+        const precoFinal =
+            numeroPositivo(
+                campoPrecoFinalOrcamento
+                    ? campoPrecoFinalOrcamento.value
+                    : 0
+            );
+
+        const valorTotal =
+            precoFinal *
+            quantidade;
+
+        const margemReal =
+            calcularMargemReal(
+                precoFinal,
+                custoUnitario
+            );
+
+        if (campoCustoInsumosOrcamento) {
+
+            campoCustoInsumosOrcamento.value =
+                dinheiro(
+                    custoInsumos
+                );
+
+        }
+
+        if (campoCustoEnergiaOrcamento) {
+
+            campoCustoEnergiaOrcamento.value =
+                dinheiro(
+                    energia.custoEnergia
+                );
+
+        }
+
+        if (campoCustoMaquinaOrcamento) {
+
+            campoCustoMaquinaOrcamento.value =
+                dinheiro(
+                    maquina.custoTotal
+                );
+
+        }
+
+        if (campoCustoTotalOrcamento) {
+
+            campoCustoTotalOrcamento.value =
+                dinheiro(
+                    custoTotal
+                );
+
+        }
+
+        if (campoCustoUnitarioOrcamento) {
+
+            campoCustoUnitarioOrcamento.value =
+                dinheiro(
+                    custoUnitario
+                );
+
+        }
+
+        if (campoPrecoSugeridoOrcamento) {
+
+            campoPrecoSugeridoOrcamento.value =
+                dinheiro(
+                    precoSugerido
+                );
+
+        }
+
+        if (campoValorTotalOrcamento) {
+
+            campoValorTotalOrcamento.value =
+                dinheiro(
+                    valorTotal
+                );
+
+        }
+
+        if (campoMargemRealOrcamento) {
+
+            campoMargemRealOrcamento.value =
+                numeroFormatado(
+                    margemReal,
+                    2
+                ) +
+                "%";
+
+        }
+
+        return {
+
+            filamentos:
+                filamentosEstimados,
+
+            acessorios:
+                acessoriosEstimados,
+
+            embalagens:
+                embalagensEstimadas,
+
+            custoFilamentos:
+                custoFilamentos,
+
+            custoAcessorios:
+                custoAcessorios,
+
+            custoEmbalagens:
+                custoEmbalagens,
+
+            custoInsumos:
+                custoInsumos,
+
+            horas:
+                tempo.horas,
+
+            minutos:
+                tempo.minutos,
+
+            horasDecimais:
+                tempo.horasDecimais,
+
+            potenciaWatts:
+                energia.potenciaWatts,
+
+            tarifaEnergia:
+                energia.tarifa,
+
+            consumoKwh:
+                energia.consumoKwh,
+
+            custoEnergia:
+                energia.custoEnergia,
+
+            custoHoraImpressora:
+                maquina.custoPorHora,
+
+            custoMaquina:
+                maquina.custoTotal,
+
+            custoTotal:
+                custoTotal,
+
+            quantidade:
+                quantidade,
+
+            custoUnitario:
+                custoUnitario,
+
+            margemDesejada:
+                margemDesejada,
+
+            precoSugerido:
+                precoSugerido,
+
+            precoFinal:
+                precoFinal,
+
+            valorTotal:
+                valorTotal,
+
+            margemReal:
+                margemReal
+
+        };
+
+    }
+    
     function ligarEventosCalculo(
         campos,
         atualizar
