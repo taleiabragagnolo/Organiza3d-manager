@@ -1141,7 +1141,7 @@ function iniciarProduto() {
 
     }
 
-    function atualizarSelectsFixos() {
+        function atualizarSelectsFixos() {
 
         recarregarDadosDeApoio();
 
@@ -1165,6 +1165,144 @@ function iniciarProduto() {
                 ? campoClienteOrcamento.value
                 : ""
         );
+
+        // Atualizar filamentos da produção
+        if (listaFilamentosProduto) {
+
+            listaFilamentosProduto
+                .querySelectorAll(
+                    ".produto-filamento-select"
+                )
+                .forEach(
+                    function (select) {
+
+                        const valorAtual =
+                            select.value;
+
+                        preencherSelectFilamentos(
+                            select,
+                            valorAtual
+                        );
+
+                    }
+                );
+
+        }
+
+        // Atualizar filamentos do orçamento
+        if (listaFilamentosOrcamento) {
+
+            listaFilamentosOrcamento
+                .querySelectorAll(
+                    ".orcamento-filamento-select"
+                )
+                .forEach(
+                    function (select) {
+
+                        const valorAtual =
+                            select.value;
+
+                        preencherSelectFilamentos(
+                            select,
+                            valorAtual
+                        );
+
+                    }
+                );
+
+        }
+
+        // Atualizar acessórios da produção
+        if (listaAcessoriosProduto) {
+
+            listaAcessoriosProduto
+                .querySelectorAll(
+                    ".select-acessorio, .produto-acessorio-select"
+                )
+                .forEach(
+                    function (select) {
+
+                        const valorAtual =
+                            select.value;
+
+                        preencherSelectAcessorios(
+                            select,
+                            valorAtual
+                        );
+
+                    }
+                );
+
+        }
+
+        // Atualizar acessórios do orçamento
+        if (listaAcessoriosOrcamento) {
+
+            listaAcessoriosOrcamento
+                .querySelectorAll(
+                    ".select-acessorio, .orcamento-acessorio-select"
+                )
+                .forEach(
+                    function (select) {
+
+                        const valorAtual =
+                            select.value;
+
+                        preencherSelectAcessorios(
+                            select,
+                            valorAtual
+                        );
+
+                    }
+                );
+
+        }
+
+        // Atualizar embalagens da produção
+        if (listaEmbalagensProduto) {
+
+            listaEmbalagensProduto
+                .querySelectorAll(
+                    ".select-embalagem, .produto-embalagem-select"
+                )
+                .forEach(
+                    function (select) {
+
+                        const valorAtual =
+                            select.value;
+
+                        preencherSelectEmbalagens(
+                            select,
+                            valorAtual
+                        );
+
+                    }
+                );
+
+        }
+
+        // Atualizar embalagens do orçamento
+        if (listaEmbalagensOrcamento) {
+
+            listaEmbalagensOrcamento
+                .querySelectorAll(
+                    ".select-embalagem, .orcamento-embalagem-select"
+                )
+                .forEach(
+                    function (select) {
+
+                        const valorAtual =
+                            select.value;
+
+                        preencherSelectEmbalagens(
+                            select,
+                            valorAtual
+                        );
+
+                    }
+                );
+
+        }
 
     }
     // ==================================================
