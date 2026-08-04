@@ -2529,34 +2529,73 @@ function iniciarProduto() {
 
     }
 
-    function obterEmbalagensProduto() {
+        function obterEmbalagensProduto() {
 
         const resultado = [];
+
+        if (!listaEmbalagensProduto) {
+            return resultado;
+        }
 
         listaEmbalagensProduto
             .querySelectorAll(
                 ".item-embalagem-produto"
             )
             .forEach(
-
                 function (linha) {
 
-                    const id =
+                    const campoSelect =
                         linha.querySelector(
-                            ".select-embalagem"
-                        ).value;
+                            ".select-embalagem, .produto-embalagem-select"
+                        );
+
+                    const campoQuantidade =
+                        linha.querySelector(
+                            ".quantidade-embalagem, .produto-embalagem-quantidade"
+                        );
+
+                    const campoCusto =
+                        linha.querySelector(
+                            ".custo-embalagem, .produto-embalagem-custo"
+                        );
+
+                    if (
+                        !campoSelect ||
+                        !campoQuantidade
+                    ) {
+                        return;
+                    }
+
+                    const id =
+                        campoSelect.value;
 
                     const quantidade =
                         numeroPositivo(
-
-                            linha.querySelector(
-                                ".quantidade-embalagem"
-                            ).value
-
+                            campoQuantidade.value
                         );
 
                     const embalagem =
                         encontrarEmbalagem(id);
+
+                    const valorUnitario =
+                        embalagem
+                            ? valorUnitarioEmbalagem(
+                                embalagem
+                            )
+                            : 0;
+
+                    const custoTotal =
+                        quantidade *
+                        valorUnitario;
+
+                    if (campoCusto) {
+
+                        campoCusto.value =
+                            dinheiro(
+                                custoTotal
+                            );
+
+                    }
 
                     if (
                         embalagem &&
@@ -2569,30 +2608,22 @@ function iniciarProduto() {
                                 embalagem.id,
 
                             nome:
-                                embalagem.nome,
+                                embalagem.nome || "",
 
                             quantidade:
                                 quantidade,
 
                             valorUnitario:
-                                valorUnitarioEmbalagem(
-                                    embalagem
-                                ),
+                                valorUnitario,
 
                             custoTotal:
-
-                                quantidade *
-
-                                valorUnitarioEmbalagem(
-                                    embalagem
-                                )
+                                custoTotal
 
                         });
 
                     }
 
                 }
-
             );
 
         return resultado;
