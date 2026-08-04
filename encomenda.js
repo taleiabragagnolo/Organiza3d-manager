@@ -402,11 +402,8 @@ function atualizarOpcoesFilamentosEncomenda() {
         function (filamento) {
             campoFilamentoEncomenda.innerHTML += `
                 <option value="${filamento.id}">
-                    ${escaparTexto(
-                        filamento.material
-                    )}
-                    ${escaparTexto(
-                        filamento.cor
+                    
+                
                     )}
                     — ${Number(
                         filamento.pesoRestante || 0
