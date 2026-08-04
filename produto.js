@@ -495,504 +495,679 @@ function iniciarProduto() {
 
         }
     );
-    // ======================================================
-// ORGANIZA 3D MANAGER
-// MÓDULO PRODUTOS
-// produto.js
-// ======================================================
-
-"use strict";
-
-function iniciarProduto() {
-
-    // ==================================================
-    // CHAVES DO LOCALSTORAGE
+        // ==================================================
+    // ELEMENTOS — PRODUTOS PRODUZIDOS
     // ==================================================
 
-    const CHAVE_PRODUTOS =
-        "organiza3d_produtos_produzidos";
+    const listaFilamentosProduto =
+        document.getElementById(
+            "lista-filamentos-produto"
+        );
 
-    const CHAVE_ORCAMENTOS =
-        "organiza3d_orcamentos";
+    const listaAcessoriosProduto =
+        document.getElementById(
+            "lista-acessorios-produto"
+        );
 
-    const CHAVE_PERDAS =
-        "organiza3d_perdas_produtos";
+    const listaEmbalagensProduto =
+        document.getElementById(
+            "lista-embalagens-produto"
+        );
 
-    const CHAVE_CONSUMO_PROPRIO =
-        "organiza3d_consumo_proprio";
+    const campoImpressoraProduto =
+        document.getElementById(
+            "produto-impressora-utilizada"
+        );
 
-    const CHAVE_MOVIMENTACOES =
-        "organiza3d_movimentacoes_produtos";
+    const botaoAdicionarFilamentoProduto =
+        document.getElementById(
+            "adicionar-filamento-produto"
+        );
 
-    const CHAVE_FILAMENTOS =
-        "organiza3d_filamentos";
+    const botaoAdicionarAcessorioProduto =
+        document.getElementById(
+            "adicionar-acessorio-produto"
+        );
 
-    const CHAVE_ACESSORIOS =
-        "organiza3d_acessorios";
-
-    const CHAVE_EMBALAGENS =
-        "organiza3d_embalagens";
-
-    const CHAVE_IMPRESSORAS =
-        "organiza3d_impressoras";
-
-    const CHAVE_CLIENTES =
-        "organiza3d_cliente";
+    const botaoAdicionarEmbalagemProduto =
+        document.getElementById(
+            "adicionar-embalagem-produto"
+        );
 
     // ==================================================
-    // FUNÇÕES AUXILIARES
+    // ELEMENTOS — ORÇAMENTOS
     // ==================================================
 
-    function lerLista(chave) {
+    const listaFilamentosOrcamento =
+        document.getElementById(
+            "lista-filamentos-orcamento"
+        );
 
-        try {
+    const listaAcessoriosOrcamento =
+        document.getElementById(
+            "lista-acessorios-orcamento"
+        );
 
-            const dados =
-                JSON.parse(
-                    localStorage.getItem(chave)
-                );
+    const listaEmbalagensOrcamento =
+        document.getElementById(
+            "lista-embalagens-orcamento"
+        );
 
-            return Array.isArray(dados)
-                ? dados
-                : [];
+    const campoClienteOrcamento =
+        document.getElementById(
+            "orcamento-cliente"
+        );
 
-        } catch (erro) {
+    const campoImpressoraOrcamento =
+        document.getElementById(
+            "orcamento-impressora"
+        );
 
-            console.error(
-                "Erro ao carregar:",
-                chave,
-                erro
-            );
+    const botaoAdicionarFilamentoOrcamento =
+        document.getElementById(
+            "adicionar-filamento-orcamento"
+        );
 
-            return [];
+    const botaoAdicionarAcessorioOrcamento =
+        document.getElementById(
+            "adicionar-acessorio-orcamento"
+        );
 
-        }
+    const botaoAdicionarEmbalagemOrcamento =
+        document.getElementById(
+            "adicionar-embalagem-orcamento"
+        );
+
+    // ==================================================
+    // LOCALIZAR REGISTROS
+    // ==================================================
+
+    function encontrarFilamento(id) {
+
+        return filamentos.find(
+            function (item) {
+
+                return String(item.id) ===
+                    String(id);
+
+            }
+        );
 
     }
 
-    function salvarLista(
-        chave,
-        lista
+    function encontrarAcessorio(id) {
+
+        return acessorios.find(
+            function (item) {
+
+                return String(item.id) ===
+                    String(id);
+
+            }
+        );
+
+    }
+
+    function encontrarEmbalagem(id) {
+
+        return embalagens.find(
+            function (item) {
+
+                return String(item.id) ===
+                    String(id);
+
+            }
+        );
+
+    }
+
+    function encontrarImpressora(id) {
+
+        return impressoras.find(
+            function (item) {
+
+                return String(item.id) ===
+                    String(id);
+
+            }
+        );
+
+    }
+
+    function encontrarCliente(id) {
+
+        return clientes.find(
+            function (item) {
+
+                return String(item.id) ===
+                    String(id);
+
+            }
+        );
+
+    }
+
+    function encontrarProduto(id) {
+
+        return produtos.find(
+            function (item) {
+
+                return String(item.id) ===
+                    String(id);
+
+            }
+        );
+
+    }
+
+    // ==================================================
+    // DADOS NUMÉRICOS DOS INSUMOS
+    // ==================================================
+
+    function pesoRestanteFilamento(
+        filamento
     ) {
 
-        localStorage.setItem(
-            chave,
-            JSON.stringify(lista)
-        );
-
-    }
-
-    function numero(valor) {
-
-        const resultado =
-            Number(valor);
-
-        return Number.isFinite(resultado)
-            ? resultado
-            : 0;
-
-    }
-
-    function numeroPositivo(valor) {
-
-        return Math.max(
-            0,
-            numero(valor)
-        );
-
-    }
-
-    function dinheiro(valor) {
-
-        return numero(valor)
-            .toLocaleString(
-                "pt-BR",
-                {
-                    style: "currency",
-                    currency: "BRL"
-                }
-            );
-
-    }
-
-    function numeroFormatado(
-        valor,
-        casas = 0
-    ) {
-
-        return numero(valor)
-            .toLocaleString(
-                "pt-BR",
-                {
-                    minimumFractionDigits:
-                        casas,
-
-                    maximumFractionDigits:
-                        casas
-                }
-            );
-
-    }
-
-    function dataFormatada(data) {
-
-        if (!data) {
-            return "Não informada";
-        }
-
-        const partes =
-            String(data).split("-");
-
-        if (partes.length !== 3) {
-            return data;
-        }
-
-        return (
-            partes[2] +
-            "/" +
-            partes[1] +
-            "/" +
-            partes[0]
-        );
-
-    }
-
-    function dataHoje() {
-
-        const data =
-            new Date();
-
-        const ano =
-            data.getFullYear();
-
-        const mes =
-            String(
-                data.getMonth() + 1
-            ).padStart(2, "0");
-
-        const dia =
-            String(
-                data.getDate()
-            ).padStart(2, "0");
-
-        return (
-            ano +
-            "-" +
-            mes +
-            "-" +
-            dia
-        );
-
-    }
-
-    function criarId() {
-
-        return (
-            Date.now() +
-            Math.floor(
-                Math.random() * 1000
-            )
-        );
-
-    }
-
-    function textoSeguro(valor) {
-
-        if (
-            valor === null ||
-            valor === undefined
-        ) {
-            return "";
-        }
-
-        return String(valor)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#39;");
-
-    }
-
-    function somar(
-        lista,
-        propriedade
-    ) {
-
-        return lista.reduce(
-            function (total, item) {
-
-                return (
-                    total +
-                    numero(
-                        item[propriedade]
-                    )
-                );
-
-            },
+        return numero(
+            filamento?.pesoRestante ??
+            filamento?.pesoAtual ??
+            filamento?.pesoInicial ??
             0
         );
 
     }
 
-    // ==================================================
-    // LISTAS DO SISTEMA
-    // ==================================================
+    function pesoInicialFilamento(
+        filamento
+    ) {
 
-    let produtos =
-        lerLista(
-            CHAVE_PRODUTOS
+        return numero(
+            filamento?.pesoInicial ??
+            filamento?.peso ??
+            0
         );
 
-    let orcamentos =
-        lerLista(
-            CHAVE_ORCAMENTOS
+    }
+
+    function valorFilamento(
+        filamento
+    ) {
+
+        return numero(
+            filamento?.valor ??
+            filamento?.valorPago ??
+            filamento?.valorCompra ??
+            0
         );
 
-    let perdas =
-        lerLista(
-            CHAVE_PERDAS
-        );
+    }
 
-    let consumosProprios =
-        lerLista(
-            CHAVE_CONSUMO_PROPRIO
-        );
+    function custoPorGrama(
+        filamento
+    ) {
 
-    let movimentacoes =
-        lerLista(
-            CHAVE_MOVIMENTACOES
-        );
-
-    let filamentos =
-        lerLista(
-            CHAVE_FILAMENTOS
-        );
-
-    let acessorios =
-        lerLista(
-            CHAVE_ACESSORIOS
-        );
-
-    let embalagens =
-        lerLista(
-            CHAVE_EMBALAGENS
-        );
-
-    let impressoras =
-        lerLista(
-            CHAVE_IMPRESSORAS
-        );
-
-    let clientes =
-        lerLista(
-            CHAVE_CLIENTES
-        );
-
-    // ==================================================
-    // CONTROLE DE EDIÇÃO
-    // ==================================================
-
-    let produtoEmEdicaoId =
-        null;
-
-    let orcamentoEmEdicaoId =
-        null;
-
-    let perdaEmEdicaoId =
-        null;
-
-    let consumoProprioEmEdicaoId =
-        null;
-
-    let orcamentoOrigemProducaoId =
-        null;
-
-    // ==================================================
-    // RECARREGAR DADOS DE APOIO
-    // ==================================================
-
-    function recarregarDadosDeApoio() {
-
-        filamentos =
-            lerLista(
-                CHAVE_FILAMENTOS
+        const pesoInicial =
+            pesoInicialFilamento(
+                filamento
             );
 
-        acessorios =
-            lerLista(
-                CHAVE_ACESSORIOS
+        if (pesoInicial <= 0) {
+            return 0;
+        }
+
+        return (
+            valorFilamento(
+                filamento
+            ) /
+            pesoInicial
+        );
+
+    }
+
+    function quantidadeAcessorio(
+        acessorio
+    ) {
+
+        return numero(
+            acessorio?.quantidade ??
+            acessorio?.estoque ??
+            0
+        );
+
+    }
+
+    function valorUnitarioAcessorio(
+        acessorio
+    ) {
+
+        const valorUnitario =
+            numero(
+                acessorio?.valorUnitario
             );
 
-        embalagens =
-            lerLista(
-                CHAVE_EMBALAGENS
+        if (valorUnitario > 0) {
+            return valorUnitario;
+        }
+
+        const quantidade =
+            quantidadeAcessorio(
+                acessorio
             );
 
-        impressoras =
-            lerLista(
-                CHAVE_IMPRESSORAS
+        const valorCompra =
+            numero(
+                acessorio?.valorCompra ??
+                acessorio?.valor ??
+                0
             );
 
-        clientes =
-            lerLista(
-                CHAVE_CLIENTES
+        return quantidade > 0
+            ? valorCompra / quantidade
+            : 0;
+
+    }
+
+    function quantidadeEmbalagem(
+        embalagem
+    ) {
+
+        return numero(
+            embalagem?.quantidade ??
+            embalagem?.estoque ??
+            0
+        );
+
+    }
+
+    function valorUnitarioEmbalagem(
+        embalagem
+    ) {
+
+        const valorUnitario =
+            numero(
+                embalagem?.valorUnitario
             );
+
+        if (valorUnitario > 0) {
+            return valorUnitario;
+        }
+
+        const quantidade =
+            quantidadeEmbalagem(
+                embalagem
+            );
+
+        const valorCompra =
+            numero(
+                embalagem?.valorCompra ??
+                embalagem?.valor ??
+                0
+            );
+
+        return quantidade > 0
+            ? valorCompra / quantidade
+            : 0;
 
     }
 
     // ==================================================
-    // SALVAMENTOS
+    // TEXTOS DOS SELECTS
     // ==================================================
 
-    function salvarProdutos() {
+    function textoFilamento(
+        filamento
+    ) {
 
-        salvarLista(
-            CHAVE_PRODUTOS,
-            produtos
+        const fabricante =
+            filamento.fabricante ||
+            "Fabricante não informado";
+
+        const material =
+            filamento.material ||
+            filamento.tipo ||
+            "Material não informado";
+
+        const cor =
+            filamento.cor ||
+            "Cor não informada";
+
+        const lote =
+            filamento.lote ||
+            "Sem lote";
+
+        return (
+            fabricante +
+            " — " +
+            material +
+            " — " +
+            cor +
+            " — lote " +
+            lote +
+            " — " +
+            numeroFormatado(
+                pesoRestanteFilamento(
+                    filamento
+                ),
+                2
+            ) +
+            " g disponíveis"
         );
 
     }
 
-    function salvarOrcamentos() {
+    function textoAcessorio(
+        acessorio
+    ) {
 
-        salvarLista(
-            CHAVE_ORCAMENTOS,
-            orcamentos
+        return (
+            (
+                acessorio.nome ||
+                "Acessório sem nome"
+            ) +
+            " — " +
+            numeroFormatado(
+                quantidadeAcessorio(
+                    acessorio
+                ),
+                0
+            ) +
+            " disponíveis"
         );
 
     }
 
-    function salvarPerdas() {
+    function textoEmbalagem(
+        embalagem
+    ) {
 
-        salvarLista(
-            CHAVE_PERDAS,
-            perdas
+        return (
+            (
+                embalagem.nome ||
+                "Embalagem sem nome"
+            ) +
+            " — " +
+            numeroFormatado(
+                quantidadeEmbalagem(
+                    embalagem
+                ),
+                0
+            ) +
+            " disponíveis"
         );
 
     }
 
-    function salvarConsumosProprios() {
+    function textoImpressora(
+        impressora
+    ) {
 
-        salvarLista(
-            CHAVE_CONSUMO_PROPRIO,
-            consumosProprios
-        );
+        const nome =
+            impressora.nome ||
+            impressora.apelido ||
+            impressora.identificacao ||
+            "Impressora sem nome";
 
-    }
+        const marca =
+            impressora.marca || "";
 
-    function salvarMovimentacoes() {
+        const modelo =
+            impressora.modelo || "";
 
-        salvarLista(
-            CHAVE_MOVIMENTACOES,
-            movimentacoes
-        );
-
-    }
-
-    function salvarFilamentos() {
-
-        salvarLista(
-            CHAVE_FILAMENTOS,
-            filamentos
-        );
-
-    }
-
-    function salvarAcessorios() {
-
-        salvarLista(
-            CHAVE_ACESSORIOS,
-            acessorios
-        );
-
-    }
-
-    function salvarEmbalagens() {
-
-        salvarLista(
-            CHAVE_EMBALAGENS,
-            embalagens
-        );
-
-    }
-
-    function salvarImpressoras() {
-
-        salvarLista(
-            CHAVE_IMPRESSORAS,
-            impressoras
-        );
+        return [
+            nome,
+            marca,
+            modelo
+        ]
+            .filter(Boolean)
+            .join(" — ");
 
     }
 
     // ==================================================
-    // NAVEGAÇÃO DAS ABAS
+    // PREENCHER SELECTS
     // ==================================================
 
-    const botoesAbas =
-        document.querySelectorAll(
-            ".aba-produto"
-        );
+    function preencherSelectFilamentos(
+        select,
+        valorSelecionado = ""
+    ) {
 
-    const conteudosAbas =
-        document.querySelectorAll(
-            ".conteudo-aba-produto"
-        );
+        if (!select) {
+            return;
+        }
 
-    function abrirAba(idAba) {
+        select.innerHTML =
+            '<option value="">' +
+            "Selecione o filamento" +
+            "</option>";
 
-        conteudosAbas.forEach(
-            function (conteudo) {
+        filamentos.forEach(
+            function (filamento) {
 
-                const ativa =
-                    conteudo.id === idAba;
-
-                conteudo.hidden =
-                    !ativa;
-
-                conteudo.classList.toggle(
-                    "ativo",
-                    ativa
-                );
-
-            }
-        );
-
-        botoesAbas.forEach(
-            function (botao) {
-
-                const ativo =
-                    botao.dataset.abaProduto ===
-                    idAba;
-
-                botao.classList.toggle(
-                    "botao-principal",
-                    ativo
-                );
-
-            }
-        );
-
-    }
-
-    botoesAbas.forEach(
-        function (botao) {
-
-            botao.addEventListener(
-                "click",
-                function () {
-
-                    abrirAba(
-                        botao.dataset.abaProduto
+                const option =
+                    document.createElement(
+                        "option"
                     );
 
-                }
-            );
+                option.value =
+                    String(filamento.id);
 
+                option.textContent =
+                    textoFilamento(
+                        filamento
+                    );
+
+                option.selected =
+                    String(valorSelecionado) ===
+                    String(filamento.id);
+
+                select.appendChild(
+                    option
+                );
+
+            }
+        );
+
+    }
+
+    function preencherSelectAcessorios(
+        select,
+        valorSelecionado = ""
+    ) {
+
+        if (!select) {
+            return;
         }
-    );
-        // ==================================================
+
+        select.innerHTML =
+            '<option value="">' +
+            "Selecione o acessório" +
+            "</option>";
+
+        acessorios.forEach(
+            function (acessorio) {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+                option.value =
+                    String(acessorio.id);
+
+                option.textContent =
+                    textoAcessorio(
+                        acessorio
+                    );
+
+                option.selected =
+                    String(valorSelecionado) ===
+                    String(acessorio.id);
+
+                select.appendChild(
+                    option
+                );
+
+            }
+        );
+
+    }
+
+    function preencherSelectEmbalagens(
+        select,
+        valorSelecionado = ""
+    ) {
+
+        if (!select) {
+            return;
+        }
+
+        select.innerHTML =
+            '<option value="">' +
+            "Selecione a embalagem" +
+            "</option>";
+
+        embalagens.forEach(
+            function (embalagem) {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+                option.value =
+                    String(embalagem.id);
+
+                option.textContent =
+                    textoEmbalagem(
+                        embalagem
+                    );
+
+                option.selected =
+                    String(valorSelecionado) ===
+                    String(embalagem.id);
+
+                select.appendChild(
+                    option
+                );
+
+            }
+        );
+
+    }
+
+    function preencherSelectImpressoras(
+        select,
+        valorSelecionado = ""
+    ) {
+
+        if (!select) {
+            return;
+        }
+
+        select.innerHTML =
+            '<option value="">' +
+            "Selecione a impressora" +
+            "</option>";
+
+        impressoras.forEach(
+            function (impressora) {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+                option.value =
+                    String(impressora.id);
+
+                option.textContent =
+                    textoImpressora(
+                        impressora
+                    );
+
+                option.selected =
+                    String(valorSelecionado) ===
+                    String(impressora.id);
+
+                select.appendChild(
+                    option
+                );
+
+            }
+        );
+
+    }
+
+    function preencherSelectClientes(
+        select,
+        valorSelecionado = ""
+    ) {
+
+        if (!select) {
+            return;
+        }
+
+        select.innerHTML =
+            '<option value="">' +
+            "Cliente não informado" +
+            "</option>";
+
+        clientes.forEach(
+            function (cliente) {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+                option.value =
+                    String(cliente.id);
+
+                option.textContent =
+                    cliente.nome ||
+                    "Cliente sem nome";
+
+                option.selected =
+                    String(valorSelecionado) ===
+                    String(cliente.id);
+
+                select.appendChild(
+                    option
+                );
+
+            }
+        );
+
+    }
+
+    function atualizarSelectsFixos() {
+
+        recarregarDadosDeApoio();
+
+        preencherSelectImpressoras(
+            campoImpressoraProduto,
+            campoImpressoraProduto
+                ? campoImpressoraProduto.value
+                : ""
+        );
+
+        preencherSelectImpressoras(
+            campoImpressoraOrcamento,
+            campoImpressoraOrcamento
+                ? campoImpressoraOrcamento.value
+                : ""
+        );
+
+        preencherSelectClientes(
+            campoClienteOrcamento,
+            campoClienteOrcamento
+                ? campoClienteOrcamento.value
+                : ""
+        );
+
+    }
+    // ==================================================
     // LINHA DE FILAMENTO — PRODUÇÃO
     // ==================================================
 
@@ -10151,7 +10326,7 @@ function iniciarProduto() {
             );
 
     }
-    
+
     // ==================================================
     // PARTE 12
     // INICIALIZAÇÃO FINAL DO MÓDULO
