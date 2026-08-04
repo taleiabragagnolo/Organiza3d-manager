@@ -5187,9 +5187,6 @@ function iniciarProduto() {
             produto:
                 produto.nome,
 
-            lote:
-                produto.lote,
-
             quantidade:
                 produto.quantidadeProduzida,
 
@@ -5824,9 +5821,6 @@ function iniciarProduto() {
 
             produto:
                 produto.nome,
-
-            lote:
-                produto.lote,
 
             horas:
                 numeroPositivo(
@@ -7322,8 +7316,7 @@ function iniciarProduto() {
             confirm(
                 'Deseja excluir o lote "' +
                 (
-                    produto.lote ||
-                    "não informado"
+                   
                 ) +
                 '" do produto "' +
                 (
@@ -8972,11 +8965,7 @@ function iniciarProduto() {
                         (
                             produto.nome ||
                             "Produto sem nome"
-                        ) +
-                        " — lote " +
-                        (
-                            produto.lote ||
-                            "não informado"
+                                            
                         ) +
                         " — " +
                         numeroFormatado(
@@ -9227,8 +9216,6 @@ function iniciarProduto() {
             produtoNome:
                 produto.nome || "",
 
-            lote:
-                produto.lote || "",
 
             data:
                 campoPerdaData
@@ -9929,11 +9916,7 @@ function iniciarProduto() {
                             produto.nome ||
                             "Produto sem nome"
                         ) +
-                        " — lote " +
-                        (
-                            produto.lote ||
-                            "não informado"
-                        ) +
+                                        
                         " — " +
                         numeroFormatado(
                             produto.quantidadeDisponivel,
@@ -10145,9 +10128,7 @@ function iniciarProduto() {
             produtoNome:
                 produto.nome || "",
 
-            lote:
-                produto.lote || "",
-
+        
             data:
                 campoConsumoData
                     ? campoConsumoData.value
