@@ -2313,7 +2313,6 @@ function iniciarProduto() {
             );
 
         return resultado;
-
     }
 
     // ==================================================
