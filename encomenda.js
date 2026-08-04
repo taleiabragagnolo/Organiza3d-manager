@@ -5,7 +5,25 @@
 let encomendas = JSON.parse(
     localStorage.getItem("organiza3d_encomendas")
 ) || [];
+function carregarClientes() {
 
+    return JSON.parse(
+        localStorage.getItem(
+            "organiza3d_clientes"
+        )
+    ) || [];
+
+}
+
+function carregarProdutos() {
+
+    return JSON.parse(
+        localStorage.getItem(
+            "organiza3d_produtos_produzidos"
+        )
+    ) || [];
+
+}
 const botaoSalvarEncomenda =
     document.getElementById("salvar-encomenda");
 
@@ -428,11 +446,11 @@ function calcularValoresEncomenda() {
     ) || 0;
 
     const produtoEncontrado =
-        produtos.find(
-            function (produto) {
-                return produto.id === produtoId;
-            }
-        );
+    carregarProdutos().find(
+        function (produto) {
+            return produto.id === produtoId;
+        }
+    );
 
     if (
         !produtoEncontrado ||
@@ -1218,20 +1236,18 @@ if (botaoSalvarEncomenda) {
                     .trim();
 
             const clienteEncontrado =
-                clientes.find(
-                    function (cliente) {
-                        return cliente.id ===
-                            clienteId;
-                    }
-                );
+          carregarClientes().find(
+        function (cliente) {
+            return cliente.id === clienteId;
+        }
+    );
 
             const produtoEncontrado =
-                produtos.find(
-                    function (produto) {
-                        return produto.id ===
-                            produtoId;
-                    }
-                );
+    carregarProdutos().find(
+        function (produto) {
+            return produto.id === produtoId;
+        }
+    );
 
             if (!clienteEncontrado) {
                 alert(
