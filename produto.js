@@ -1993,7 +1993,87 @@ function iniciarProduto() {
 
     }
 
-    function obterAcessoriosProduto() {
+        function obterAcessoriosProduto() {
+
+        const resultado = [];
+
+        if (!listaAcessoriosProduto) {
+            return resultado;
+        }
+
+        listaAcessoriosProduto
+            .querySelectorAll(
+                ".item-acessorio-produto"
+            )
+            .forEach(
+                function (linha) {
+
+                    const campoSelect =
+                        linha.querySelector(
+                            ".select-acessorio, .produto-acessorio-select"
+                        );
+
+                    const campoQuantidade =
+                        linha.querySelector(
+                            ".quantidade-acessorio, .produto-acessorio-quantidade"
+                        );
+
+                    if (
+                        !campoSelect ||
+                        !campoQuantidade
+                    ) {
+                        return;
+                    }
+
+                    const id =
+                        campoSelect.value;
+
+                    const quantidade =
+                        numeroPositivo(
+                            campoQuantidade.value
+                        );
+
+                    const acessorio =
+                        encontrarAcessorio(id);
+
+                    if (
+                        acessorio &&
+                        quantidade > 0
+                    ) {
+
+                        const valorUnitario =
+                            valorUnitarioAcessorio(
+                                acessorio
+                            );
+
+                        resultado.push({
+
+                            acessorioId:
+                                acessorio.id,
+
+                            nome:
+                                acessorio.nome || "",
+
+                            quantidade:
+                                quantidade,
+
+                            valorUnitario:
+                                valorUnitario,
+
+                            custoTotal:
+                                quantidade *
+                                valorUnitario
+
+                        });
+
+                    }
+
+                }
+            );
+
+        return resultado;
+
+    }
 
         const resultado = [];
 
@@ -4209,7 +4289,7 @@ function iniciarProduto() {
         };
 
     }
-    
+
     function ligarEventosCalculo(
         campos,
         atualizar
