@@ -2099,7 +2099,87 @@ function iniciarProduto() {
 
     }
 
-        function obterAcessoriosOrcamento() {
+           function obterAcessoriosOrcamento() {
+
+        const resultado = [];
+
+        if (!listaAcessoriosOrcamento) {
+            return resultado;
+        }
+
+        listaAcessoriosOrcamento
+            .querySelectorAll(
+                ".item-acessorio-orcamento"
+            )
+            .forEach(
+                function (linha) {
+
+                    const campoSelect =
+                        linha.querySelector(
+                            ".select-acessorio, .orcamento-acessorio-select"
+                        );
+
+                    const campoQuantidade =
+                        linha.querySelector(
+                            ".quantidade-acessorio, .orcamento-acessorio-quantidade"
+                        );
+
+                    if (
+                        !campoSelect ||
+                        !campoQuantidade
+                    ) {
+                        return;
+                    }
+
+                    const id =
+                        campoSelect.value;
+
+                    const quantidade =
+                        numeroPositivo(
+                            campoQuantidade.value
+                        );
+
+                    const acessorio =
+                        encontrarAcessorio(id);
+
+                    if (
+                        acessorio &&
+                        quantidade > 0
+                    ) {
+
+                        const valorUnitario =
+                            valorUnitarioAcessorio(
+                                acessorio
+                            );
+
+                        resultado.push({
+
+                            acessorioId:
+                                acessorio.id,
+
+                            nome:
+                                acessorio.nome || "",
+
+                            quantidade:
+                                quantidade,
+
+                            valorUnitario:
+                                valorUnitario,
+
+                            custoTotal:
+                                quantidade *
+                                valorUnitario
+
+                        });
+
+                    }
+
+                }
+            );
+
+        return resultado;
+
+    }
 
     // ==================================================
     // BOTÕES
