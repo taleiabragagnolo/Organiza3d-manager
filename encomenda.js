@@ -183,48 +183,177 @@ function encomendaEstaAtrasada(encomenda) {
 // =========================
 
 function atualizarOpcoesEncomendas() {
+
+    // ==============================================
+    // CARREGAR CLIENTES DIRETAMENTE DO LOCALSTORAGE
+    // ==============================================
+
+    let clientesCadastrados = [];
+
+    try {
+
+        const dadosClientes =
+            JSON.parse(
+                localStorage.getItem(
+                    "organiza3d_clientes"
+                )
+            );
+
+        clientesCadastrados =
+            Array.isArray(dadosClientes)
+                ? dadosClientes
+                : [];
+
+    } catch (erro) {
+
+        console.error(
+            "Não foi possível carregar os clientes.",
+            erro
+        );
+
+        clientesCadastrados = [];
+
+    }
+
+    // ==============================================
+    // PREENCHER CLIENTES
+    // ==============================================
+
     if (campoClienteEncomenda) {
+
         const clienteSelecionado =
             campoClienteEncomenda.value;
 
         campoClienteEncomenda.innerHTML =
-            '<option value="">Selecione o cliente</option>';
+            '<option value="">' +
+            "Selecione o cliente" +
+            "</option>";
 
-        clientes.forEach(function (cliente) {
-            campoClienteEncomenda.innerHTML += `
-                <option value="${cliente.id}">
-                    ${escaparTexto(cliente.nome)}
-                </option>
-            `;
-        });
+        clientesCadastrados.forEach(
+            function (cliente) {
 
-        campoClienteEncomenda.value =
-            clienteSelecionado;
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+                option.value =
+                    String(cliente.id);
+
+                option.textContent =
+                    cliente.nome ||
+                    "Cliente sem nome";
+
+                option.selected =
+                    String(clienteSelecionado) ===
+                    String(cliente.id);
+
+                campoClienteEncomenda.appendChild(
+                    option
+                );
+
+            }
+        );
+
     }
 
+    // ==============================================
+    // CARREGAR PRODUTOS DIRETAMENTE DO LOCALSTORAGE
+    // ==============================================
+
+    let produtosCadastrados = [];
+
+    try {
+
+        const dadosProdutos =
+            JSON.parse(
+                localStorage.getItem(
+                    "organiza3d_produtos_produzidos"
+                )
+            );
+
+        produtosCadastrados =
+            Array.isArray(dadosProdutos)
+                ? dadosProdutos
+                : [];
+
+    } catch (erro) {
+
+        console.error(
+            "Não foi possível carregar os produtos.",
+            erro
+        );
+
+        produtosCadastrados = [];
+
+    }
+
+    // ==============================================
+    // PREENCHER PRODUTOS
+    // ==============================================
+
     if (campoProdutoEncomenda) {
+
         const produtoSelecionado =
             campoProdutoEncomenda.value;
 
         campoProdutoEncomenda.innerHTML =
-            '<option value="">Selecione o produto</option>';
+            '<option value="">' +
+            "Selecione o produto" +
+            "</option>";
 
-        produtos.forEach(function (produto) {
-            campoProdutoEncomenda.innerHTML += `
-                <option value="${produto.id}">
-                    ${escaparTexto(produto.nome)}
-                    — ${formatarDinheiro(
-                        produto.preco
-                    )}
-                </option>
-            `;
-        });
+        produtosCadastrados
+            .filter(
+                function (produto) {
 
-        campoProdutoEncomenda.value =
-            produtoSelecionado;
+                    return Number(
+                        produto.quantidadeDisponivel || 0
+                    ) > 0;
+
+                }
+            )
+            .forEach(
+                function (produto) {
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+                    option.value =
+                        String(produto.id);
+
+                    option.textContent =
+                        (
+                            produto.nome ||
+                            "Produto sem nome"
+                        ) +
+                        (
+                            produto.lote
+                                ? " — lote " +
+                                  produto.lote
+                                : ""
+                        ) +
+                        " — " +
+                        Number(
+                            produto.quantidadeDisponivel ||
+                            0
+                        ) +
+                        " disponíveis";
+
+                    option.selected =
+                        String(produtoSelecionado) ===
+                        String(produto.id);
+
+                    campoProdutoEncomenda.appendChild(
+                        option
+                    );
+
+                }
+            );
+
     }
 
-    atualizarOpcoesFilamentosEncomenda();
 }
 
 function atualizarOpcoesFilamentosEncomenda() {
