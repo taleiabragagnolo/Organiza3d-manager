@@ -7305,7 +7305,7 @@ function iniciarProduto() {
         ) {
 
             alert(
-                "Este lote já possui movimentações de saída e não pode ser excluído."
+                "Este produto já possui movimentações de saída e não pode ser excluído."
             );
 
             return;
