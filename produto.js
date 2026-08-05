@@ -10864,5 +10864,3 @@ function iniciarProduto() {
     abrirAba(
         "aba-produtos-produzidos"
     );
-
-} 
