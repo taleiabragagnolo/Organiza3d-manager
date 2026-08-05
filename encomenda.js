@@ -1387,8 +1387,7 @@ if (filamentoId) {
         });
 
 }
-                
-
+            
                 if (!filamentoEncontrado) {
                     alert(
                         "O filamento selecionado não foi encontrado."
