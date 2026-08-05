@@ -1441,7 +1441,6 @@ if (filamentoId) {
     return;
 
 }
-
             const encomenda = {
                 id: Date.now(),
 
