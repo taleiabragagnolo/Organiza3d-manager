@@ -411,6 +411,7 @@ function atualizarOpcoesFilamentosEncomenda() {
 
     filamentosDisponiveis.forEach(
         function (filamento) {
+            
             campoFilamentoEncomenda.innerHTML += `
         }
     );
