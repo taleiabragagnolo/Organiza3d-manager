@@ -104,6 +104,304 @@
             </div>
 
         </header>
+<!-- ===================================================== -->
+<!-- VENDAS -->
+<!-- ===================================================== -->
+
+<section id="vendas" class="pagina ativa">
+
+    <h2>Vendas</h2>
+
+    <p>
+        Registre vendas, entregas de encomendas,
+        pagamentos e baixas no estoque.
+    </p>
+
+    <h3>Resumo das vendas</h3>
+
+    <div class="cards">
+
+        <div class="card">
+
+            <span>🛒 Vendas registradas</span>
+
+            <strong id="vendas-total">
+                0
+            </strong>
+
+        </div>
+
+        <div class="card">
+
+            <span>📦 Unidades vendidas</span>
+
+            <strong id="vendas-unidades">
+                0
+            </strong>
+
+        </div>
+
+        <div class="card">
+
+            <span>💰 Valor total vendido</span>
+
+            <strong id="vendas-valor-total">
+                R$ 0,00
+            </strong>
+
+        </div>
+
+        <div class="card">
+
+            <span>⏳ Valor pendente</span>
+
+            <strong id="vendas-valor-pendente">
+                R$ 0,00
+            </strong>
+
+        </div>
+
+    </div>
+
+    <h3>Registrar venda ou entrega</h3>
+
+    <div class="formulario">
+
+        <div class="linha">
+
+            <div class="campo">
+
+                <label for="venda-cliente">
+                    Cliente
+                </label>
+
+                <select id="venda-cliente">
+
+                    <option value="">
+                        Venda balcão — cliente não informado
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="venda-data">
+                    Data
+                </label>
+
+                <input
+                    type="date"
+                    id="venda-data">
+
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+
+                <label for="venda-produto">
+                    Produto
+                </label>
+
+                <select id="venda-produto">
+
+                    <option value="">
+                        Selecione o produto
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="venda-quantidade">
+                    Quantidade
+                </label>
+
+                <input
+                    type="number"
+                    id="venda-quantidade"
+                    min="1"
+                    step="1"
+                    value="1">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="venda-estoque-disponivel">
+                    Estoque disponível
+                </label>
+
+                <input
+                    type="text"
+                    id="venda-estoque-disponivel"
+                    value="0 unidades"
+                    readonly>
+
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+
+                <label for="venda-valor-unitario">
+                    Valor unitário
+                </label>
+
+                <input
+                    type="text"
+                    id="venda-valor-unitario"
+                    value="R$ 0,00"
+                    readonly>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="venda-valor-total">
+                    Valor total
+                </label>
+
+                <input
+                    type="text"
+                    id="venda-valor-total"
+                    value="R$ 0,00"
+                    readonly>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="venda-valor-pago">
+                    Valor pago
+                </label>
+
+                <input
+                    type="number"
+                    id="venda-valor-pago"
+                    min="0"
+                    step="0.01"
+                    placeholder="Ex.: 50,00">
+
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+
+                <label for="venda-forma-pagamento">
+                    Forma de pagamento
+                </label>
+
+                <select id="venda-forma-pagamento">
+
+                    <option value="">
+                        Selecione
+                    </option>
+
+                    <option value="Dinheiro">
+                        Dinheiro
+                    </option>
+
+                    <option value="Pix">
+                        Pix
+                    </option>
+
+                    <option value="Cartão de débito">
+                        Cartão de débito
+                    </option>
+
+                    <option value="Cartão de crédito">
+                        Cartão de crédito
+                    </option>
+
+                    <option value="Transferência">
+                        Transferência
+                    </option>
+
+                    <option value="Outro">
+                        Outro
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="venda-situacao-pagamento">
+                    Situação do pagamento
+                </label>
+
+                <select id="venda-situacao-pagamento">
+
+                    <option value="Pendente">
+                        Pendente
+                    </option>
+
+                    <option value="Parcial">
+                        Parcial
+                    </option>
+
+                    <option value="Pago">
+                        Pago
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <div class="campo campo-completo">
+
+            <label for="venda-observacoes">
+                Observações
+            </label>
+
+            <textarea
+                id="venda-observacoes"
+                rows="3"
+                placeholder="Informações adicionais sobre a venda ou entrega"></textarea>
+
+        </div>
+
+        <button
+            id="salvar-venda"
+            class="botao-principal"
+            type="button">
+            Salvar Venda
+        </button>
+
+        <button
+            id="limpar-formulario-venda"
+            type="button">
+            Limpar Formulário
+        </button>
+
+    </div>
+
+    <h3>Vendas registradas</h3>
+
+    <div id="lista-vendas">
+
+        <p>
+            Nenhuma venda registrada.
+        </p>
+
+    </div>
+
+</section>
 
         <!-- ========================= -->
         <!-- DASHBOARD -->
