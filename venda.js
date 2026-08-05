@@ -160,85 +160,30 @@ const resumoValorPendenteVenda =
 // INICIALIZAÇÃO
 // ======================================================
 
-function iniciarVenda() {
+ffunction carregarDadosVenda() {
 
-    carregarDadosVenda();
-
-    carregarClientesVenda();
-
-    if (campoDataVenda) {
-
-        campoDataVenda.value =
-            dataHojeVenda();
-
-    }
-
-    const primeiroItem =
-        listaItensVenda
-            ? listaItensVenda.querySelector(
-                ".item-venda"
-            )
-            : null;
-
-    if (primeiroItem) {
-
-        carregarProdutosSelect(
-
-            primeiroItem.querySelector(
-                ".venda-item-produto"
-            )
-
+    vendas =
+        lerListaVenda(
+            CHAVE_VENDAS
         );
 
-        configurarEventosItemVenda(
-            primeiroItem
+    clientesVenda =
+        lerListaVenda(
+            CHAVE_CLIENTES
         );
 
-    }
+    produtosVenda =
+        lerListaVenda(
+            CHAVE_PRODUTOS
+        );
 
-    if (botaoAdicionarItemVenda) {
-
-        botaoAdicionarItemVenda
-            .addEventListener(
-                "click",
-                adicionarItemVenda
-            );
-
-    }
-
-    if (campoDescontoVenda) {
-
-        campoDescontoVenda
-            .addEventListener(
-                "input",
-                calcularTotaisVenda
-            );
-
-    }
-
-    if (campoFreteVenda) {
-
-        campoFreteVenda
-            .addEventListener(
-                "input",
-                calcularTotaisVenda
-            );
-
-    }
-
-    if (campoValorPagoVenda) {
-
-        campoValorPagoVenda
-            .addEventListener(
-                "input",
-                calcularTotaisVenda
-            );
-
-    }
-
-    calcularTotaisVenda();
+    lancamentosFinanceirosVenda =
+        lerListaVenda(
+            CHAVE_FINANCEIRO
+        );
 
 }
+
 // ======================================================
 // FUNÇÕES AUXILIARES
 // ======================================================
@@ -508,15 +453,30 @@ function carregarProdutosSelect(
         return;
     }
 
+    const produtoSelecionado =
+        select.value;
+
     select.innerHTML =
-        '<option value="">Selecione o produto</option>';
+        '<option value="">' +
+        "Selecione o produto" +
+        "</option>";
 
     produtosVenda
+        .filter(
+            function (produto) {
+
+                return (
+                    produto.status !==
+                        "Inativo" &&
+                    numeroPositivoVenda(
+                        produto.quantidadeDisponivel
+                    ) > 0
+                );
+
+            }
+        )
         .sort(
-            function (
-                a,
-                b
-            ) {
+            function (a, b) {
 
                 return String(
                     a.nome || ""
@@ -530,9 +490,7 @@ function carregarProdutosSelect(
             }
         )
         .forEach(
-            function (
-                produto
-            ) {
+            function (produto) {
 
                 const opcao =
                     document.createElement(
@@ -540,10 +498,28 @@ function carregarProdutosSelect(
                     );
 
                 opcao.value =
-                    produto.id;
+                    String(
+                        produto.id
+                    );
 
                 opcao.textContent =
-                    produto.nome;
+                    (
+                        produto.nome ||
+                        "Produto sem nome"
+                    ) +
+                    " — " +
+                    numeroPositivoVenda(
+                        produto.quantidadeDisponivel
+                    ) +
+                    " disponíveis";
+
+                opcao.selected =
+                    String(
+                        produtoSelecionado
+                    ) ===
+                    String(
+                        produto.id
+                    );
 
                 select.appendChild(
                     opcao
@@ -553,6 +529,7 @@ function carregarProdutosSelect(
         );
 
 }
+
 // ======================================================
 // CARREGAMENTO DOS DADOS
 // ======================================================
@@ -1150,9 +1127,7 @@ function salvarVenda() {
     if (
         !validarVenda()
     ) {
-
         return;
-
     }
 
     const venda =
@@ -1171,8 +1146,728 @@ function salvarVenda() {
         vendas
     );
 
+    registrarFinanceiroVenda(
+        venda
+    );
+
+    carregarDadosVenda();
+
+    carregarClientesVenda();
+
+    mostrarVendas();
+
+    limparFormularioVenda();
+
+    if (
+        typeof atualizarDashboardCompleto ===
+        "function"
+    ) {
+
+        atualizarDashboardCompleto();
+
+    }
+
+    if (
+        typeof atualizarRelatorios ===
+        "function"
+    ) {
+
+        atualizarRelatorios();
+
+    }
+
     alert(
         "Venda registrada com sucesso."
     );
+
+}
+
+function carregarProdutosSelect(
+    select
+) {
+
+    if (!select) {
+        return;
+    }
+
+    const produtoSelecionado =
+        select.value;
+
+    select.innerHTML =
+        '<option value="">' +
+        "Selecione o produto" +
+        "</option>";
+
+    produtosVenda
+        .filter(
+            function (produto) {
+
+                return (
+                    produto.status !==
+                        "Inativo" &&
+                    numeroPositivoVenda(
+                        produto.quantidadeDisponivel
+                    ) > 0
+                );
+
+            }
+        )
+        .sort(
+            function (a, b) {
+
+                return String(
+                    a.nome || ""
+                ).localeCompare(
+                    String(
+                        b.nome || ""
+                    ),
+                    "pt-BR"
+                );
+
+            }
+        )
+        .forEach(
+            function (produto) {
+
+                const opcao =
+                    document.createElement(
+                        "option"
+                    );
+
+                opcao.value =
+                    String(
+                        produto.id
+                    );
+
+                opcao.textContent =
+                    (
+                        produto.nome ||
+                        "Produto sem nome"
+                    ) +
+                    " — " +
+                    numeroPositivoVenda(
+                        produto.quantidadeDisponivel
+                    ) +
+                    " disponíveis";
+
+                opcao.selected =
+                    String(
+                        produtoSelecionado
+                    ) ===
+                    String(
+                        produto.id
+                    );
+
+                select.appendChild(
+                    opcao
+                );
+
+            }
+        );
+
+}
+// ======================================================
+// LOCALIZAR CLIENTE
+// ======================================================
+
+function encontrarClienteVenda(
+    clienteId
+) {
+
+    return clientesVenda.find(
+        function (cliente) {
+
+            return String(
+                cliente.id
+            ) ===
+            String(
+                clienteId
+            );
+
+        }
+    ) || null;
+
+}
+
+// ======================================================
+// LANÇAR VENDA NO FINANCEIRO
+// ======================================================
+
+function registrarFinanceiroVenda(
+    venda
+) {
+
+    if (
+        numeroPositivoVenda(
+            venda.total
+        ) <= 0
+    ) {
+
+        return;
+
+    }
+
+    const cliente =
+        encontrarClienteVenda(
+            venda.clienteId
+        );
+
+    const descricaoCliente =
+        cliente
+            ? " — Cliente: " +
+                (
+                    cliente.nome ||
+                    "Não informado"
+                )
+            : "";
+
+    const lancamento = {
+
+        id:
+            criarIdVenda(),
+
+        tipo:
+            "Receita",
+
+        categoria:
+            "Venda de produtos",
+
+        descricao:
+            "Venda #" +
+            venda.id +
+            descricaoCliente,
+
+        valor:
+            venda.total,
+
+        data:
+            venda.data,
+
+        formaPagamento:
+            venda.formaPagamento,
+
+        situacao:
+            venda.situacaoPagamento,
+
+        valorPago:
+            venda.valorPago,
+
+        encomendaId:
+            "",
+
+        encomendaDescricao:
+            "",
+
+        origem:
+            "Vendas",
+
+        observacoes:
+            venda.observacoes ||
+            "Lançamento automático gerado pelo módulo Vendas.",
+
+        automatico:
+            true,
+
+        vendaId:
+            venda.id
+
+    };
+
+    lancamentosFinanceirosVenda.push(
+        lancamento
+    );
+
+    salvarListaVenda(
+        CHAVE_FINANCEIRO,
+        lancamentosFinanceirosVenda
+    );
+
+}
+// ======================================================
+// ATUALIZAR RESUMO DAS VENDAS
+// ======================================================
+
+function atualizarResumoVenda() {
+
+    const totalVendas =
+        vendas.length;
+
+    const totalUnidades =
+        vendas.reduce(
+            function (
+                total,
+                venda
+            ) {
+
+                const unidadesVenda =
+                    Array.isArray(
+                        venda.itens
+                    )
+                        ? venda.itens.reduce(
+                            function (
+                                soma,
+                                item
+                            ) {
+
+                                return (
+                                    soma +
+                                    numeroPositivoVenda(
+                                        item.quantidade
+                                    )
+                                );
+
+                            },
+                            0
+                        )
+                        : 0;
+
+                return (
+                    total +
+                    unidadesVenda
+                );
+
+            },
+            0
+        );
+
+    const totalBrindes =
+        vendas.reduce(
+            function (
+                total,
+                venda
+            ) {
+
+                if (
+                    !Array.isArray(
+                        venda.itens
+                    )
+                ) {
+                    return total;
+                }
+
+                return (
+                    total +
+                    venda.itens.reduce(
+                        function (
+                            soma,
+                            item
+                        ) {
+
+                            return item.brinde
+                                ? (
+                                    soma +
+                                    numeroPositivoVenda(
+                                        item.quantidade
+                                    )
+                                )
+                                : soma;
+
+                        },
+                        0
+                    )
+                );
+
+            },
+            0
+        );
+
+    const valorTotal =
+        vendas.reduce(
+            function (
+                total,
+                venda
+            ) {
+
+                return (
+                    total +
+                    numeroPositivoVenda(
+                        venda.total
+                    )
+                );
+
+            },
+            0
+        );
+
+    const valorPendente =
+        vendas.reduce(
+            function (
+                total,
+                venda
+            ) {
+
+                return (
+                    total +
+                    Math.max(
+                        0,
+                        numeroPositivoVenda(
+                            venda.total
+                        ) -
+                        numeroPositivoVenda(
+                            venda.valorPago
+                        )
+                    )
+                );
+
+            },
+            0
+        );
+
+    if (resumoTotalVendas) {
+
+        resumoTotalVendas.textContent =
+            totalVendas;
+
+    }
+
+    if (resumoUnidadesVenda) {
+
+        resumoUnidadesVenda.textContent =
+            totalUnidades;
+
+    }
+
+    if (resumoBrindesVenda) {
+
+        resumoBrindesVenda.textContent =
+            totalBrindes;
+
+    }
+
+    if (resumoValorTotalVenda) {
+
+        resumoValorTotalVenda.textContent =
+            formatarDinheiroVenda(
+                valorTotal
+            );
+
+    }
+
+    if (resumoValorPendenteVenda) {
+
+        resumoValorPendenteVenda.textContent =
+            formatarDinheiroVenda(
+                valorPendente
+            );
+
+    }
+
+}
+
+// ======================================================
+// FORMATAR DATA
+// ======================================================
+
+function formatarDataVenda(
+    data
+) {
+
+    if (!data) {
+        return "Não informada";
+    }
+
+    const partes =
+        String(
+            data
+        ).split("-");
+
+    if (partes.length !== 3) {
+        return data;
+    }
+
+    return (
+        partes[2] +
+        "/" +
+        partes[1] +
+        "/" +
+        partes[0]
+    );
+
+}
+
+// ======================================================
+// MOSTRAR VENDAS
+// ======================================================
+
+function mostrarVendas() {
+
+    if (!listaVendas) {
+        return;
+    }
+
+    if (
+        !Array.isArray(vendas) ||
+        vendas.length === 0
+    ) {
+
+        listaVendas.innerHTML =
+            "<p>Nenhuma venda registrada.</p>";
+
+        atualizarResumoVenda();
+
+        return;
+
+    }
+
+    const vendasOrdenadas =
+        [...vendas].sort(
+            function (a, b) {
+
+                return String(
+                    b.data || ""
+                ).localeCompare(
+                    String(
+                        a.data || ""
+                    )
+                );
+
+            }
+        );
+
+    listaVendas.innerHTML =
+        vendasOrdenadas
+            .map(
+                function (venda) {
+
+                    const cliente =
+                        encontrarClienteVenda(
+                            venda.clienteId
+                        );
+
+                    const itensTexto =
+                        Array.isArray(
+                            venda.itens
+                        )
+                            ? venda.itens
+                                .map(
+                                    function (item) {
+
+                                        return (
+                                            escaparTextoVenda(
+                                                item.nome ||
+                                                "Produto"
+                                            ) +
+                                            " — " +
+                                            numeroPositivoVenda(
+                                                item.quantidade
+                                            ) +
+                                            " un. — " +
+                                            (
+                                                item.brinde
+                                                    ? "Brinde"
+                                                    : formatarDinheiroVenda(
+                                                        numeroPositivoVenda(
+                                                            item.quantidade
+                                                        ) *
+                                                        numeroPositivoVenda(
+                                                            item.valorUnitario
+                                                        )
+                                                    )
+                                            )
+                                        );
+
+                                    }
+                                )
+                                .join("<br>")
+                            : "Nenhum item";
+
+                    return `
+                        <div class="card-item">
+
+                            <h4>
+                                Venda #${escaparTextoVenda(
+                                    venda.id
+                                )}
+                            </h4>
+
+                            <p>
+                                <strong>Data:</strong>
+                                ${formatarDataVenda(
+                                    venda.data
+                                )}
+                            </p>
+
+                            <p>
+                                <strong>Cliente:</strong>
+                                ${escaparTextoVenda(
+                                    cliente
+                                        ? cliente.nome
+                                        : "Não vinculado"
+                                )}
+                            </p>
+
+                            <p>
+                                <strong>Produtos:</strong><br>
+                                ${itensTexto}
+                            </p>
+
+                            <p>
+                                <strong>Desconto:</strong>
+                                ${formatarDinheiroVenda(
+                                    venda.desconto
+                                )}
+                            </p>
+
+                            <p>
+                                <strong>Frete:</strong>
+                                ${formatarDinheiroVenda(
+                                    venda.frete
+                                )}
+                            </p>
+
+                            <p>
+                                <strong>Total:</strong>
+                                ${formatarDinheiroVenda(
+                                    venda.total
+                                )}
+                            </p>
+
+                            <p>
+                                <strong>Valor pago:</strong>
+                                ${formatarDinheiroVenda(
+                                    venda.valorPago
+                                )}
+                            </p>
+
+                            <p>
+                                <strong>Situação:</strong>
+                                ${escaparTextoVenda(
+                                    venda.situacaoPagamento ||
+                                    "Não informada"
+                                )}
+                            </p>
+
+                            <p>
+                                <strong>Forma de pagamento:</strong>
+                                ${escaparTextoVenda(
+                                    venda.formaPagamento ||
+                                    "Não informada"
+                                )}
+                            </p>
+
+                        </div>
+                    `;
+
+                }
+            )
+            .join("");
+
+    atualizarResumoVenda();
+
+}
+// ======================================================
+// LIMPAR FORMULÁRIO DA VENDA
+// ======================================================
+
+function limparFormularioVenda() {
+
+    if (campoClienteVenda) {
+        campoClienteVenda.value = "";
+    }
+
+    if (campoDataVenda) {
+        campoDataVenda.value =
+            dataHojeVenda();
+    }
+
+    if (campoDescontoVenda) {
+        campoDescontoVenda.value = 0;
+    }
+
+    if (campoFreteVenda) {
+        campoFreteVenda.value = 0;
+    }
+
+    if (campoValorPagoVenda) {
+        campoValorPagoVenda.value = 0;
+    }
+
+    if (campoFormaPagamentoVenda) {
+        campoFormaPagamentoVenda.value =
+            "";
+    }
+
+    if (campoSituacaoPagamentoVenda) {
+        campoSituacaoPagamentoVenda.value =
+            "Pendente";
+    }
+
+    if (campoObservacoesVenda) {
+        campoObservacoesVenda.value = "";
+    }
+
+    if (listaItensVenda) {
+
+        const itens =
+            listaItensVenda.querySelectorAll(
+                ".item-venda"
+            );
+
+        itens.forEach(
+            function (
+                item,
+                indice
+            ) {
+
+                if (indice > 0) {
+                    item.remove();
+                }
+
+            }
+        );
+
+        const primeiroItem =
+            listaItensVenda.querySelector(
+                ".item-venda"
+            );
+
+        if (primeiroItem) {
+
+            const produto =
+                primeiroItem.querySelector(
+                    ".venda-item-produto"
+                );
+
+            const estoque =
+                primeiroItem.querySelector(
+                    ".venda-item-estoque"
+                );
+
+            const quantidade =
+                primeiroItem.querySelector(
+                    ".venda-item-quantidade"
+                );
+
+            const valor =
+                primeiroItem.querySelector(
+                    ".venda-item-valor-unitario"
+                );
+
+            const brinde =
+                primeiroItem.querySelector(
+                    ".venda-item-brinde"
+                );
+
+            const total =
+                primeiroItem.querySelector(
+                    ".venda-item-total"
+                );
+
+            carregarProdutosSelect(
+                produto
+            );
+
+            produto.value = "";
+            estoque.value = "0 unidades";
+            quantidade.value = 1;
+            valor.value = "";
+            brinde.value = "Não";
+            total.value = "R$ 0,00";
+
+        }
+
+    }
+
+    calcularTotaisVenda();
 
 }
