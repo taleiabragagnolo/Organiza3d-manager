@@ -1510,8 +1510,14 @@ if (filamentoId) {
                             .pesoRestante
                     );
 
-                salvarFilamentos();
-                mostrarFilamentos();
+               localStorage.setItem(
+    "organiza3d_filamentos",
+    JSON.stringify(
+        filamentosSalvos
+    )
+);
+
+atualizarOpcoesFilamentosEncomenda();
             }
 
             encomendas.push(encomenda);
