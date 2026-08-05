@@ -8649,14 +8649,15 @@ function iniciarProduto() {
         }
 
         const confirmar =
-            confirm(
-                'Deseja excluir o orçamento de "' +
-                (
-                    orcamento.produtoNome ||
-                    "produto não informado"
-                ) +
-                '"?'
-            );
+    confirm(
+        'Deseja excluir o produto "' +
+        (
+            produto.nome ||
+            "produto sem nome"
+        ) +
+        '"?\n\n' +
+        "Os insumos consumidos e as horas da impressora não serão devolvidos automaticamente."
+    );
 
         if (!confirmar) {
             return;
