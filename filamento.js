@@ -780,7 +780,46 @@ try {
 }
 
 let filamentoEmEdicaoId = null;
+const CHAVE_PREJUIZOS_FILAMENTOS =
+    "organiza3d_prejuizos_filamentos";
 
+let prejuizosFilamentos = [];
+
+try {
+
+    const dadosPrejuizos =
+        JSON.parse(
+            localStorage.getItem(
+                CHAVE_PREJUIZOS_FILAMENTOS
+            )
+        );
+
+    prejuizosFilamentos =
+        Array.isArray(dadosPrejuizos)
+            ? dadosPrejuizos
+            : [];
+
+} catch (erro) {
+
+    console.error(
+        "Não foi possível carregar os prejuízos dos filamentos.",
+        erro
+    );
+
+    prejuizosFilamentos = [];
+
+}
+
+function salvarPrejuizosFilamentos() {
+
+    localStorage.setItem(
+        CHAVE_PREJUIZOS_FILAMENTOS,
+        JSON.stringify(
+            prejuizosFilamentos
+        )
+    );
+
+}
 const botaoSalvarFilamento =
     document.getElementById(
         "salvar-filamento"
@@ -911,8 +950,8 @@ function definirStatusFilamento(
         Number(pesoRestante);
 
     if (restante <= 0) {
-        return "Finalizado";
-    }
+    return "Inativo";
+}
 
     const percentual =
         calcularPercentualFilamento(
@@ -1094,29 +1133,44 @@ function atualizarResumoFilamentos() {
         ).length;
 
     const totalFinalizados =
-        filamentos.filter(
-            function (filamento) {
+    filamentos.filter(
+        function (filamento) {
 
-                return filamento.status ===
-                    "Finalizado";
-            }
-        ).length;
+            return (
+                filamento.status ===
+                    "Inativo" ||
+                filamento.status ===
+                    "Finalizado"
+            );
+
+        }
+    ).length;
 
     const pesoDisponivel =
-        filamentos.reduce(
-            function (
-                total,
-                filamento
-            ) {
+    filamentos.reduce(
+        function (
+            total,
+            filamento
+        ) {
 
-                return total +
-                    Number(
-                        filamento.pesoRestante ||
-                        0
-                    );
-            },
-            0
-        );
+            if (
+                filamento.status ===
+                    "Inativo" ||
+                filamento.status ===
+                    "Finalizado"
+            ) {
+                return total;
+            }
+
+            return total +
+                Number(
+                    filamento.pesoRestante ||
+                    0
+                );
+
+        },
+        0
+    );
 
     if (campoTotal) {
 
@@ -1292,10 +1346,37 @@ function mostrarFilamentos() {
 
         return;
     }
+const filamentosAtivos =
+    filamentos.filter(
+        function (filamento) {
+
+            return (
+                filamento.status !==
+                    "Inativo" &&
+                filamento.status !==
+                    "Finalizado" &&
+                Number(
+                    filamento.pesoRestante ||
+                    0
+                ) > 0
+            );
+
+        }
+    );
+
+if (filamentosAtivos.length === 0) {
 
     listaFilamentos.innerHTML =
-        filamentos
-            .map(function (filamento) {
+        "<p>Nenhum filamento ativo cadastrado.</p>";
+
+    atualizarResumoFilamentos();
+
+    return;
+
+}
+   listaFilamentos.innerHTML =
+    filamentosAtivos
+        .map(function (filamento) {
 
                 const percentual =
                     calcularPercentualFilamento(
