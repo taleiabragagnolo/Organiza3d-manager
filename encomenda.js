@@ -170,6 +170,23 @@ function obterDataHoje() {
 }
 
 function formatarDataEncomenda(data) {
+    function escaparTexto(valor) {
+
+    if (
+        valor === null ||
+        valor === undefined
+    ) {
+        return "";
+    }
+
+    return String(valor)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+
+}
     if (!data) {
         return "Não informada";
     }
@@ -342,22 +359,16 @@ function atualizarOpcoesEncomendas() {
                         String(produto.id);
 
                     option.textContent =
-                        (
-                            produto.nome ||
-                            "Produto sem nome"
-                        ) +
-                        (
-                            produto.lote
-                                ? " — lote " +
-                                  produto.lote
-                                : ""
-                        ) +
-                        " — " +
-                        Number(
-                            produto.quantidadeDisponivel ||
-                            0
-                        ) +
-                        " disponíveis";
+                    (
+                       produto.nome ||
+                        "Produto sem nome"
+                      ) +
+                  " — " +
+                      Number(
+                      produto.quantidadeDisponivel ||
+                        0
+                      ) +
+                      " disponíveis";
 
                     option.selected =
                         String(produtoSelecionado) ===
@@ -1334,7 +1345,7 @@ if (botaoSalvarEncomenda) {
 
             if (filamentoId) {
                 filamentoEncontrado =
-                    filamentos.find(
+                    filamento.find(
                         function (filamento) {
                             return filamento.id ===
                                 filamentoId;
