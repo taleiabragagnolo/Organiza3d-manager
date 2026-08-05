@@ -386,7 +386,121 @@ function iniciarVenda() {
         }
 
     }
+// ==================================================
+// ENCONTRAR PRODUTO
+// ==================================================
 
+function encontrarProdutoVenda(
+    produtoId
+) {
+
+    return produtos.find(
+        function (produto) {
+
+            return String(
+                produto.id
+            ) ===
+            String(
+                produtoId
+            );
+
+        }
+    ) || null;
+
+}
+
+// ==================================================
+// ATUALIZAR CÁLCULOS DA VENDA
+// ==================================================
+
+function atualizarCalculosVenda() {
+
+    if (
+        !campoProduto ||
+        !campoQuantidade
+    ) {
+        return;
+    }
+
+    const produto =
+        encontrarProdutoVenda(
+            campoProduto.value
+        );
+
+    const quantidade =
+        Number(
+            campoQuantidade.value
+        ) || 0;
+
+    if (!produto) {
+
+        if (campoEstoqueDisponivel) {
+            campoEstoqueDisponivel.value =
+                "0 unidades";
+        }
+
+        if (campoValorUnitario) {
+            campoValorUnitario.value =
+                "R$ 0,00";
+        }
+
+        if (campoValorTotal) {
+            campoValorTotal.value =
+                "R$ 0,00";
+        }
+
+        return;
+
+    }
+
+    const estoqueDisponivel =
+        Number(
+            produto.quantidadeDisponivel ||
+            0
+        );
+
+    const valorUnitario =
+        Number(
+            produto.preco ||
+            produto.precoVenda ||
+            0
+        );
+
+    const valorTotal =
+        valorUnitario *
+        quantidade;
+
+    if (campoEstoqueDisponivel) {
+
+        campoEstoqueDisponivel.value =
+            estoqueDisponivel +
+            (
+                estoqueDisponivel === 1
+                    ? " unidade"
+                    : " unidades"
+            );
+
+    }
+
+    if (campoValorUnitario) {
+
+        campoValorUnitario.value =
+            formatarDinheiro(
+                valorUnitario
+            );
+
+    }
+
+    if (campoValorTotal) {
+
+        campoValorTotal.value =
+            formatarDinheiro(
+                valorTotal
+            );
+
+    }
+
+}
     // ==================================================
     // EVENTOS
     // ==================================================
@@ -427,7 +541,23 @@ function iniciarVenda() {
         );
 
     }
+if (campoProduto) {
 
+    campoProduto.addEventListener(
+        "change",
+        atualizarCalculosVenda
+    );
+
+}
+
+if (campoQuantidade) {
+
+    campoQuantidade.addEventListener(
+        "input",
+        atualizarCalculosVenda
+    );
+
+}
     // ==================================================
     // INICIALIZAÇÃO
     // ==================================================
