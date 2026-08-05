@@ -9,7 +9,7 @@ function carregarClientes() {
 
     return JSON.parse(
         localStorage.getItem(
-            "organiza3d_clientes"
+            "organiza3d_cliente"
         )
     ) || [];
 
@@ -1386,9 +1386,7 @@ if (filamentoId) {
             function (filamento) {
 
                 return filamento.id ===
-                    filamentoId;
-
-            }
+                    fila
         );
 
     if (!filamentoEncontrado) {
