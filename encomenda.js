@@ -1376,18 +1376,17 @@ if (botaoSalvarEncomenda) {
 
             let filamentoEncontrado = null;
 
+const filamentosSalvos =
+    carregarFilamentosEncomenda();
 
-            const filamentosSalvos =
-          carregarFilamentosEncomenda();
-
-            if (filamentoId) {
+if (filamentoId) {
 
     filamentoEncontrado =
-        filamentosSalvos.find(
-                        function (filamento) {
-                            return filamento.id ===
-                                filamentoId;
-                        }
+        filamentosSalvos.find(function (filamento) {
+            return filamento.id === filamentoId;
+        });
+
+}
                     );
 
                 if (!filamentoEncontrado) {
