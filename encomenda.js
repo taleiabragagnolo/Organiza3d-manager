@@ -170,34 +170,29 @@ function obterDataHoje() {
 }
 
 function formatarDataEncomenda(data) {
-    
-    if (
-        valor === null ||
-        valor === undefined
-    ) {
-        return "";
-    }
 
-    return String(valor)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-
-}
     if (!data) {
         return "Não informada";
     }
 
-    const partes = data.split("-");
+    const partes =
+        String(data).split("-");
 
     if (partes.length !== 3) {
         return data;
     }
 
-    return `${partes[2]}/${partes[1]}/${partes[0]}`;
-    function escaparTexto(valor) {
+    return (
+        partes[2] +
+        "/" +
+        partes[1] +
+        "/" +
+        partes[0]
+    );
+
+}
+
+function escaparTexto(valor) {
 
     if (
         valor === null ||
