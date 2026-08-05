@@ -170,8 +170,7 @@ function obterDataHoje() {
 }
 
 function formatarDataEncomenda(data) {
-    function escaparTexto(valor) {
-
+    
     if (
         valor === null ||
         valor === undefined
@@ -198,6 +197,22 @@ function formatarDataEncomenda(data) {
     }
 
     return `${partes[2]}/${partes[1]}/${partes[0]}`;
+    function escaparTexto(valor) {
+
+    if (
+        valor === null ||
+        valor === undefined
+    ) {
+        return "";
+    }
+
+    return String(valor)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+
 }
 
 function encomendaEstaAtrasada(encomenda) {
@@ -1366,12 +1381,11 @@ if (botaoSalvarEncomenda) {
 
             let filamentoEncontrado = null;
 
-            let filamentoEncontrado = null;
 
-const filamentosSalvos =
-    carregarFilamentosEncomenda();
+            const filamentosSalvos =
+          carregarFilamentosEncomenda();
 
-if (filamentoId) {
+            if (filamentoId) {
 
     filamentoEncontrado =
         filamentosSalvos.find(
