@@ -328,12 +328,27 @@ function normalizarDadosEquipamentos() {
                     impressora.dataCompra || "",
 
                 valor:
-                    Number(
-                        impressora.valor || 0
-                    ),
+                Number(
+                  impressora.valor || 0
+    ),
 
-                status:
-                    impressora.status || "Ativa",
+potenciaWatts:
+    Number(
+        impressora.potenciaWatts || 0
+    ),
+
+tarifaEnergia:
+    Number(
+        impressora.tarifaEnergia || 0
+    ),
+
+custoHoraImpressora:
+    Number(
+        impressora.custoHoraImpressora || 0
+    ),
+
+status:
+    impressora.status || "Ativa",
 
                 horasIniciais:
                     Number(
@@ -1089,7 +1104,20 @@ function limparFormularioImpressora() {
         "valor-impressora",
         ""
     );
+    definirValorCampoEquipamentos(
+    "potencia-impressora",
+    ""
+    );
 
+    definirValorCampoEquipamentos(
+    "tarifa-energia-impressora",
+    ""
+    );
+
+    definirValorCampoEquipamentos(
+      "custo-hora-impressora",
+      ""
+    );
 
     definirValorCampoEquipamentos(
         "status-impressora",
