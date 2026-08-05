@@ -1391,7 +1391,6 @@ if (filamentoId) {
             }
         );
 
-
     if (!filamentoEncontrado) {
 
         alert(
@@ -1402,36 +1401,46 @@ if (filamentoId) {
 
     }
 
-                if (
-                    !consumoFilamento ||
-                    consumoFilamento <= 0
-                ) {
-                    alert(
-                        "Informe o consumo do filamento em gramas."
-                    );
-                    return;
-                }
+    if (
+        !consumoFilamento ||
+        consumoFilamento <= 0
+    ) {
 
-                if (
-                    consumoFilamento >
-                    Number(
-                        filamentoEncontrado
-                            .pesoRestante || 0
-                    )
-                ) {
-                    alert(
-                        "O consumo é maior que o peso disponível do filamento."
-                    );
-                    return;
-                }
-            } else if (
-                consumoFilamento > 0
-            ) {
-                alert(
-                    "Selecione o filamento utilizado."
-                );
-                return;
-            }
+        alert(
+            "Informe o consumo do filamento em gramas."
+        );
+
+        return;
+
+    }
+
+    if (
+        consumoFilamento >
+        Number(
+            filamentoEncontrado
+                .pesoRestante || 0
+        )
+    ) {
+
+        alert(
+            "O consumo é maior que o peso disponível do filamento."
+        );
+
+        return;
+
+    }
+
+} else if (
+    consumoFilamento > 0
+) {
+
+    alert(
+        "Selecione o filamento utilizado."
+    );
+
+    return;
+
+}
 
             const encomenda = {
                 id: Date.now(),
