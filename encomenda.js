@@ -1382,18 +1382,24 @@ const filamentosSalvos =
 if (filamentoId) {
 
     filamentoEncontrado =
-        filamentosSalvos.find(function (filamento) {
-            return filamento.id === filamentoId;
-        })
+        filamentosSalvos.find(
+            function (filamento) {
 
-}
-        
-                if (!filamentoEncontrado) {
-                    alert(
-                        "O filamento selecionado não foi encontrado."
-                    );
-                    return;
-                }
+                return filamento.id ===
+                    filamentoId;
+
+            }
+        );
+
+    if (!filamentoEncontrado) {
+
+        alert(
+            "O filamento selecionado não foi encontrado."
+        );
+
+        return;
+
+    }
 
                 if (
                     !consumoFilamento ||
