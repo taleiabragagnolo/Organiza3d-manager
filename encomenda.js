@@ -1384,10 +1384,10 @@ if (filamentoId) {
     filamentoEncontrado =
         filamentosSalvos.find(function (filamento) {
             return filamento.id === filamentoId;
-        });
+        })
 
 }
-            
+        
                 if (!filamentoEncontrado) {
                     alert(
                         "O filamento selecionado não foi encontrado."
