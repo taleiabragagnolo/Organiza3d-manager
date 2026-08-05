@@ -90,6 +90,10 @@ function iniciarMenu() {
 
 function iniciarModulos() {
 
+    if (typeof iniciarVenda === "function") {
+        iniciarVenda();
+    }
+
     if (typeof iniciarCliente === "function") {
         iniciarCliente();
     }
@@ -98,16 +102,12 @@ function iniciarModulos() {
         iniciarProduto();
     }
 
-    if (typeof iniciarEncomenda === "function") {
-        iniciarEncomenda();
-    }
-
     if (typeof iniciarFilamento === "function") {
         iniciarFilamento();
     }
 
     if (typeof iniciarEquipamento === "function") {
-    iniciarEquipamento();
+        iniciarEquipamento();
     }
 
     if (typeof iniciarFinanceiro === "function") {
