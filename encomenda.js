@@ -411,8 +411,44 @@ function atualizarOpcoesFilamentosEncomenda() {
 
     filamentosDisponiveis.forEach(
         function (filamento) {
-            
-            campoFilamentoEncomenda.innerHTML += `
+
+           campoFilamentoEncomenda.innerHTML += `
+    <option value="${filamento.id}">
+        ${
+            escaparTexto(
+                filamento.fabricante || ""
+            )
+        }
+        ${
+            escaparTexto(
+                filamento.material ||
+                filamento.tipo ||
+                ""
+            )
+        }
+        ${
+            escaparTexto(
+                filamento.cor || ""
+            )
+        }
+        ${
+            filamento.lote
+                ? "— lote " +
+                  escaparTexto(
+                      filamento.lote
+                  )
+                : ""
+        }
+        — ${Number(
+            filamento.pesoRestante || 0
+        ).toLocaleString(
+            "pt-BR",
+            {
+                maximumFractionDigits: 1
+            }
+        )} g disponíveis
+    </option>
+`;
         }
     );
 
