@@ -1342,7 +1342,7 @@ const custoHoraImpressora =
 
                 impressora.custoHoraImpressora =
                     custoHoraImpressora;
-                    
+
                 impressora.status = status;
 
                 impressora.horasIniciais =
@@ -1400,7 +1400,16 @@ const custoHoraImpressora =
                         dataCompra,
 
                     valor:
-                        valor,
+                         valor,
+
+                    potenciaWatts:
+                        potenciaWatts,
+
+                    tarifaEnergia:
+                        tarifaEnergia,
+
+                    custoHoraImpressora:
+                        custoHoraImpressora,
 
                     status:
                         status,
