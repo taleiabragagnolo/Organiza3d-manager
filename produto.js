@@ -5568,11 +5568,16 @@ function validarDadosProduto(
                     : calculos.quantidadeProduzida,
 
             estoqueMinimo:
-                campoEstoqueMinimoProduto
-                    ? numeroPositivo(
-                        campoEstoqueMinimoProduto.value
-                    )
-                    : 0,
+    (
+        campoTipoProducao &&
+        campoTipoProducao.value ===
+            "Estoque" &&
+        campoEstoqueMinimoProduto
+    )
+        ? numeroPositivo(
+            campoEstoqueMinimoProduto.value
+        )
+        : 0,
 
             descricao:
                 campoDescricaoProduto
