@@ -1912,8 +1912,9 @@ function (id) {
 };
 
 
+
 // =========================
-// REGISTRAR CONSUMO
+// REGISTRAR CONSUMO / FALHA
 // =========================
 
 window.registrarConsumoFilamento =
@@ -1930,27 +1931,63 @@ function (id) {
 
     if (!filamento) {
 
-        return;
-    }
-
-    const resposta =
-        prompt(
-            "Quantos gramas foram utilizados?"
+        alert(
+            "Filamento não encontrado."
         );
 
-    if (resposta === null) {
+        return;
 
+    }
+
+    const respostaTipo =
+        prompt(
+            "Informe o tipo da baixa:\n" +
+            "1 - Consumo normal\n" +
+            "2 - Falha de impressão / prejuízo"
+        );
+
+    if (respostaTipo === null) {
         return;
     }
 
-    const consumo =
+    const tipoBaixa =
+        String(
+            respostaTipo
+        ).trim();
+
+    if (
+        tipoBaixa !== "1" &&
+        tipoBaixa !== "2"
+    ) {
+
+        alert(
+            "Selecione 1 para consumo normal ou 2 para falha."
+        );
+
+        return;
+
+    }
+
+    const respostaQuantidade =
+        prompt(
+            tipoBaixa === "2"
+                ? "Quantos gramas foram perdidos na falha?"
+                : "Quantos gramas foram utilizados?"
+        );
+
+    if (respostaQuantidade === null) {
+        return;
+    }
+
+    const quantidade =
         Number(
-            resposta.replace(",", ".")
+            respostaQuantidade
+                .replace(",", ".")
         );
 
     if (
-        Number.isNaN(consumo) ||
-        consumo <= 0
+        Number.isNaN(quantidade) ||
+        quantidade <= 0
     ) {
 
         alert(
@@ -1958,22 +1995,118 @@ function (id) {
         );
 
         return;
+
     }
 
+    const pesoDisponivel =
+        Number(
+            filamento.pesoRestante ||
+            0
+        );
+
     if (
-        consumo >
-        filamento.pesoRestante
+        quantidade >
+        pesoDisponivel
     ) {
 
         alert(
-            "Quantidade maior que o estoque."
+            "Quantidade maior que o estoque disponível."
         );
 
         return;
+
     }
 
-    filamento.pesoRestante -=
-        consumo;
+    const pesoInicial =
+        Number(
+            filamento.pesoInicial ||
+            0
+        );
+
+    const valorRolo =
+        Number(
+            filamento.valor ||
+            0
+        );
+
+    const custoPorGrama =
+        pesoInicial > 0
+            ? valorRolo / pesoInicial
+            : 0;
+
+    const custoTotal =
+        quantidade *
+        custoPorGrama;
+
+    let observacoes = "";
+
+    if (tipoBaixa === "2") {
+
+        const respostaObservacoes =
+            prompt(
+                "Descreva brevemente a falha de impressão:"
+            );
+
+        if (respostaObservacoes === null) {
+            return;
+        }
+
+        observacoes =
+            respostaObservacoes.trim();
+
+        prejuizosFilamentos.push({
+
+            id:
+                Date.now() +
+                Math.floor(
+                    Math.random() * 1000
+                ),
+
+            filamentoId:
+                filamento.id,
+
+            fabricante:
+                filamento.fabricante ||
+                "",
+
+            material:
+                filamento.material ||
+                "",
+
+            cor:
+                filamento.cor ||
+                "",
+
+            tipo:
+                "Falha de impressão",
+
+            quantidadeGramas:
+                quantidade,
+
+            custoPorGrama:
+                custoPorGrama,
+
+            custoTotal:
+                custoTotal,
+
+            data:
+                obterDataHojeFilamento(),
+
+            observacoes:
+                observacoes
+
+        });
+
+        salvarPrejuizosFilamentos();
+
+    }
+
+    filamento.pesoRestante =
+        Math.max(
+            0,
+            pesoDisponivel -
+            quantidade
+        );
 
     filamento.percentual =
         calcularPercentualFilamento(
@@ -1997,6 +2130,7 @@ function (id) {
     ) {
 
         atualizarDashboardCompleto();
+
     }
 
     if (
@@ -2005,11 +2139,34 @@ function (id) {
     ) {
 
         atualizarRelatorios();
+
     }
 
-    alert(
-        "Consumo registrado."
-    );
+    if (tipoBaixa === "2") {
+
+        alert(
+            "Falha registrada.\n\n" +
+            "Quantidade perdida: " +
+            quantidade.toLocaleString(
+                "pt-BR",
+                {
+                    maximumFractionDigits: 2
+                }
+            ) +
+            " g\n" +
+            "Prejuízo calculado: " +
+            formatarDinheiro(
+                custoTotal
+            )
+        );
+
+    } else {
+
+        alert(
+            "Consumo registrado com sucesso."
+        );
+
+    }
 
 };
 
