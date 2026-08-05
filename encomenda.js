@@ -412,20 +412,6 @@ function atualizarOpcoesFilamentosEncomenda() {
     filamentosDisponiveis.forEach(
         function (filamento) {
             campoFilamentoEncomenda.innerHTML += `
-                <option value="${filamento.id}">
-                    
-                
-                    )}
-                    — ${Number(
-                        filamento.pesoRestante || 0
-                    ).toLocaleString(
-                        "pt-BR",
-                        {
-                            maximumFractionDigits: 1
-                        }
-                    )} g disponíveis
-                </option>
-            `;
         }
     );
 
