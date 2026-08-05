@@ -5368,20 +5368,24 @@ if (campoImpressoraOrcamento) {
     // ==================================================
 
     const campoNomeProduto =
-        document.getElementById(
-            "produto-produzido-nome"
-        );
+    document.getElementById(
+        "produto-produzido-nome"
+    );
 
-    const campoCategoriaProduto =
-        document.getElementById(
-            "produto-produzido-categoria"
-        );
+const campoCategoriaProduto =
+    document.getElementById(
+        "produto-produzido-categoria"
+    );
 
-    
-    const campoDataProduto =
-        document.getElementById(
-            "produto-produzido-data"
-        );
+const campoTipoProducao =
+    document.getElementById(
+        "produto-tipo-producao"
+    );
+
+const campoDataProduto =
+    document.getElementById(
+        "produto-produzido-data"
+    );
 
     const campoEstoqueMinimoProduto =
         document.getElementById(
@@ -5541,15 +5545,19 @@ function validarDadosProduto(
                     : "",
 
             categoria:
-                campoCategoriaProduto
+                 campoCategoriaProduto
                     ? campoCategoriaProduto.value
-                    : "",
+                      : "",
 
-            
+            tipoProducao:
+               campoTipoProducao
+                   ? campoTipoProducao.value
+                 : "Estoque",
+
             dataProducao:
                 campoDataProduto
-                    ? campoDataProduto.value
-                    : "",
+                 ? campoDataProduto.value
+                : "",
 
             quantidadeProduzida:
                 calculos.quantidadeProduzida,
