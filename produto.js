@@ -4490,21 +4490,109 @@ function iniciarProduto() {
 
     if (campoImpressoraProduto) {
 
-        campoImpressoraProduto.addEventListener(
-            "change",
-            atualizarCalculosProduto
-        );
+    campoImpressoraProduto.addEventListener(
+        "change",
+        function () {
 
-    }
+            recarregarDadosDeApoio();
 
-    if (campoImpressoraOrcamento) {
+            const impressora =
+                encontrarImpressora(
+                    campoImpressoraProduto.value
+                );
 
-        campoImpressoraOrcamento.addEventListener(
-            "change",
-            atualizarCalculosOrcamento
-        );
+            if (campoPotenciaProduto) {
 
-    }
+                campoPotenciaProduto.value =
+                    impressora
+                        ? numero(
+                            impressora.potenciaWatts
+                        )
+                        : "";
+
+            }
+
+            if (campoTarifaProduto) {
+
+                campoTarifaProduto.value =
+                    impressora
+                        ? numero(
+                            impressora.tarifaEnergia
+                        )
+                        : "";
+
+            }
+
+            if (campoCustoHoraProduto) {
+
+                campoCustoHoraProduto.value =
+                    impressora
+                        ? numero(
+                            impressora.custoHoraImpressora
+                        )
+                        : "";
+
+            }
+
+            atualizarCalculosProduto();
+
+        }
+    );
+
+}
+
+if (campoImpressoraOrcamento) {
+
+    campoImpressoraOrcamento.addEventListener(
+        "change",
+        function () {
+
+            recarregarDadosDeApoio();
+
+            const impressora =
+                encontrarImpressora(
+                    campoImpressoraOrcamento.value
+                );
+
+            if (campoPotenciaOrcamento) {
+
+                campoPotenciaOrcamento.value =
+                    impressora
+                        ? numero(
+                            impressora.potenciaWatts
+                        )
+                        : "";
+
+            }
+
+            if (campoTarifaOrcamento) {
+
+                campoTarifaOrcamento.value =
+                    impressora
+                        ? numero(
+                            impressora.tarifaEnergia
+                        )
+                        : "";
+
+            }
+
+            if (campoCustoHoraOrcamento) {
+
+                campoCustoHoraOrcamento.value =
+                    impressora
+                        ? numero(
+                            impressora.custoHoraImpressora
+                        )
+                        : "";
+
+            }
+
+            atualizarCalculosOrcamento();
+
+        }
+    );
+
+}
     // ==================================================
     // PARTE 7A
     // VALIDAÇÃO DOS INSUMOS DA PRODUÇÃO
