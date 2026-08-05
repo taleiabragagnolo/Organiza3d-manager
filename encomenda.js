@@ -1366,9 +1366,15 @@ if (botaoSalvarEncomenda) {
 
             let filamentoEncontrado = null;
 
-            if (filamentoId) {
-                filamentoEncontrado =
-                    filamento.find(
+            let filamentoEncontrado = null;
+
+const filamentosSalvos =
+    carregarFilamentosEncomenda();
+
+if (filamentoId) {
+
+    filamentoEncontrado =
+        filamentosSalvos.find(
                         function (filamento) {
                             return filamento.id ===
                                 filamentoId;
