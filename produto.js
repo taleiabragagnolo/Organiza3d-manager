@@ -5545,19 +5545,29 @@ function validarDadosProduto(
                     : "",
 
             categoria:
-                 campoCategoriaProduto
-                    ? campoCategoriaProduto.value
-                      : "",
+    campoCategoriaProduto
+        ? campoCategoriaProduto.value
+        : "",
 
-            tipoProducao:
-               campoTipoProducao
-                   ? campoTipoProducao.value
-                 : "Estoque",
+tipoProducao:
+    campoTipoProducao
+        ? campoTipoProducao.value
+        : "Estoque",
 
-            dataProducao:
-                campoDataProduto
-                 ? campoDataProduto.value
-                : "",
+status:
+    produtoEmEdicaoId
+        ? (
+            encontrarProduto(
+                produtoEmEdicaoId
+            )?.status ||
+            "Ativo"
+        )
+        : "Ativo",
+
+dataProducao:
+    campoDataProduto
+        ? campoDataProduto.value
+        : "",
 
             quantidadeProduzida:
                 calculos.quantidadeProduzida,
@@ -6555,9 +6565,21 @@ function validarDadosProduto(
             campoNomeProduto.value = "";
         }
 
-        if (campoCategoriaProduto) {
-            campoCategoriaProduto.value = "";
-        }
+       if (campoCategoriaProduto) {
+    campoCategoriaProduto.value = "";
+}
+
+if (campoTipoProducao) {
+    campoTipoProducao.value =
+        "Estoque";
+}
+
+if (campoEstoqueMinimoProduto) {
+    campoEstoqueMinimoProduto.disabled =
+        false;
+}
+
+if (campoDataProduto) {
 
 
         if (campoDataProduto) {
@@ -6924,38 +6946,60 @@ function validarDadosProduto(
 
         }
 
-        const produtosOrdenados =
-            [...produtos].sort(
-                function (a, b) {
+        const produtosAtivos =
+    produtos.filter(
+        function (produto) {
 
-                    const dataA =
-                        String(
-                            a.dataProducao ||
-                            ""
-                        );
-
-                    const dataB =
-                        String(
-                            b.dataProducao ||
-                            ""
-                        );
-
-                    if (dataA !== dataB) {
-
-                        return dataA.localeCompare(
-                            dataB
-                        );
-
-                    }
-
-                    return (
-                        numero(a.id) -
-                        numero(b.id)
-                    );
-
-                }
+            return (
+                produto.status !==
+                "Inativo"
             );
 
+        }
+    );
+
+if (produtosAtivos.length === 0) {
+
+    listaProdutos.innerHTML =
+        "<p>Nenhum produto ativo cadastrado.</p>";
+
+    atualizarResumoProdutos();
+
+    return;
+
+}
+
+const produtosOrdenados =
+    [...produtosAtivos].sort(
+        function (a, b) {
+
+            const dataA =
+                String(
+                    a.dataProducao ||
+                    ""
+                );
+
+            const dataB =
+                String(
+                    b.dataProducao ||
+                    ""
+                );
+
+            if (dataA !== dataB) {
+
+                return dataA.localeCompare(
+                    dataB
+                );
+
+            }
+
+            return (
+                numero(a.id) -
+                numero(b.id)
+            );
+
+        }
+    );
         listaProdutos.innerHTML =
             produtosOrdenados
                 .map(
@@ -7212,10 +7256,38 @@ function validarDadosProduto(
 
         if (campoCategoriaProduto) {
 
-            campoCategoriaProduto.value =
-                produto.categoria || "";
+    campoCategoriaProduto.value =
+        produto.categoria || "";
 
-        }
+}
+
+if (campoTipoProducao) {
+
+    campoTipoProducao.value =
+        produto.tipoProducao ||
+        "Estoque";
+
+}
+
+if (campoEstoqueMinimoProduto) {
+
+    const encomenda =
+        (
+            produto.tipoProducao ||
+            "Estoque"
+        ) === "Encomenda";
+
+    campoEstoqueMinimoProduto.disabled =
+        encomenda;
+
+    if (encomenda) {
+        campoEstoqueMinimoProduto.value =
+            "";
+    }
+
+}
+
+if (campoDataProduto) {
 
             if (campoDataProduto) {
 
