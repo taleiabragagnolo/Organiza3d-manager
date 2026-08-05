@@ -5320,107 +5320,101 @@ function iniciarProduto() {
             "limpar-formulario-produto-produzido"
         );
 
-    // ==================================================
-    // VALIDAR DADOS PRINCIPAIS
-    // ==================================================
+   // ==================================================
+// VALIDAR DADOS PRINCIPAIS
+// ==================================================
 
-    function validarDadosProduto(
-        calculos
-    ) {
+function validarDadosProduto(
+    calculos
+) {
 
-        const nome =
-            campoNomeProduto
-                ? campoNomeProduto.value.trim()
-                : "";
+    const nome =
+        campoNomeProduto
+            ? campoNomeProduto.value.trim()
+            : "";
 
-        const categoria =
-            campoCategoriaProduto
-                ? campoCategoriaProduto.value
-                : "";
+    const categoria =
+        campoCategoriaProduto
+            ? campoCategoriaProduto.value
+            : "";
 
-            const data =
-            campoDataProduto
-                ? campoDataProduto.value
-                : "";
+    const data =
+        campoDataProduto
+            ? campoDataProduto.value
+            : "";
 
-        const impressoraId =
-            campoImpressoraProduto
-                ? campoImpressoraProduto.value
-                : "";
+    const impressoraId =
+        campoImpressoraProduto
+            ? campoImpressoraProduto.value
+            : "";
 
-        if (!nome) {
+    if (!nome) {
 
-            alert(
-                "Informe o nome do produto."
-            );
+        alert(
+            "Informe o nome do produto."
+        );
 
-            return false;
-
-        }
-
-        if (!categoria) {
-
-            alert(
-                "Selecione a categoria do produto."
-            );
-
-            return false;
-
-        }
-
-    
-
-            return false;
-
-        }
-
-        if (!data) {
-
-            alert(
-                "Informe a data da produção."
-            );
-
-            return false;
-
-        }
-
-        if (
-            calculos.quantidadeProduzida <= 0
-        ) {
-
-            alert(
-                "Informe uma quantidade produzida válida."
-            );
-
-            return false;
-
-        }
-
-        if (!impressoraId) {
-
-            alert(
-                "Selecione a impressora utilizada."
-            );
-
-            return false;
-
-        }
-
-        if (
-            calculos.horasDecimais <= 0
-        ) {
-
-            alert(
-                "Informe o tempo de impressão."
-            );
-
-            return false;
-
-        }
-
-        return true;
+        return false;
 
     }
+
+    if (!categoria) {
+
+        alert(
+            "Selecione a categoria do produto."
+        );
+
+        return false;
+
+    }
+
+    if (!data) {
+
+        alert(
+            "Informe a data da produção."
+        );
+
+        return false;
+
+    }
+
+    if (
+        calculos.quantidadeProduzida <= 0
+    ) {
+
+        alert(
+            "Informe uma quantidade produzida válida."
+        );
+
+        return false;
+
+    }
+
+    if (!impressoraId) {
+
+        alert(
+            "Selecione a impressora utilizada."
+        );
+
+        return false;
+
+    }
+
+    if (
+        calculos.horasDecimais <= 0
+    ) {
+
+        alert(
+            "Informe o tempo de impressão."
+        );
+
+        return false;
+
+    }
+
+    return true;
+
+}
 
     // ==================================================
     // CRIAR OBJETO DO PRODUTO
