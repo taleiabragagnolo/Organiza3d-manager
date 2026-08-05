@@ -1172,15 +1172,24 @@ function limparFormularioEncomenda() {
 // =========================
 
 if (menuEncomendas) {
+
     menuEncomendas.addEventListener(
         "click",
         function () {
+
             atualizarOpcoesEncomendas();
+
+            atualizarOpcoesFilamentosEncomenda();
+
             calcularValoresEncomenda();
+
             calcularFilamentoAposEncomenda();
+
             atualizarResumoEncomendas();
+
         }
     );
+
 }
 
 if (campoProdutoEncomenda) {
@@ -1801,8 +1810,20 @@ window.excluirEncomenda =
 // =========================
 
 normalizarEncomendasAntigas();
+
 mostrarEncomendas();
+
 atualizarOpcoesEncomendas();
+
+atualizarOpcoesFilamentosEncomenda();
+
 limparFormularioEncomenda();
 
-prepararFormularioFinanceiro();
+if (
+    typeof prepararFormularioFinanceiro ===
+    "function"
+) {
+
+    prepararFormularioFinanceiro();
+
+}
