@@ -1594,6 +1594,21 @@ window.editarImpressora = function (id) {
 
 
     definirValorCampoEquipamentos(
+         "potencia-impressora",
+         impressora.potenciaWatts || ""
+    );
+
+    definirValorCampoEquipamentos(
+         "tarifa-energia-impressora",
+         impressora.tarifaEnergia || ""
+    );
+
+    definirValorCampoEquipamentos(
+         "custo-hora-impressora",
+        impressora.custoHoraImpressora || ""
+    );
+
+    definirValorCampoEquipamentos(
         "status-impressora",
         impressora.status
     );
