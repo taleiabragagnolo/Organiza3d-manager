@@ -1385,9 +1385,12 @@ if (filamentoId) {
         filamentosSalvos.find(
             function (filamento) {
 
-                return filamento.id ===
-                    fila
+                return String(filamento.id) ===
+                    String(filamentoId);
+
+            }
         );
+
 
     if (!filamentoEncontrado) {
 
