@@ -1171,7 +1171,20 @@ if (botaoSalvarImpressora) {
                 obterNumeroCampoEquipamentos(
                     "valor-impressora"
                 );
+                const potenciaWatts =
+    obterNumeroCampoEquipamentos(
+        "potencia-impressora"
+    );
 
+const tarifaEnergia =
+    obterNumeroCampoEquipamentos(
+        "tarifa-energia-impressora"
+    );
+
+const custoHoraImpressora =
+    obterNumeroCampoEquipamentos(
+        "custo-hora-impressora"
+    );
 
             const status =
                 obterTextoCampoEquipamentos(
@@ -1320,7 +1333,16 @@ if (botaoSalvarImpressora) {
                     dataCompra;
 
                 impressora.valor = valor;
+               
+                impressora.potenciaWatts =
+                     potenciaWatts;
 
+                impressora.tarifaEnergia =
+                   tarifaEnergia;
+
+                impressora.custoHoraImpressora =
+                    custoHoraImpressora;
+                    
                 impressora.status = status;
 
                 impressora.horasIniciais =
