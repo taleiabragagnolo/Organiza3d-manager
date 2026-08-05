@@ -184,27 +184,35 @@ function abrirPaginaInicial() {
         document.querySelectorAll(".pagina");
 
     botoesMenu.forEach(function (botao) {
+
         botao.classList.remove("ativo");
+
     });
 
     paginas.forEach(function (pagina) {
+
         pagina.classList.remove("ativa");
+
     });
 
-    const botaoDashboard =
+    const botaoVendas =
         document.querySelector(
-            '.menu-item[data-pagina="dashboard"]'
+            '.menu-item[data-pagina="vendas"]'
         );
 
-    const paginaDashboard =
-        document.getElementById("dashboard");
+    const paginaVendas =
+        document.getElementById("vendas");
 
-    if (botaoDashboard) {
-        botaoDashboard.classList.add("ativo");
+    if (botaoVendas) {
+
+        botaoVendas.classList.add("ativo");
+
     }
 
-    if (paginaDashboard) {
-        paginaDashboard.classList.add("ativa");
+    if (paginaVendas) {
+
+        paginaVendas.classList.add("ativa");
+
     }
 
 }
