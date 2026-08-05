@@ -694,22 +694,64 @@
 
             </div>
 
-            <div class="linha">
+            <<div class="linha">
 
-            
-                <div class="campo">
+    <div class="campo">
 
-                    <label for="produto-produzido-data">
-                        Data da produção
-                    </label>
+        <label for="produto-tipo-producao">
+            Tipo da produção
+        </label>
 
-                    <input
-                        type="date"
-                        id="produto-produzido-data">
+        <select id="produto-tipo-producao">
 
-                </div>
+            <option value="Estoque">
+                Produto para estoque
+            </option>
 
-            </div>
+            <option value="Encomenda">
+                Produto sob encomenda
+            </option>
+
+        </select>
+
+    </div>
+
+    <div
+        class="campo"
+        id="campo-cliente-encomenda"
+        hidden>
+
+        <label for="produto-cliente-encomenda">
+            Cliente da encomenda
+        </label>
+
+        <select id="produto-cliente-encomenda">
+
+            <option value="">
+                Selecione o cliente
+            </option>
+
+        </select>
+
+    </div>
+
+</div>
+
+<div class="linha">
+
+    <div class="campo">
+
+        <label for="produto-produzido-data">
+            Data da produção
+        </label>
+
+        <input
+            type="date"
+            id="produto-produzido-data">
+
+    </div>
+
+</div>
 
             <div class="linha">
 
