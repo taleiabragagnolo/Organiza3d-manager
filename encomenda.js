@@ -240,7 +240,7 @@ function atualizarOpcoesEncomendas() {
         const dadosClientes =
             JSON.parse(
                 localStorage.getItem(
-                    "organiza3d_clientes"
+                    "organiza3d_cliente"
                 )
             );
 
