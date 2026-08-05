@@ -230,7 +230,26 @@ function calcularFinanceiroDashboard() {
 // =========================
 
 function atualizarDashboardCompleto() {
+const produtos =
+    JSON.parse(
+        localStorage.getItem(
+            "organiza3d_produtos_produzidos"
+        )
+    ) || [];
 
+const cliente =
+    JSON.parse(
+        localStorage.getItem(
+            "organiza3d_clientes"
+        )
+    ) || [];
+
+const impressoras =
+    JSON.parse(
+        localStorage.getItem(
+            "organiza3d_impressoras"
+        )
+    ) || [];
     const financeiro =
         calcularFinanceiroDashboard();
 
@@ -349,7 +368,26 @@ definirTextoDashboard(
 // =========================
 
 function atualizarAlertasDashboard() {
+const produtos =
+    JSON.parse(
+        localStorage.getItem(
+            "organiza3d_produtos_produzidos"
+        )
+    ) || [];
 
+const impressoras =
+    JSON.parse(
+        localStorage.getItem(
+            "organiza3d_impressoras"
+        )
+    ) || [];
+
+const filamentos =
+    JSON.parse(
+        localStorage.getItem(
+            "organiza3d_filamentos"
+        )
+    ) || [];
     const campoAlertas =
         document.getElementById(
             "dashboard-alertas"
@@ -468,7 +506,7 @@ function atualizarAlertasDashboard() {
     campoAlertas.innerHTML =
         alertas
             .map(function (alerta) {
-                return `<p>⚠️ ${escaparTexto(alerta)}</p>`;
+               return `<p>⚠️ ${alerta}</p>`;
             })
             .join("");
 
