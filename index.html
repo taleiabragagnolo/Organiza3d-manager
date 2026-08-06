@@ -113,7 +113,7 @@
     <h2>Vendas</h2>
 
     <p>
-        Registre vendas, entregas de encomendas,
+        Registre vendas, entregas, brindes,
         pagamentos e baixas no estoque.
     </p>
 
@@ -123,7 +123,9 @@
 
         <div class="card">
 
-            <span>🛒 Vendas registradas</span>
+            <span>
+                🛒 Vendas registradas
+            </span>
 
             <strong id="vendas-total">
                 0
@@ -133,7 +135,9 @@
 
         <div class="card">
 
-            <span>📦 Unidades vendidas</span>
+            <span>
+                📦 Unidades vendidas
+            </span>
 
             <strong id="vendas-unidades">
                 0
@@ -143,7 +147,21 @@
 
         <div class="card">
 
-            <span>💰 Valor total vendido</span>
+            <span>
+                🎁 Unidades em brindes
+            </span>
+
+            <strong id="vendas-brindes">
+                0
+            </strong>
+
+        </div>
+
+        <div class="card">
+
+            <span>
+                💰 Valor total vendido
+            </span>
 
             <strong id="vendas-valor-total">
                 R$ 0,00
@@ -153,7 +171,9 @@
 
         <div class="card">
 
-            <span>⏳ Valor pendente</span>
+            <span>
+                ⏳ Valor pendente
+            </span>
 
             <strong id="vendas-valor-pendente">
                 R$ 0,00
@@ -167,6 +187,10 @@
 
     <div class="formulario">
 
+        <!-- ================================================= -->
+        <!-- DADOS PRINCIPAIS -->
+        <!-- ================================================= -->
+
         <div class="linha">
 
             <div class="campo">
@@ -178,7 +202,7 @@
                 <select id="venda-cliente">
 
                     <option value="">
-                        Venda balcão — cliente não informado
+                        Venda sem cliente vinculado
                     </option>
 
                 </select>
@@ -188,7 +212,7 @@
             <div class="campo">
 
                 <label for="venda-data">
-                    Data
+                    Data da venda
                 </label>
 
                 <input
@@ -199,209 +223,139 @@
 
         </div>
 
-        <div class="linha">
+        <!-- ================================================= -->
+        <!-- ITENS DA VENDA -->
+        <!-- ================================================= -->
 
-            <div class="campo">
-
-                <label for="venda-produto">
-                    Produto
-                </label>
-
-                <select id="venda-produto">
-
-                    <option value="">
-                        Selecione o produto
-                    </option>
-
-                </select>
-
-            </div>
-
-            <div class="campo">
-
-                <label for="venda-quantidade">
-                    Quantidade
-                </label>
-
-                <input
-                    type="number"
-                    id="venda-quantidade"
-                    min="1"
-                    step="1"
-                    value="1">
-
-            </div>
-
-            <div class="campo">
-
-                <label for="venda-estoque-disponivel">
-                    Estoque disponível
-                </label>
-
-                <input
-                    type="text"
-                    id="venda-estoque-disponivel"
-                    value="0 unidades"
-                    readonly>
-
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-
-                <label for="venda-valor-unitario">
-                    Valor unitário
-                </label>
-
-                <input
-                    type="text"
-                    id="venda-valor-unitario"
-                    value="R$ 0,00"
-                    readonly>
-
-            </div>
-
-            <div class="campo">
-
-                <label for="venda-valor-total">
-                    Valor total
-                </label>
-
-                <input
-                    type="text"
-                    id="venda-valor-total"
-                    value="R$ 0,00"
-                    readonly>
-
-            </div>
-
-            <div class="campo">
-
-                <label for="venda-valor-pago">
-                    Valor pago
-                </label>
-
-                <input
-                    type="number"
-                    id="venda-valor-pago"
-                    min="0"
-                    step="0.01"
-                    placeholder="Ex.: 50,00">
-
-            </div>
-
-        </div>
-
-        <div class="linha">
-
-            <div class="campo">
-
-                <label for="venda-forma-pagamento">
-                    Forma de pagamento
-                </label>
-
-                <select id="venda-forma-pagamento">
-
-                    <option value="">
-                        Selecione
-                    </option>
-
-                    <option value="Dinheiro">
-                        Dinheiro
-                    </option>
-
-                    <option value="Pix">
-                        Pix
-                    </option>
-
-                    <option value="Cartão de débito">
-                        Cartão de débito
-                    </option>
-
-                    <option value="Cartão de crédito">
-                        Cartão de crédito
-                    </option>
-
-                    <option value="Transferência">
-                        Transferência
-                    </option>
-
-                    <option value="Outro">
-                        Outro
-                    </option>
-
-                </select>
-
-            </div>
-
-            <div class="campo">
-
-                <label for="venda-situacao-pagamento">
-                    Situação do pagamento
-                </label>
-
-                <select id="venda-situacao-pagamento">
-
-                    <option value="Pendente">
-                        Pendente
-                    </option>
-
-                    <option value="Parcial">
-                        Parcial
-                    </option>
-
-                    <option value="Pago">
-                        Pago
-                    </option>
-
-                </select>
-
-            </div>
-
-        </div>
-
-        <div class="campo campo-completo">
-
-            <label for="venda-observacoes">
-                Observações
-            </label>
-
-            <textarea
-                id="venda-observacoes"
-                rows="3"
-                placeholder="Informações adicionais sobre a venda ou entrega"></textarea>
-
-        </div>
-
-        <button
-            id="salvar-venda"
-            class="botao-principal"
-            type="button">
-            Salvar Venda
-        </button>
-
-        <button
-            id="limpar-formulario-venda"
-            type="button">
-            Limpar Formulário
-        </button>
-
-    </div>
-
-    <h3>Vendas registradas</h3>
-
-    <div id="lista-vendas">
+        <h3>Produtos da venda</h3>
 
         <p>
-            Nenhuma venda registrada.
+            Adicione um ou mais produtos.
+            Marque como brinde quando o item tiver valor zero.
         </p>
 
-    </div>
+        <div id="lista-itens-venda">
 
-</section>
+            <div class="linha item-venda">
+
+                <div class="campo">
+
+                    <label>
+                        Produto
+                    </label>
+
+                    <select class="venda-item-produto">
+
+                        <option value="">
+                            Selecione o produto
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="campo">
+
+                    <label>
+                        Estoque disponível
+                    </label>
+
+                    <input
+                        type="text"
+                        class="venda-item-estoque"
+                        value="0 unidades"
+                        readonly>
+
+                </div>
+
+                <div class="campo">
+
+                    <label>
+                        Quantidade
+                    </label>
+
+                    <input
+                        type="number"
+                        class="venda-item-quantidade"
+                        min="1"
+                        step="1"
+                        value="1">
+
+                </div>
+
+                <div class="campo">
+
+                    <label>
+                        Valor unitário
+                    </label>
+
+                    <input
+                        type="number"
+                        class="venda-item-valor-unitario"
+                        min="0"
+                        step="0.01"
+                        placeholder="0,00">
+
+                </div>
+
+                <div class="campo">
+
+                    <label>
+                        Brinde
+                    </label>
+
+                    <select class="venda-item-brinde">
+
+                        <option value="Não">
+                            Não
+                        </option>
+
+                        <option value="Sim">
+                            Sim
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="campo">
+
+                    <label>
+                        Total do item
+                    </label>
+
+                    <input
+                        type="text"
+                        class="venda-item-total"
+                        value="R$ 0,00"
+                        readonly>
+
+                </div>
+
+                <div class="campo">
+
+                    <label>
+                        Ação
+                    </label>
+
+                    <button
+                        type="button"
+                        class="botao-excluir remover-item-venda">
+                        Remover
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <button
+            id="adicionar-item-venda"
+            type="button">
+            + Adicionar outro produto
+        </button>
+        
 
         <!-- ========================= -->
         <!-- DASHBOARD -->
