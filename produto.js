@@ -7288,12 +7288,10 @@ if (campoEstoqueMinimoProduto) {
 
 if (campoDataProduto) {
 
-            if (campoDataProduto) {
+    campoDataProduto.value =
+        produto.dataProducao || "";
 
-            campoDataProduto.value =
-                produto.dataProducao || "";
-
-        }
+}
 
         if (campoQuantidadeProduzida) {
 
