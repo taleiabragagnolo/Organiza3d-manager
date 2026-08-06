@@ -6586,7 +6586,6 @@ if (campoDataProduto) {
 
 }
 
-        }
 
         if (campoQuantidadeProduzida) {
             campoQuantidadeProduzida.value = "";
