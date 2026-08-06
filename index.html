@@ -355,7 +355,221 @@
             type="button">
             + Adicionar outro produto
         </button>
-        
+                <!-- ================================================= -->
+        <!-- TOTAIS DA VENDA -->
+        <!-- ================================================= -->
+
+        <h3>Totais da venda</h3>
+
+        <div class="linha">
+
+            <div class="campo">
+
+                <label for="venda-subtotal">
+                    Subtotal
+                </label>
+
+                <input
+                    type="text"
+                    id="venda-subtotal"
+                    value="R$ 0,00"
+                    readonly>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="venda-desconto">
+                    Desconto geral
+                </label>
+
+                <input
+                    type="number"
+                    id="venda-desconto"
+                    min="0"
+                    step="0.01"
+                    value="0">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="venda-frete">
+                    Frete
+                </label>
+
+                <input
+                    type="number"
+                    id="venda-frete"
+                    min="0"
+                    step="0.01"
+                    value="0">
+
+            </div>
+
+        </div>
+
+        <div class="linha">
+
+            <div class="campo">
+
+                <label for="venda-total-final">
+                    Total final
+                </label>
+
+                <input
+                    type="text"
+                    id="venda-total-final"
+                    value="R$ 0,00"
+                    readonly>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="venda-valor-pago">
+                    Valor pago
+                </label>
+
+                <input
+                    type="number"
+                    id="venda-valor-pago"
+                    min="0"
+                    step="0.01"
+                    value="0">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="venda-valor-pendente">
+                    Valor pendente
+                </label>
+
+                <input
+                    type="text"
+                    id="venda-valor-pendente"
+                    value="R$ 0,00"
+                    readonly>
+
+            </div>
+
+        </div>
+
+        <!-- ================================================= -->
+        <!-- PAGAMENTO -->
+        <!-- ================================================= -->
+
+        <h3>Pagamento</h3>
+
+        <div class="linha">
+
+            <div class="campo">
+
+                <label for="venda-forma-pagamento">
+                    Forma de pagamento
+                </label>
+
+                <select id="venda-forma-pagamento">
+
+                    <option value="">
+                        Selecione
+                    </option>
+
+                    <option value="Dinheiro">
+                        Dinheiro
+                    </option>
+
+                    <option value="Pix">
+                        Pix
+                    </option>
+
+                    <option value="Cartão de débito">
+                        Cartão de débito
+                    </option>
+
+                    <option value="Cartão de crédito">
+                        Cartão de crédito
+                    </option>
+
+                    <option value="Transferência">
+                        Transferência
+                    </option>
+
+                    <option value="Outro">
+                        Outro
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="venda-situacao-pagamento">
+                    Situação do pagamento
+                </label>
+
+                <select id="venda-situacao-pagamento">
+
+                    <option value="Pendente">
+                        Pendente
+                    </option>
+
+                    <option value="Parcial">
+                        Parcial
+                    </option>
+
+                    <option value="Pago">
+                        Pago
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <div class="campo campo-completo">
+
+            <label for="venda-observacoes">
+                Observações
+            </label>
+
+            <textarea
+                id="venda-observacoes"
+                rows="3"
+                placeholder="Informações adicionais sobre a venda, entrega, frete ou pagamento"></textarea>
+
+        </div>
+
+        <button
+            id="salvar-venda"
+            class="botao-principal"
+            type="button">
+            Salvar Venda
+        </button>
+
+        <button
+            id="limpar-formulario-venda"
+            type="button">
+            Limpar Formulário
+        </button>
+
+    </div>
+
+    <h3>Vendas registradas</h3>
+
+    <div id="lista-vendas">
+
+        <p>
+            Nenhuma venda registrada.
+        </p>
+
+    </div>
+
+</section>
+
 
         <!-- ========================= -->
         <!-- DASHBOARD -->
