@@ -240,7 +240,7 @@ const produtos =
 const cliente =
     JSON.parse(
         localStorage.getItem(
-            "organiza3d_clientes"
+            "organiza3d_cliente"
         )
     ) || [];
 
