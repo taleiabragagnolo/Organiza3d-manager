@@ -6581,11 +6581,10 @@ if (campoEstoqueMinimoProduto) {
 
 if (campoDataProduto) {
 
+    campoDataProduto.value =
+        dataHoje();
 
-        if (campoDataProduto) {
-
-            campoDataProduto.value =
-                dataHoje();
+}
 
         }
 
