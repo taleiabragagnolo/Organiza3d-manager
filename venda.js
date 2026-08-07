@@ -1490,7 +1490,7 @@
         };
 
     }
-        // ==================================================
+    // ==================================================
     // OBTER ITENS DA VENDA
     // ==================================================
 
@@ -2073,7 +2073,196 @@
         );
 
     }
+    // ==================================================
+    // ESTORNAR VENDA
+    // ==================================================
 
+    function estornarVenda(
+        vendaId
+    ) {
+
+        const venda =
+            vendas.find(
+                function (item) {
+
+                    return String(
+                        item.id
+                    ) ===
+                    String(
+                        vendaId
+                    );
+
+                }
+            );
+
+        if (!venda) {
+
+            alert(
+                "Venda não encontrada."
+            );
+
+            return;
+
+        }
+
+        const confirmar =
+            confirm(
+                "Deseja realmente estornar esta venda?\n\n" +
+                "Os produtos voltarão ao estoque e o lançamento financeiro da venda será removido."
+            );
+
+        if (!confirmar) {
+
+            return;
+
+        }
+
+        // ==============================================
+        // DEVOLVER PRODUTOS AO ESTOQUE
+        // ==============================================
+
+        if (
+            Array.isArray(
+                venda.itens
+            )
+        ) {
+
+            venda.itens.forEach(
+                function (itemVenda) {
+
+                    const produto =
+                        encontrarProdutoVenda(
+                            itemVenda.produtoId
+                        );
+
+                    if (!produto) {
+
+                        return;
+
+                    }
+
+                    const quantidadeAtual =
+                        numeroPositivoVenda(
+                            produto.quantidadeDisponivel
+                        );
+
+                    const quantidadeDevolver =
+                        numeroPositivoVenda(
+                            itemVenda.quantidade
+                        );
+
+                    produto.quantidadeDisponivel =
+                        quantidadeAtual +
+                        quantidadeDevolver;
+
+                    if (
+                        produto.quantidadeDisponivel > 0 &&
+                        produto.status === "Inativo"
+                    ) {
+
+                        produto.status =
+                            "Ativo";
+
+                    }
+
+                }
+            );
+
+            salvarListaVenda(
+                CHAVE_PRODUTOS,
+                produtosVenda
+            );
+
+        }
+
+        // ==============================================
+        // REMOVER LANÇAMENTO FINANCEIRO DA VENDA
+        // ==============================================
+
+        lancamentosFinanceirosVenda =
+            lancamentosFinanceirosVenda.filter(
+                function (lancamento) {
+
+                    return String(
+                        lancamento.vendaId
+                    ) !==
+                    String(
+                        venda.id
+                    );
+
+                }
+            );
+
+        salvarListaVenda(
+            CHAVE_FINANCEIRO,
+            lancamentosFinanceirosVenda
+        );
+
+        // ==============================================
+        // REMOVER VENDA
+        // ==============================================
+
+        vendas =
+            vendas.filter(
+                function (item) {
+
+                    return String(
+                        item.id
+                    ) !==
+                    String(
+                        venda.id
+                    );
+
+                }
+            );
+
+        salvarListaVenda(
+            CHAVE_VENDAS,
+            vendas
+        );
+
+        // ==============================================
+        // ATUALIZAR TELAS
+        // ==============================================
+
+        carregarDadosVenda();
+
+        carregarClientesVenda();
+
+        mostrarVendas();
+
+        if (
+            typeof atualizarDashboardCompleto ===
+            "function"
+        ) {
+
+            atualizarDashboardCompleto();
+
+        }
+
+        if (
+            typeof atualizarRelatorios ===
+            "function"
+        ) {
+
+            atualizarRelatorios();
+
+        }
+
+        if (
+            typeof mostrarLancamentosFinanceiros ===
+            "function"
+        ) {
+
+            mostrarLancamentosFinanceiros();
+
+        }
+
+        alert(
+            "Venda estornada com sucesso."
+        );
+
+    }
     // ==================================================
     // ATUALIZAR RESUMO
     // ==================================================
@@ -2459,7 +2648,14 @@
                                         `
                                         : ""
                                 }
-
+                                <button
+                                    type="button"
+                                    class="botao-excluir estornar-venda"
+                                    data-venda-id="${escaparTextoVenda(
+                                        venda.id
+                                    )}">
+                                    Estornar venda
+                                </button>
                             </div>
                         `;
 
@@ -2661,6 +2857,37 @@
 
     function configurarEventosVenda() {
 
+                if (listaVendas) {
+
+            listaVendas.addEventListener(
+                "click",
+                function (evento) {
+
+                    const botao =
+                        evento.target.closest(
+                            ".estornar-venda"
+                        );
+
+                    if (!botao) {
+
+                        return;
+
+                    }
+
+                    const vendaId =
+                        botao.getAttribute(
+                            "data-venda-id"
+                        );
+
+                    estornarVenda(
+                        vendaId
+                    );
+
+                }
+            );
+
+        }
+        
         if (botaoAdicionarItemVenda) {
 
             botaoAdicionarItemVenda
