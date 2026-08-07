@@ -3230,7 +3230,8 @@ function iniciarProduto() {
             ids.length
         );
 
-    }    // ==================================================
+    }   
+    // ==================================================
     // PARTE 6B
     // CÁLCULO COMPLETO DA PRODUÇÃO
     // ==================================================
@@ -5411,8 +5412,7 @@ const campoDataProduto =
         document.getElementById(
             "limpar-formulario-produto-produzido"
         );
-
-   // ==================================================
+// ==================================================
 // VALIDAR DADOS PRINCIPAIS
 // ==================================================
 
@@ -5833,8 +5833,7 @@ dataProducao:
         );
 
     }
-        // ==================================================
-    // PARTE 7E
+    // ==================================================
     // ATUALIZAÇÃO DAS HORAS DA IMPRESSORA
     // ==================================================
 
@@ -6150,8 +6149,7 @@ dataProducao:
         salvarImpressoras();
 
     }
-        // ==================================================
-    // PARTE 7F
+    // ==================================================
     // INTEGRAÇÃO DA PRODUÇÃO COM O ORÇAMENTO
     // ==================================================
 
@@ -6443,8 +6441,7 @@ dataProducao:
         });
 
     }
-        // ==================================================
-    // PARTE 8A
+    // ==================================================
     // LIMPEZA, RESUMO E LISTAGEM DOS PRODUTOS
     // ==================================================
 
@@ -7218,8 +7215,7 @@ const produtosOrdenados =
         atualizarResumoProdutos();
 
     }
-        // ==================================================
-    // PARTE 8B
+    // ==================================================
     // EDIÇÃO E EXCLUSÃO DOS PRODUTOS PRODUZIDOS
     // ==================================================
 
@@ -7441,7 +7437,135 @@ if (campoDataProduto) {
         );
 
     }
+    // ==================================================
+// DEVOLVER INSUMOS DA PRODUÇÃO
+// ==================================================
 
+function devolverInsumosProduto(produto) {
+
+    if (!produto) {
+        return;
+    }
+
+    // ------------------------------
+    // FILAMENTOS
+    // ------------------------------
+
+    if (Array.isArray(produto.filamentos)) {
+
+        produto.filamentos.forEach(function (consumo) {
+
+            const filamento =
+                encontrarFilamento(
+                    consumo.filamentoId
+                );
+
+            if (!filamento) {
+                return;
+            }
+
+            filamento.pesoRestante =
+                numero(
+                    filamento.pesoRestante
+                ) +
+                numero(
+                    consumo.quantidade
+                );
+
+            const pesoInicial =
+                numero(
+                    filamento.pesoInicial
+                );
+
+            if (
+                filamento.pesoRestante >
+                pesoInicial
+            ) {
+
+                filamento.pesoRestante =
+                    pesoInicial;
+
+            }
+
+            atualizarStatusFilamento(
+                filamento
+            );
+
+        });
+
+    }
+
+    // ------------------------------
+    // ACESSÓRIOS
+    // ------------------------------
+
+    if (Array.isArray(produto.acessorios)) {
+
+        produto.acessorios.forEach(function (consumo) {
+
+            const acessorio =
+                encontrarAcessorio(
+                    consumo.acessorioId
+                );
+
+            if (!acessorio) {
+                return;
+            }
+
+            acessorio.quantidade =
+                numero(
+                    acessorio.quantidade
+                ) +
+                numero(
+                    consumo.quantidade
+                );
+
+            acessorio.estoque =
+                acessorio.quantidade;
+
+        });
+
+    }
+
+    // ------------------------------
+    // EMBALAGENS
+    // ------------------------------
+
+    if (Array.isArray(produto.embalagens)) {
+
+        produto.embalagens.forEach(function (consumo) {
+
+            const embalagem =
+                encontrarEmbalagem(
+                    consumo.embalagemId
+                );
+
+            if (!embalagem) {
+                return;
+            }
+
+            embalagem.quantidade =
+                numero(
+                    embalagem.quantidade
+                ) +
+                numero(
+                    consumo.quantidade
+                );
+
+            embalagem.estoque =
+                embalagem.quantidade;
+
+        });
+
+    }
+
+    salvarFilamentos();
+
+    salvarAcessorios();
+
+    salvarEmbalagens();
+
+}
     // ==================================================
     // EXCLUIR PRODUTO
     // ==================================================
@@ -7483,13 +7607,15 @@ if (campoDataProduto) {
             "produto sem nome"
         ) +
         '"?\n\n' +
-        "Os insumos consumidos e as horas da impressora não serão devolvidos automaticamente."
+        "Os filamentos, acessórios e embalagens consumidos serão devolvidos ao estoque.\n\n" +
+        "Esta operação só é permitida porque este produto não possui movimentações de saída."
     );
-
         if (!confirmar) {
             return;
         }
-
+    devolverInsumosProduto(
+     produto
+    );
         produtos =
             produtos.filter(
                 function (item) {
