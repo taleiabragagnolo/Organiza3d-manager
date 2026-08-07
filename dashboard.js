@@ -230,7 +230,7 @@ function calcularFinanceiroDashboard() {
 // =========================
 
 function atualizarDashboardCompleto() {
-const produtos =
+const produto =
     JSON.parse(
         localStorage.getItem(
             "organiza3d_produtos_produzidos"
@@ -257,9 +257,9 @@ const impressoras =
         calcularEncomendasDashboard();
 
     definirTextoDashboard(
-        "total-produtos",
-        Array.isArray(produtos)
-            ? produtos.length
+        "total-produto",
+        Array.isArray(produto)
+            ? produto.length
             : 0
     );
 
@@ -368,7 +368,7 @@ definirTextoDashboard(
 // =========================
 
 function atualizarAlertasDashboard() {
-const produtos =
+const produto =
     JSON.parse(
         localStorage.getItem(
             "organiza3d_produtos_produzidos"
@@ -405,17 +405,17 @@ const filamentos =
     const encomendasAtrasadas =
         calcularEncomendasAtrasadasDashboard();
 
-    const produtosEstoqueBaixo =
-        Array.isArray(produtos)
-            ? produtos.filter(function (produto) {
+    const produtoEstoqueBaixo =
+        Array.isArray(produto)
+            ? produto.filter(function (produto) {
                   return produto.status ===
                       "Estoque baixo";
               }).length
             : 0;
 
-    const produtosSemEstoque =
-        Array.isArray(produtos)
-            ? produtos.filter(function (produto) {
+    const produtoSemEstoque =
+        Array.isArray(produto)
+            ? produto.filter(function (produto) {
                   return produto.status ===
                       "Sem estoque";
               }).length
@@ -447,15 +447,15 @@ const filamentos =
         );
     }
 
-    if (produtosEstoqueBaixo > 0) {
+    if (produtoEstoqueBaixo > 0) {
         alertas.push(
-            `${produtosEstoqueBaixo} produto(s) com estoque baixo.`
+            `${produtoEstoqueBaixo} produto(s) com estoque baixo.`
         );
     }
 
-    if (produtosSemEstoque > 0) {
+    if (produtoSemEstoque > 0) {
         alertas.push(
-            `${produtosSemEstoque} produto(s) sem estoque.`
+            `${produtoSemEstoque} produto(s) sem estoque.`
         );
     }
 
