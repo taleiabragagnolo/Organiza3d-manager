@@ -11540,7 +11540,111 @@ produtos =
             );
 
     }
+// ==================================================
+// RECUPERAR HORAS DAS PRODUÇÕES ANTIGAS
+// ==================================================
 
+function recuperarHorasProdutosExistentes() {
+
+    const totaisPorImpressora = {};
+
+    // ----------------------------------------------
+    // SOMAR HORAS DE TODOS OS PRODUTOS EXISTENTES
+    // ----------------------------------------------
+
+    produtos.forEach(
+        function (produto) {
+
+            if (!produto) {
+                return;
+            }
+
+            const impressoraId =
+                String(
+                    produto.impressoraId ||
+                    ""
+                );
+
+            const horas =
+                numeroPositivo(
+                    produto.horasDecimais
+                );
+
+            if (
+                !impressoraId ||
+                horas <= 0
+            ) {
+                return;
+            }
+
+            if (
+                !totaisPorImpressora[
+                    impressoraId
+                ]
+            ) {
+
+                totaisPorImpressora[
+                    impressoraId
+                ] = 0;
+
+            }
+
+            totaisPorImpressora[
+                impressoraId
+            ] += horas;
+
+        }
+    );
+
+    // ----------------------------------------------
+    // CORRIGIR CADA IMPRESSORA
+    // ----------------------------------------------
+
+    impressoras.forEach(
+        function (impressora) {
+
+            const id =
+                String(
+                    impressora.id
+                );
+
+            const totalCorreto =
+                numeroPositivo(
+                    totaisPorImpressora[id]
+                );
+
+            impressora.horasProducoes =
+                totalCorreto;
+
+            impressora.totalHoras =
+                numeroPositivo(
+                    impressora.horasIniciais
+                ) +
+                numeroPositivo(
+                    impressora.horasProducoes
+                ) +
+                numeroPositivo(
+                    impressora.horasAjustes
+                );
+
+        }
+    );
+
+    salvarImpressoras();
+
+    console.log(
+        "Horas das produções recuperadas com sucesso.",
+        totaisPorImpressora
+    );
+
+    return totaisPorImpressora;
+
+}
+
+// Disponibilizar somente para a recuperação
+window.recuperarHorasProdutosExistentes =
+    recuperarHorasProdutosExistentes;
+    
     // ==================================================
     // PARTE 12
     // INICIALIZAÇÃO FINAL DO MÓDULO
