@@ -6405,197 +6405,178 @@ if (editando) {
     // ATUALIZAÇÃO DAS HORAS DA IMPRESSORA
     // ==================================================
 
-    function obterHorasAtuaisImpressora(
-        impressora
+        // ==================================================
+    // ATUALIZAÇÃO DAS HORAS DA IMPRESSORA
+    // ==================================================
+
+    function adicionarHorasProducaoLocal(
+        impressoraId,
+        horas
     ) {
 
-        if (!impressora) {
-            return 0;
+        const quantidadeHoras =
+            numeroPositivo(
+                horas
+            );
+
+        if (quantidadeHoras <= 0) {
+            return false;
         }
 
-        return numeroPositivo(
+        const impressora =
+            encontrarImpressora(
+                impressoraId
+            );
 
-            impressora.horasUso ??
-            impressora.horasAcumuladas ??
-            impressora.horas ??
-            impressora.horasIniciais ??
-            0
+        if (!impressora) {
 
+            console.warn(
+                "A impressora utilizada não foi encontrada."
+            );
+
+            return false;
+
+        }
+
+        impressora.horasProducoes =
+            numeroPositivo(
+                impressora.horasProducoes
+            ) +
+            quantidadeHoras;
+
+        salvarImpressoras();
+
+        return true;
+
+    }
+
+    function removerHorasProducaoLocal(
+        impressoraId,
+        horas
+    ) {
+
+        const quantidadeHoras =
+            numeroPositivo(
+                horas
+            );
+
+        if (quantidadeHoras <= 0) {
+            return false;
+        }
+
+        const impressora =
+            encontrarImpressora(
+                impressoraId
+            );
+
+        if (!impressora) {
+
+            console.warn(
+                "A impressora utilizada não foi encontrada."
+            );
+
+            return false;
+
+        }
+
+        impressora.horasProducoes =
+            Math.max(
+                0,
+                numeroPositivo(
+                    impressora.horasProducoes
+                ) -
+                quantidadeHoras
+            );
+
+        salvarImpressoras();
+
+        return true;
+
+    }
+
+    function adicionarHorasProducao(
+        impressoraId,
+        horas,
+        produto
+    ) {
+
+        const quantidadeHoras =
+            numeroPositivo(
+                horas
+            );
+
+        if (quantidadeHoras <= 0) {
+            return true;
+        }
+
+        if (
+            typeof window.adicionarHorasProducaoEquipamento ===
+            "function"
+        ) {
+
+            return window.adicionarHorasProducaoEquipamento(
+                impressoraId,
+                quantidadeHoras,
+                "Produção do produto " +
+                (
+                    produto?.nome ||
+                    "não informado"
+                ),
+                produto?.dataProducao ||
+                dataHoje()
+            );
+
+        }
+
+        return adicionarHorasProducaoLocal(
+            impressoraId,
+            quantidadeHoras
         );
 
     }
 
-    function definirHorasImpressora(
-        impressora,
-        totalHoras
+    function removerHorasProducao(
+        impressoraId,
+        horas,
+        produto
     ) {
 
-        const horas =
+        const quantidadeHoras =
             numeroPositivo(
-                totalHoras
+                horas
             );
 
-        impressora.horasUso =
-            horas;
-
-        impressora.horasAcumuladas =
-            horas;
-
-        if (
-            Object.prototype.hasOwnProperty.call(
-                impressora,
-                "horas"
-            )
-        ) {
-
-            impressora.horas =
-                horas;
-
-        }
-
-    }
-
-    function adicionarHistoricoHorasImpressora(
-        impressora,
-        produto,
-        horasAdicionadas
-    ) {
-
-        if (!impressora) {
-            return;
+        if (quantidadeHoras <= 0) {
+            return true;
         }
 
         if (
-            !Array.isArray(
-                impressora.historicoHoras
-            )
+            typeof window.removerHorasProducaoEquipamento ===
+            "function"
         ) {
 
-            impressora.historicoHoras =
-                [];
+            return window.removerHorasProducaoEquipamento(
+                impressoraId,
+                quantidadeHoras,
+                "Produção do produto " +
+                (
+                    produto?.nome ||
+                    "não informado"
+                ),
+                produto?.dataProducao ||
+                dataHoje()
+            );
 
         }
 
-        impressora.historicoHoras.push({
-
-            id:
-                criarId(),
-
-            data:
-                produto.dataProducao ||
-                dataHoje(),
-
-            origem:
-                "Produção",
-
-            produtoId:
-                produto.id,
-
-            produto:
-                produto.nome,
-
-           horas:
-                numero(
-                horasAdicionadas
-            ),
-
-            criadoEm:
-                new Date().toISOString()
-
-        });
+        return removerHorasProducaoLocal(
+            impressoraId,
+            quantidadeHoras
+        );
 
     }
 
-    function atualizarControleManutencaoImpressora(
-        impressora
-    ) {
-
-        if (!impressora) {
-            return;
-        }
-
-        const horasAtuais =
-            obterHorasAtuaisImpressora(
-                impressora
-            );
-
-        const intervaloManutencao =
-            numeroPositivo(
-
-                impressora.intervaloManutencaoHoras ??
-                impressora.intervaloManutencao ??
-                impressora.horasManutencaoPreventiva ??
-                0
-
-            );
-
-        const horasUltimaManutencao =
-            numeroPositivo(
-
-                impressora.horasUltimaManutencao ??
-                impressora.ultimaManutencaoHoras ??
-                0
-
-            );
-
-        const horasDesdeUltimaManutencao =
-            Math.max(
-                0,
-                horasAtuais -
-                horasUltimaManutencao
-            );
-
-        impressora.horasDesdeUltimaManutencao =
-            horasDesdeUltimaManutencao;
-
-        if (
-            intervaloManutencao > 0
-        ) {
-
-            impressora.horasParaProximaManutencao =
-                Math.max(
-                    0,
-                    intervaloManutencao -
-                    horasDesdeUltimaManutencao
-                );
-
-            impressora.manutencaoPendente =
-                horasDesdeUltimaManutencao >=
-                intervaloManutencao;
-
-        }
-
-    }
-
-    function atualizarDepreciacaoImpressora(
-        impressora
-    ) {
-
-        if (!impressora) {
-            return;
-        }
-
-        const horasAtuais =
-            obterHorasAtuaisImpressora(
-                impressora
-            );
-
-        const custoPorHora =
-            numeroPositivo(
-
-                impressora.custoHora ??
-                impressora.custoPorHora ??
-                0
-
-            );
-
-        impressora.depreciacaoAcumulada =
-            horasAtuais *
-            custoPorHora;
-
-    }
-
-        function registrarHorasImpressoraProduto(
+    function registrarHorasImpressoraProduto(
         produto,
         editando,
         produtoAnterior = null
@@ -6616,47 +6597,11 @@ if (editando) {
 
         if (!editando) {
 
-            const impressora =
-                encontrarImpressora(
-                    produto.impressoraId
-                );
-
-            if (!impressora) {
-
-                console.warn(
-                    "A impressora utilizada não foi encontrada."
-                );
-
-                return;
-
-            }
-
-            const horasAtuais =
-                obterHorasAtuaisImpressora(
-                    impressora
-                );
-
-            definirHorasImpressora(
-                impressora,
-                horasAtuais +
-                horasNovas
+            adicionarHorasProducao(
+                produto.impressoraId,
+                horasNovas,
+                produto
             );
-
-            adicionarHistoricoHorasImpressora(
-                impressora,
-                produto,
-                horasNovas
-            );
-
-            atualizarControleManutencaoImpressora(
-                impressora
-            );
-
-            atualizarDepreciacaoImpressora(
-                impressora
-            );
-
-            salvarImpressoras();
 
             return;
 
@@ -6702,60 +6647,31 @@ if (editando) {
             impressoraNovaId
         ) {
 
-            const impressora =
-                encontrarImpressora(
-                    produto.impressoraId
-                );
-
-            if (!impressora) {
-
-                console.warn(
-                    "A impressora utilizada não foi encontrada."
-                );
-
-                return;
-
-            }
-
             const diferencaHoras =
                 horasNovas -
                 horasAnteriores;
 
-            if (
-                diferencaHoras !== 0
-            ) {
+            if (diferencaHoras > 0) {
 
-                const horasAtuais =
-                    obterHorasAtuaisImpressora(
-                        impressora
-                    );
-
-                definirHorasImpressora(
-                    impressora,
-                    Math.max(
-                        0,
-                        horasAtuais +
-                        diferencaHoras
-                    )
+                adicionarHorasProducao(
+                    produto.impressoraId,
+                    diferencaHoras,
+                    produto
                 );
 
-                adicionarHistoricoHorasImpressora(
-                    impressora,
-                    produto,
-                    diferencaHoras
+            } else if (
+                diferencaHoras < 0
+            ) {
+
+                removerHorasProducao(
+                    produto.impressoraId,
+                    Math.abs(
+                        diferencaHoras
+                    ),
+                    produto
                 );
 
             }
-
-            atualizarControleManutencaoImpressora(
-                impressora
-            );
-
-            atualizarDepreciacaoImpressora(
-                impressora
-            );
-
-            salvarImpressoras();
 
             return;
 
@@ -6765,82 +6681,31 @@ if (editando) {
         // TROCOU DE IMPRESSORA
         // ==============================================
 
-        const impressoraAnterior =
-            encontrarImpressora(
-                produtoAnterior.impressoraId
-            );
+        if (
+            impressoraAnteriorId &&
+            horasAnteriores > 0
+        ) {
 
-        const impressoraNova =
-            encontrarImpressora(
-                produto.impressoraId
-            );
-
-        // Retirar as horas da impressora antiga
-
-        if (impressoraAnterior) {
-
-            const horasAtuaisAnterior =
-                obterHorasAtuaisImpressora(
-                    impressoraAnterior
-                );
-
-            definirHorasImpressora(
-                impressoraAnterior,
-                Math.max(
-                    0,
-                    horasAtuaisAnterior -
-                    horasAnteriores
-                )
-            );
-
-            adicionarHistoricoHorasImpressora(
-                impressoraAnterior,
-                produto,
-                -horasAnteriores
-            );
-
-            atualizarControleManutencaoImpressora(
-                impressoraAnterior
-            );
-
-            atualizarDepreciacaoImpressora(
-                impressoraAnterior
+            removerHorasProducao(
+                produtoAnterior.impressoraId,
+                horasAnteriores,
+                produtoAnterior
             );
 
         }
 
-        // Adicionar as horas na nova impressora
+        if (
+            impressoraNovaId &&
+            horasNovas > 0
+        ) {
 
-        if (impressoraNova) {
-
-            const horasAtuaisNova =
-                obterHorasAtuaisImpressora(
-                    impressoraNova
-                );
-
-            definirHorasImpressora(
-                impressoraNova,
-                horasAtuaisNova +
-                horasNovas
-            );
-
-            adicionarHistoricoHorasImpressora(
-                impressoraNova,
-                produto,
-                horasNovas
-            );
-
-            atualizarControleManutencaoImpressora(
-                impressoraNova
-            );
-
-            atualizarDepreciacaoImpressora(
-                impressoraNova
+            adicionarHorasProducao(
+                produto.impressoraId,
+                horasNovas,
+                produto
             );
 
         }
-
-        salvarImpressoras();
 
     }
     // ==================================================
@@ -8305,13 +8170,21 @@ function devolverInsumosProduto(produto) {
         "Esta operação só é permitida porque este produto não possui movimentações de saída."
     );
         if (!confirmar) {
-            return;
-        }
-    devolverInsumosProduto(
-     produto
-    );
-        produtos =
-            produtos.filter(
+    return;
+}
+
+removerHorasProducao(
+    produto.impressoraId,
+    produto.horasDecimais,
+    produto
+);
+
+devolverInsumosProduto(
+    produto
+);
+
+produtos =
+    produtos.filter(
                 function (item) {
 
                     return String(item.id) !==
