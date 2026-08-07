@@ -5710,73 +5710,104 @@ dataProducao:
             return;
         }
 
-        const editando =
-            produtoEmEdicaoId !== null;
+       const editando =
+    produtoEmEdicaoId !== null;
 
-        if (!editando) {
+let produtoAnterior =
+    null;
 
-            if (
-                !validarEstoqueProducao(
-                    calculos
-                )
-            ) {
-                return;
+if (!editando) {
+
+    if (
+        !validarEstoqueProducao(
+            calculos
+        )
+    ) {
+        return;
+    }
+
+} else {
+
+    produtoAnterior =
+        encontrarProduto(
+            produtoEmEdicaoId
+        );
+
+    if (!produtoAnterior) {
+
+        alert(
+            "Produto não encontrado."
+        );
+
+        return;
+
+    }
+
+}
+
+const produto =
+    criarObjetoProduto(
+        calculos
+    );
+
+if (editando) {
+
+    const indice =
+        produtos.findIndex(
+            function (item) {
+
+                return String(item.id) ===
+                    String(
+                        produtoEmEdicaoId
+                    );
+
             }
+        );
 
-        }
+    if (indice === -1) {
 
-        const produto =
-            criarObjetoProduto(
-                calculos
-            );
+        alert(
+            "Produto não encontrado."
+        );
 
-        if (editando) {
+        return;
 
-            const indice =
-                produtos.findIndex(
-                    function (item) {
+    }
 
-                        return String(item.id) ===
-                            String(
-                                produtoEmEdicaoId
-                            );
+    const ajusteRealizado =
+        ajustarInsumosEdicao(
+            produtoAnterior,
+            produto
+        );
 
-                    }
-                );
+    if (!ajusteRealizado) {
 
-            if (indice === -1) {
+        return;
 
-                alert(
-                    "Produto não encontrado."
-                );
+    }
 
-                return;
+    produto.criadoEm =
+        produtoAnterior.criadoEm ||
+        produto.criadoEm;
 
-            }
+    produtos[indice] =
+        produto;
 
-            produto.criadoEm =
-                produtos[indice].criadoEm ||
-                produto.criadoEm;
+} else {
 
-            produtos[indice] =
-                produto;
+    baixarInsumosProducao(
+        calculos
+    );
 
-        } else {
+    produtos.push(
+        produto
+    );
 
-            baixarInsumosProducao(
-                calculos
-            );
+    registrarMovimentacaoProducao(
+        produto
+    );
 
-            produtos.push(
-                produto
-            );
-
-            registrarMovimentacaoProducao(
-                produto
-            );
-
-        }
-
+}
         salvarProdutos();
 
         registrarHorasImpressoraProduto(
@@ -5811,7 +5842,544 @@ dataProducao:
         );
 
     }
+    // ==================================================
+    // AJUSTAR INSUMOS AO EDITAR UMA PRODUÇÃO
+    // ==================================================
 
+    function ajustarInsumosEdicao(
+        produtoAnterior,
+        produtoNovo
+    ) {
+
+        if (
+            !produtoAnterior ||
+            !produtoNovo
+        ) {
+            return false;
+        }
+
+        // ==============================================
+        // SOMAR CONSUMOS POR ID
+        // ==============================================
+
+        function montarMapaConsumos(
+            lista,
+            campoId
+        ) {
+
+            const mapa = {};
+
+            if (!Array.isArray(lista)) {
+                return mapa;
+            }
+
+            lista.forEach(
+                function (item) {
+
+                    const id =
+                        String(
+                            item[campoId] ??
+                            ""
+                        );
+
+                    if (!id) {
+                        return;
+                    }
+
+                    if (!mapa[id]) {
+                        mapa[id] = 0;
+                    }
+
+                    mapa[id] +=
+                        numeroPositivo(
+                            item.quantidade
+                        );
+
+                }
+            );
+
+            return mapa;
+
+        }
+
+        // ==============================================
+        // FILAMENTOS
+        // ==============================================
+
+        const filamentosAnteriores =
+            montarMapaConsumos(
+                produtoAnterior.filamentos,
+                "filamentoId"
+            );
+
+        const filamentosNovos =
+            montarMapaConsumos(
+                produtoNovo.filamentos,
+                "filamentoId"
+            );
+
+        const idsFilamentos =
+            new Set([
+                ...Object.keys(
+                    filamentosAnteriores
+                ),
+                ...Object.keys(
+                    filamentosNovos
+                )
+            ]);
+
+        // Primeiro validar antes de alterar qualquer coisa
+
+        for (
+            const id of idsFilamentos
+        ) {
+
+            const quantidadeAnterior =
+                numeroPositivo(
+                    filamentosAnteriores[id]
+                );
+
+            const quantidadeNova =
+                numeroPositivo(
+                    filamentosNovos[id]
+                );
+
+            const diferenca =
+                quantidadeNova -
+                quantidadeAnterior;
+
+            if (diferenca <= 0) {
+                continue;
+            }
+
+            const filamento =
+                encontrarFilamento(id);
+
+            if (!filamento) {
+
+                alert(
+                    "Um dos filamentos da produção não foi encontrado."
+                );
+
+                return false;
+
+            }
+
+            const saldoAtual =
+                pesoRestanteFilamento(
+                    filamento
+                );
+
+            if (
+                diferenca >
+                saldoAtual
+            ) {
+
+                alert(
+                    "Não há filamento suficiente para atualizar esta produção.\n\n" +
+                    "Filamento: " +
+                    textoFilamento(
+                        filamento
+                    ) +
+                    "\nNecessário adicional: " +
+                    numeroFormatado(
+                        diferenca,
+                        2
+                    ) +
+                    " g\nDisponível: " +
+                    numeroFormatado(
+                        saldoAtual,
+                        2
+                    ) +
+                    " g"
+                );
+
+                return false;
+
+            }
+
+        }
+
+        // ==============================================
+        // ACESSÓRIOS
+        // ==============================================
+
+        const acessoriosAnteriores =
+            montarMapaConsumos(
+                produtoAnterior.acessorios,
+                "acessorioId"
+            );
+
+        const acessoriosNovos =
+            montarMapaConsumos(
+                produtoNovo.acessorios,
+                "acessorioId"
+            );
+
+        const idsAcessorios =
+            new Set([
+                ...Object.keys(
+                    acessoriosAnteriores
+                ),
+                ...Object.keys(
+                    acessoriosNovos
+                )
+            ]);
+
+        for (
+            const id of idsAcessorios
+        ) {
+
+            const quantidadeAnterior =
+                numeroPositivo(
+                    acessoriosAnteriores[id]
+                );
+
+            const quantidadeNova =
+                numeroPositivo(
+                    acessoriosNovos[id]
+                );
+
+            const diferenca =
+                quantidadeNova -
+                quantidadeAnterior;
+
+            if (diferenca <= 0) {
+                continue;
+            }
+
+            const acessorio =
+                encontrarAcessorio(id);
+
+            if (!acessorio) {
+
+                alert(
+                    "Um dos acessórios da produção não foi encontrado."
+                );
+
+                return false;
+
+            }
+
+            const saldoAtual =
+                quantidadeAcessorio(
+                    acessorio
+                );
+
+            if (
+                diferenca >
+                saldoAtual
+            ) {
+
+                alert(
+                    'Estoque insuficiente do acessório "' +
+                    (
+                        acessorio.nome ||
+                        "sem nome"
+                    ) +
+                    '".\n\n' +
+                    "Necessário adicional: " +
+                    numeroFormatado(
+                        diferenca,
+                        0
+                    ) +
+                    "\nDisponível: " +
+                    numeroFormatado(
+                        saldoAtual,
+                        0
+                    )
+                );
+
+                return false;
+
+            }
+
+        }
+
+        // ==============================================
+        // EMBALAGENS
+        // ==============================================
+
+        const embalagensAnteriores =
+            montarMapaConsumos(
+                produtoAnterior.embalagens,
+                "embalagemId"
+            );
+
+        const embalagensNovas =
+            montarMapaConsumos(
+                produtoNovo.embalagens,
+                "embalagemId"
+            );
+
+        const idsEmbalagens =
+            new Set([
+                ...Object.keys(
+                    embalagensAnteriores
+                ),
+                ...Object.keys(
+                    embalagensNovas
+                )
+            ]);
+
+        for (
+            const id of idsEmbalagens
+        ) {
+
+            const quantidadeAnterior =
+                numeroPositivo(
+                    embalagensAnteriores[id]
+                );
+
+            const quantidadeNova =
+                numeroPositivo(
+                    embalagensNovas[id]
+                );
+
+            const diferenca =
+                quantidadeNova -
+                quantidadeAnterior;
+
+            if (diferenca <= 0) {
+                continue;
+            }
+
+            const embalagem =
+                encontrarEmbalagem(id);
+
+            if (!embalagem) {
+
+                alert(
+                    "Uma das embalagens da produção não foi encontrada."
+                );
+
+                return false;
+
+            }
+
+            const saldoAtual =
+                quantidadeEmbalagem(
+                    embalagem
+                );
+
+            if (
+                diferenca >
+                saldoAtual
+            ) {
+
+                alert(
+                    'Estoque insuficiente da embalagem "' +
+                    (
+                        embalagem.nome ||
+                        "sem nome"
+                    ) +
+                    '".\n\n' +
+                    "Necessário adicional: " +
+                    numeroFormatado(
+                        diferenca,
+                        0
+                    ) +
+                    "\nDisponível: " +
+                    numeroFormatado(
+                        saldoAtual,
+                        0
+                    )
+                );
+
+                return false;
+
+            }
+
+        }
+
+        // ==============================================
+        // APLICAR DIFERENÇAS DOS FILAMENTOS
+        // ==============================================
+
+        idsFilamentos.forEach(
+            function (id) {
+
+                const quantidadeAnterior =
+                    numeroPositivo(
+                        filamentosAnteriores[id]
+                    );
+
+                const quantidadeNova =
+                    numeroPositivo(
+                        filamentosNovos[id]
+                    );
+
+                const diferenca =
+                    quantidadeNova -
+                    quantidadeAnterior;
+
+                if (diferenca === 0) {
+                    return;
+                }
+
+                const filamento =
+                    encontrarFilamento(id);
+
+                if (!filamento) {
+                    return;
+                }
+
+                const saldoAtual =
+                    pesoRestanteFilamento(
+                        filamento
+                    );
+
+                const pesoInicial =
+                    pesoInicialFilamento(
+                        filamento
+                    );
+
+                filamento.pesoRestante =
+                    Math.max(
+                        0,
+                        Math.min(
+                            pesoInicial,
+                            saldoAtual -
+                            diferenca
+                        )
+                    );
+
+                atualizarStatusFilamento(
+                    filamento
+                );
+
+            }
+        );
+
+        // ==============================================
+        // APLICAR DIFERENÇAS DOS ACESSÓRIOS
+        // ==============================================
+
+        idsAcessorios.forEach(
+            function (id) {
+
+                const quantidadeAnterior =
+                    numeroPositivo(
+                        acessoriosAnteriores[id]
+                    );
+
+                const quantidadeNova =
+                    numeroPositivo(
+                        acessoriosNovos[id]
+                    );
+
+                const diferenca =
+                    quantidadeNova -
+                    quantidadeAnterior;
+
+                if (diferenca === 0) {
+                    return;
+                }
+
+                const acessorio =
+                    encontrarAcessorio(id);
+
+                if (!acessorio) {
+                    return;
+                }
+
+                const novoSaldo =
+                    Math.max(
+                        0,
+                        quantidadeAcessorio(
+                            acessorio
+                        ) -
+                        diferenca
+                    );
+
+                acessorio.quantidade =
+                    novoSaldo;
+
+                if (
+                    Object.prototype
+                        .hasOwnProperty.call(
+                            acessorio,
+                            "estoque"
+                        )
+                ) {
+
+                    acessorio.estoque =
+                        novoSaldo;
+
+                }
+
+            }
+        );
+
+        // ==============================================
+        // APLICAR DIFERENÇAS DAS EMBALAGENS
+        // ==============================================
+
+        idsEmbalagens.forEach(
+            function (id) {
+
+                const quantidadeAnterior =
+                    numeroPositivo(
+                        embalagensAnteriores[id]
+                    );
+
+                const quantidadeNova =
+                    numeroPositivo(
+                        embalagensNovas[id]
+                    );
+
+                const diferenca =
+                    quantidadeNova -
+                    quantidadeAnterior;
+
+                if (diferenca === 0) {
+                    return;
+                }
+
+                const embalagem =
+                    encontrarEmbalagem(id);
+
+                if (!embalagem) {
+                    return;
+                }
+
+                const novoSaldo =
+                    Math.max(
+                        0,
+                        quantidadeEmbalagem(
+                            embalagem
+                        ) -
+                        diferenca
+                    );
+
+                embalagem.quantidade =
+                    novoSaldo;
+
+                if (
+                    Object.prototype
+                        .hasOwnProperty.call(
+                            embalagem,
+                            "estoque"
+                        )
+                ) {
+
+                    embalagem.estoque =
+                        novoSaldo;
+
+                }
+
+            }
+        );
+
+        salvarFilamentos();
+
+        salvarAcessorios();
+
+        salvarEmbalagens();
+
+        return true;
+
+    }
     // ==================================================
     // EVENTOS DOS BOTÕES
     // ==================================================
