@@ -571,7 +571,7 @@
 </section>
 
 
-        <!-- ========================= -->
+                <!-- ========================= -->
         <!-- DASHBOARD -->
         <!-- ========================= -->
 
@@ -580,23 +580,35 @@
             <h2>Visão geral</h2>
 
             <p>
-                Acompanhe os principais números da Organiza 3D.
+                Acompanhe vendas, financeiro, estoque,
+                produção e equipamentos da Organiza 3D.
             </p>
 
-            <h3>Resumo geral</h3>
+            <!-- ========================= -->
+            <!-- FINANCEIRO E VENDAS -->
+            <!-- ========================= -->
+
+            <h3>Financeiro e vendas</h3>
 
             <div class="cards">
 
                 <div class="card">
-                    <span>💰 Faturamento estimado</span>
+                    <span>💰 Faturamento em vendas</span>
                     <strong id="total-faturamento">
                         R$ 0,00
                     </strong>
                 </div>
 
                 <div class="card">
-                    <span>📈 Lucro estimado</span>
-                    <strong id="total-lucro">
+                    <span>💵 Valor recebido</span>
+                    <strong id="dashboard-total-entradas">
+                        R$ 0,00
+                    </strong>
+                </div>
+
+                <div class="card">
+                    <span>💸 Despesas pagas</span>
+                    <strong id="dashboard-total-despesas">
                         R$ 0,00
                     </strong>
                 </div>
@@ -609,62 +621,156 @@
                 </div>
 
                 <div class="card">
-                    <span>📦 Produtos</span>
-                    <strong id="total-produto">0</strong>
+                    <span>⏳ Valores a receber</span>
+                    <strong id="dashboard-entradas-pendentes">
+                        R$ 0,00
+                    </strong>
                 </div>
 
                 <div class="card">
-                    <span>👥 Clientes</span>
-                    <strong id="total-cliente">0</strong>
+                    <span>🧾 Valores a pagar</span>
+                    <strong id="dashboard-despesas-pendentes">
+                        R$ 0,00
+                    </strong>
                 </div>
 
                 <div class="card">
-                    <span>📋 Encomendas</span>
-                    <strong id="total-encomendas">0</strong>
+                    <span>🛒 Vendas registradas</span>
+                    <strong id="dashboard-total-vendas">
+                        0
+                    </strong>
                 </div>
 
                 <div class="card">
-                    <span>🧵 Filamentos</span>
-                    <strong id="total-filamento">0</strong>
+                    <span>📦 Unidades vendidas</span>
+                    <strong id="dashboard-unidades-vendidas">
+                        0
+                    </strong>
                 </div>
 
                 <div class="card">
-                    <span>🖨️ Impressora</span>
-                    <strong id="total-impressoras">0</strong>
+                    <span>🎁 Brindes entregues</span>
+                    <strong id="dashboard-total-brindes">
+                        0
+                    </strong>
+                </div>
+
+                <div class="card">
+                    <span>🎯 Ticket médio</span>
+                    <strong id="dashboard-ticket-medio">
+                        R$ 0,00
+                    </strong>
                 </div>
 
             </div>
 
-            <h3>Situação das encomendas</h3>
+            <!-- ========================= -->
+            <!-- ESTOQUE E PRODUÇÃO -->
+            <!-- ========================= -->
+
+            <h3>Estoque e produção</h3>
 
             <div class="cards">
 
                 <div class="card">
-                    <span>⏳ Aguardando</span>
-                    <strong id="dashboard-aguardando">0</strong>
+                    <span>📦 Produtos cadastrados</span>
+                    <strong id="total-produto">
+                        0
+                    </strong>
                 </div>
 
                 <div class="card">
-                    <span>⚙️ Em produção</span>
-                    <strong id="dashboard-producao">0</strong>
+                    <span>✅ Unidades em estoque</span>
+                    <strong id="dashboard-unidades-estoque">
+                        0
+                    </strong>
                 </div>
 
                 <div class="card">
-                    <span>✅ Finalizadas</span>
-                    <strong id="dashboard-finalizadas">0</strong>
+                    <span>💰 Valor do estoque</span>
+                    <strong id="dashboard-valor-estoque">
+                        R$ 0,00
+                    </strong>
                 </div>
 
                 <div class="card">
-                    <span>📦 Entregues</span>
-                    <strong id="dashboard-entregues">0</strong>
+                    <span>🏠 Consumo próprio</span>
+                    <strong id="dashboard-consumo-proprio">
+                        0
+                    </strong>
                 </div>
 
                 <div class="card">
-                    <span>⚠️ Atrasadas</span>
-                    <strong id="dashboard-atrasadas">0</strong>
+                    <span>⚠️ Peças com falha</span>
+                    <strong id="dashboard-perdas-produtos">
+                        0
+                    </strong>
+                </div>
+
+                <div class="card">
+                    <span>🧵 Filamentos cadastrados</span>
+                    <strong id="total-filamento">
+                        0
+                    </strong>
+                </div>
+
+                <div class="card">
+                    <span>⚖️ Filamento disponível</span>
+                    <strong id="dashboard-filamento-disponivel">
+                        0 g
+                    </strong>
+                </div>
+
+                <div class="card">
+                    <span>👥 Clientes</span>
+                    <strong id="total-cliente">
+                        0
+                    </strong>
                 </div>
 
             </div>
+
+            <!-- ========================= -->
+            <!-- EQUIPAMENTOS -->
+            <!-- ========================= -->
+
+            <h3>Equipamentos</h3>
+
+            <div class="cards">
+
+                <div class="card">
+                    <span>🖨️ Impressoras cadastradas</span>
+                    <strong id="total-impressoras">
+                        0
+                    </strong>
+                </div>
+
+                <div class="card">
+                    <span>✅ Impressoras ativas</span>
+                    <strong id="dashboard-impressoras-ativas">
+                        0
+                    </strong>
+                </div>
+
+                <div class="card">
+                    <span>⏱️ Horas de produção</span>
+                    <strong id="dashboard-horas-producao">
+                        0h
+                    </strong>
+                </div>
+
+                <div class="card">
+                    <span>🕐 Horas totais</span>
+                    <strong id="dashboard-horas-totais">
+                        0h
+                    </strong>
+                </div>
+
+            </div>
+
+            <!-- ========================= -->
+            <!-- AVISOS -->
+            <!-- ========================= -->
 
             <h3>Avisos importantes</h3>
 
