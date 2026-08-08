@@ -1377,193 +1377,227 @@
 
             </div>
             <!-- ================================================= -->
-            <!-- IMPRESSORA, TEMPO E ENERGIA -->
+<!-- IMPRESSORA, TEMPO E ENERGIA - LAYOUT COMPACTO -->
+<!-- ================================================= -->
+
+<h3>Impressão e custos da máquina</h3>
+
+
+<!-- ========================= -->
+<!-- LINHA 1 -->
+<!-- ========================= -->
+
+<div class="linha linha-impressao-principal">
+
+    <!-- IMPRESSORA -->
+
+    <div class="campo campo-impressora-produto">
+
+        <label for="produto-impressora-utilizada">
+            Impressora utilizada
+        </label>
+
+        <select id="produto-impressora-utilizada">
+
+            <option value="">
+                Selecione a impressora
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- HORAS -->
+
+    <div class="campo campo-tempo-produto">
+
+        <label for="produto-tempo-impressao-horas">
+            Horas
+        </label>
+
+        <input
+            type="number"
+            id="produto-tempo-impressao-horas"
+            min="0"
+            step="1"
+            placeholder="14">
+
+    </div>
+
+
+    <!-- MINUTOS -->
+
+    <div class="campo campo-tempo-produto">
+
+        <label for="produto-tempo-impressao-minutos">
+            Min.
+        </label>
+
+        <input
+            type="number"
+            id="produto-tempo-impressao-minutos"
+            min="0"
+            max="59"
+            step="1"
+            placeholder="40">
+
+    </div>
+
+
+    <!-- POTÊNCIA -->
+
+    <div class="campo campo-potencia-produto">
+
+        <label for="produto-potencia-impressora">
+            Potência (W)
+        </label>
+
+        <input
+            type="number"
+            id="produto-potencia-impressora"
+            min="0"
+            step="0.01"
+            placeholder="150">
+
+    </div>
+
+
+    <!-- TARIFA -->
+
+    <div class="campo campo-tarifa-produto">
+
+        <label for="produto-tarifa-energia">
+            Tarifa (R$/kWh)
+        </label>
+
+        <input
+            type="number"
+            id="produto-tarifa-energia"
+            min="0"
+            step="0.0001"
+            placeholder="0,80">
+
+    </div>
+
+
+    <!-- CONSUMO -->
+
+    <div class="campo campo-consumo-produto">
+
+        <label for="produto-consumo-energia">
+            Consumo
+        </label>
+
+        <input
+            type="text"
+            id="produto-consumo-energia"
+            value="0 kWh"
+            readonly>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- LINHA 2 -->
+<!-- ========================= -->
+
+<div class="linha linha-impressao-custos">
+
+    <!-- CUSTO ENERGIA -->
+
+    <div class="campo campo-custo-produto">
+
+        <label for="produto-custo-energia">
+            C. energia
+        </label>
+
+        <input
+            type="text"
+            id="produto-custo-energia"
+            value="R$ 0,00"
+            readonly>
+
+    </div>
+
+
+    <!-- CUSTO POR HORA -->
+
+    <div class="campo campo-custo-hora-produto">
+
+        <label for="produto-custo-hora-impressora">
+            C. máquina (R$/h)
+        </label>
+
+        <input
+            type="number"
+            id="produto-custo-hora-impressora"
+            min="0"
+            step="0.01"
+            placeholder="0,00">
+
+        <small>
+            Depreciação, desgaste e manutenção.
+        </small>
+
+    </div>
+
+
+    <!-- CUSTO DA MÁQUINA NA PRODUÇÃO -->
+
+    <div class="campo campo-custo-producao-maquina">
+
+        <label for="produto-custo-maquina">
+            C. máquina produção
+        </label>
+
+        <input
+            type="text"
+            id="produto-custo-maquina"
+            value="R$ 0,00"
+            readonly>
+
+    </div>
+
+
+    <!-- TEMPO TOTAL -->
+
+    <div class="campo campo-tempo-total-produto">
+
+        <label for="produto-tempo-total-impressao">
+            Tempo total
+        </label>
+
+        <input
+            type="text"
+            id="produto-tempo-total-impressao"
+            value="0h 0min"
+            readonly>
+
+    </div>
+
+
+    <!-- HORAS DECIMAIS -->
+
+    <div class="campo campo-horas-decimais-produto">
+
+        <label for="produto-horas-decimais">
+            Horas decimais
+        </label>
+
+        <input
+            type="text"
+            id="produto-horas-decimais"
+            value="0,00 h"
+            readonly>
+
+    </div>
+
+</div>
+
             <!-- ================================================= -->
-
-            <h3>Impressão e custos da máquina</h3>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="produto-impressora-utilizada">
-                        Impressora utilizada
-                    </label>
-
-                    <select id="produto-impressora-utilizada">
-
-                        <option value="">
-                            Selecione a impressora
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="produto-tempo-impressao-horas">
-                        Tempo de impressão — horas
-                    </label>
-
-                    <input
-                        type="number"
-                        id="produto-tempo-impressao-horas"
-                        min="0"
-                        step="1"
-                        placeholder="Ex.: 3">
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="produto-tempo-impressao-minutos">
-                        Tempo de impressão — minutos
-                    </label>
-
-                    <input
-                        type="number"
-                        id="produto-tempo-impressao-minutos"
-                        min="0"
-                        max="59"
-                        step="1"
-                        placeholder="Ex.: 30">
-
-                </div>
-
-            </div>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="produto-potencia-impressora">
-                        Potência média da impressora (W)
-                    </label>
-
-                    <input
-                        type="number"
-                        id="produto-potencia-impressora"
-                        min="0"
-                        step="0.01"
-                        placeholder="Ex.: 150">
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="produto-tarifa-energia">
-                        Tarifa de energia (R$/kWh)
-                    </label>
-
-                    <input
-                        type="number"
-                        id="produto-tarifa-energia"
-                        min="0"
-                        step="0.0001"
-                        placeholder="Ex.: 0,95">
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="produto-consumo-energia">
-                        Consumo calculado
-                    </label>
-
-                    <input
-                        type="text"
-                        id="produto-consumo-energia"
-                        value="0 kWh"
-                        readonly>
-
-                </div>
-
-            </div>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="produto-custo-energia">
-                        Custo de energia
-                    </label>
-
-                    <input
-                        type="text"
-                        id="produto-custo-energia"
-                        value="R$ 0,00"
-                        readonly>
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="produto-custo-hora-impressora">
-                        Custo da impressora por hora
-                    </label>
-
-                    <input
-                        type="number"
-                        id="produto-custo-hora-impressora"
-                        min="0"
-                        step="0.01"
-                        placeholder="Ex.: 1,50">
-
-                    <small>
-                        Pode representar depreciação, desgaste e manutenção.
-                    </small>
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="produto-custo-maquina">
-                        Custo da máquina nesta produção
-                    </label>
-
-                    <input
-                        type="text"
-                        id="produto-custo-maquina"
-                        value="R$ 0,00"
-                        readonly>
-
-                </div>
-
-            </div>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="produto-tempo-total-impressao">
-                        Tempo total calculado
-                    </label>
-
-                    <input
-                        type="text"
-                        id="produto-tempo-total-impressao"
-                        value="0h 0min"
-                        readonly>
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="produto-horas-decimais">
-                        Horas em formato decimal
-                    </label>
-
-                    <input
-                        type="text"
-                        id="produto-horas-decimais"
-                        value="0,00 h"
-                        readonly>
-
-                </div>
-
-            </div>
-                        <!-- ================================================= -->
             <!-- CUSTOS FINAIS DA PRODUÇÃO -->
             <!-- ================================================= -->
 
