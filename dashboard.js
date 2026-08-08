@@ -1163,10 +1163,12 @@
 
     configurarEventosDashboard();
 
-    atualizarDashboardCompleto();
+atualizarDashboardCompleto();
 
 })();
+
 function calcularFilamentosDashboard(
+    
     filamentos
 ) {
 
