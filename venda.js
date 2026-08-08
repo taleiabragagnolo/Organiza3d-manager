@@ -1790,8 +1790,8 @@
             campoSituacaoPagamentoVenda &&
             campoSituacaoPagamentoVenda.value ===
                 "Pago" &&
-            totais.valorPago <
-                totais.total
+            Math.round(totais.valorPago * 100) <
+    Math.round(totais.total * 100)
         ) {
 
             alert(
