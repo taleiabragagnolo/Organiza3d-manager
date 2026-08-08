@@ -3556,3 +3556,285 @@ button {
     }
 
 }
+/* ===================================================== */
+/* VENDAS REGISTRADAS - TABELA HORIZONTAL */
+/* ===================================================== */
+
+#lista-vendas {
+    width: 100%;
+    margin-top: 12px;
+}
+
+
+/* ----------------------------------------------------- */
+/* CAIXA DA TABELA */
+/* ----------------------------------------------------- */
+
+.vendas-tabela {
+    width: 100%;
+
+    overflow-x: auto;
+
+    border: 1px solid var(--nova-borda);
+
+    border-radius: 14px;
+
+    background: #fffefa;
+
+    box-shadow:
+        0 4px 14px
+        rgba(84, 66, 56, 0.06);
+}
+
+
+/* ----------------------------------------------------- */
+/* CABEÇALHO */
+/* ----------------------------------------------------- */
+
+.venda-tabela-cabecalho,
+.venda-tabela-linha {
+
+    display: grid;
+
+    grid-template-columns:
+        130px
+        95px
+        minmax(150px, 1.3fr)
+        85px
+        100px
+        100px
+        90px
+        100px
+        100px
+        105px
+        110px
+        100px;
+
+    gap: 10px;
+
+    align-items: center;
+
+    min-width: 1180px;
+}
+
+
+.venda-tabela-cabecalho {
+
+    padding:
+        12px 16px;
+
+    border-bottom:
+        1px solid
+        var(--nova-borda);
+
+    background:
+        #f7f1ea;
+
+    color:
+        var(--nova-marrom);
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+}
+
+
+/* ----------------------------------------------------- */
+/* LINHAS */
+/* ----------------------------------------------------- */
+
+.venda-tabela-linha {
+
+    padding:
+        12px 16px;
+
+    border-bottom:
+        1px solid
+        #eee5dc;
+
+    color:
+        var(--nova-marrom-claro);
+
+    font-size:
+        13px;
+
+}
+
+
+.venda-tabela-linha:last-child {
+    border-bottom: 0;
+}
+
+
+.venda-tabela-linha:hover {
+    background:
+        #fcf8f4;
+}
+
+
+/* ----------------------------------------------------- */
+/* COLUNAS */
+/* ----------------------------------------------------- */
+
+.venda-coluna {
+    min-width: 0;
+
+    line-height:
+        1.35;
+}
+
+
+.venda-coluna-id {
+    color:
+        var(--nova-marrom);
+
+    font-weight:
+        700;
+}
+
+
+.venda-coluna-cliente {
+    color:
+        var(--nova-marrom);
+}
+
+
+.venda-coluna-total {
+    color:
+        var(--nova-verde-escuro);
+
+    font-weight:
+        700;
+}
+
+
+.valor-pendente-destaque {
+    color:
+        #c86f68;
+
+    font-weight:
+        700;
+}
+
+
+/* ----------------------------------------------------- */
+/* AÇÕES */
+/* ----------------------------------------------------- */
+
+.venda-coluna-acoes {
+    display: flex;
+
+    justify-content: flex-start;
+}
+
+
+.venda-coluna-acoes .estornar-venda {
+
+    width: auto;
+
+    min-width: 78px;
+
+    padding:
+        7px 10px;
+
+    border:
+        1px solid
+        #e7aaa4;
+
+    border-radius:
+        7px;
+
+    background:
+        #fff3f1;
+
+    color:
+        #b95f59;
+
+    font-size:
+        12px;
+
+    white-space:
+        nowrap;
+}
+
+
+.venda-coluna-acoes .estornar-venda:hover {
+
+    background:
+        #f8dfdc;
+}
+
+
+/* ----------------------------------------------------- */
+/* RESPONSIVO */
+/* ----------------------------------------------------- */
+
+@media (max-width: 700px) {
+
+    .venda-tabela-cabecalho {
+        display: none;
+    }
+
+
+    .venda-tabela-linha {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        min-width: 0;
+
+        gap:
+            12px 16px;
+
+        padding:
+            16px;
+
+    }
+
+
+    .venda-coluna {
+
+        display: flex;
+
+        flex-direction:
+            column;
+
+        gap:
+            3px;
+
+    }
+
+
+    .venda-coluna::before {
+
+        content:
+            attr(data-titulo);
+
+        color:
+            var(--nova-marrom);
+
+        font-size:
+            11px;
+
+        font-weight:
+            700;
+
+        text-transform:
+            uppercase;
+
+    }
+
+
+    .venda-coluna-acoes {
+        grid-column:
+            1 / -1;
+    }
+
+}
