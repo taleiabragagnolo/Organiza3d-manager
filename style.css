@@ -4763,3 +4763,387 @@ button {
     }
 
 }
+/* =========================================================
+   ORGANIZA 3D MANAGER
+   PRODUTOS - AJUSTE FINAL
+   IMPRESSÃO + RESUMO FINANCEIRO + BOTÕES
+   ========================================================= */
+
+
+/* =========================================================
+   1. IMPRESSÃO E CUSTOS DA MÁQUINA
+   ========================================================= */
+
+/* LINHA 1
+   Impressora | Horas | Min. | Potência | Tarifa | Consumo
+*/
+
+#produto .linha-impressao-principal {
+    display: grid !important;
+
+    grid-template-columns:
+        minmax(210px, 1.8fr)
+        72px
+        72px
+        100px
+        105px
+        110px;
+
+    gap: 12px;
+
+    align-items: end;
+
+    width: 100%;
+}
+
+
+/* LINHA 2
+   C. energia | C. máquina/h | C. máquina produção
+   | Tempo total | Horas decimais
+*/
+
+#produto .linha-impressao-custos {
+    display: grid !important;
+
+    grid-template-columns:
+        105px
+        135px
+        145px
+        115px
+        115px;
+
+    gap: 12px;
+
+    align-items: end;
+
+    width: 100%;
+
+    justify-content: start;
+}
+
+
+/* Todos os campos das duas linhas */
+
+#produto .linha-impressao-principal .campo,
+#produto .linha-impressao-custos .campo {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+}
+
+
+/* Inputs e selects */
+
+#produto .linha-impressao-principal input,
+#produto .linha-impressao-principal select,
+#produto .linha-impressao-custos input,
+#produto .linha-impressao-custos select {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+
+    height: 38px;
+
+    box-sizing: border-box;
+}
+
+
+/* Impressora */
+
+#produto .campo-impressora-produto {
+    width: 100% !important;
+}
+
+#produto #produto-impressora-utilizada {
+    width: 100% !important;
+    max-width: none !important;
+}
+
+
+/* Horas */
+
+#produto .campo-tempo-produto {
+    width: 100% !important;
+}
+
+
+/* Potência */
+
+#produto .campo-potencia-produto {
+    width: 100% !important;
+}
+
+
+/* Tarifa */
+
+#produto .campo-tarifa-produto {
+    width: 100% !important;
+}
+
+
+/* Consumo */
+
+#produto .campo-consumo-produto {
+    width: 100% !important;
+}
+
+
+/* Campos da segunda linha */
+
+#produto .campo-custo-produto,
+#produto .campo-custo-hora-produto,
+#produto .campo-custo-producao-maquina,
+#produto .campo-tempo-total-produto,
+#produto .campo-horas-decimais-produto {
+    width: 100% !important;
+}
+
+
+/* Texto explicativo do custo da máquina */
+
+#produto .campo-custo-hora-produto small {
+    display: block;
+
+    margin-top: 4px;
+
+    font-size: 10px;
+
+    line-height: 1.2;
+
+    color: #9a8170;
+}
+
+
+/* Rótulos da impressão */
+
+#produto .linha-impressao-principal label,
+#produto .linha-impressao-custos label {
+    display: block;
+
+    margin-bottom: 4px;
+
+    font-size: 11px;
+
+    line-height: 1.15;
+
+    white-space: normal;
+
+    color: #6d513d;
+}
+
+
+/* =========================================================
+   2. RESUMO FINANCEIRO DA PRODUÇÃO
+   ========================================================= */
+
+/*
+   Agora cada linha possui 4 campos.
+*/
+
+#produto .linha-resumo-financeiro {
+    display: grid !important;
+
+    grid-template-columns:
+        135px
+        145px
+        135px
+        135px;
+
+    gap: 14px;
+
+    align-items: end;
+
+    justify-content: start;
+
+    width: 100%;
+}
+
+
+/* Cada campo */
+
+#produto .linha-resumo-financeiro .campo-resumo-produto {
+    width: 100% !important;
+
+    min-width: 0 !important;
+
+    max-width: none !important;
+
+    margin: 0 !important;
+}
+
+
+/* Inputs */
+
+#produto .linha-resumo-financeiro input {
+    width: 100% !important;
+
+    min-width: 0 !important;
+
+    max-width: none !important;
+
+    height: 38px;
+
+    box-sizing: border-box;
+}
+
+
+/* Rótulos */
+
+#produto .linha-resumo-financeiro label {
+    display: block;
+
+    margin-bottom: 4px;
+
+    font-size: 11px;
+
+    line-height: 1.15;
+
+    white-space: normal;
+
+    color: #6d513d;
+}
+
+
+/* =========================================================
+   3. BOTÕES SALVAR E LIMPAR
+   ========================================================= */
+
+#produto .acoes-produto-producao {
+    display: flex !important;
+
+    flex-direction: row !important;
+
+    align-items: center;
+
+    justify-content: flex-start;
+
+    gap: 10px;
+
+    width: 100%;
+
+    margin-top: 6px;
+}
+
+
+/* SALVAR */
+
+#produto .acoes-produto-producao
+#salvar-produto-produzido {
+    width: auto !important;
+
+    min-width: 145px !important;
+
+    height: 40px;
+
+    margin: 0 !important;
+
+    padding: 8px 18px !important;
+
+    white-space: nowrap;
+}
+
+
+/* LIMPAR */
+
+#produto .acoes-produto-producao
+#limpar-formulario-produto-produzido {
+    width: auto !important;
+
+    min-width: 145px !important;
+
+    height: 40px;
+
+    margin: 0 !important;
+
+    padding: 8px 18px !important;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   4. ESPAÇAMENTO ENTRE AS ÁREAS
+   ========================================================= */
+
+#produto .linha-impressao-principal {
+    margin-bottom: 4px;
+}
+
+#produto .linha-impressao-custos {
+    margin-bottom: 8px;
+}
+
+#produto .linha-resumo-financeiro {
+    margin-bottom: 4px;
+}
+
+
+/* =========================================================
+   5. RESPONSIVO
+   ========================================================= */
+
+@media (max-width: 1050px) {
+
+    #produto .linha-impressao-principal {
+        grid-template-columns:
+            minmax(190px, 1fr)
+            70px
+            70px
+            95px
+            100px
+            105px;
+    }
+
+
+    #produto .linha-impressao-custos {
+        grid-template-columns:
+            repeat(5, minmax(100px, 1fr));
+    }
+
+
+    #produto .linha-resumo-financeiro {
+        grid-template-columns:
+            repeat(4, minmax(120px, 1fr));
+    }
+
+}
+
+
+@media (max-width: 800px) {
+
+    #produto .linha-impressao-principal,
+    #produto .linha-impressao-custos,
+    #produto .linha-resumo-financeiro {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 520px) {
+
+    #produto .linha-impressao-principal,
+    #produto .linha-impressao-custos,
+    #produto .linha-resumo-financeiro {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    #produto .acoes-produto-producao {
+        flex-direction: column !important;
+        align-items: stretch;
+    }
+
+
+    #produto .acoes-produto-producao
+    #salvar-produto-produzido,
+
+    #produto .acoes-produto-producao
+    #limpar-formulario-produto-produzido {
+        width: 100% !important;
+    }
+
+}
