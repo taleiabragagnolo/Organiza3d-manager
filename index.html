@@ -3982,134 +3982,228 @@
 
         <h3>Cadastrar filamento</h3>
 
-        <div class="formulario">
-            <div class="linha">
+<div class="formulario formulario-filamento-horizontal">
 
-    <div class="campo">
+    <!-- LINHA 1 -->
 
-        <label for="filamento-fabricante">
-            Fabricante
-        </label>
+    <div class="linha linha-filamento-principal">
 
-        <input
-            type="text"
-            id="filamento-fabricante"
-            placeholder="Ex.: Voolt3D">
+        <div class="campo campo-filamento-fabricante">
 
-    </div>
+            <label for="filamento-fabricante">
+                Fabricante
+            </label>
 
-    <div class="campo">
+            <input
+                type="text"
+                id="filamento-fabricante"
+                placeholder="Ex.: Voolt3D">
 
-        <label for="filamento-material">
-            Material
-        </label>
+        </div>
 
-        <select id="filamento-material">
 
-            <option value="">
-                Selecione
-            </option>
+        <div class="campo campo-filamento-material">
 
-            <option>PLA</option>
-            <option>PETG</option>
-            <option>ABS</option>
-            <option>ASA</option>
-            <option>TPU</option>
-            <option>Outro</option>
+            <label for="filamento-material">
+                Material
+            </label>
 
-        </select>
+            <select id="filamento-material">
 
-    </div>
+                <option value="">
+                    Selecione
+                </option>
 
-</div>
+                <option>PLA</option>
+                <option>PETG</option>
+                <option>ABS</option>
+                <option>ASA</option>
+                <option>TPU</option>
+                <option>Outro</option>
 
-<div class="linha">
+            </select>
 
-    <div class="campo">
+        </div>
 
-        <label for="filamento-cor">
-            Cor
-        </label>
 
-        <input
-            type="text"
-            id="filamento-cor"
-            placeholder="Ex.: Branco Fosco">
+        <div class="campo campo-filamento-cor">
 
-    </div>
+            <label for="filamento-cor">
+                Cor
+            </label>
 
-    <div class="campo">
+            <input
+                type="text"
+                id="filamento-cor"
+                placeholder="Ex.: Branco Fosco">
 
-        <label for="filamento-lote">
-            Lote
-        </label>
+        </div>
 
-        <input
-            type="text"
-            id="filamento-lote"
-            placeholder="Número do lote">
 
-    </div>
+        <div class="campo campo-filamento-lote">
 
-</div>
+            <label for="filamento-lote">
+                Lote
+            </label>
 
-<div class="linha">
+            <input
+                type="text"
+                id="filamento-lote"
+                placeholder="Número do lote">
 
-    <div class="campo">
+        </div>
 
-        <label for="filamento-peso-inicial">
-            Peso inicial (g)
-        </label>
 
-        <input
-            type="number"
-            id="filamento-peso-inicial"
-            min="0">
+        <div class="campo campo-filamento-fornecedor">
 
-    </div>
+            <label for="filamento-fornecedor">
+                Fornecedor
+            </label>
 
-    <div class="campo">
+            <input
+                type="text"
+                id="filamento-fornecedor"
+                placeholder="Ex.: Loja de filamentos">
 
-        <label for="filamento-peso-restante">
-            Peso restante (g)
-        </label>
-
-        <input
-            type="number"
-            id="filamento-peso-restante"
-            min="0">
+        </div>
 
     </div>
 
-</div>
-<div class="linha">
 
-    <div class="campo">
+    <!-- LINHA 2 -->
 
-        <label for="filamento-valor">
-            Valor de compra
-        </label>
+    <div class="linha linha-filamento-valores">
 
-        <input
-            type="number"
-            id="filamento-valor"
-            min="0"
-            step="0.01"
-            placeholder="Ex.: 89,90">
+        <div class="campo campo-filamento-peso">
+
+            <label for="filamento-peso-inicial">
+                Peso inicial (g)
+            </label>
+
+            <input
+                type="number"
+                id="filamento-peso-inicial"
+                min="0"
+                placeholder="Ex.: 1000">
+
+        </div>
+
+
+        <div class="campo campo-filamento-peso">
+
+            <label for="filamento-peso-restante">
+                Peso restante (g)
+            </label>
+
+            <input
+                type="number"
+                id="filamento-peso-restante"
+                min="0"
+                placeholder="Ex.: 757">
+
+        </div>
+
+
+        <div class="campo campo-filamento-valor">
+
+            <label for="filamento-valor">
+                Valor de compra
+            </label>
+
+            <input
+                type="number"
+                id="filamento-valor"
+                min="0"
+                step="0.01"
+                placeholder="Ex.: 89,90">
+
+        </div>
+
+
+        <div class="campo campo-filamento-percentual">
+
+            <label for="filamento-percentual">
+                Percentual disponível
+            </label>
+
+            <input
+                type="text"
+                id="filamento-percentual"
+                value="0%"
+                readonly>
+
+        </div>
+
+
+        <div class="campo campo-filamento-status">
+
+            <label for="filamento-status">
+                Status
+            </label>
+
+            <input
+                type="text"
+                id="filamento-status"
+                value="Finalizado"
+                readonly>
+
+        </div>
+
+
+        <div class="campo campo-filamento-data">
+
+            <label for="filamento-data-compra">
+                Data da compra
+            </label>
+
+            <input
+                type="date"
+                id="filamento-data-compra">
+
+        </div>
 
     </div>
 
-    <div class="campo">
 
-        <label for="filamento-percentual">
-            Percentual disponível
-        </label>
+    <!-- LINHA 3 -->
 
-        <input
-            type="text"
-            id="filamento-percentual"
-            value="0%"
-            readonly>
+    <div class="linha linha-filamento-final">
+
+        <div class="campo campo-filamento-observacoes">
+
+            <label for="filamento-observacoes">
+                Observações
+            </label>
+
+            <textarea
+                id="filamento-observacoes"
+                rows="2"
+                placeholder="Temperatura recomendada ou outras informações"></textarea>
+
+        </div>
+
+
+        <div class="acoes-filamento">
+
+            <button
+                id="salvar-filamento"
+                class="botao-principal"
+                type="button">
+
+                💾 Salvar Filamento
+
+            </button>
+
+
+            <button
+                id="limpar-formulario-filamento"
+                type="button">
+
+                🧹 Limpar Formulário
+
+            </button>
+
+        </div>
 
     </div>
 
