@@ -5496,3 +5496,896 @@ button {
     }
 
 }
+/* =========================================================
+   ORGANIZA 3D MANAGER
+   CLIENTES - LAYOUT HORIZONTAL FINAL
+   ========================================================= */
+
+
+/* =========================================================
+   FORMULÁRIO
+   ========================================================= */
+
+#cliente .formulario-cliente {
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(12, minmax(0, 1fr));
+
+    gap: 14px 18px;
+
+    padding: 22px;
+
+    border: 1px solid var(--nova-borda);
+
+    border-radius: 14px;
+
+    background: #fffefa;
+
+    box-shadow: var(--nova-sombra);
+}
+
+
+/* TÍTULO INTERNO */
+
+#cliente .cliente-titulo-formulario {
+    grid-column: 1 / -1;
+
+    margin: 0 0 4px;
+
+    color: var(--nova-rose);
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   CAMPOS
+   ========================================================= */
+
+/* NOME */
+
+#cliente .cliente-campo-nome {
+    grid-column: 1 / 7;
+}
+
+
+/* TELEFONE */
+
+#cliente .cliente-campo-telefone {
+    grid-column: 7 / 13;
+}
+
+
+/* E-MAIL */
+
+#cliente .cliente-campo-email {
+    grid-column: 1 / 7;
+}
+
+
+/* CIDADE */
+
+#cliente .cliente-campo-cidade {
+    grid-column: 7 / 13;
+}
+
+
+/* OBSERVAÇÕES */
+
+#cliente .cliente-campo-observacoes {
+    grid-column: 1 / -1;
+}
+
+
+#cliente .formulario-cliente input,
+#cliente .formulario-cliente textarea {
+    width: 100% !important;
+
+    max-width: none !important;
+}
+
+
+#cliente .cliente-campo-observacoes textarea {
+    min-height: 76px;
+
+    resize: vertical;
+}
+
+
+/* =========================================================
+   BOTÕES DO FORMULÁRIO
+   ========================================================= */
+
+#cliente .acoes-cliente {
+    grid-column: 1 / -1;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 2px;
+}
+
+
+#cliente #salvar-cliente {
+    width: auto !important;
+
+    min-width: 160px;
+
+    min-height: 40px;
+
+    padding: 9px 18px;
+
+    margin: 0 !important;
+
+    white-space: nowrap;
+}
+
+
+#cliente #limpar-formulario-cliente {
+    width: auto !important;
+
+    min-width: 165px;
+
+    min-height: 40px;
+
+    padding: 9px 18px;
+
+    margin: 0 !important;
+
+    border: 1px solid var(--nova-borda);
+
+    border-radius: 8px;
+
+    background: #fffaf7;
+
+    color: var(--nova-marrom);
+
+    white-space: nowrap;
+}
+
+
+#cliente #limpar-formulario-cliente:hover {
+    background: var(--nova-rose-claro);
+}
+
+
+/* =========================================================
+   CAIXA DE CLIENTES CADASTRADOS
+   ========================================================= */
+
+#cliente .clientes-cadastrados-box {
+    margin-top: 24px;
+
+    padding: 20px 22px;
+
+    border: 1px solid var(--nova-borda);
+
+    border-radius: 14px;
+
+    background: #fffefa;
+
+    box-shadow: var(--nova-sombra);
+}
+
+
+/* TOPO */
+
+#cliente .clientes-cadastrados-topo {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 16px;
+
+    margin-bottom: 14px;
+}
+
+
+#cliente .clientes-cadastrados-topo h3 {
+    margin: 0;
+
+    color: var(--nova-rose);
+
+    font-size: 15px;
+}
+
+
+/* BUSCA */
+
+#cliente .cliente-busca {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    width: 280px;
+
+    padding: 0 10px;
+
+    border: 1px solid var(--nova-borda);
+
+    border-radius: 8px;
+
+    background: #fffdf9;
+}
+
+
+#cliente .cliente-busca span {
+    color: var(--nova-marrom-claro);
+
+    font-size: 16px;
+}
+
+
+#cliente #buscar-cliente {
+    width: 100%;
+
+    min-height: 38px;
+
+    padding: 7px 4px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--nova-marrom);
+
+    outline: none;
+}
+
+
+/* =========================================================
+   TABELA DE CLIENTES
+   ========================================================= */
+
+#cliente .cliente-tabela-container {
+    width: 100%;
+
+    overflow-x: auto;
+
+    border: 1px solid var(--nova-borda);
+
+    border-radius: 10px;
+
+    background: #fffefa;
+}
+
+
+/* CABEÇALHO */
+
+#cliente .cliente-tabela-cabecalho {
+    display: grid;
+
+    grid-template-columns:
+        minmax(180px, 1.5fr)
+        145px
+        minmax(200px, 1.5fr)
+        130px
+        minmax(180px, 1.3fr)
+        170px;
+
+    gap: 12px;
+
+    align-items: center;
+
+    min-width: 980px;
+
+    padding: 10px 12px;
+
+    background: #f6efe7;
+
+    border-bottom: 1px solid var(--nova-borda);
+
+    color: var(--nova-marrom);
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+/* LINHA */
+
+#cliente .cliente-tabela-linha {
+    display: grid;
+
+    grid-template-columns:
+        minmax(180px, 1.5fr)
+        145px
+        minmax(200px, 1.5fr)
+        130px
+        minmax(180px, 1.3fr)
+        170px;
+
+    gap: 12px;
+
+    align-items: center;
+
+    min-width: 980px;
+
+    padding: 11px 12px;
+
+    border-bottom: 1px solid var(--nova-borda);
+}
+
+
+#cliente .cliente-tabela-linha:last-child {
+    border-bottom: 0;
+}
+
+
+/* COLUNAS */
+
+#cliente .cliente-coluna {
+    min-width: 0;
+
+    color: var(--nova-marrom-claro);
+
+    font-size: 13px;
+
+    line-height: 1.3;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+#cliente .cliente-nome {
+    color: var(--nova-marrom);
+
+    font-weight: 700;
+}
+
+
+#cliente .cliente-observacao {
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   AÇÕES
+   ========================================================= */
+
+#cliente .cliente-acoes {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+
+#cliente .botao-editar-cliente,
+#cliente .cliente-acoes .botao-excluir {
+    width: auto !important;
+
+    min-width: 74px !important;
+
+    min-height: 34px;
+
+    padding: 7px 10px !important;
+
+    margin: 0 !important;
+
+    font-size: 12px;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   MENSAGEM VAZIA
+   ========================================================= */
+
+#cliente #lista-cliente .mensagem-vazia {
+    margin: 0;
+
+    padding: 18px;
+
+    border: 0;
+
+    border-radius: 0;
+
+    background: transparent;
+
+    color: var(--nova-marrom-claro);
+}
+
+
+/* =========================================================
+   RESPONSIVO
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    #cliente .cliente-campo-nome,
+    #cliente .cliente-campo-telefone,
+    #cliente .cliente-campo-email,
+    #cliente .cliente-campo-cidade {
+        grid-column: 1 / -1;
+    }
+
+
+    #cliente .clientes-cadastrados-topo {
+        align-items: stretch;
+
+        flex-direction: column;
+    }
+
+
+    #cliente .cliente-busca {
+        width: 100%;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    #cliente .acoes-cliente {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    #cliente #salvar-cliente,
+    #cliente #limpar-formulario-cliente {
+        width: 100% !important;
+    }
+
+}
+/* =========================================================
+   ORGANIZA 3D MANAGER
+   PRODUTOS - AJUSTE FINAL HORIZONTAL
+   ========================================================= */
+
+
+/* =========================================================
+   INSUMOS - FILAMENTO / ACESSÓRIO / EMBALAGEM
+   ========================================================= */
+
+#produto .grupo-insumo-produto {
+    display: grid !important;
+
+    grid-template-columns:
+        minmax(300px, 1fr)
+        105px
+        115px
+        110px
+        85px
+        135px;
+
+    gap: 10px;
+
+    align-items: end;
+
+    width: 100%;
+
+    grid-column: 1 / -1;
+}
+
+
+/* ABRIR A LISTA DINÂMICA PARA A GRADE PAI */
+
+#produto .grupo-insumo-produto
+#lista-filamentos-produto,
+
+#produto .grupo-insumo-produto
+#lista-acessorios-produto,
+
+#produto .grupo-insumo-produto
+#lista-embalagens-produto {
+    display: contents !important;
+}
+
+
+/* ABRIR CADA LINHA DINÂMICA */
+
+#produto .grupo-insumo-produto
+.item-filamento-produto,
+
+#produto .grupo-insumo-produto
+.item-acessorio-produto,
+
+#produto .grupo-insumo-produto
+.item-embalagem-produto {
+    display: contents !important;
+}
+
+
+/* CAMPOS DAS LINHAS */
+
+#produto .grupo-insumo-produto .campo {
+    width: 100% !important;
+
+    min-width: 0 !important;
+
+    max-width: none !important;
+
+    margin: 0 !important;
+}
+
+
+/* SELECT PRINCIPAL */
+
+#produto .grupo-insumo-produto
+.produto-filamento-select,
+
+#produto .grupo-insumo-produto
+.produto-acessorio-select,
+
+#produto .grupo-insumo-produto
+.produto-embalagem-select,
+
+#produto .grupo-insumo-produto
+.select-acessorio,
+
+#produto .grupo-insumo-produto
+.select-embalagem {
+    width: 100% !important;
+
+    max-width: none !important;
+}
+
+
+/* QUANTIDADE */
+
+#produto .grupo-insumo-produto
+.produto-filamento-quantidade,
+
+#produto .grupo-insumo-produto
+.produto-acessorio-quantidade,
+
+#produto .grupo-insumo-produto
+.produto-embalagem-quantidade,
+
+#produto .grupo-insumo-produto
+.quantidade-acessorio,
+
+#produto .grupo-insumo-produto
+.quantidade-embalagem {
+    width: 105px !important;
+
+    max-width: 105px !important;
+}
+
+
+/* CUSTO DA LINHA */
+
+#produto .grupo-insumo-produto
+.produto-filamento-custo,
+
+#produto .grupo-insumo-produto
+.produto-acessorio-custo,
+
+#produto .grupo-insumo-produto
+.produto-embalagem-custo,
+
+#produto .grupo-insumo-produto
+.custo-acessorio,
+
+#produto .grupo-insumo-produto
+.custo-embalagem {
+    width: 115px !important;
+
+    max-width: 115px !important;
+}
+
+
+/* CUSTO TOTAL */
+
+#produto .campo-total-insumo {
+    grid-column: auto !important;
+
+    width: 110px !important;
+
+    min-width: 110px !important;
+}
+
+
+#produto .campo-total-insumo input {
+    width: 110px !important;
+
+    max-width: 110px !important;
+}
+
+
+/* REMOVER */
+
+#produto .campo-acao-insumo {
+    grid-column: auto !important;
+
+    width: 85px !important;
+
+    min-width: 85px !important;
+}
+
+
+#produto .campo-acao-insumo button,
+#produto .grupo-insumo-produto .botao-excluir {
+    width: 85px !important;
+
+    min-width: 85px !important;
+
+    padding: 8px 9px !important;
+
+    margin: 0 !important;
+}
+
+
+/* ADICIONAR */
+
+#produto .campo-adicionar-insumo {
+    grid-column: auto !important;
+
+    width: 135px !important;
+
+    min-width: 135px !important;
+}
+
+
+#produto .campo-adicionar-insumo button,
+#produto #adicionar-filamento-produto,
+#produto #adicionar-acessorio-produto,
+#produto #adicionar-embalagem-produto {
+    width: 135px !important;
+
+    min-width: 135px !important;
+
+    max-width: 135px !important;
+
+    padding: 8px 10px !important;
+
+    margin: 0 !important;
+
+    white-space: nowrap;
+
+    font-size: 12px;
+}
+
+
+/* CAMPO INTERNO OCULTO */
+
+#produto .campo-interno-oculto {
+    display: none !important;
+}
+
+
+/* =========================================================
+   IMPRESSORA - UMA LINHA
+   ========================================================= */
+
+#produto .linha-impressao-principal,
+#produto .linha-impressao-custos {
+    display: contents !important;
+}
+
+
+/* ESCONDER CAMPOS QUE NÃO QUEREMOS EXIBIR */
+
+#produto .campo-potencia-produto,
+#produto .campo-consumo-produto,
+#produto .campo-tempo-total-produto,
+#produto .campo-horas-decimais-produto {
+    display: none !important;
+}
+
+
+/* CAMPOS VISÍVEIS */
+
+#produto .campo-impressora-produto {
+    width: 210px !important;
+    min-width: 210px !important;
+}
+
+#produto .campo-tempo-produto {
+    width: 70px !important;
+    min-width: 70px !important;
+}
+
+#produto .campo-tarifa-produto {
+    width: 95px !important;
+    min-width: 95px !important;
+}
+
+#produto .campo-custo-produto {
+    width: 100px !important;
+    min-width: 100px !important;
+}
+
+#produto .campo-custo-hora-produto {
+    width: 110px !important;
+    min-width: 110px !important;
+}
+
+#produto .campo-custo-producao-maquina {
+    width: 120px !important;
+    min-width: 120px !important;
+}
+
+
+/* INPUTS */
+
+#produto #produto-impressora-utilizada {
+    width: 210px !important;
+    max-width: 210px !important;
+}
+
+#produto #produto-tempo-impressao-horas,
+#produto #produto-tempo-impressao-minutos {
+    width: 70px !important;
+    max-width: 70px !important;
+}
+
+#produto #produto-tarifa-energia {
+    width: 95px !important;
+    max-width: 95px !important;
+}
+
+#produto #produto-custo-energia {
+    width: 100px !important;
+    max-width: 100px !important;
+}
+
+#produto #produto-custo-hora-impressora {
+    width: 110px !important;
+    max-width: 110px !important;
+}
+
+#produto #produto-custo-maquina {
+    width: 120px !important;
+    max-width: 120px !important;
+}
+
+
+/* RETIRAR MENSAGEM */
+
+#produto .campo-custo-hora-produto small {
+    display: none !important;
+}
+
+
+/* =========================================================
+   RESUMO FINANCEIRO - 8 CAMPOS EM UMA ÚNICA LINHA
+   ========================================================= */
+
+#produto .linha-resumo-financeiro {
+    display: contents !important;
+}
+
+
+#produto .campo-resumo-produto {
+    width: 105px !important;
+
+    min-width: 105px !important;
+
+    max-width: 105px !important;
+
+    margin: 0 9px 6px 0 !important;
+}
+
+
+#produto .campo-resumo-produto input {
+    width: 105px !important;
+
+    max-width: 105px !important;
+}
+
+
+/* PREÇO DE VENDA */
+
+#produto .campo-resumo-produto:has(#produto-preco-venda),
+#produto .campo-resumo-produto:has(#produto-valor-total-estoque) {
+    width: 115px !important;
+
+    min-width: 115px !important;
+
+    max-width: 115px !important;
+}
+
+
+#produto #produto-preco-venda,
+#produto #produto-valor-total-estoque {
+    width: 115px !important;
+
+    max-width: 115px !important;
+}
+
+
+/* QUANTIDADE */
+
+#produto .campo-resumo-produto:has(#produto-quantidade-disponivel) {
+    width: 90px !important;
+
+    min-width: 90px !important;
+
+    max-width: 90px !important;
+}
+
+
+#produto #produto-quantidade-disponivel {
+    width: 90px !important;
+
+    max-width: 90px !important;
+}
+
+
+/* =========================================================
+   LABELS MAIS COMPACTOS
+   ========================================================= */
+
+#produto .grupo-insumo-produto label,
+#produto .campo-impressora-produto label,
+#produto .campo-tempo-produto label,
+#produto .campo-tarifa-produto label,
+#produto .campo-custo-produto label,
+#produto .campo-custo-hora-produto label,
+#produto .campo-custo-producao-maquina label,
+#produto .campo-resumo-produto label {
+    font-size: 11px !important;
+
+    line-height: 1.15;
+
+    margin-bottom: 3px;
+}
+
+
+/* =========================================================
+   RESPONSIVO
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    #produto .grupo-insumo-produto {
+        grid-template-columns:
+            minmax(260px, 1fr)
+            100px
+            110px
+            105px
+            80px
+            130px;
+
+        overflow-x: auto;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    #produto .grupo-insumo-produto {
+        grid-template-columns: 1fr !important;
+    }
+
+    #produto .grupo-insumo-produto
+    #lista-filamentos-produto,
+
+    #produto .grupo-insumo-produto
+    #lista-acessorios-produto,
+
+    #produto .grupo-insumo-produto
+    #lista-embalagens-produto,
+
+    #produto .grupo-insumo-produto
+    .item-filamento-produto,
+
+    #produto .grupo-insumo-produto
+    .item-acessorio-produto,
+
+    #produto .grupo-insumo-produto
+    .item-embalagem-produto {
+        display: block !important;
+    }
+
+}

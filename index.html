@@ -1722,11 +1722,13 @@
 
             <h3>Resumo financeiro da produção</h3>
 
-            <!-- ================================================= -->
+<!-- ================================================= -->
 <!-- RESUMO FINANCEIRO - LAYOUT COMPACTO -->
 <!-- ================================================= -->
 
-<!-- LINHA 1 -->
+<!-- ================================================= -->
+<!-- RESUMO FINANCEIRO - UMA ÚNICA LINHA -->
+<!-- ================================================= -->
 
 <div class="linha linha-resumo-financeiro">
 
@@ -1735,7 +1737,7 @@
     <div class="campo campo-resumo-produto">
 
         <label for="produto-custo-insumos">
-            Custo dos insumos
+            Custo insumos
         </label>
 
         <input
@@ -1747,12 +1749,12 @@
     </div>
 
 
-    <!-- CUSTO TOTAL DA PRODUÇÃO -->
+    <!-- CUSTO DA PRODUÇÃO -->
 
     <div class="campo campo-resumo-produto">
 
         <label for="produto-custo-total-producao">
-            Custo da produção
+            Custo produção
         </label>
 
         <input
@@ -1786,7 +1788,7 @@
     <div class="campo campo-resumo-produto">
 
         <label for="produto-preco-venda">
-            Preço de venda
+            Preço venda
         </label>
 
         <input
@@ -1794,23 +1796,17 @@
             id="produto-preco-venda"
             min="0"
             step="0.01"
-            placeholder="Ex.: 15,00">
+            placeholder="15,00">
 
     </div>
 
-</div>
-
-
-<!-- LINHA 2 -->
-
-<div class="linha linha-resumo-financeiro">
 
     <!-- LUCRO UNITÁRIO -->
 
     <div class="campo campo-resumo-produto">
 
         <label for="produto-lucro-unitario">
-            Lucro por unidade
+            Lucro/unid.
         </label>
 
         <input
@@ -1839,12 +1835,12 @@
     </div>
 
 
-    <!-- VALOR TOTAL DO ESTOQUE -->
+    <!-- VALOR DO ESTOQUE -->
 
     <div class="campo campo-resumo-produto">
 
         <label for="produto-valor-total-estoque">
-            Valor do estoque
+            Valor estoque
         </label>
 
         <input
@@ -3259,69 +3255,85 @@
         Cadastre e acompanhe os clientes da empresa.
     </p>
 
-    <div class="formulario">
 
-        <div class="linha">
+    <!-- ================================================= -->
+    <!-- NOVO CLIENTE -->
+    <!-- ================================================= -->
 
-            <div class="campo">
+    <div class="formulario formulario-cliente">
 
-                <label for="nome-cliente">
-                    Nome do cliente
-                </label>
+        <h3 class="cliente-titulo-formulario">
+            Novo cliente
+        </h3>
 
-                <input
-                    type="text"
-                    id="nome-cliente"
-                    placeholder="Ex.: Maria da Silva">
 
-            </div>
+        <!-- NOME -->
 
-            <div class="campo">
+        <div class="campo cliente-campo-nome">
 
-                <label for="telefone-cliente">
-                    Telefone
-                </label>
+            <label for="nome-cliente">
+                Nome do cliente
+            </label>
 
-                <input
-                    type="tel"
-                    id="telefone-cliente"
-                    placeholder="Ex.: (45) 99999-9999">
-
-            </div>
+            <input
+                type="text"
+                id="nome-cliente"
+                placeholder="Ex.: Maria da Silva">
 
         </div>
 
-        <div class="linha">
 
-            <div class="campo">
+        <!-- TELEFONE -->
 
-                <label for="email-cliente">
-                    E-mail
-                </label>
+        <div class="campo cliente-campo-telefone">
 
-                <input
-                    type="email"
-                    id="email-cliente"
-                    placeholder="Ex.: cliente@email.com">
+            <label for="telefone-cliente">
+                Telefone
+            </label>
 
-            </div>
-
-            <div class="campo">
-
-                <label for="cidade-cliente">
-                    Cidade
-                </label>
-
-                <input
-                    type="text"
-                    id="cidade-cliente"
-                    placeholder="Ex.: Toledo">
-
-            </div>
+            <input
+                type="tel"
+                id="telefone-cliente"
+                placeholder="Ex.: (45) 99999-9999">
 
         </div>
 
-        <div class="campo campo-completo">
+
+        <!-- E-MAIL -->
+
+        <div class="campo cliente-campo-email">
+
+            <label for="email-cliente">
+                E-mail
+            </label>
+
+            <input
+                type="email"
+                id="email-cliente"
+                placeholder="Ex.: cliente@email.com">
+
+        </div>
+
+
+        <!-- CIDADE -->
+
+        <div class="campo cliente-campo-cidade">
+
+            <label for="cidade-cliente">
+                Cidade
+            </label>
+
+            <input
+                type="text"
+                id="cidade-cliente"
+                placeholder="Ex.: Toledo">
+
+        </div>
+
+
+        <!-- OBSERVAÇÕES -->
+
+        <div class="campo campo-completo cliente-campo-observacoes">
 
             <label for="observacoes-cliente">
                 Observações
@@ -3334,26 +3346,89 @@
 
         </div>
 
-        <button
-            id="salvar-cliente"
-            class="botao-principal"
-            type="button">
-            Salvar Cliente
-        </button>
+
+        <!-- BOTÕES -->
+
+        <div class="acoes-cliente">
+
+            <button
+                id="salvar-cliente"
+                class="botao-principal"
+                type="button">
+
+                💾 Salvar Cliente
+
+            </button>
+
+
+            <button
+                id="limpar-formulario-cliente"
+                type="button">
+
+                🧹 Limpar Formulário
+
+            </button>
+
+        </div>
 
     </div>
 
-    <h3>Clientes cadastrados</h3>
 
-    <div id="lista-cliente">
+    <!-- ================================================= -->
+    <!-- CLIENTES CADASTRADOS -->
+    <!-- ================================================= -->
 
-        <p>
-            Nenhum cliente cadastrado.
-        </p>
+    <div class="clientes-cadastrados-box">
+
+        <div class="clientes-cadastrados-topo">
+
+            <h3>
+                Clientes cadastrados
+            </h3>
+
+
+            <div class="cliente-busca">
+
+                <span>⌕</span>
+
+                <input
+                    type="search"
+                    id="buscar-cliente"
+                    placeholder="Buscar cliente...">
+
+            </div>
+
+        </div>
+
+
+        <div class="cliente-tabela-container">
+
+            <div class="cliente-tabela-cabecalho">
+
+                <div>Cliente</div>
+                <div>Telefone</div>
+                <div>E-mail</div>
+                <div>Cidade</div>
+                <div>Observações</div>
+                <div>Ações</div>
+
+            </div>
+
+
+            <div id="lista-cliente">
+
+                <p class="mensagem-vazia">
+                    Nenhum cliente cadastrado.
+                </p>
+
+            </div>
+
+        </div>
 
     </div>
 
 </section>
+
 <!-- ===================================================== -->
 <!-- ENCOMENDAS -->
 <!-- ===================================================== -->

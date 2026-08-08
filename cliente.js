@@ -12,8 +12,8 @@ function iniciarCliente() {
     // ==================================================
 
     let cliente = carregarCliente();
-
     let clienteEmEdicaoId = null;
+
 
     // ==================================================
     // ELEMENTOS DO HTML
@@ -28,17 +28,27 @@ function iniciarCliente() {
     const campoEmail =
         document.getElementById("email-cliente");
 
+    const campoCidade =
+        document.getElementById("cidade-cliente");
+
     const campoObservacoes =
         document.getElementById("observacoes-cliente");
 
     const botaoSalvarCliente =
         document.getElementById("salvar-cliente");
 
+    const botaoLimparCliente =
+        document.getElementById("limpar-formulario-cliente");
+
+    const campoBuscaCliente =
+        document.getElementById("buscar-cliente");
+
     const listaCliente =
         document.getElementById("lista-cliente");
 
     const totalCliente =
         document.getElementById("total-cliente");
+
 
     // ==================================================
     // CARREGAR CLIENTES
@@ -62,16 +72,17 @@ function iniciarCliente() {
         } catch (erro) {
 
             console.error(
-                "Não foi possível carregar os cliente.",
+                "Não foi possível carregar os clientes.",
                 erro
             );
 
             return [];
-
         }
 
     }
-        // ==================================================
+
+
+    // ==================================================
     // SALVAR CLIENTES
     // ==================================================
 
@@ -84,6 +95,7 @@ function iniciarCliente() {
 
     }
 
+
     // ==================================================
     // ATUALIZAR TOTAL
     // ==================================================
@@ -95,6 +107,7 @@ function iniciarCliente() {
         }
 
     }
+
 
     // ==================================================
     // LIMPAR FORMULÁRIO
@@ -116,17 +129,60 @@ function iniciarCliente() {
             campoEmail.value = "";
         }
 
+        if (campoCidade) {
+            campoCidade.value = "";
+        }
+
         if (campoObservacoes) {
             campoObservacoes.value = "";
         }
 
         if (botaoSalvarCliente) {
-            botaoSalvarCliente.textContent =
-                "Salvar Cliente";
+            botaoSalvarCliente.innerHTML =
+                "💾 Salvar Cliente";
         }
 
     }
-        // ==================================================
+
+
+    // ==================================================
+    // FILTRAR CLIENTES
+    // ==================================================
+
+    function obterClientesFiltrados() {
+
+        const termo =
+            campoBuscaCliente
+                ? campoBuscaCliente.value
+                    .trim()
+                    .toLowerCase()
+                : "";
+
+        if (!termo) {
+            return cliente;
+        }
+
+        return cliente.filter(function (item) {
+
+            const texto = [
+                item.nome,
+                item.telefone,
+                item.email,
+                item.cidade,
+                item.observacoes
+            ]
+                .filter(Boolean)
+                .join(" ")
+                .toLowerCase();
+
+            return texto.includes(termo);
+
+        });
+
+    }
+
+
+    // ==================================================
     // MOSTRAR CLIENTES
     // ==================================================
 
@@ -136,87 +192,104 @@ function iniciarCliente() {
             return;
         }
 
-        if (cliente.length === 0) {
+        const clientesFiltrados =
+            obterClientesFiltrados();
 
-            listaCliente.innerHTML =
-                "<p>Nenhum cliente cadastrado.</p>";
+        if (clientesFiltrados.length === 0) {
+
+            listaCliente.innerHTML = `
+                <p class="mensagem-vazia">
+                    Nenhum cliente encontrado.
+                </p>
+            `;
 
             return;
-
         }
 
-        listaCliente.innerHTML = cliente
-            .map(function (cliente) {
+        listaCliente.innerHTML =
+            clientesFiltrados
+                .map(function (item) {
 
-                return `
-                    <div class="card-item">
+                    return `
+                        <div class="cliente-tabela-linha">
 
-                        <h4>
-                            ${escaparTexto(cliente.nome)}
-                        </h4>
+                            <div class="cliente-coluna cliente-nome">
+                                ${escaparTexto(
+                                    item.nome || "Não informado"
+                                )}
+                            </div>
 
-                        <p>
-                            <strong>Telefone:</strong>
-                            ${escaparTexto(
-                                cliente.telefone ||
-                                "Não informado"
-                            )}
-                        </p>
+                            <div class="cliente-coluna">
+                                ${escaparTexto(
+                                    item.telefone || "Não informado"
+                                )}
+                            </div>
 
-                        <p>
-                            <strong>E-mail:</strong>
-                            ${escaparTexto(
-                                cliente.email ||
-                                "Não informado"
-                            )}
-                        </p>
+                            <div class="cliente-coluna">
+                                ${escaparTexto(
+                                    item.email || "Não informado"
+                                )}
+                            </div>
 
-                        <p>
-                            <strong>Observações:</strong>
-                            ${escaparTexto(
-                                cliente.observacoes ||
-                                "Nenhuma"
-                            )}
-                        </p>
+                            <div class="cliente-coluna">
+                                ${escaparTexto(
+                                    item.cidade || "Não informado"
+                                )}
+                            </div>
 
-                        <button
-                            type="button"
-                            class="botao-principal"
-                            onclick="editarCliente(${cliente.id})"
-                        >
-                            Editar
-                        </button>
+                            <div class="cliente-coluna cliente-observacao">
+                                ${escaparTexto(
+                                    item.observacoes || "Nenhuma"
+                                )}
+                            </div>
 
-                        <button
-                            type="button"
-                            class="botao-excluir"
-                            onclick="excluirCliente(${cliente.id})"
-                        >
-                            Excluir
-                        </button>
+                            <div class="cliente-coluna cliente-acoes">
 
-                    </div>
-                `;
+                                <button
+                                    type="button"
+                                    class="botao-principal botao-editar-cliente"
+                                    onclick="editarCliente(${item.id})">
 
-            })
-            .join("");
+                                    ✏️ Editar
+
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="botao-excluir"
+                                    onclick="excluirCliente(${item.id})">
+
+                                    Excluir
+
+                                </button>
+
+                            </div>
+
+                        </div>
+                    `;
+
+                })
+                .join("");
 
     }
-        // ==================================================
+
+
+    // ==================================================
     // EDITAR CLIENTE
     // ==================================================
 
     window.editarCliente = function (id) {
 
-        const clienteEncontrado = cliente.find(
-            function (cliente) {
-                return cliente.id === id;
-            }
-        );
+        const clienteEncontrado =
+            cliente.find(function (item) {
+                return item.id === id;
+            });
 
         if (!clienteEncontrado) {
+
             alert("Cliente não encontrado.");
             return;
+
         }
 
         clienteEmEdicaoId = id;
@@ -236,17 +309,27 @@ function iniciarCliente() {
                 clienteEncontrado.email || "";
         }
 
+        if (campoCidade) {
+            campoCidade.value =
+                clienteEncontrado.cidade || "";
+        }
+
         if (campoObservacoes) {
             campoObservacoes.value =
                 clienteEncontrado.observacoes || "";
         }
 
         if (botaoSalvarCliente) {
-            botaoSalvarCliente.textContent =
-                "Atualizar Cliente";
+            botaoSalvarCliente.innerHTML =
+                "💾 Atualizar Cliente";
+        }
+
+        if (campoNome) {
+            campoNome.focus();
         }
 
     };
+
 
     // ==================================================
     // EXCLUIR CLIENTE
@@ -263,8 +346,8 @@ function iniciarCliente() {
         }
 
         cliente = cliente.filter(
-            function (cliente) {
-                return cliente.id !== id;
+            function (item) {
+                return item.id !== id;
             }
         );
 
@@ -277,7 +360,9 @@ function iniciarCliente() {
         }
 
     };
-        // ==================================================
+
+
+    // ==================================================
     // SALVAR OU ATUALIZAR CLIENTE
     // ==================================================
 
@@ -302,48 +387,79 @@ function iniciarCliente() {
                         ? campoEmail.value.trim()
                         : "";
 
+                const cidade =
+                    campoCidade
+                        ? campoCidade.value.trim()
+                        : "";
+
                 const observacoes =
                     campoObservacoes
                         ? campoObservacoes.value.trim()
                         : "";
 
                 if (!nome) {
-                    alert("Informe o nome completo do cliente.");
+
+                    alert(
+                        "Informe o nome completo do cliente."
+                    );
+
                     return;
                 }
 
                 const estavaEditando =
                     clienteEmEdicaoId !== null;
 
+
                 if (estavaEditando) {
 
                     const clienteEncontrado =
                         cliente.find(
-                            function (cliente) {
-                                return cliente.id ===
+                            function (item) {
+                                return item.id ===
                                     clienteEmEdicaoId;
                             }
                         );
 
                     if (!clienteEncontrado) {
-                        alert("Cliente não encontrado.");
+
+                        alert(
+                            "Cliente não encontrado."
+                        );
+
                         return;
                     }
 
-                    clienteEncontrado.nome = nome;
-                    clienteEncontrado.telefone = telefone;
-                    clienteEncontrado.email = email;
+                    clienteEncontrado.nome =
+                        nome;
+
+                    clienteEncontrado.telefone =
+                        telefone;
+
+                    clienteEncontrado.email =
+                        email;
+
+                    clienteEncontrado.cidade =
+                        cidade;
+
                     clienteEncontrado.observacoes =
                         observacoes;
 
                 } else {
 
                     const novoCliente = {
+
                         id: Date.now(),
+
                         nome: nome,
+
                         telefone: telefone,
+
                         email: email,
+
+                        cidade: cidade,
+
                         observacoes: observacoes
+
                     };
 
                     cliente.push(novoCliente);
@@ -357,7 +473,6 @@ function iniciarCliente() {
 
                 alert(
                     estavaEditando
-                
                         ? "Cliente atualizado com sucesso!"
                         : "Cliente cadastrado com sucesso!"
                 );
@@ -366,6 +481,35 @@ function iniciarCliente() {
         );
 
     }
+
+
+    // ==================================================
+    // BOTÃO LIMPAR
+    // ==================================================
+
+    if (botaoLimparCliente) {
+
+        botaoLimparCliente.addEventListener(
+            "click",
+            limparFormularioCliente
+        );
+
+    }
+
+
+    // ==================================================
+    // BUSCA
+    // ==================================================
+
+    if (campoBuscaCliente) {
+
+        campoBuscaCliente.addEventListener(
+            "input",
+            mostrarCliente
+        );
+
+    }
+
 
     // ==================================================
     // INICIALIZAÇÃO DO MÓDULO
