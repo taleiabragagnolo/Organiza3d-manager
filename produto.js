@@ -7476,8 +7476,8 @@ if (campoDataProduto) {
 
     }
 
-    // ==================================================
-    // MOSTRAR PRODUTOS
+        // ==================================================
+    // MOSTRAR PRODUTOS - FORMATO HORIZONTAL COMPACTO
     // ==================================================
 
     function mostrarProdutos() {
@@ -7497,235 +7497,266 @@ if (campoDataProduto) {
             atualizarResumoProdutos();
 
             return;
-
         }
+
 
         const produtosAtivos =
-    produtos.filter(
-        function (produto) {
+            produtos.filter(
+                function (produto) {
 
-            return (
-                produto.status !==
-                "Inativo"
+                    return (
+                        produto.status !==
+                        "Inativo"
+                    );
+
+                }
             );
 
+
+        if (produtosAtivos.length === 0) {
+
+            listaProdutos.innerHTML =
+                "<p>Nenhum produto ativo cadastrado.</p>";
+
+            atualizarResumoProdutos();
+
+            return;
         }
-    );
 
-if (produtosAtivos.length === 0) {
 
-    listaProdutos.innerHTML =
-        "<p>Nenhum produto ativo cadastrado.</p>";
+        const produtosOrdenados =
+            [...produtosAtivos].sort(
+                function (a, b) {
 
-    atualizarResumoProdutos();
+                    const dataA =
+                        String(
+                            a.dataProducao ||
+                            ""
+                        );
 
-    return;
+                    const dataB =
+                        String(
+                            b.dataProducao ||
+                            ""
+                        );
 
-}
+                    if (dataA !== dataB) {
 
-const produtosOrdenados =
-    [...produtosAtivos].sort(
-        function (a, b) {
+                        return dataB.localeCompare(
+                            dataA
+                        );
 
-            const dataA =
-                String(
-                    a.dataProducao ||
-                    ""
-                );
+                    }
 
-            const dataB =
-                String(
-                    b.dataProducao ||
-                    ""
-                );
+                    return (
+                        numero(b.id) -
+                        numero(a.id)
+                    );
 
-            if (dataA !== dataB) {
-
-                return dataA.localeCompare(
-                    dataB
-                );
-
-            }
-
-            return (
-                numero(a.id) -
-                numero(b.id)
+                }
             );
 
-        }
-    );
-        listaProdutos.innerHTML =
+
+        const linhasProdutos =
             produtosOrdenados
                 .map(
                     function (produto) {
 
-                        return `
-                            <div class="card-item">
+                        const status =
+                            obterStatusProduto(
+                                produto
+                            );
 
-                                <h4>
+
+                        const classeStatus =
+                            status === "Disponível"
+                                ? "produto-status-disponivel"
+                                : (
+                                    status === "Estoque baixo"
+                                        ? "produto-status-baixo"
+                                        : "produto-status-indisponivel"
+                                );
+
+
+                        return `
+
+                            <div class="produto-tabela-linha">
+
+                                <div
+                                    class="produto-coluna produto-coluna-nome"
+                                    data-titulo="Produto">
+
                                     ${textoSeguro(
                                         produto.nome ||
                                         "Produto sem nome"
                                     )}
-                                </h4>
 
-                                </p>
+                                </div>
 
-                                <p>
-                                    <strong>Categoria:</strong>
+
+                                <div
+                                    class="produto-coluna"
+                                    data-titulo="Categoria">
+
                                     ${textoSeguro(
                                         produto.categoria ||
                                         "Não informada"
                                     )}
-                                </p>
 
-                                <p>
-                                    <strong>Data da produção:</strong>
-                                    ${dataFormatada(
-                                        produto.dataProducao
+                                </div>
+
+
+                                <div
+                                    class="produto-coluna"
+                                    data-titulo="Tipo">
+
+                                    ${textoSeguro(
+                                        produto.tipoProducao ||
+                                        "Estoque"
                                     )}
-                                </p>
 
-                                <p>
-                                    <strong>Quantidade produzida:</strong>
+                                </div>
+
+
+                                <div
+                                    class="produto-coluna"
+                                    data-titulo="Produzido">
+
                                     ${numeroFormatado(
                                         produto.quantidadeProduzida,
                                         0
                                     )}
-                                </p>
 
-                                <p>
-                                    <strong>Quantidade disponível:</strong>
+                                </div>
+
+
+                                <div
+                                    class="produto-coluna"
+                                    data-titulo="Disponível">
+
                                     ${numeroFormatado(
                                         produto.quantidadeDisponivel,
                                         0
                                     )}
-                                </p>
 
-                                <p>
-                                    <strong>Status:</strong>
-                                    ${textoSeguro(
-                                        obterStatusProduto(
-                                            produto
-                                        )
-                                    )}
-                                </p>
+                                </div>
 
-                                <p>
-                                    <strong>Impressora:</strong>
-                                    ${textoSeguro(
-                                        produto.impressoraNome ||
-                                        "Não informada"
-                                    )}
-                                </p>
 
-                                <p>
-                                    <strong>Tempo de impressão:</strong>
-                                    ${numeroFormatado(
-                                        produto.horas,
-                                        0
-                                    )}h
-                                    ${numeroFormatado(
-                                        produto.minutos,
-                                        0
-                                    )}min
-                                </p>
+                                <div
+                                    class="produto-coluna"
+                                    data-titulo="Custo unit.">
 
-                                <p>
-                                    <strong>Filamentos:</strong><br>
-                                    ${montarTextoFilamentos(
-                                        produto.filamentos
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Acessórios:</strong><br>
-                                    ${montarTextoAcessorios(
-                                        produto.acessorios
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Embalagens:</strong><br>
-                                    ${montarTextoEmbalagens(
-                                        produto.embalagens
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Custo dos insumos:</strong>
-                                    ${dinheiro(
-                                        produto.custoInsumos
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Custo de energia:</strong>
-                                    ${dinheiro(
-                                        produto.custoEnergia
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Custo da máquina:</strong>
-                                    ${dinheiro(
-                                        produto.custoMaquina
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Custo total:</strong>
-                                    ${dinheiro(
-                                        produto.custoTotalProducao
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Custo unitário:</strong>
                                     ${dinheiro(
                                         produto.custoUnitario
                                     )}
-                                </p>
 
-                                <p>
-                                    <strong>Preço de venda:</strong>
+                                </div>
+
+
+                                <div
+                                    class="produto-coluna produto-coluna-preco"
+                                    data-titulo="Preço venda">
+
                                     ${dinheiro(
                                         produto.precoVenda
                                     )}
-                                </p>
 
-                                <p>
-                                    <strong>Margem real:</strong>
+                                </div>
+
+
+                                <div
+                                    class="produto-coluna"
+                                    data-titulo="Margem">
+
                                     ${numeroFormatado(
                                         produto.margemReal,
                                         2
                                     )}%
-                                </p>
 
-                                <div class="acoes-card">
+                                </div>
+
+
+                                <div
+                                    class="produto-coluna"
+                                    data-titulo="Data">
+
+                                    ${dataFormatada(
+                                        produto.dataProducao
+                                    )}
+
+                                </div>
+
+
+                                <div
+                                    class="produto-coluna ${classeStatus}"
+                                    data-titulo="Status">
+
+                                    ${textoSeguro(
+                                        status
+                                    )}
+
+                                </div>
+
+
+                                <div
+                                    class="produto-coluna produto-coluna-acoes"
+                                    data-titulo="Ações">
 
                                     <button
                                         type="button"
-                                        class="botao-principal"
+                                        class="botao-principal botao-editar-produto"
                                         data-editar-produto="${produto.id}">
+
                                         Editar
+
                                     </button>
 
                                     <button
                                         type="button"
                                         class="botao-excluir"
                                         data-excluir-produto="${produto.id}">
+
                                         Excluir
+
                                     </button>
 
                                 </div>
 
                             </div>
+
                         `;
 
                     }
                 )
                 .join("");
+
+
+        listaProdutos.innerHTML = `
+
+            <div class="produtos-tabela">
+
+                <div class="produto-tabela-cabecalho">
+
+                    <div>Produto</div>
+                    <div>Categoria</div>
+                    <div>Tipo</div>
+                    <div>Produzido</div>
+                    <div>Disponível</div>
+                    <div>Custo unit.</div>
+                    <div>Preço venda</div>
+                    <div>Margem</div>
+                    <div>Data</div>
+                    <div>Status</div>
+                    <div>Ações</div>
+
+                </div>
+
+                ${linhasProdutos}
+
+            </div>
+
+        `;
+
 
         listaProdutos
             .querySelectorAll(
@@ -7749,6 +7780,7 @@ const produtosOrdenados =
                 }
             );
 
+
         listaProdutos
             .querySelectorAll(
                 "[data-excluir-produto]"
@@ -7771,9 +7803,11 @@ const produtosOrdenados =
                 }
             );
 
+
         atualizarResumoProdutos();
 
     }
+    
     // ==================================================
     // EDIÇÃO E EXCLUSÃO DOS PRODUTOS PRODUZIDOS
     // ==================================================
