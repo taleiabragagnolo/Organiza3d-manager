@@ -2297,12 +2297,14 @@
                                 item
                             ) {
 
-                                return (
+                                return item.brinde
+                                 ? soma
+                                : (
                                     soma +
-                                    numeroPositivoVenda(
-                                        item.quantidade
-                                    )
-                                );
+                                 numeroPositivoVenda(
+                               item.quantidade
+                          )
+                         );
 
                             },
                             0

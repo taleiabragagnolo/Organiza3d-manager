@@ -1,547 +1,1168 @@
-// =========================
-// DASHBOARD 2.0
-// =========================
+// ======================================================
+// ORGANIZA 3D MANAGER
+// DASHBOARD
+// dashboard.js
+// ======================================================
 
-const menuDashboard =
-    document.querySelector(
-        '[data-pagina="dashboard"]'
-    );
+"use strict";
 
-const botaoAtualizarDashboardCompleto =
-    document.getElementById(
-        "atualizar-dashboard"
-    );
+(function () {
 
-// =========================
-// FUNÇÕES AUXILIARES
-// =========================
+    // ==================================================
+    // CHAVES DO LOCALSTORAGE
+    // ==================================================
 
-function definirTextoDashboard(
-    id,
-    valor
-) {
-    const elemento =
-        document.getElementById(id);
+    const CHAVE_PRODUTOS =
+        "organiza3d_produtos_produzidos";
 
-    if (!elemento) {
-        return;
-    }
+    const CHAVE_VENDAS =
+        "organiza3d_vendas";
 
-    elemento.textContent = valor;
-}
+    const CHAVE_CLIENTES =
+        "organiza3d_cliente";
 
-function definirDinheiroDashboard(
-    id,
-    valor
-) {
-    definirTextoDashboard(
-        id,
-        formatarDinheiro(valor)
-    );
-}
+    const CHAVE_FILAMENTOS =
+        "organiza3d_filamentos";
 
-// =========================
-// ENCOMENDAS
-// =========================
+    const CHAVE_IMPRESSORAS =
+        "organiza3d_impressoras";
 
-function contarEncomendasDashboard(
-    status
-) {
-    if (
-        typeof encomendas === "undefined" ||
-        !Array.isArray(encomendas)
+    const CHAVE_FINANCEIRO =
+        "organiza3d_financeiro";
+
+    const CHAVE_CONSUMO_PROPRIO =
+        "organiza3d_consumo_proprio";
+
+    const CHAVE_PERDAS =
+        "organiza3d_perdas_produtos";
+
+    // ==================================================
+    // FUNÇÕES AUXILIARES
+    // ==================================================
+
+    function lerListaDashboard(
+        chave
     ) {
-        return 0;
-    }
 
-    return encomendas.filter(
-        function (encomenda) {
-            return encomenda.status === status;
-        }
-    ).length;
-}
+        try {
 
-function calcularEncomendasAtrasadasDashboard() {
-    if (
-        typeof encomendas === "undefined" ||
-        !Array.isArray(encomendas)
-    ) {
-        return 0;
-    }
-
-    const hoje = new Date();
-
-    hoje.setHours(0, 0, 0, 0);
-
-    return encomendas.filter(
-        function (encomenda) {
-            if (!encomenda.dataEntrega) {
-                return false;
-            }
-
-            if (
-                encomenda.status === "Finalizada" ||
-                encomenda.status === "Entregue" ||
-                encomenda.status === "Cancelada"
-            ) {
-                return false;
-            }
-
-            const dataEntrega =
-                new Date(
-                    `${encomenda.dataEntrega}T00:00:00`
+            const dados =
+                JSON.parse(
+                    localStorage.getItem(
+                        chave
+                    )
                 );
 
-            return dataEntrega < hoje;
-        }
-    ).length;
-}
+            return Array.isArray(dados)
+                ? dados
+                : [];
 
-function calcularEncomendasDashboard() {
-    if (
-        typeof encomendas === "undefined" ||
-        !Array.isArray(encomendas)
-    ) {
-        return {
-            valorTotal: 0,
-            ticketMedio: 0
-        };
+        } catch (erro) {
+
+            console.error(
+                "Erro ao carregar dados do Dashboard:",
+                chave,
+                erro
+            );
+
+            return [];
+
+        }
+
     }
 
-    const encomendasValidas =
-        encomendas.filter(
-            function (encomenda) {
-                return (
-                    encomenda.status !==
-                    "Cancelada"
-                );
+    function numeroDashboard(
+        valor
+    ) {
+
+        if (
+            typeof valor === "string"
+        ) {
+
+            valor =
+                valor
+                    .trim()
+                    .replace(",", ".");
+
+        }
+
+        const numero =
+            Number(valor);
+
+        return Number.isFinite(numero)
+            ? numero
+            : 0;
+
+    }
+
+    function numeroPositivoDashboard(
+        valor
+    ) {
+
+        return Math.max(
+            0,
+            numeroDashboard(
+                valor
+            )
+        );
+
+    }
+
+    function dinheiroDashboard(
+        valor
+    ) {
+
+        return numeroDashboard(
+            valor
+        ).toLocaleString(
+            "pt-BR",
+            {
+                style: "currency",
+                currency: "BRL"
             }
         );
 
-    const valorTotal =
-        encomendasValidas.reduce(
-            function (total, encomenda) {
-                return total +
-                    Number(
-                        encomenda.valorTotal || 0
+    }
+
+    function numeroFormatadoDashboard(
+        valor,
+        casas = 0
+    ) {
+
+        return numeroDashboard(
+            valor
+        ).toLocaleString(
+            "pt-BR",
+            {
+                minimumFractionDigits:
+                    casas,
+
+                maximumFractionDigits:
+                    casas
+            }
+        );
+
+    }
+
+    function definirTextoDashboard(
+        id,
+        valor
+    ) {
+
+        const elemento =
+            document.getElementById(
+                id
+            );
+
+        if (!elemento) {
+
+            return;
+
+        }
+
+        elemento.textContent =
+            valor;
+
+    }
+
+    function definirDinheiroDashboard(
+        id,
+        valor
+    ) {
+
+        definirTextoDashboard(
+            id,
+            dinheiroDashboard(
+                valor
+            )
+        );
+
+    }
+
+    function formatarHorasDashboard(
+        horas
+    ) {
+
+        const total =
+            numeroDashboard(
+                horas
+            );
+
+        const horasInteiras =
+            Math.floor(total);
+
+        let minutos =
+            Math.round(
+                (
+                    total -
+                    horasInteiras
+                ) * 60
+            );
+
+        let horasFinal =
+            horasInteiras;
+
+        if (minutos >= 60) {
+
+            horasFinal += 1;
+
+            minutos = 0;
+
+        }
+
+        if (minutos <= 0) {
+
+            return (
+                horasFinal +
+                "h"
+            );
+
+        }
+
+        return (
+            horasFinal +
+            "h " +
+            minutos +
+            "min"
+        );
+
+    }
+
+    // ==================================================
+    // RESUMO DAS VENDAS
+    // ==================================================
+
+    function calcularVendasDashboard(
+        vendas
+    ) {
+
+        let faturamento = 0;
+
+        let unidadesVendidas = 0;
+
+        let brindes = 0;
+
+        vendas.forEach(
+            function (venda) {
+
+                faturamento +=
+                    numeroPositivoDashboard(
+                        venda.total
                     );
+
+                if (
+                    !Array.isArray(
+                        venda.itens
+                    )
+                ) {
+
+                    return;
+
+                }
+
+                venda.itens.forEach(
+                    function (item) {
+
+                        const quantidade =
+                            numeroPositivoDashboard(
+                                item.quantidade
+                            );
+
+                        if (item.brinde) {
+
+                            brindes +=
+                                quantidade;
+
+                        } else {
+
+                            unidadesVendidas +=
+                                quantidade;
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+        const ticketMedio =
+            vendas.length > 0
+                ? faturamento /
+                    vendas.length
+                : 0;
+
+        return {
+
+            faturamento:
+                faturamento,
+
+            totalVendas:
+                vendas.length,
+
+            unidadesVendidas:
+                unidadesVendidas,
+
+            brindes:
+                brindes,
+
+            ticketMedio:
+                ticketMedio
+
+        };
+
+    }
+
+    // ==================================================
+    // RESUMO FINANCEIRO
+    // ==================================================
+
+    function calcularFinanceiroDashboard(
+        lancamentos
+    ) {
+
+        let entradas = 0;
+
+        let despesas = 0;
+
+        let entradasPendentes = 0;
+
+        let despesasPendentes = 0;
+
+        lancamentos.forEach(
+            function (lancamento) {
+
+                const valor =
+                    numeroPositivoDashboard(
+                        lancamento.valor
+                    );
+
+                const valorPago =
+                    numeroPositivoDashboard(
+                        lancamento.valorPago
+                    );
+
+                const realizado =
+                    Math.min(
+                        valor,
+                        valorPago
+                    );
+
+                const pendente =
+                    Math.max(
+                        0,
+                        valor -
+                        realizado
+                    );
+
+                if (
+                    lancamento.tipo ===
+                    "Entrada"
+                ) {
+
+                    entradas +=
+                        realizado;
+
+                    entradasPendentes +=
+                        pendente;
+
+                }
+
+                if (
+                    lancamento.tipo ===
+                    "Despesa"
+                ) {
+
+                    despesas +=
+                        realizado;
+
+                    despesasPendentes +=
+                        pendente;
+
+                }
+
+            }
+        );
+
+        return {
+
+            entradas:
+                entradas,
+
+            despesas:
+                despesas,
+
+            saldo:
+                entradas -
+                despesas,
+
+            entradasPendentes:
+                entradasPendentes,
+
+            despesasPendentes:
+                despesasPendentes
+
+        };
+
+    }
+
+    // ==================================================
+    // PRODUTOS E ESTOQUE
+    // ==================================================
+
+    function calcularProdutosDashboard(
+        produtos
+    ) {
+
+        let unidadesEstoque = 0;
+
+        let valorEstoque = 0;
+
+        produtos.forEach(
+            function (produto) {
+
+                const quantidade =
+                    numeroPositivoDashboard(
+                        produto.quantidadeDisponivel
+                    );
+
+                const preco =
+                    numeroPositivoDashboard(
+                        produto.precoVenda
+                    );
+
+                unidadesEstoque +=
+                    quantidade;
+
+                valorEstoque +=
+                    quantidade *
+                    preco;
+
+            }
+        );
+
+        return {
+
+            totalProdutos:
+                produtos.length,
+
+            unidadesEstoque:
+                unidadesEstoque,
+
+            valorEstoque:
+                valorEstoque
+
+        };
+
+    }
+
+    // ==================================================
+    // CONSUMO PRÓPRIO
+    // ==================================================
+
+    function calcularConsumoProprioDashboard(
+        consumos
+    ) {
+
+        return consumos.reduce(
+            function (
+                total,
+                consumo
+            ) {
+
+                return (
+                    total +
+                    numeroPositivoDashboard(
+                        consumo.quantidade
+                    )
+                );
+
             },
             0
         );
 
-    const ticketMedio =
-        encomendasValidas.length > 0
-            ? valorTotal /
-                encomendasValidas.length
-            : 0;
+    }
 
-    return {
-        valorTotal: valorTotal,
-        ticketMedio: ticketMedio
-    };
-}
+    // ==================================================
+    // PERDAS DE PRODUTOS
+    // ==================================================
 
-// =========================
-// FINANCEIRO
-// =========================
-
-function calcularFinanceiroDashboard() {
-    if (
-        typeof lancamentosFinanceiros ===
-            "undefined" ||
-        !Array.isArray(
-            lancamentosFinanceiros
-        )
+    function calcularPerdasDashboard(
+        perdas
     ) {
+
+        return perdas.reduce(
+            function (
+                total,
+                perda
+            ) {
+
+                return (
+                    total +
+                    numeroPositivoDashboard(
+                        perda.quantidade
+                    )
+                );
+
+            },
+            0
+        );
+
+    }
+
+    // ==================================================
+    // FILAMENTOS
+    // ==================================================
+
+    function calcularFilamentosDashboard(
+        filamentos
+    ) {
+
+        let pesoDisponivel = 0;
+
+        let estoqueBaixo = 0;
+
+        let finalizados = 0;
+
+        filamentos.forEach(
+            function (filamento) {
+
+                const pesoRestante =
+                    numeroPositivoDashboard(
+                        filamento.pesoRestante
+                    );
+
+                pesoDisponivel +=
+                    pesoRestante;
+
+                if (
+                    filamento.status ===
+                    "Baixo estoque"
+                ) {
+
+                    estoqueBaixo += 1;
+
+                }
+
+                if (
+                    filamento.status ===
+                    "Finalizado" ||
+                    pesoRestante <= 0
+                ) {
+
+                    finalizados += 1;
+
+                }
+
+            }
+        );
+
         return {
-            entradas: 0,
-            despesas: 0,
-            saldo: 0,
-            entradasPendentes: 0,
-            despesasPendentes: 0
+
+            total:
+                filamentos.length,
+
+            pesoDisponivel:
+                pesoDisponivel,
+
+            estoqueBaixo:
+                estoqueBaixo,
+
+            finalizados:
+                finalizados
+
         };
+
     }
 
-    let entradas = 0;
-    let despesas = 0;
-    let entradasPendentes = 0;
-    let despesasPendentes = 0;
+    // ==================================================
+    // EQUIPAMENTOS
+    // ==================================================
 
-    lancamentosFinanceiros.forEach(
-        function (lancamento) {
-            const valorRealizado =
-                typeof obterValorRealizadoLancamento ===
-                "function"
-                    ? obterValorRealizadoLancamento(
-                        lancamento
-                    )
-                    : Number(
-                        lancamento.valorPago || 0
-                    );
-
-            const valorPendente =
-                typeof obterValorPendenteLancamento ===
-                "function"
-                    ? obterValorPendenteLancamento(
-                        lancamento
-                    )
-                    : Math.max(
-                        0,
-                        Number(
-                            lancamento.valor || 0
-                        ) -
-                        Number(
-                            lancamento.valorPago || 0
-                        )
-                    );
-
-            if (
-                lancamento.tipo ===
-                "Entrada"
-            ) {
-                entradas += valorRealizado;
-                entradasPendentes +=
-                    valorPendente;
-            }
-
-            if (
-                lancamento.tipo ===
-                "Despesa"
-            ) {
-                despesas += valorRealizado;
-                despesasPendentes +=
-                    valorPendente;
-            }
-        }
-    );
-
-    return {
-        entradas: entradas,
-        despesas: despesas,
-        saldo: entradas - despesas,
-        entradasPendentes:
-            entradasPendentes,
-        despesasPendentes:
-            despesasPendentes
-    };
-}
-// =========================
-// ATUALIZAÇÃO PRINCIPAL
-// =========================
-
-function atualizarDashboardCompleto() {
-const produto =
-    JSON.parse(
-        localStorage.getItem(
-            "organiza3d_produtos_produzidos"
-        )
-    ) || [];
-
-const cliente =
-    JSON.parse(
-        localStorage.getItem(
-            "organiza3d_cliente"
-        )
-    ) || [];
-
-const impressoras =
-    JSON.parse(
-        localStorage.getItem(
-            "organiza3d_impressoras"
-        )
-    ) || [];
-    const financeiro =
-        calcularFinanceiroDashboard();
-
-    const resumoEncomendas =
-        calcularEncomendasDashboard();
-
-    definirTextoDashboard(
-        "total-produto",
-        Array.isArray(produto)
-            ? produto.length
-            : 0
-    );
-
-    definirTextoDashboard(
-        "total-cliente",
-        Array.isArray(cliente)
-            ? cliente.length
-            : 0
-    );
-
-    definirTextoDashboard(
-        "total-impressoras",
-        Array.isArray(impressoras)
-            ? impressoras.length
-            : 0
-    );
-
-    const filamentosDashboard = JSON.parse(
-    localStorage.getItem("organiza3d_filamentos")
-) || [];
-
-definirTextoDashboard(
-    "total-filamento",
-    Array.isArray(filamentosDashboard)
-        ? filamentosDashboard.length
-        : 0
-);
-
-    definirTextoDashboard(
-        "total-encomendas",
-        typeof encomendas !== "undefined" &&
-        Array.isArray(encomendas)
-            ? encomendas.length
-            : 0
-    );
-
-    definirTextoDashboard(
-        "dashboard-aguardando",
-        contarEncomendasDashboard(
-            "Aguardando"
-        )
-    );
-
-    definirTextoDashboard(
-        "dashboard-producao",
-        contarEncomendasDashboard(
-            "Em produção"
-        )
-    );
-
-    definirTextoDashboard(
-        "dashboard-finalizadas",
-        contarEncomendasDashboard(
-            "Finalizada"
-        )
-    );
-
-    definirTextoDashboard(
-        "dashboard-entregues",
-        contarEncomendasDashboard(
-            "Entregue"
-        )
-    );
-
-    definirTextoDashboard(
-        "dashboard-atrasadas",
-        calcularEncomendasAtrasadasDashboard()
-    );
-
-    definirDinheiroDashboard(
-        "dashboard-saldo-financeiro",
-        financeiro.saldo
-    );
-
-    definirDinheiroDashboard(
-        "dashboard-total-entradas",
-        financeiro.entradas
-    );
-
-    definirDinheiroDashboard(
-        "dashboard-total-despesas",
-        financeiro.despesas
-    );
-
-    definirDinheiroDashboard(
-        "dashboard-valor-encomendas",
-        resumoEncomendas.valorTotal
-    );
-
-    definirDinheiroDashboard(
-        "dashboard-ticket-medio",
-        resumoEncomendas.ticketMedio
-    );
-
-    if (
-        typeof atualizarDashboard ===
-        "function"
+    function calcularEquipamentosDashboard(
+        impressoras
     ) {
-        atualizarDashboard();
-    }
 
-    atualizarAlertasDashboard();
-}
-// =========================
-// ALERTAS
-// =========================
+        let ativas = 0;
 
-function atualizarAlertasDashboard() {
-const produto =
-    JSON.parse(
-        localStorage.getItem(
-            "organiza3d_produtos_produzidos"
-        )
-    ) || [];
+        let emManutencao = 0;
 
-const impressoras =
-    JSON.parse(
-        localStorage.getItem(
-            "organiza3d_impressoras"
-        )
-    ) || [];
+        let horasProducoes = 0;
 
-const filamentos =
-    JSON.parse(
-        localStorage.getItem(
-            "organiza3d_filamentos"
-        )
-    ) || [];
-    const campoAlertas =
-        document.getElementById(
-            "dashboard-alertas"
+        let horasTotais = 0;
+
+        impressoras.forEach(
+            function (impressora) {
+
+                const status =
+                    String(
+                        impressora.status ||
+                        ""
+                    ).toLowerCase();
+
+                if (
+                    status === "ativa" ||
+                    status === "ativo"
+                ) {
+
+                    ativas += 1;
+
+                }
+
+                if (
+                    status.includes(
+                        "manuten"
+                    )
+                ) {
+
+                    emManutencao += 1;
+
+                }
+
+                const horasIniciais =
+                    numeroDashboard(
+                        impressora.horasIniciais
+                    );
+
+                const horasProducao =
+                    numeroDashboard(
+                        impressora.horasProducoes
+                    );
+
+                const horasAjustes =
+                    numeroDashboard(
+                        impressora.horasAjustes
+                    );
+
+                horasProducoes +=
+                    horasProducao;
+
+                horasTotais +=
+                    Math.max(
+                        0,
+                        horasIniciais +
+                        horasProducao +
+                        horasAjustes
+                    );
+
+            }
         );
 
-    if (!campoAlertas) {
-        return;
+        return {
+
+            total:
+                impressoras.length,
+
+            ativas:
+                ativas,
+
+            emManutencao:
+                emManutencao,
+
+            horasProducoes:
+                horasProducoes,
+
+            horasTotais:
+                horasTotais
+
+        };
+
     }
 
-    const alertas = [];
+    // ==================================================
+    // ALERTAS DO DASHBOARD
+    // ==================================================
 
-    const financeiro =
-        calcularFinanceiroDashboard();
+    function atualizarAlertasDashboard(
+        dados
+    ) {
 
-    const encomendasAtrasadas =
-        calcularEncomendasAtrasadasDashboard();
+        const campo =
+            document.getElementById(
+                "dashboard-alertas"
+            );
 
-    const produtoEstoqueBaixo =
-        Array.isArray(produto)
-            ? produto.filter(function (produto) {
-                  return produto.status ===
-                      "Estoque baixo";
-              }).length
-            : 0;
+        if (!campo) {
 
-    const produtoSemEstoque =
-        Array.isArray(produto)
-            ? produto.filter(function (produto) {
-                  return produto.status ===
-                      "Sem estoque";
-              }).length
-            : 0;
+            return;
 
-    const impressorasManutencao =
-        Array.isArray(impressoras)
-            ? impressoras.filter(function (impressora) {
-                  return impressora.status ===
-                      "Em manutenção";
-              }).length
-            : 0;
+        }
 
-    const filamentosCriticos =
-        typeof filamentos !== "undefined" &&
-        Array.isArray(filamentos)
-            ? filamentos.filter(function (filamento) {
-                  return [
-                      "Baixo",
-                      "Crítico",
-                      "Esgotado"
-                  ].includes(filamento.status);
-              }).length
-            : 0;
+        const alertas = [];
 
-    if (encomendasAtrasadas > 0) {
-        alertas.push(
-            `${encomendasAtrasadas} encomenda(s) atrasada(s).`
+        if (
+            dados.financeiro
+                .entradasPendentes > 0
+        ) {
+
+            alertas.push(
+                "Valores a receber: " +
+                dinheiroDashboard(
+                    dados.financeiro
+                        .entradasPendentes
+                ) +
+                "."
+            );
+
+        }
+
+        if (
+            dados.financeiro
+                .despesasPendentes > 0
+        ) {
+
+            alertas.push(
+                "Valores a pagar: " +
+                dinheiroDashboard(
+                    dados.financeiro
+                        .despesasPendentes
+                ) +
+                "."
+            );
+
+        }
+
+        if (
+            dados.financeiro.saldo < 0
+        ) {
+
+            alertas.push(
+                "Saldo financeiro negativo em " +
+                dinheiroDashboard(
+                    Math.abs(
+                        dados.financeiro.saldo
+                    )
+                ) +
+                "."
+            );
+
+        }
+
+        if (
+            dados.filamentos
+                .estoqueBaixo > 0
+        ) {
+
+            alertas.push(
+                dados.filamentos
+                    .estoqueBaixo +
+                " filamento(s) com estoque baixo."
+            );
+
+        }
+
+        if (
+            dados.filamentos
+                .finalizados > 0
+        ) {
+
+            alertas.push(
+                dados.filamentos
+                    .finalizados +
+                " filamento(s) finalizado(s)."
+            );
+
+        }
+
+        if (
+            dados.equipamentos
+                .emManutencao > 0
+        ) {
+
+            alertas.push(
+                dados.equipamentos
+                    .emManutencao +
+                " impressora(s) em manutenção."
+            );
+
+        }
+
+        if (
+            dados.produtos
+                .unidadesEstoque <= 0
+        ) {
+
+            alertas.push(
+                "Não há unidades de produtos disponíveis em estoque."
+            );
+
+        }
+
+        if (
+            alertas.length === 0
+        ) {
+
+            campo.innerHTML =
+                "<p>Nenhum aviso no momento.</p>";
+
+            return;
+
+        }
+
+        campo.innerHTML =
+            alertas
+                .map(
+                    function (alerta) {
+
+                        return (
+                            "<p>⚠️ " +
+                            alerta +
+                            "</p>"
+                        );
+
+                    }
+                )
+                .join("");
+
+    }
+
+    // ==================================================
+    // ATUALIZAÇÃO PRINCIPAL
+    // ==================================================
+
+    function atualizarDashboardCompleto() {
+
+        const produtos =
+            lerListaDashboard(
+                CHAVE_PRODUTOS
+            );
+
+        const vendas =
+            lerListaDashboard(
+                CHAVE_VENDAS
+            );
+
+        const clientes =
+            lerListaDashboard(
+                CHAVE_CLIENTES
+            );
+
+        const filamentos =
+            lerListaDashboard(
+                CHAVE_FILAMENTOS
+            );
+
+        const impressoras =
+            lerListaDashboard(
+                CHAVE_IMPRESSORAS
+            );
+
+        const financeiro =
+            lerListaDashboard(
+                CHAVE_FINANCEIRO
+            );
+
+        const consumosProprios =
+            lerListaDashboard(
+                CHAVE_CONSUMO_PROPRIO
+            );
+
+        const perdas =
+            lerListaDashboard(
+                CHAVE_PERDAS
+            );
+
+        const resumoVendas =
+            calcularVendasDashboard(
+                vendas
+            );
+
+        const resumoFinanceiro =
+            calcularFinanceiroDashboard(
+                financeiro
+            );
+
+        const resumoProdutos =
+            calcularProdutosDashboard(
+                produtos
+            );
+
+        const resumoFilamentos =
+            calcularFilamentosDashboard(
+                filamentos
+            );
+
+        const resumoEquipamentos =
+            calcularEquipamentosDashboard(
+                impressoras
+            );
+
+        const totalConsumoProprio =
+            calcularConsumoProprioDashboard(
+                consumosProprios
+            );
+
+        const totalPerdas =
+            calcularPerdasDashboard(
+                perdas
+            );
+
+        // ==============================================
+        // FINANCEIRO E VENDAS
+        // ==============================================
+
+        definirDinheiroDashboard(
+            "total-faturamento",
+            resumoVendas.faturamento
         );
-    }
 
-    if (produtoEstoqueBaixo > 0) {
-        alertas.push(
-            `${produtoEstoqueBaixo} produto(s) com estoque baixo.`
+        definirDinheiroDashboard(
+            "dashboard-total-entradas",
+            resumoFinanceiro.entradas
         );
-    }
 
-    if (produtoSemEstoque > 0) {
-        alertas.push(
-            `${produtoSemEstoque} produto(s) sem estoque.`
+        definirDinheiroDashboard(
+            "dashboard-total-despesas",
+            resumoFinanceiro.despesas
         );
-    }
 
-    if (impressorasManutencao > 0) {
-        alertas.push(
-            `${impressorasManutencao} impressora(s) em manutenção.`
+        definirDinheiroDashboard(
+            "dashboard-saldo-financeiro",
+            resumoFinanceiro.saldo
         );
-    }
 
-    if (filamentosCriticos > 0) {
-        alertas.push(
-            `${filamentosCriticos} filamento(s) com estoque crítico.`
+        definirDinheiroDashboard(
+            "dashboard-entradas-pendentes",
+            resumoFinanceiro
+                .entradasPendentes
         );
-    }
 
-    if (financeiro.entradasPendentes > 0) {
-        alertas.push(
-            `Entradas pendentes: ${formatarDinheiro(
-                financeiro.entradasPendentes
-            )}.`
+        definirDinheiroDashboard(
+            "dashboard-despesas-pendentes",
+            resumoFinanceiro
+                .despesasPendentes
         );
-    }
 
-    if (financeiro.despesasPendentes > 0) {
-        alertas.push(
-            `Despesas pendentes: ${formatarDinheiro(
-                financeiro.despesasPendentes
-            )}.`
+        definirTextoDashboard(
+            "dashboard-total-vendas",
+            resumoVendas.totalVendas
         );
-    }
 
-    if (financeiro.saldo < 0) {
-        alertas.push(
-            `Saldo negativo de ${formatarDinheiro(
-                Math.abs(financeiro.saldo)
-            )}.`
+        definirTextoDashboard(
+            "dashboard-unidades-vendidas",
+            numeroFormatadoDashboard(
+                resumoVendas
+                    .unidadesVendidas,
+                0
+            )
         );
+
+        definirTextoDashboard(
+            "dashboard-total-brindes",
+            numeroFormatadoDashboard(
+                resumoVendas.brindes,
+                0
+            )
+        );
+
+        definirDinheiroDashboard(
+            "dashboard-ticket-medio",
+            resumoVendas.ticketMedio
+        );
+
+        // ==============================================
+        // PRODUTOS E ESTOQUE
+        // ==============================================
+
+        definirTextoDashboard(
+            "total-produto",
+            resumoProdutos.totalProdutos
+        );
+
+        definirTextoDashboard(
+            "dashboard-unidades-estoque",
+            numeroFormatadoDashboard(
+                resumoProdutos
+                    .unidadesEstoque,
+                0
+            )
+        );
+
+        definirDinheiroDashboard(
+            "dashboard-valor-estoque",
+            resumoProdutos.valorEstoque
+        );
+
+        definirTextoDashboard(
+            "dashboard-consumo-proprio",
+            numeroFormatadoDashboard(
+                totalConsumoProprio,
+                0
+            )
+        );
+
+        definirTextoDashboard(
+            "dashboard-perdas-produtos",
+            numeroFormatadoDashboard(
+                totalPerdas,
+                0
+            )
+        );
+
+        definirTextoDashboard(
+            "total-filamento",
+            resumoFilamentos.total
+        );
+
+        definirTextoDashboard(
+            "dashboard-filamento-disponivel",
+            numeroFormatadoDashboard(
+                resumoFilamentos
+                    .pesoDisponivel,
+                2
+            ) +
+            " g"
+        );
+
+        definirTextoDashboard(
+            "total-cliente",
+            clientes.length
+        );
+
+        // ==============================================
+        // EQUIPAMENTOS
+        // ==============================================
+
+        definirTextoDashboard(
+            "total-impressoras",
+            resumoEquipamentos.total
+        );
+
+        definirTextoDashboard(
+            "dashboard-impressoras-ativas",
+            resumoEquipamentos.ativas
+        );
+
+        definirTextoDashboard(
+            "dashboard-horas-producao",
+            formatarHorasDashboard(
+                resumoEquipamentos
+                    .horasProducoes
+            )
+        );
+
+        definirTextoDashboard(
+            "dashboard-horas-totais",
+            formatarHorasDashboard(
+                resumoEquipamentos
+                    .horasTotais
+            )
+        );
+
+        // ==============================================
+        // ALERTAS
+        // ==============================================
+
+        atualizarAlertasDashboard({
+
+            financeiro:
+                resumoFinanceiro,
+
+            produtos:
+                resumoProdutos,
+
+            filamentos:
+                resumoFilamentos,
+
+            equipamentos:
+                resumoEquipamentos
+
+        });
+
     }
 
-    if (alertas.length === 0) {
+    // ==================================================
+    // EVENTOS
+    // ==================================================
 
-        campoAlertas.innerHTML =
-            "<p>Nenhum alerta no momento.</p>";
+    function configurarEventosDashboard() {
 
-        return;
+        const menuDashboard =
+            document.querySelector(
+                '[data-pagina="dashboard"]'
+            );
+
+        const botaoAtualizar =
+            document.getElementById(
+                "atualizar-dashboard"
+            );
+
+        if (menuDashboard) {
+
+            menuDashboard.addEventListener(
+                "click",
+                atualizarDashboardCompleto
+            );
+
+        }
+
+        if (botaoAtualizar) {
+
+            botaoAtualizar.addEventListener(
+                "click",
+                function () {
+
+                    atualizarDashboardCompleto();
+
+                    alert(
+                        "Dashboard atualizado com sucesso!"
+                    );
+
+                }
+            );
+
+        }
+
     }
 
-    campoAlertas.innerHTML =
-        alertas
-            .map(function (alerta) {
-               return `<p>⚠️ ${alerta}</p>`;
-            })
-            .join("");
+    // ==================================================
+    // EXPOR ATUALIZAÇÃO PARA OUTROS MÓDULOS
+    // ==================================================
 
-}
+    window.atualizarDashboardCompleto =
+        atualizarDashboardCompleto;
 
-// =========================
-// EVENTOS
-// =========================
+    // ==================================================
+    // ATUALIZAÇÃO POR ALTERAÇÃO DO LOCALSTORAGE
+    // ==================================================
 
-if (menuDashboard) {
+    window.addEventListener(
+        "storage",
+        function (evento) {
 
-    menuDashboard.addEventListener(
-        "click",
-        atualizarDashboardCompleto);}
+            const chavesDashboard = [
 
-if (botaoAtualizarDashboardCompleto) {
+                CHAVE_PRODUTOS,
+                CHAVE_VENDAS,
+                CHAVE_CLIENTES,
+                CHAVE_FILAMENTOS,
+                CHAVE_IMPRESSORAS,
+                CHAVE_FINANCEIRO,
+                CHAVE_CONSUMO_PROPRIO,
+                CHAVE_PERDAS
 
-    botaoAtualizarDashboardCompleto
-        .addEventListener(
-            "click",
-            function () {
+            ];
+
+            if (
+                evento.key &&
+                chavesDashboard.includes(
+                    evento.key
+                )
+            ) {
 
                 atualizarDashboardCompleto();
 
-                alert(
-                    "Dashboard atualizado com sucesso!"
-                );
-
             }
-        );
 
-}
+        }
+    );
 
-// =========================
-// INICIALIZAÇÃO
-// =========================
+    // ==================================================
+    // INICIALIZAÇÃO
+    // ==================================================
 
-atualizarDashboardCompleto();
+    configurarEventosDashboard();
+
+    atualizarDashboardCompleto();
+
+})();
