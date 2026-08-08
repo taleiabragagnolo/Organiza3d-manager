@@ -1603,136 +1603,159 @@
 
             <h3>Resumo financeiro da produção</h3>
 
-            <div class="linha">
+            <!-- ================================================= -->
+<!-- RESUMO FINANCEIRO - LAYOUT COMPACTO -->
+<!-- ================================================= -->
 
-                <div class="campo">
+<!-- LINHA 1 -->
 
-                    <label for="produto-custo-insumos">
-                        Custo total dos insumos
-                    </label>
+<div class="linha linha-resumo-financeiro">
 
-                    <input
-                        type="text"
-                        id="produto-custo-insumos"
-                        value="R$ 0,00"
-                        readonly>
+    <!-- CUSTO DOS INSUMOS -->
 
-                </div>
+    <div class="campo campo-resumo-produto">
 
-                <div class="campo">
+        <label for="produto-custo-insumos">
+            Custo dos insumos
+        </label>
 
-                    <label for="produto-custo-total-producao">
-                        Custo total da produção
-                    </label>
+        <input
+            type="text"
+            id="produto-custo-insumos"
+            value="R$ 0,00"
+            readonly>
 
-                    <input
-                        type="text"
-                        id="produto-custo-total-producao"
-                        value="R$ 0,00"
-                        readonly>
+    </div>
 
-                </div>
 
-            </div>
+    <!-- CUSTO TOTAL DA PRODUÇÃO -->
 
-            <div class="linha">
+    <div class="campo campo-resumo-produto">
 
-                <div class="campo">
+        <label for="produto-custo-total-producao">
+            Custo da produção
+        </label>
 
-                    <label for="produto-custo-unitario-real">
-                        Custo unitário real
-                    </label>
+        <input
+            type="text"
+            id="produto-custo-total-producao"
+            value="R$ 0,00"
+            readonly>
 
-                    <input
-                        type="text"
-                        id="produto-custo-unitario-real"
-                        value="R$ 0,00"
-                        readonly>
+    </div>
 
-                </div>
 
-                <div class="campo">
+    <!-- CUSTO UNITÁRIO -->
 
-                    <label for="produto-preco-venda">
-                        Preço de venda por unidade
-                    </label>
+    <div class="campo campo-resumo-produto">
 
-                    <input
-                        type="number"
-                        id="produto-preco-venda"
-                        min="0"
-                        step="0.01"
-                        placeholder="Ex.: 15,00">
+        <label for="produto-custo-unitario-real">
+            Custo unitário
+        </label>
 
-                </div>
+        <input
+            type="text"
+            id="produto-custo-unitario-real"
+            value="R$ 0,00"
+            readonly>
 
-            </div>
+    </div>
 
-            <div class="linha">
 
-                <div class="campo">
+    <!-- PREÇO DE VENDA -->
 
-                    <label for="produto-lucro-unitario">
-                        Lucro por unidade
-                    </label>
+    <div class="campo campo-resumo-produto">
 
-                    <input
-                        type="text"
-                        id="produto-lucro-unitario"
-                        value="R$ 0,00"
-                        readonly>
+        <label for="produto-preco-venda">
+            Preço de venda
+        </label>
 
-                </div>
+        <input
+            type="number"
+            id="produto-preco-venda"
+            min="0"
+            step="0.01"
+            placeholder="Ex.: 15,00">
 
-                <div class="campo">
+    </div>
 
-                    <label for="produto-margem-real">
-                        Margem real
-                    </label>
+</div>
 
-                    <input
-                        type="text"
-                        id="produto-margem-real"
-                        value="0%"
-                        readonly>
 
-                </div>
+<!-- LINHA 2 -->
 
-            </div>
+<div class="linha linha-resumo-financeiro">
 
-            <div class="linha">
+    <!-- LUCRO UNITÁRIO -->
 
-                <div class="campo">
+    <div class="campo campo-resumo-produto">
 
-                    <label for="produto-valor-total-estoque">
-                        Valor total de venda do estoque
-                    </label>
+        <label for="produto-lucro-unitario">
+            Lucro por unidade
+        </label>
 
-                    <input
-                        type="text"
-                        id="produto-valor-total-estoque"
-                        value="R$ 0,00"
-                        readonly>
+        <input
+            type="text"
+            id="produto-lucro-unitario"
+            value="R$ 0,00"
+            readonly>
 
-                </div>
+    </div>
 
-                <div class="campo">
 
-                    <label for="produto-quantidade-disponivel">
-                        Quantidade disponível
-                    </label>
+    <!-- MARGEM -->
 
-                    <input
-                        type="number"
-                        id="produto-quantidade-disponivel"
-                        min="0"
-                        step="1"
-                        value="0"
-                        readonly>
+    <div class="campo campo-resumo-produto">
 
-                </div>
+        <label for="produto-margem-real">
+            Margem
+        </label>
 
-            </div>
+        <input
+            type="text"
+            id="produto-margem-real"
+            value="0%"
+            readonly>
+
+    </div>
+
+
+    <!-- VALOR TOTAL DO ESTOQUE -->
+
+    <div class="campo campo-resumo-produto">
+
+        <label for="produto-valor-total-estoque">
+            Valor do estoque
+        </label>
+
+        <input
+            type="text"
+            id="produto-valor-total-estoque"
+            value="R$ 0,00"
+            readonly>
+
+    </div>
+
+
+    <!-- QUANTIDADE DISPONÍVEL -->
+
+    <div class="campo campo-resumo-produto">
+
+        <label for="produto-quantidade-disponivel">
+            Qtd. disponível
+        </label>
+
+        <input
+            type="number"
+            id="produto-quantidade-disponivel"
+            min="0"
+            step="1"
+            value="0"
+            readonly>
+
+    </div>
+
+</div>
 
             <div class="campo campo-completo">
 
@@ -1747,18 +1770,26 @@
 
             </div>
 
-            <button
-                id="salvar-produto-produzido"
-                class="botao-principal"
-                type="button">
-                Salvar Produção
-            </button>
+<!-- ================================================= -->
+<!-- AÇÕES DA PRODUÇÃO -->
+<!-- ================================================= -->
 
-            <button
-                id="limpar-formulario-produto-produzido"
-                type="button">
-                Limpar Formulário
-            </button>
+<div class="acoes-produto-producao">
+
+    <button
+        id="salvar-produto-produzido"
+        class="botao-principal"
+        type="button">
+        Salvar Produção
+    </button>
+
+    <button
+        id="limpar-formulario-produto-produzido"
+        type="button">
+        Limpar Formulário
+    </button>
+
+</div>
 
         </div>
 
