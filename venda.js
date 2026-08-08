@@ -1773,9 +1773,9 @@
         }
 
         if (
-            totais.valorPago >
-            totais.total
-        ) {
+    Math.round(totais.valorPago * 100) >
+    Math.round(totais.total * 100)
+) {
 
             alert(
                 "O valor pago não pode ser maior que o total da venda."
