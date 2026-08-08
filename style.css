@@ -3169,3 +3169,390 @@ button {
     }
 
 }
+/* ===================================================== */
+/* ORGANIZA 3D - AJUSTE FINAL DA TELA DE VENDAS */
+/* ===================================================== */
+
+
+/* ===================================================== */
+/* BLOCO PRINCIPAL DA VENDA */
+/* ===================================================== */
+
+#vendas .formulario {
+
+    display: block;
+
+    padding: 24px 28px;
+
+    border-radius: 16px;
+
+    background: #fffefa;
+
+}
+
+
+/* ===================================================== */
+/* CLIENTE + DATA NA MESMA LINHA */
+/* ===================================================== */
+
+#vendas .formulario > .linha {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    align-items: flex-end;
+
+    gap: 18px;
+
+    margin-bottom: 22px;
+
+}
+
+
+/* ===================================================== */
+/* TÍTULOS DAS SEÇÕES */
+/* ===================================================== */
+
+#vendas .formulario h3 {
+
+    margin-top: 22px;
+
+    margin-bottom: 5px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid var(--nova-borda);
+
+    color: #cf796f;
+
+    font-size: 17px;
+
+}
+
+
+/* ===================================================== */
+/* PRODUTOS DA VENDA */
+/* ===================================================== */
+
+#vendas .item-venda {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(240px, 2fr)
+        150px
+        95px
+        130px
+        105px
+        130px
+        100px;
+
+    gap: 12px;
+
+    align-items: end;
+
+    width: 100%;
+
+    margin-top: 14px;
+
+}
+
+
+/* ===================================================== */
+/* BOTÃO ADICIONAR NOVO PRODUTO */
+/* ===================================================== */
+
+#adicionar-item-venda {
+
+    display: block;
+
+    width: max-content;
+
+    min-width: 0;
+
+    margin:
+        12px 0
+        12px auto;
+
+    padding:
+        9px 16px;
+
+    border: 0;
+
+    border-radius: 8px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--nova-verde),
+            #879474
+        );
+
+    color: white;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+}
+
+
+#adicionar-item-venda:hover {
+
+    background:
+        var(--nova-verde-escuro);
+
+}
+
+
+/* ===================================================== */
+/* CAMPOS DA LINHA DO PRODUTO */
+/* ===================================================== */
+
+.item-venda .campo {
+
+    min-width: 0;
+
+}
+
+
+.item-venda .campo input,
+.item-venda .campo select {
+
+    width: 100%;
+
+    max-width: none;
+
+}
+
+
+/* ===================================================== */
+/* TOTAL DA VENDA - UMA ÚNICA LINHA */
+/* ===================================================== */
+
+#vendas .totais-venda,
+#vendas .resumo-venda,
+#vendas .grupo-totais {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(7, minmax(110px, 1fr));
+
+    gap: 14px;
+
+    align-items: end;
+
+    width: 100%;
+
+}
+
+
+/* ===================================================== */
+/* CAMPOS DOS TOTAIS */
+/* ===================================================== */
+
+#venda-subtotal,
+#venda-desconto,
+#venda-desconto-valor,
+#venda-frete,
+#venda-total-final,
+#venda-valor-pago,
+#venda-valor-pendente {
+
+    width: 100%;
+
+    max-width: none;
+
+}
+
+
+/* ===================================================== */
+/* PAGAMENTO */
+/* ===================================================== */
+
+#vendas .pagamento-venda,
+#vendas .grupo-pagamento {
+
+    display: grid;
+
+    grid-template-columns:
+        220px
+        220px
+        minmax(300px, 1fr);
+
+    gap: 18px;
+
+    align-items: end;
+
+}
+
+
+/* ===================================================== */
+/* OBSERVAÇÕES */
+/* ===================================================== */
+
+#venda-observacoes {
+
+    width: 100%;
+
+    max-width: none;
+
+    min-height: 72px;
+
+}
+
+
+/* ===================================================== */
+/* BOTÕES REGISTRAR + LIMPAR */
+/* ===================================================== */
+
+#vendas .acoes-formulario {
+
+    display: flex;
+
+    flex-direction: row;
+
+    justify-content: flex-end;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-top: 18px;
+
+}
+
+
+/* REGISTRAR VENDA */
+
+#salvar-venda {
+
+    width: auto;
+
+    min-width: 165px;
+
+    padding: 11px 20px;
+
+    border: 0;
+
+    border-radius: 8px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--nova-verde),
+            #7f8d6b
+        );
+
+    color: white;
+
+    font-weight: 700;
+
+}
+
+
+/* LIMPAR FORMULÁRIO */
+
+#limpar-formulario-venda {
+
+    width: auto;
+
+    min-width: 160px;
+
+    padding: 10px 18px;
+
+    border:
+        1px solid
+        var(--nova-rose);
+
+    border-radius: 8px;
+
+    background: #fffefa;
+
+    color: #c86f68;
+
+    font-weight: 700;
+
+}
+
+
+/* ===================================================== */
+/* BOTÃO REMOVER */
+/* ===================================================== */
+
+.item-venda .botao-excluir,
+.item-venda .remover-item-venda {
+
+    width: auto;
+
+    min-width: 90px;
+
+    padding: 9px 12px;
+
+    white-space: nowrap;
+
+}
+
+
+/* ===================================================== */
+/* RESPONSIVO */
+/* ===================================================== */
+
+@media (max-width: 1200px) {
+
+    #vendas .item-venda {
+
+        grid-template-columns:
+            repeat(2, minmax(220px, 1fr));
+
+    }
+
+    #vendas .totais-venda,
+    #vendas .resumo-venda,
+    #vendas .grupo-totais {
+
+        grid-template-columns:
+            repeat(3, minmax(150px, 1fr));
+
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    #vendas .item-venda,
+    #vendas .totais-venda,
+    #vendas .resumo-venda,
+    #vendas .grupo-totais,
+    #vendas .pagamento-venda,
+    #vendas .grupo-pagamento {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+    #vendas .acoes-formulario {
+
+        flex-direction:
+            column;
+
+        align-items:
+            stretch;
+
+    }
+
+    #salvar-venda,
+    #limpar-formulario-venda {
+
+        width:
+            100%;
+
+    }
+
+}
