@@ -682,3 +682,1192 @@ button {
 .conteudo-aba-filamento.ativo{
     display:block;
 }
+
+/* ===================================================== */
+/* ORGANIZA 3D MANAGER - NOVO VISUAL */
+/* PARTE 1 - IDENTIDADE GERAL E MENU */
+/* ===================================================== */
+
+:root {
+
+    /* BASE */
+    --nova-creme: #fbf7f1;
+    --nova-branca: #fffdf9;
+    --nova-areia: #eee4d7;
+
+    /* HOME / ORGANIZAÇÃO */
+    --nova-verde: #9ba58c;
+    --nova-verde-claro: #e3e8dc;
+    --nova-verde-escuro: #667055;
+
+    /* KIDS / ACOLHIMENTO */
+    --nova-rose: #d6a092;
+    --nova-rose-claro: #f2ddd6;
+    --nova-pessego: #e7b596;
+
+    /* RELIGIOSO / ELEGÂNCIA */
+    --nova-dourado: #b89b6a;
+    --nova-dourado-claro: #eee3cb;
+
+    /* TEXTO */
+    --nova-marrom: #544238;
+    --nova-marrom-claro: #816f62;
+
+    /* ESTRUTURA */
+    --nova-borda: #e8ddd2;
+    --nova-sombra:
+        0 5px 18px rgba(84, 66, 56, 0.08);
+}
+
+
+/* ===================================================== */
+/* FUNDO E TEXTO GERAL */
+/* ===================================================== */
+
+body {
+    background:
+        linear-gradient(
+            135deg,
+            #fbf8f3 0%,
+            #f8f4ee 55%,
+            #fbf7f1 100%
+        );
+
+    color: var(--nova-marrom);
+
+    font-family:
+        "Trebuchet MS",
+        Arial,
+        Helvetica,
+        sans-serif;
+}
+
+
+/* ===================================================== */
+/* CONTEÚDO PRINCIPAL */
+/* ===================================================== */
+
+.conteudo {
+    padding: 26px 30px 40px;
+    background: transparent;
+}
+
+
+/* ===================================================== */
+/* MENU LATERAL */
+/* ===================================================== */
+
+.menu-lateral {
+
+    width: 225px;
+
+    min-height: 100vh;
+
+    padding:
+        28px
+        16px
+        22px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #fffaf5 0%,
+            #f8f1e9 100%
+        );
+
+    color:
+        var(--nova-marrom);
+
+    border-right:
+        1px solid
+        var(--nova-borda);
+
+    box-shadow:
+        5px 0 18px
+        rgba(84, 66, 56, 0.04);
+}
+
+
+/* ===================================================== */
+/* LOGO DO MENU */
+/* ===================================================== */
+
+.logo {
+
+    margin-bottom: 30px;
+
+    padding:
+        4px 10px
+        20px;
+
+    text-align: center;
+
+    border-bottom:
+        1px solid
+        var(--nova-borda);
+}
+
+
+.logo h2 {
+
+    color:
+        var(--nova-marrom);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 25px;
+
+    font-weight: normal;
+}
+
+
+.logo p {
+
+    margin-top: 5px;
+
+    color:
+        var(--nova-rose);
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+}
+
+
+/* ===================================================== */
+/* ITENS DO MENU */
+/* ===================================================== */
+
+.menu {
+    gap: 7px;
+}
+
+
+.menu-item {
+
+    width: 100%;
+
+    padding:
+        12px
+        14px;
+
+    border:
+        1px solid
+        transparent;
+
+    border-radius:
+        9px;
+
+    background:
+        transparent;
+
+    color:
+        var(--nova-marrom);
+
+    font-size:
+        15px;
+
+    text-align:
+        left;
+
+    transition:
+        all 0.18s ease;
+}
+
+
+.menu-item:hover {
+
+    background:
+        rgba(
+            214,
+            160,
+            146,
+            0.10
+        );
+
+    border-color:
+        rgba(
+            214,
+            160,
+            146,
+            0.18
+        );
+
+    transform:
+        translateX(2px);
+}
+
+
+.menu-item.ativo {
+
+    background:
+        linear-gradient(
+            135deg,
+            #dda99b,
+            #cf9183
+        );
+
+    color:
+        #ffffff;
+
+    border-color:
+        transparent;
+
+    box-shadow:
+        0 4px 12px
+        rgba(
+            180,
+            120,
+            105,
+            0.18
+        );
+}
+
+
+/* ===================================================== */
+/* BOTÃO SAIR */
+/* ===================================================== */
+
+.menu-rodape {
+
+    margin-top:
+        35px;
+
+    padding-top:
+        18px;
+
+    border-top:
+        1px solid
+        var(--nova-borda);
+}
+
+
+.botao-sair,
+#botao-sair {
+
+    width:
+        100%;
+
+    padding:
+        11px 14px;
+
+    border:
+        1px solid
+        var(--nova-borda);
+
+    border-radius:
+        9px;
+
+    background:
+        rgba(
+            255,
+            253,
+            249,
+            0.75
+        );
+
+    color:
+        var(--nova-marrom);
+
+    text-align:
+        left;
+
+    transition:
+        0.18s;
+}
+
+
+.botao-sair:hover,
+#botao-sair:hover {
+
+    background:
+        var(--nova-rose-claro);
+
+    border-color:
+        var(--nova-rose);
+
+}
+
+
+/* ===================================================== */
+/* TÍTULOS DAS PÁGINAS */
+/* ===================================================== */
+
+.pagina > h2 {
+
+    margin-bottom:
+        6px;
+
+    color:
+        var(--nova-marrom);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:
+        27px;
+
+    font-weight:
+        normal;
+}
+
+
+.pagina > p {
+
+    margin-bottom:
+        20px;
+
+    color:
+        var(--nova-marrom-claro);
+
+    line-height:
+        1.5;
+}
+
+
+.pagina > h3 {
+
+    margin-top:
+        24px;
+
+    margin-bottom:
+        10px;
+
+    color:
+        var(--nova-rose);
+
+    font-size:
+        15px;
+
+    font-weight:
+        bold;
+}
+
+
+/* ===================================================== */
+/* RESPONSIVO */
+/* ===================================================== */
+
+@media (max-width: 700px) {
+
+    .menu-lateral {
+
+        width:
+            100%;
+
+        min-height:
+            auto;
+
+    }
+
+    .conteudo {
+
+        padding:
+            18px;
+
+    }
+
+}/* ===================================================== */
+/* ORGANIZA 3D MANAGER - NOVO VISUAL */
+/* PARTE 2 - FORMULÁRIOS COMPACTOS E HORIZONTAIS */
+/* ===================================================== */
+
+
+/* ===================================================== */
+/* FORMULÁRIOS */
+/* ===================================================== */
+
+.formulario {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(12, minmax(0, 1fr));
+
+    gap:
+        14px 18px;
+
+    padding:
+        22px;
+
+    border:
+        1px solid
+        var(--nova-borda);
+
+    border-radius:
+        14px;
+
+    background:
+        rgba(
+            255,
+            253,
+            249,
+            0.94
+        );
+
+    box-shadow:
+        var(--nova-sombra);
+}
+
+
+/* ===================================================== */
+/* LINHAS INTERNAS */
+/* ===================================================== */
+
+.linha {
+
+    grid-column:
+        1 / -1;
+
+    display:
+        flex;
+
+    flex-wrap:
+        wrap;
+
+    align-items:
+        flex-end;
+
+    gap:
+        14px 18px;
+}
+
+
+/* ===================================================== */
+/* CAMPOS */
+/* ===================================================== */
+
+.campo {
+
+    flex:
+        1 1 220px;
+
+    min-width:
+        180px;
+
+    gap:
+        6px;
+}
+
+
+.campo label {
+
+    color:
+        var(--nova-marrom);
+
+    font-size:
+        13px;
+
+    font-weight:
+        700;
+}
+
+
+.campo input,
+.campo select,
+.campo textarea {
+
+    min-height:
+        42px;
+
+    padding:
+        9px 12px;
+
+    border:
+        1px solid
+        var(--nova-borda);
+
+    border-radius:
+        8px;
+
+    background:
+        #fffefa;
+
+    color:
+        var(--nova-marrom);
+}
+
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+
+    border-color:
+        var(--nova-rose);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(
+            214,
+            160,
+            146,
+            0.14
+        );
+}
+
+
+/* ===================================================== */
+/* CAMPOS PEQUENOS */
+/* ===================================================== */
+
+input[type="date"] {
+
+    max-width:
+        190px;
+}
+
+
+input[type="number"] {
+
+    max-width:
+        180px;
+}
+
+
+/* ===================================================== */
+/* CAMPOS DE QUANTIDADE */
+/* ===================================================== */
+
+#produto-produzido-quantidade,
+.venda-item-quantidade,
+.produto-filamento-quantidade,
+.produto-acessorio-quantidade {
+
+    max-width:
+        150px;
+}
+
+
+/* ===================================================== */
+/* CAMPOS DE DATA */
+/* ===================================================== */
+
+#produto-produzido-data,
+#venda-data,
+#financeiro-data,
+#relatorio-data-inicial,
+#relatorio-data-final {
+
+    max-width:
+        185px;
+}
+
+
+/* ===================================================== */
+/* CAMPOS MONETÁRIOS */
+/* ===================================================== */
+
+#venda-desconto,
+#venda-frete,
+#venda-valor-pago,
+#financeiro-valor,
+#financeiro-valor-pago {
+
+    max-width:
+        180px;
+}
+
+
+/* ===================================================== */
+/* CAMPOS SOMENTE LEITURA */
+/* ===================================================== */
+
+input[readonly] {
+
+    background:
+        #faf7f2;
+
+    color:
+        var(--nova-marrom-claro);
+}
+
+
+/* ===================================================== */
+/* BOTÕES SECUNDÁRIOS COMPACTOS */
+/* ===================================================== */
+
+button:not(.botao-principal):not(.menu-item):not(.botao-sair) {
+
+    min-height:
+        38px;
+
+    padding:
+        8px 14px;
+
+    border-radius:
+        8px;
+}
+
+
+/* ===================================================== */
+/* BOTÕES ADICIONAR */
+/* ===================================================== */
+
+#adicionar-filamento-produto,
+#adicionar-acessorio-produto,
+#adicionar-embalagem-produto,
+#adicionar-item-venda {
+
+    width:
+        auto;
+
+    min-width:
+        0;
+
+    max-width:
+        max-content;
+
+    min-height:
+        38px;
+
+    padding:
+        8px 14px;
+
+    margin:
+        6px 0;
+
+    border:
+        1px solid
+        var(--nova-rose);
+
+    border-radius:
+        8px;
+
+    background:
+        #fffaf7;
+
+    color:
+        var(--nova-rose);
+
+    font-weight:
+        700;
+}
+
+
+#adicionar-filamento-produto:hover,
+#adicionar-acessorio-produto:hover,
+#adicionar-embalagem-produto:hover,
+#adicionar-item-venda:hover {
+
+    background:
+        var(--nova-rose-claro);
+
+}
+
+
+/* ===================================================== */
+/* BOTÃO REMOVER */
+/* ===================================================== */
+
+.botao-excluir {
+
+    width:
+        auto;
+
+    min-width:
+        100px;
+
+    max-width:
+        max-content;
+
+    padding:
+        8px 13px;
+
+    border-radius:
+        8px;
+}
+
+
+/* ===================================================== */
+/* ITENS DE FILAMENTO / ACESSÓRIO / VENDA */
+/* ===================================================== */
+
+.item-filamento-produto,
+.item-acessorio-produto,
+.item-venda {
+
+    align-items:
+        flex-end;
+
+    gap:
+        12px 16px;
+}
+
+
+/* ===================================================== */
+/* TEXTOS DE APOIO */
+/* ===================================================== */
+
+.formulario p {
+
+    line-height:
+        1.45;
+
+    color:
+        var(--nova-marrom-claro);
+}
+
+
+/* ===================================================== */
+/* TEXTAREA */
+/* ===================================================== */
+
+.campo textarea {
+
+    min-height:
+        80px;
+}
+
+
+/* ===================================================== */
+/* RESPONSIVO */
+/* ===================================================== */
+
+@media (max-width: 900px) {
+
+    .linha {
+
+        align-items:
+            stretch;
+
+    }
+
+    .campo {
+
+        flex:
+            1 1 45%;
+
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .linha {
+
+        flex-direction:
+            column;
+
+    }
+
+    .campo {
+
+        width:
+            100%;
+
+        min-width:
+            100%;
+
+    }
+
+    input[type="date"],
+    input[type="number"] {
+
+        max-width:
+            100%;
+
+    }
+
+}
+/* ===================================================== */
+/* ORGANIZA 3D MANAGER - NOVO VISUAL */
+/* PARTE 3 - CARDS, RESUMOS E LISTAS */
+/* ===================================================== */
+
+
+/* ===================================================== */
+/* CARDS DE RESUMO */
+/* ===================================================== */
+
+.cards {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(210px, 1fr)
+        );
+
+    gap:
+        16px;
+
+    margin-top:
+        16px;
+}
+
+
+.card {
+
+    min-height:
+        110px;
+
+    padding:
+        18px 20px;
+
+    border:
+        1px solid
+        var(--nova-borda);
+
+    border-radius:
+        14px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #fffefa,
+            #fbf7f1
+        );
+
+    box-shadow:
+        var(--nova-sombra);
+
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+
+.card:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 8px 24px
+        rgba(
+            84,
+            66,
+            56,
+            0.10
+        );
+}
+
+
+.card span {
+
+    color:
+        var(--nova-marrom-claro);
+
+    font-size:
+        13px;
+
+    font-weight:
+        600;
+}
+
+
+.card strong {
+
+    margin-top:
+        12px;
+
+    color:
+        var(--nova-marrom);
+
+    font-size:
+        25px;
+
+    line-height:
+        1.1;
+}
+
+
+/* ===================================================== */
+/* DESTAQUES SUAVES POR ÁREA */
+/* ===================================================== */
+
+#vendas .card:nth-child(1),
+#vendas .card:nth-child(4) {
+
+    border-top:
+        3px solid
+        var(--nova-rose);
+}
+
+
+#dashboard .card:nth-child(2n) {
+
+    border-top:
+        3px solid
+        var(--nova-verde);
+}
+
+
+#financeiro .card {
+
+    border-top:
+        3px solid
+        var(--nova-verde);
+}
+
+
+#relatorio .card:nth-child(3n) {
+
+    border-top:
+        3px solid
+        var(--nova-dourado);
+}
+
+
+/* ===================================================== */
+/* BLOCOS DE LISTAS */
+/* ===================================================== */
+
+.card-item {
+
+    margin-bottom:
+        12px;
+
+    padding:
+        16px 18px;
+
+    border:
+        1px solid
+        var(--nova-borda);
+
+    border-radius:
+        12px;
+
+    background:
+        #fffefa;
+
+    box-shadow:
+        0 3px 12px
+        rgba(
+            84,
+            66,
+            56,
+            0.05
+        );
+}
+
+
+.card-item h4 {
+
+    margin-bottom:
+        10px;
+
+    color:
+        var(--nova-marrom);
+
+    font-size:
+        15px;
+}
+
+
+.card-item p {
+
+    margin:
+        4px 0;
+
+    color:
+        var(--nova-marrom-claro);
+
+    line-height:
+        1.4;
+}
+
+
+/* ===================================================== */
+/* LISTAS PRINCIPAIS */
+/* ===================================================== */
+
+#lista-vendas,
+#lista-financeiro,
+#lista-produtos-produzidos,
+#lista-consumo-proprio,
+#lista-perdas-produtos,
+#relatorio-vendas,
+#relatorio-financeiro,
+#relatorio-produtos,
+#relatorio-consumo-proprio,
+#relatorio-perdas,
+#relatorio-filamentos,
+#relatorio-equipamentos {
+
+    margin-top:
+        12px;
+}
+
+
+/* ===================================================== */
+/* TABELAS */
+/* ===================================================== */
+
+.tabela {
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        var(--nova-borda);
+
+    border-radius:
+        12px;
+
+    background:
+        #fffefa;
+}
+
+
+.tabela th {
+
+    padding:
+        11px 13px;
+
+    background:
+        #f6efe7;
+
+    color:
+        var(--nova-marrom);
+
+    font-size:
+        12px;
+
+    font-weight:
+        700;
+}
+
+
+.tabela td {
+
+    padding:
+        11px 13px;
+
+    color:
+        var(--nova-marrom-claro);
+
+    font-size:
+        13px;
+}
+
+
+.tabela tr:last-child td {
+
+    border-bottom:
+        0;
+}
+
+
+/* ===================================================== */
+/* MENSAGENS VAZIAS */
+/* ===================================================== */
+
+.mensagem-vazia,
+#lista-vendas > p,
+#lista-financeiro > p,
+#relatorio-vendas > p,
+#relatorio-financeiro > p,
+#relatorio-produtos > p,
+#relatorio-consumo-proprio > p,
+#relatorio-perdas > p,
+#relatorio-filamentos > p,
+#relatorio-equipamentos > p {
+
+    padding:
+        20px;
+
+    border:
+        1px dashed
+        var(--nova-borda);
+
+    border-radius:
+        11px;
+
+    background:
+        rgba(
+            255,
+            253,
+            249,
+            0.65
+        );
+
+    color:
+        var(--nova-marrom-claro);
+
+    text-align:
+        center;
+}
+
+
+/* ===================================================== */
+/* SEPARAÇÃO ENTRE BLOCOS */
+/* ===================================================== */
+
+.pagina > h3 {
+
+    padding-bottom:
+        7px;
+
+    border-bottom:
+        1px solid
+        rgba(
+            214,
+            160,
+            146,
+            0.22
+        );
+}
+
+
+/* ===================================================== */
+/* RESUMO GERAL DO RELATÓRIO */
+/* ===================================================== */
+
+#relatorio-resumo {
+
+    margin-bottom:
+        24px;
+}
+
+
+/* ===================================================== */
+/* CARDS DO DASHBOARD E RELATÓRIOS */
+/* ===================================================== */
+
+#dashboard .cards,
+#relatorio .cards {
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(220px, 1fr)
+        );
+}
+
+
+/* ===================================================== */
+/* RESPONSIVO */
+/* ===================================================== */
+
+@media (max-width: 700px) {
+
+    .cards {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+    .card {
+
+        min-height:
+            95px;
+
+    }
+
+}
