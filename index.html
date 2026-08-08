@@ -6511,7 +6511,185 @@
 
 </section>
        ...
+<!-- ===================================================== -->
+<!-- RELATÓRIOS -->
+<!-- ===================================================== -->
 
+<section id="relatorio" class="pagina">
+
+    <h2>Relatórios</h2>
+
+    <p>
+        Consulte os resultados da Organiza 3D
+        e acompanhe vendas, financeiro,
+        estoque, produção e equipamentos.
+    </p>
+
+
+    <!-- ================================================= -->
+    <!-- FILTRO POR PERÍODO -->
+    <!-- ================================================= -->
+
+    <h3>Período do relatório</h3>
+
+    <div class="linha">
+
+        <div class="campo">
+
+            <label for="relatorio-data-inicial">
+                Data inicial
+            </label>
+
+            <input
+                type="date"
+                id="relatorio-data-inicial">
+
+        </div>
+
+        <div class="campo">
+
+            <label for="relatorio-data-final">
+                Data final
+            </label>
+
+            <input
+                type="date"
+                id="relatorio-data-final">
+
+        </div>
+
+    </div>
+
+
+    <button
+        id="relatorio-aplicar-filtro"
+        class="botao-principal"
+        type="button">
+        Aplicar Período
+    </button>
+
+    <button
+        id="relatorio-limpar-filtro"
+        type="button">
+        Limpar Período
+    </button>
+
+
+    <!-- ================================================= -->
+    <!-- RESUMO GERAL -->
+    <!-- ================================================= -->
+
+    <h3>Resumo geral</h3>
+
+    <div id="relatorio-resumo">
+
+        <p>
+            Carregando resumo...
+        </p>
+
+    </div>
+        <!-- ================================================= -->
+    <!-- VENDAS -->
+    <!-- ================================================= -->
+
+    <h3>Vendas</h3>
+
+    <div id="relatorio-vendas">
+
+        <p>
+            Nenhuma venda para exibir.
+        </p>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- FINANCEIRO -->
+    <!-- ================================================= -->
+
+    <h3>Financeiro</h3>
+
+    <div id="relatorio-financeiro">
+
+        <p>
+            Nenhum lançamento financeiro para exibir.
+        </p>
+
+    </div>
+        <!-- ================================================= -->
+    <!-- PRODUTOS E ESTOQUE -->
+    <!-- ================================================= -->
+
+    <h3>Produtos e estoque</h3>
+
+    <div id="relatorio-produtos">
+
+        <p>
+            Nenhum produto para exibir.
+        </p>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- CONSUMO PRÓPRIO -->
+    <!-- ================================================= -->
+
+    <h3>Consumo próprio</h3>
+
+    <div id="relatorio-consumo-proprio">
+
+        <p>
+            Nenhum consumo próprio para exibir.
+        </p>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- FALHAS E PERDAS -->
+    <!-- ================================================= -->
+
+    <h3>Falhas e perdas</h3>
+
+    <div id="relatorio-perdas">
+
+        <p>
+            Nenhuma falha para exibir.
+        </p>
+
+    </div>
+        <!-- ================================================= -->
+    <!-- FILAMENTOS -->
+    <!-- ================================================= -->
+
+    <h3>Filamentos</h3>
+
+    <div id="relatorio-filamentos">
+
+        <p>
+            Nenhum filamento para exibir.
+        </p>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- EQUIPAMENTOS -->
+    <!-- ================================================= -->
+
+    <h3>Equipamentos</h3>
+
+    <div id="relatorio-equipamentos">
+
+        <p>
+            Nenhum equipamento para exibir.
+        </p>
+
+    </div>
+
+
+</section>
 </main>
 </div>
 
@@ -6524,6 +6702,7 @@
 <script src="filamento.js"></script>
 <script src="financeiro.js"></script>
 <script src="dashboard.js"></script>
+<script src="relatorio.js"></script>
 
 </body>
 </html>
