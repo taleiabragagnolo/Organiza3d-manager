@@ -686,7 +686,6 @@ function limparFormularioFinanceiro() {
         campoObservacoesLancamento.value =
             "";
     }
-}
 
 function ajustarValorPagoFinanceiro() {
     if (
