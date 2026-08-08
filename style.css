@@ -1871,3 +1871,334 @@ button:not(.botao-principal):not(.menu-item):not(.botao-sair) {
     }
 
 }
+/* ===================================================== */
+/* ORGANIZA 3D MANAGER - NOVO VISUAL */
+/* PARTE 4 - VENDAS MAIS HORIZONTAIS E COMPACTAS */
+/* ===================================================== */
+
+
+/* ===================================================== */
+/* FORMULÁRIO DE VENDAS */
+/* ===================================================== */
+
+#vendas .formulario {
+
+    grid-template-columns:
+        repeat(12, minmax(0, 1fr));
+
+    gap:
+        14px 18px;
+}
+
+
+/* ===================================================== */
+/* CLIENTE E DATA */
+/* ===================================================== */
+
+#venda-cliente {
+
+    min-width:
+        280px;
+
+    max-width:
+        420px;
+}
+
+
+#venda-data {
+
+    width:
+        170px;
+
+    max-width:
+        170px;
+}
+
+
+/* ===================================================== */
+/* ITENS DA VENDA */
+/* ===================================================== */
+
+.item-venda {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        minmax(260px, 2.2fr)
+        150px
+        100px
+        130px
+        110px
+        130px
+        auto;
+
+    gap:
+        12px;
+
+    width:
+        100%;
+
+    align-items:
+        end;
+}
+
+
+/* ===================================================== */
+/* PRODUTO */
+/* ===================================================== */
+
+.item-venda
+.venda-item-produto {
+
+    width:
+        100%;
+}
+
+
+/* ===================================================== */
+/* ESTOQUE */
+/* ===================================================== */
+
+.item-venda
+.venda-item-estoque {
+
+    width:
+        150px;
+
+    max-width:
+        150px;
+}
+
+
+/* ===================================================== */
+/* QUANTIDADE */
+/* ===================================================== */
+
+.item-venda
+.venda-item-quantidade {
+
+    width:
+        90px;
+
+    max-width:
+        90px;
+}
+
+
+/* ===================================================== */
+/* VALOR UNITÁRIO */
+/* ===================================================== */
+
+.item-venda
+.venda-item-valor-unitario {
+
+    width:
+        125px;
+
+    max-width:
+        125px;
+}
+
+
+/* ===================================================== */
+/* BRINDE */
+/* ===================================================== */
+
+.item-venda
+.venda-item-brinde {
+
+    width:
+        105px;
+
+    max-width:
+        105px;
+}
+
+
+/* ===================================================== */
+/* TOTAL DO ITEM */
+/* ===================================================== */
+
+.item-venda
+.venda-item-total {
+
+    width:
+        125px;
+
+    max-width:
+        125px;
+}
+
+
+/* ===================================================== */
+/* BOTÃO REMOVER ITEM */
+/* ===================================================== */
+
+.item-venda
+.remover-item-venda {
+
+    width:
+        auto;
+
+    min-width:
+        85px;
+
+    padding:
+        9px 12px;
+}
+
+
+/* ===================================================== */
+/* BOTÃO ADICIONAR PRODUTO */
+/* ===================================================== */
+
+#adicionar-item-venda {
+
+    margin-top:
+        10px;
+
+    margin-bottom:
+        4px;
+
+    width:
+        auto;
+
+    max-width:
+        max-content;
+
+    padding:
+        9px 16px;
+}
+
+
+/* ===================================================== */
+/* TOTAIS DA VENDA */
+/* ===================================================== */
+
+#venda-subtotal,
+#venda-total-final,
+#venda-valor-pendente {
+
+    max-width:
+        180px;
+}
+
+
+#venda-desconto,
+#venda-frete,
+#venda-valor-pago {
+
+    width:
+        135px;
+
+    max-width:
+        135px;
+}
+
+
+/* ===================================================== */
+/* PAGAMENTO */
+/* ===================================================== */
+
+#venda-forma-pagamento {
+
+    max-width:
+        220px;
+}
+
+
+#venda-situacao-pagamento {
+
+    max-width:
+        180px;
+}
+
+
+/* ===================================================== */
+/* OBSERVAÇÕES */
+/* ===================================================== */
+
+#venda-observacoes {
+
+    min-height:
+        72px;
+
+    max-width:
+        700px;
+}
+
+
+/* ===================================================== */
+/* BOTÕES PRINCIPAIS DA VENDA */
+/* ===================================================== */
+
+#salvar-venda {
+
+    width:
+        auto;
+
+    min-width:
+        150px;
+
+    padding:
+        11px 20px;
+}
+
+
+#limpar-formulario-venda {
+
+    width:
+        auto;
+
+    min-width:
+        140px;
+
+    padding:
+        10px 18px;
+}
+
+
+/* ===================================================== */
+/* RESPONSIVO */
+/* ===================================================== */
+
+@media (max-width: 1150px) {
+
+    .item-venda {
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(220px, 1fr)
+            );
+
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .item-venda {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+    #venda-cliente,
+    #venda-data,
+    #venda-forma-pagamento,
+    #venda-situacao-pagamento,
+    #venda-observacoes {
+
+        width:
+            100%;
+
+        max-width:
+            100%;
+
+    }
+
+}
