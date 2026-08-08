@@ -2202,106 +2202,221 @@ button:not(.botao-principal):not(.menu-item):not(.botao-sair) {
     }
 
 }
+
 /* ===================================================== */
-/* ORGANIZA 3D MANAGER - NOVO VISUAL */
-/* PARTE 5 - PRODUTOS MAIS COMPACTOS */
+/* ORGANIZA 3D MANAGER                                   */
+/* PARTE 5 - PRODUTOS - LAYOUT FINAL APROVADO            */
 /* ===================================================== */
 
 
 /* ===================================================== */
-/* REGISTRAR PRODUÇÃO */
+/* FORMULÁRIO PRINCIPAL                                  */
 /* ===================================================== */
 
 #produto .formulario {
 
-    gap:
-        14px 16px;
+    display: grid;
+
+    grid-template-columns:
+        repeat(12, minmax(0, 1fr));
+
+    column-gap: 14px;
+
+    row-gap: 12px;
+
+    padding: 20px 22px;
 
 }
 
 
 /* ===================================================== */
-/* CAMPOS PRINCIPAIS */
+/* CAMPOS PRINCIPAIS - UMA ÚNICA LINHA                   */
 /* ===================================================== */
+
+/*
+   As duas linhas antigas são "abertas" para que
+   Nome / Categoria / Tipo / Data / Quantidade
+   possam ocupar a mesma linha.
+*/
+
+#produto .formulario
+.linha:has(#produto-produzido-nome),
+
+#produto .formulario
+.linha:has(#produto-tipo-producao) {
+
+    display: contents;
+
+}
+
+
+/* NOME */
+
+#produto .campo:has(#produto-produzido-nome) {
+
+    grid-column: 1 / 4;
+
+    min-width: 0;
+
+}
 
 #produto-produzido-nome {
 
-    min-width:
-        280px;
+    width: 100%;
 
-    max-width:
-        420px;
+    min-width: 0;
+
+    max-width: none;
 
 }
 
+
+/* CATEGORIA */
+
+#produto .campo:has(#produto-produzido-categoria) {
+
+    grid-column: 4 / 6;
+
+    min-width: 0;
+
+}
 
 #produto-produzido-categoria {
 
-    width:
-        210px;
+    width: 100%;
 
-    max-width:
-        210px;
+    max-width: none;
 
 }
 
+
+/* TIPO DA PRODUÇÃO */
+
+#produto .campo:has(#produto-tipo-producao) {
+
+    grid-column: 6 / 9;
+
+    min-width: 0;
+
+}
 
 #produto-tipo-producao {
 
-    width:
-        210px;
+    width: 100%;
 
-    max-width:
-        210px;
+    max-width: none;
 
 }
 
+
+/* DATA */
+
+#produto .campo:has(#produto-produzido-data) {
+
+    grid-column: 9 / 11;
+
+    min-width: 0;
+
+}
 
 #produto-produzido-data {
 
-    width:
-        165px;
+    width: 155px;
 
-    max-width:
-        165px;
+    max-width: 155px;
 
 }
 
+
+/* QUANTIDADE PRODUZIDA */
+
+#produto .campo:has(#produto-produzido-quantidade) {
+
+    grid-column: 11 / 13;
+
+    min-width: 0;
+
+}
 
 #produto-produzido-quantidade {
 
-    width:
-        110px;
+    width: 86px;
 
-    max-width:
-        110px;
+    max-width: 86px;
 
 }
 
 
 /* ===================================================== */
-/* ITENS DE FILAMENTO */
+/* TÍTULOS E TEXTOS INTERNOS                             */
 /* ===================================================== */
+
+#produto .formulario h3,
+#produto .formulario > p {
+
+    grid-column: 1 / -1;
+
+}
+
+#produto .formulario h3 {
+
+    margin:
+        8px 0 0;
+
+    font-size: 14px;
+
+}
+
+#produto .formulario > p {
+
+    margin:
+        -5px 0 0;
+
+    font-size: 12px;
+
+    color:
+        var(--nova-marrom-claro);
+
+}
+
+
+/* ===================================================== */
+/* FILAMENTOS - UMA LINHA                                */
+/* ===================================================== */
+
+#lista-filamentos-produto {
+
+    grid-column: 1 / 11;
+
+    width: 100%;
+
+}
+
 
 .item-filamento-produto {
 
-    display:
-        grid;
+    display: grid !important;
 
     grid-template-columns:
-        minmax(280px, 2fr)
-        150px
-        145px
-        auto;
+        minmax(280px, 1fr)
+        115px
+        125px
+        82px;
 
-    gap:
-        12px;
+    gap: 12px;
 
-    width:
-        100%;
+    align-items: end;
 
-    align-items:
-        end;
+    width: 100%;
+
+}
+
+
+.item-filamento-produto .campo {
+
+    min-width: 0;
+
+    width: 100%;
 
 }
 
@@ -2309,8 +2424,9 @@ button:not(.botao-principal):not(.menu-item):not(.botao-sair) {
 .item-filamento-produto
 .produto-filamento-select {
 
-    width:
-        100%;
+    width: 100%;
+
+    max-width: none;
 
 }
 
@@ -2318,11 +2434,9 @@ button:not(.botao-principal):not(.menu-item):not(.botao-sair) {
 .item-filamento-produto
 .produto-filamento-quantidade {
 
-    width:
-        120px;
+    width: 105px !important;
 
-    max-width:
-        120px;
+    max-width: 105px !important;
 
 }
 
@@ -2330,222 +2444,840 @@ button:not(.botao-principal):not(.menu-item):not(.botao-sair) {
 .item-filamento-produto
 .produto-filamento-custo {
 
-    width:
-        135px;
+    width: 115px !important;
 
-    max-width:
-        135px;
+    max-width: 115px !important;
 
 }
 
 
-/* ===================================================== */
-/* BOTÃO ADICIONAR FILAMENTO */
-/* ===================================================== */
+/* REMOVER */
+
+.item-filamento-produto
+.botao-excluir {
+
+    width: auto;
+
+    min-width: 76px;
+
+    padding:
+        8px 9px;
+
+}
+
+
+/* ADICIONAR FILAMENTO - FINAL DA LINHA */
 
 #adicionar-filamento-produto {
 
-    width:
-        auto;
+    grid-column: 11 / 13;
 
-    min-width:
-        0;
+    align-self: end;
+
+    justify-self: end;
+
+    width: auto !important;
+
+    min-width: 135px;
+
+    margin: 0 !important;
 
     padding:
-        7px 12px;
+        9px 13px;
 
-    font-size:
-        13px;
+    font-size: 12px;
 
-    margin-top:
-        8px;
+    white-space: nowrap;
 
 }
 
 
 /* ===================================================== */
-/* ACESSÓRIOS */
+/* TOTAL DOS FILAMENTOS                                  */
 /* ===================================================== */
+
+#produto .campo:has(#produto-custo-filamentos) {
+
+    flex:
+        0 0 120px;
+
+    min-width: 120px;
+
+}
+
+
+#produto-custo-filamentos {
+
+    width: 110px !important;
+
+    max-width: 110px !important;
+
+}
+
+
+#produto .campo:has(#produto-peso-total-filamentos) {
+
+    flex:
+        0 0 120px;
+
+    min-width: 120px;
+
+}
+
+
+#produto-peso-total-filamentos {
+
+    width: 110px !important;
+
+    max-width: 110px !important;
+
+}
+
+
+/* ===================================================== */
+/* ACESSÓRIOS - UMA LINHA                                */
+/* ===================================================== */
+
+#lista-acessorios-produto {
+
+    grid-column: 1 / 11;
+
+    width: 100%;
+
+}
+
 
 .item-acessorio-produto {
 
-    display:
-        grid;
+    display: grid !important;
 
     grid-template-columns:
-        minmax(260px, 2fr)
+        minmax(280px, 1fr)
+        105px
         120px
-        145px
-        auto;
+        82px;
 
-    gap:
-        12px;
+    gap: 12px;
 
-    width:
-        100%;
+    align-items: end;
 
-    align-items:
-        end;
+    width: 100%;
+
+}
+
+
+.item-acessorio-produto .campo {
+
+    min-width: 0;
+
+    width: 100%;
 
 }
 
 
 .item-acessorio-produto
-.produto-acessorio-select {
+.select-acessorio {
 
-    width:
-        100%;
+    width: 100%;
 
-}
-
-
-.item-acessorio-produto
-.produto-acessorio-quantidade {
-
-    width:
-        100px;
-
-    max-width:
-        100px;
+    max-width: none;
 
 }
 
 
 .item-acessorio-produto
-.produto-acessorio-custo {
+.quantidade-acessorio {
 
-    width:
-        135px;
+    width: 92px !important;
 
-    max-width:
-        135px;
+    max-width: 92px !important;
+
+}
+
+
+.item-acessorio-produto
+.custo-acessorio {
+
+    width: 110px !important;
+
+    max-width: 110px !important;
+
+}
+
+
+.item-acessorio-produto
+.botao-excluir {
+
+    width: auto;
+
+    min-width: 76px;
+
+    padding:
+        8px 9px;
+
+}
+
+
+/* ADICIONAR ACESSÓRIO - FINAL */
+
+#adicionar-acessorio-produto {
+
+    grid-column: 11 / 13;
+
+    align-self: end;
+
+    justify-self: end;
+
+    width: auto !important;
+
+    min-width: 135px;
+
+    margin: 0 !important;
+
+    padding:
+        9px 13px;
+
+    font-size: 12px;
+
+    white-space: nowrap;
+
+}
+
+
+/* TOTAL ACESSÓRIOS */
+
+#produto .campo:has(#produto-custo-acessorios) {
+
+    flex:
+        0 0 120px;
+
+    min-width: 120px;
+
+}
+
+
+#produto-custo-acessorios {
+
+    width: 110px !important;
+
+    max-width: 110px !important;
 
 }
 
 
 /* ===================================================== */
-/* EMBALAGENS */
+/* EMBALAGENS - UMA LINHA                                */
 /* ===================================================== */
+
+#lista-embalagens-produto {
+
+    grid-column: 1 / 11;
+
+    width: 100%;
+
+}
+
 
 .item-embalagem-produto {
 
-    display:
-        grid;
+    display: grid !important;
 
     grid-template-columns:
-        minmax(260px, 2fr)
+        minmax(280px, 1fr)
+        105px
         120px
-        145px
-        auto;
+        82px;
 
-    gap:
-        12px;
+    gap: 12px;
 
-    width:
-        100%;
+    align-items: end;
 
-    align-items:
-        end;
+    width: 100%;
 
 }
 
 
-/* ===================================================== */
-/* CAMPOS DE CUSTO E RESUMO */
-/* ===================================================== */
+.item-embalagem-produto .campo {
 
-#produto-custo-filamentos,
-#produto-peso-total-filamentos,
-#produto-custo-acessorios,
-#produto-custo-embalagens,
-#produto-custo-producao,
-#produto-custo-unitario,
-#produto-preco-venda {
+    min-width: 0;
 
-    max-width:
-        185px;
+    width: 100%;
 
 }
 
 
-/* ===================================================== */
-/* BOTÕES ADICIONAR ACESSÓRIO / EMBALAGEM */
-/* ===================================================== */
+.item-embalagem-produto
+.select-embalagem {
 
-#adicionar-acessorio-produto,
-#adicionar-embalagem-produto {
+    width: 100%;
 
-    width:
-        auto;
-
-    min-width:
-        0;
-
-    padding:
-        7px 12px;
-
-    font-size:
-        13px;
+    max-width: none;
 
 }
 
 
-/* ===================================================== */
-/* BOTÕES REMOVER */
-/* ===================================================== */
+.item-embalagem-produto
+.quantidade-embalagem {
 
-.item-filamento-produto
-.botao-excluir,
-.item-acessorio-produto
-.botao-excluir,
+    width: 92px !important;
+
+    max-width: 92px !important;
+
+}
+
+
+.item-embalagem-produto
+.custo-embalagem {
+
+    width: 110px !important;
+
+    max-width: 110px !important;
+
+}
+
+
 .item-embalagem-produto
 .botao-excluir {
 
-    min-width:
-        80px;
+    width: auto;
+
+    min-width: 76px;
 
     padding:
-        8px 10px;
+        8px 9px;
 
-    font-size:
-        12px;
+}
+
+
+/* ADICIONAR EMBALAGEM - FINAL */
+
+#adicionar-embalagem-produto {
+
+    grid-column: 11 / 13;
+
+    align-self: end;
+
+    justify-self: end;
+
+    width: auto !important;
+
+    min-width: 135px;
+
+    margin: 0 !important;
+
+    padding:
+        9px 13px;
+
+    font-size: 12px;
+
+    white-space: nowrap;
+
+}
+
+
+/* TOTAL EMBALAGENS */
+
+#produto .campo:has(#produto-custo-embalagens) {
+
+    flex:
+        0 0 120px;
+
+    min-width: 120px;
+
+}
+
+
+#produto-custo-embalagens {
+
+    width: 110px !important;
+
+    max-width: 110px !important;
 
 }
 
 
 /* ===================================================== */
-/* BOTÃO SALVAR PRODUÇÃO */
+/* IMPRESSORA E CUSTOS - LINHA COMPACTA                  */
+/* ===================================================== */
+
+/*
+   Mantemos todos os campos da impressora em uma
+   única linha sempre que houver espaço.
+*/
+
+#produto .linha:has(#produto-impressora-utilizada) {
+
+    display: flex !important;
+
+    flex-wrap: nowrap;
+
+    align-items: end;
+
+    gap: 11px;
+
+    width: 100%;
+
+}
+
+
+/* IMPRESSORA */
+
+#produto .campo:has(#produto-impressora-utilizada) {
+
+    flex:
+        0 0 190px;
+
+    min-width: 190px;
+
+}
+
+
+#produto-impressora-utilizada {
+
+    width: 190px !important;
+
+    max-width: 190px !important;
+
+}
+
+
+/* HORAS */
+
+#produto .campo:has(#produto-tempo-impressao-horas) {
+
+    flex:
+        0 0 78px;
+
+    min-width: 78px;
+
+}
+
+
+#produto-tempo-impressao-horas {
+
+    width: 70px !important;
+
+    max-width: 70px !important;
+
+}
+
+
+/* MINUTOS */
+
+#produto .campo:has(#produto-tempo-impressao-minutos) {
+
+    flex:
+        0 0 78px;
+
+    min-width: 78px;
+
+}
+
+
+#produto-tempo-impressao-minutos {
+
+    width: 70px !important;
+
+    max-width: 70px !important;
+
+}
+
+
+/* TARIFA ENERGIA - EX.: 0,80 */
+
+#produto .campo:has(#produto-tarifa-energia) {
+
+    flex:
+        0 0 82px;
+
+    min-width: 82px;
+
+}
+
+
+#produto-tarifa-energia {
+
+    width: 76px !important;
+
+    max-width: 76px !important;
+
+}
+
+
+/* CUSTO DE ENERGIA - EX.: 34,89 */
+
+#produto .campo:has(#produto-custo-energia) {
+
+    flex:
+        0 0 92px;
+
+    min-width: 92px;
+
+}
+
+
+#produto-custo-energia {
+
+    width: 86px !important;
+
+    max-width: 86px !important;
+
+}
+
+
+/* CUSTO DA MÁQUINA - EX.: 00,00 */
+
+#produto .campo:has(#produto-custo-maquina) {
+
+    flex:
+        0 0 90px;
+
+    min-width: 90px;
+
+}
+
+
+#produto-custo-maquina {
+
+    width: 84px !important;
+
+    max-width: 84px !important;
+
+}
+
+
+/* CUSTO DA IMPRESSORA POR HORA */
+
+#produto .campo:has(#produto-custo-hora-impressora) {
+
+    flex:
+        0 0 92px;
+
+    min-width: 92px;
+
+}
+
+
+#produto-custo-hora-impressora {
+
+    width: 86px !important;
+
+    max-width: 86px !important;
+
+}
+
+
+/* TEMPO TOTAL - CABE APENAS ALGO COMO 34h 79m */
+
+#produto .campo:has(#produto-tempo-total-impressao) {
+
+    flex:
+        0 0 104px;
+
+    min-width: 104px;
+
+}
+
+
+#produto-tempo-total-impressao {
+
+    width: 98px !important;
+
+    max-width: 98px !important;
+
+}
+
+
+/* HORAS DECIMAIS */
+
+#produto .campo:has(#produto-horas-decimais) {
+
+    flex:
+        0 0 82px;
+
+    min-width: 82px;
+
+}
+
+
+#produto-horas-decimais {
+
+    width: 76px !important;
+
+    max-width: 76px !important;
+
+}
+
+
+/* ===================================================== */
+/* RESUMO FINANCEIRO - UMA LINHA ENXUTA                  */
+/* ===================================================== */
+
+#produto .linha:has(#produto-custo-insumos),
+
+#produto .linha:has(#produto-custo-total-producao),
+
+#produto .linha:has(#produto-custo-unitario-real),
+
+#produto .linha:has(#produto-lucro-unitario),
+
+#produto .linha:has(#produto-margem-real),
+
+#produto .linha:has(#produto-valor-total-estoque) {
+
+    display: flex !important;
+
+    flex-wrap: nowrap;
+
+    align-items: end;
+
+    gap: 11px;
+
+    width: 100%;
+
+}
+
+
+/* CAMPOS DO RESUMO */
+
+#produto .campo:has(#produto-custo-insumos),
+#produto .campo:has(#produto-custo-total-producao),
+#produto .campo:has(#produto-custo-unitario-real),
+#produto .campo:has(#produto-preco-venda),
+#produto .campo:has(#produto-lucro-unitario),
+#produto .campo:has(#produto-margem-real),
+#produto .campo:has(#produto-quantidade-disponivel),
+#produto .campo:has(#produto-valor-total-estoque) {
+
+    flex:
+        0 0 110px;
+
+    min-width: 110px;
+
+}
+
+
+/* VALORES COMPACTOS */
+
+#produto-custo-insumos,
+#produto-custo-total-producao,
+#produto-custo-unitario-real,
+#produto-preco-venda,
+#produto-lucro-unitario,
+#produto-margem-real,
+#produto-valor-total-estoque {
+
+    width: 104px !important;
+
+    max-width: 104px !important;
+
+}
+
+
+/* QUANTIDADE DISPONÍVEL */
+
+#produto-quantidade-disponivel {
+
+    width: 76px !important;
+
+    max-width: 76px !important;
+
+}
+
+
+/* ===================================================== */
+/* RÓTULOS COMPACTOS                                     */
+/* ===================================================== */
+
+#produto .formulario .campo label {
+
+    margin-bottom: 1px;
+
+    font-size: 12px;
+
+    line-height: 1.2;
+
+}
+
+
+/* ===================================================== */
+/* CAMPOS MAIS BAIXOS E DELICADOS                        */
+/* ===================================================== */
+
+#produto .formulario input,
+#produto .formulario select {
+
+    min-height: 38px;
+
+    padding:
+        7px 10px;
+
+}
+
+
+#produto .formulario textarea {
+
+    min-height: 62px;
+
+    padding:
+        9px 11px;
+
+}
+
+
+/* ===================================================== */
+/* OBSERVAÇÕES                                           */
+/* ===================================================== */
+
+#produto .campo:has(#produto-observacoes) {
+
+    width: 100%;
+
+}
+
+
+#produto-observacoes {
+
+    width: 100%;
+
+    max-width: none;
+
+}
+
+
+/* ===================================================== */
+/* BOTÕES SALVAR / LIMPAR                                */
 /* ===================================================== */
 
 #salvar-produto-produzido {
 
-    width:
-        auto;
+    width: auto;
 
-    min-width:
-        155px;
+    min-width: 150px;
 
     padding:
-        11px 20px;
+        10px 18px;
+
+}
+
+
+#limpar-formulario-produto {
+
+    width: auto;
+
+    min-width: 150px;
+
+    padding:
+        10px 18px;
 
 }
 
 
 /* ===================================================== */
-/* RESPONSIVO */
+/* ÁREAS DO MÓDULO - BOTÕES HORIZONTAIS                  */
 /* ===================================================== */
 
-@media (max-width: 1100px) {
+#produto .abas-produto,
+#produto .botoes-abas-produto {
 
-    .item-filamento-produto,
-    .item-acessorio-produto,
-    .item-embalagem-produto {
+    display: flex;
 
-        grid-template-columns:
-            repeat(
-                2,
-                minmax(220px, 1fr)
-            );
+    flex-direction: row;
+
+    flex-wrap: nowrap;
+
+    gap: 10px;
+
+    align-items: center;
+
+}
+
+
+#produto .aba-produto {
+
+    width: auto;
+
+    min-width: 150px;
+
+    padding:
+        9px 14px;
+
+}
+
+
+/* ===================================================== */
+/* RESPONSIVO                                            */
+/* ===================================================== */
+
+@media (max-width: 1200px) {
+
+    #produto .linha:has(#produto-impressora-utilizada),
+
+    #produto .linha:has(#produto-custo-insumos),
+
+    #produto .linha:has(#produto-custo-total-producao),
+
+    #produto .linha:has(#produto-custo-unitario-real),
+
+    #produto .linha:has(#produto-lucro-unitario),
+
+    #produto .linha:has(#produto-margem-real),
+
+    #produto .linha:has(#produto-valor-total-estoque) {
+
+        flex-wrap: wrap;
+
+    }
+
+}
+
+
+@media (max-width: 900px) {
+
+    #produto .formulario
+    .linha:has(#produto-produzido-nome),
+
+    #produto .formulario
+    .linha:has(#produto-tipo-producao) {
+
+        display: flex;
+
+        flex-wrap: wrap;
+
+    }
+
+
+    #produto .campo:has(#produto-produzido-nome),
+    #produto .campo:has(#produto-produzido-categoria),
+    #produto .campo:has(#produto-tipo-producao),
+    #produto .campo:has(#produto-produzido-data),
+    #produto .campo:has(#produto-produzido-quantidade) {
+
+        flex:
+            1 1 200px;
+
+    }
+
+
+    #lista-filamentos-produto,
+    #lista-acessorios-produto,
+    #lista-embalagens-produto {
+
+        grid-column:
+            1 / -1;
+
+    }
+
+
+    #adicionar-filamento-produto,
+    #adicionar-acessorio-produto,
+    #adicionar-embalagem-produto {
+
+        grid-column:
+            1 / -1;
+
+        justify-self:
+            start;
 
     }
 
@@ -2554,26 +3286,48 @@ button:not(.botao-principal):not(.menu-item):not(.botao-sair) {
 
 @media (max-width: 700px) {
 
-    #produto-produzido-nome,
-    #produto-produzido-categoria,
-    #produto-tipo-producao,
-    #produto-produzido-data,
-    #produto-produzido-quantidade {
-
-        width:
-            100%;
-
-        max-width:
-            100%;
-
-    }
-
     .item-filamento-produto,
     .item-acessorio-produto,
     .item-embalagem-produto {
 
         grid-template-columns:
-            1fr;
+            1fr !important;
+
+    }
+
+
+    #produto .linha:has(#produto-impressora-utilizada),
+
+    #produto .linha:has(#produto-custo-insumos),
+
+    #produto .linha:has(#produto-custo-total-producao),
+
+    #produto .linha:has(#produto-custo-unitario-real),
+
+    #produto .linha:has(#produto-lucro-unitario),
+
+    #produto .linha:has(#produto-margem-real),
+
+    #produto .linha:has(#produto-valor-total-estoque) {
+
+        flex-direction:
+            column;
+
+        align-items:
+            stretch;
+
+    }
+
+
+    #produto .campo,
+    #produto .campo input,
+    #produto .campo select {
+
+        width:
+            100% !important;
+
+        max-width:
+            100% !important;
 
     }
 
