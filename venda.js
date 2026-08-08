@@ -2441,22 +2441,18 @@
 
     }
 
-    // ==================================================
-    // MOSTRAR VENDAS
+        // ==================================================
+    // MOSTRAR VENDAS - FORMATO HORIZONTAL
     // ==================================================
 
     function mostrarVendas() {
 
         if (!listaVendas) {
-
             return;
-
         }
 
         if (
-            !Array.isArray(
-                vendas
-            ) ||
+            !Array.isArray(vendas) ||
             vendas.length === 0
         ) {
 
@@ -2466,204 +2462,242 @@
             atualizarResumoVenda();
 
             return;
-
         }
+
 
         const vendasOrdenadas =
             [...vendas].sort(
-                function (
-                    a,
-                    b
-                ) {
+                function (a, b) {
 
                     const dataA =
-                        String(
-                            a.data ||
-                            ""
-                        );
+                        String(a.data || "");
 
                     const dataB =
-                        String(
-                            b.data ||
-                            ""
-                        );
+                        String(b.data || "");
 
-                    if (
-                        dataA !== dataB
-                    ) {
-
-                        return dataB.localeCompare(
-                            dataA
-                        );
-
+                    if (dataA !== dataB) {
+                        return dataB.localeCompare(dataA);
                     }
 
                     return (
-                        numeroVenda(
-                            b.id
-                        ) -
-                        numeroVenda(
-                            a.id
-                        )
+                        numeroVenda(b.id) -
+                        numeroVenda(a.id)
                     );
-
                 }
             );
 
-        listaVendas.innerHTML =
+
+        const linhasVendas =
             vendasOrdenadas
                 .map(
                     function (venda) {
 
-                        const itensTexto =
-                            Array.isArray(
-                                venda.itens
-                            )
-                                ? venda.itens
-                                    .map(
-                                        function (item) {
+                        const quantidadeItens =
+                            Array.isArray(venda.itens)
+                                ? venda.itens.reduce(
+                                    function (total, item) {
 
-                                            return `
-                                                <div>
-                                                    ${escaparTextoVenda(
-                                                        item.nome ||
-                                                        "Produto"
-                                                    )}
-                                                    —
-                                                    ${numeroPositivoVenda(
-                                                        item.quantidade
-                                                    )}
-                                                    un.
-                                                    —
-                                                    ${
-                                                        item.brinde
-                                                            ? "Brinde"
-                                                            : formatarDinheiroVenda(
-                                                                item.total
-                                                            )
-                                                    }
-                                                </div>
-                                            `;
+                                        return (
+                                            total +
+                                            numeroPositivoVenda(
+                                                item.quantidade
+                                            )
+                                        );
 
-                                        }
-                                    )
-                                    .join("")
-                                : "<div>Nenhum item informado.</div>";
+                                    },
+                                    0
+                                )
+                                : 0;
+
+
+                        const classePendente =
+                            numeroPositivoVenda(
+                                venda.valorPendente
+                            ) > 0
+                                ? "valor-pendente-destaque"
+                                : "";
+
 
                         return `
-                            <div class="card-item">
+                            <div class="venda-tabela-linha">
 
-                                <h4>
-                                    Venda #${escaparTextoVenda(
+                                <div
+                                    class="venda-coluna venda-coluna-id"
+                                    data-titulo="Venda">
+
+                                    #${escaparTextoVenda(
                                         venda.id
                                     )}
-                                </h4>
 
-                                <p>
-                                    <strong>Data:</strong>
+                                </div>
+
+
+                                <div
+                                    class="venda-coluna"
+                                    data-titulo="Data">
+
                                     ${formatarDataVenda(
                                         venda.data
                                     )}
-                                </p>
 
-                                <p>
-                                    <strong>Cliente:</strong>
+                                </div>
+
+
+                                <div
+                                    class="venda-coluna venda-coluna-cliente"
+                                    data-titulo="Cliente">
+
                                     ${escaparTextoVenda(
                                         venda.clienteNome ||
                                         "Não vinculado"
                                     )}
-                                </p>
 
-                                <p>
-                                    <strong>Produtos:</strong>
-                                </p>
+                                </div>
 
-                                ${itensTexto}
 
-                                <p>
-                                    <strong>Subtotal:</strong>
+                                <div
+                                    class="venda-coluna"
+                                    data-titulo="Produtos">
+
+                                    ${quantidadeItens}
+                                    ${
+                                        quantidadeItens === 1
+                                            ? "item"
+                                            : "itens"
+                                    }
+
+                                </div>
+
+
+                                <div
+                                    class="venda-coluna"
+                                    data-titulo="Subtotal">
+
                                     ${formatarDinheiroVenda(
                                         venda.subtotal
                                     )}
-                                </p>
 
-                                <p>
-                                    <strong>Desconto:</strong>
+                                </div>
+
+
+                                <div
+                                    class="venda-coluna"
+                                    data-titulo="Desconto">
+
                                     ${formatarDinheiroVenda(
                                         venda.desconto
                                     )}
-                                </p>
 
-                                <p>
-                                    <strong>Frete:</strong>
+                                </div>
+
+
+                                <div
+                                    class="venda-coluna"
+                                    data-titulo="Frete">
+
                                     ${formatarDinheiroVenda(
                                         venda.frete
                                     )}
-                                </p>
 
-                                <p>
-                                    <strong>Total:</strong>
+                                </div>
+
+
+                                <div
+                                    class="venda-coluna venda-coluna-total"
+                                    data-titulo="Total">
+
                                     ${formatarDinheiroVenda(
                                         venda.total
                                     )}
-                                </p>
 
-                                <p>
-                                    <strong>Valor pago:</strong>
+                                </div>
+
+
+                                <div
+                                    class="venda-coluna"
+                                    data-titulo="Pago">
+
                                     ${formatarDinheiroVenda(
                                         venda.valorPago
                                     )}
-                                </p>
 
-                                <p>
-                                    <strong>Valor pendente:</strong>
+                                </div>
+
+
+                                <div
+                                    class="venda-coluna ${classePendente}"
+                                    data-titulo="Pendente">
+
                                     ${formatarDinheiroVenda(
                                         venda.valorPendente
                                     )}
-                                </p>
 
-                                <p>
-                                    <strong>Pagamento:</strong>
-                                    ${escaparTextoVenda(
-                                        venda.situacaoPagamento ||
-                                        "Não informado"
-                                    )}
-                                </p>
+                                </div>
 
-                                <p>
-                                    <strong>Forma de pagamento:</strong>
+
+                                <div
+                                    class="venda-coluna"
+                                    data-titulo="Pagamento">
+
                                     ${escaparTextoVenda(
                                         venda.formaPagamento ||
-                                        "Não informada"
+                                        "Não informado"
                                     )}
-                                </p>
 
-                                ${
-                                    venda.observacoes
-                                        ? `
-                                            <p>
-                                                <strong>Observações:</strong>
-                                                ${escaparTextoVenda(
-                                                    venda.observacoes
-                                                )}
-                                            </p>
-                                        `
-                                        : ""
-                                }
-                                <button
-                                    type="button"
-                                    class="botao-excluir estornar-venda"
-                                    data-venda-id="${escaparTextoVenda(
-                                        venda.id
-                                    )}">
-                                    Estornar venda
-                                </button>
+                                </div>
+
+
+                                <div
+                                    class="venda-coluna venda-coluna-acoes"
+                                    data-titulo="Ações">
+
+                                    <button
+                                        type="button"
+                                        class="botao-excluir estornar-venda"
+                                        data-venda-id="${escaparTextoVenda(
+                                            venda.id
+                                        )}">
+
+                                        Estornar
+
+                                    </button>
+
+                                </div>
+
                             </div>
                         `;
 
                     }
                 )
                 .join("");
+
+
+        listaVendas.innerHTML = `
+
+            <div class="vendas-tabela">
+
+                <div class="venda-tabela-cabecalho">
+
+                    <div>Venda</div>
+                    <div>Data</div>
+                    <div>Cliente</div>
+                    <div>Produtos</div>
+                    <div>Subtotal</div>
+                    <div>Desconto</div>
+                    <div>Frete</div>
+                    <div>Total</div>
+                    <div>Pago</div>
+                    <div>Pendente</div>
+                    <div>Pagamento</div>
+                    <div>Ações</div>
+
+                </div>
+
+                ${linhasVendas}
+
+            </div>
+        `;
+
 
         atualizarResumoVenda();
 
