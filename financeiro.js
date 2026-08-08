@@ -676,7 +676,6 @@ function limparFormularioFinanceiro() {
         campoValorPagoLancamento.value =
             "";
     }
-}
 
     if (campoOrigemLancamento) {
         campoOrigemLancamento.value =
@@ -862,31 +861,7 @@ if (botaoSalvarLancamento) {
                 situacao = "Pendente";
             }
 
-            let encomendaDescricao = "";
-
-            if (
-                campoEncomendaLancamento &&
-                campoEncomendaLancamento
-                    .selectedIndex >= 0
-            ) {
-                const opcaoSelecionada =
-                    campoEncomendaLancamento
-                        .options[
-                            campoEncomendaLancamento
-                                .selectedIndex
-                        ];
-
-                if (
-                    opcaoSelecionada &&
-                    encomendaId
-                ) {
-                    encomendaDescricao =
-                        opcaoSelecionada
-                            .textContent
-                            .trim();
-                }
-            }
-
+            
             const novoLancamento = {
                 id: Date.now(),
                 tipo: tipo,
