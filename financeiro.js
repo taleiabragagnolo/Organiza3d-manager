@@ -79,10 +79,6 @@ const campoValorPagoLancamento =
         "valor-pago-lancamento"
     );
 
-const campoEncomendaLancamento =
-    document.getElementById(
-        "encomenda-lancamento"
-    );
 
 const campoOrigemLancamento =
     document.getElementById(
@@ -285,16 +281,8 @@ function normalizarLancamentosFinanceiros() {
                     valorPago:
                         valorPago,
 
-                    encomendaId:
-                        lancamento.encomendaId ||
-                        null,
-
-                    encomendaDescricao:
-                        lancamento
-                            .encomendaDescricao ||
-                        "",
-
-                    origem:
+                        
+                        origem:
                         lancamento.origem ||
                         "Manual",
 
@@ -541,15 +529,6 @@ function mostrarLancamentosFinanceiros(
                         )
                         : "Não informada";
 
-                const encomenda =
-                    lancamento
-                        .encomendaDescricao
-                        ? escaparTexto(
-                            lancamento
-                                .encomendaDescricao
-                        )
-                        : "Nenhuma";
-
                 const observacoes =
                     lancamento.observacoes
                         ? escaparTexto(
@@ -628,11 +607,7 @@ function mostrarLancamentosFinanceiros(
                             )}
                         </p>
 
-                        <p>
-                            <strong>Encomenda vinculada:</strong>
-                            ${encomenda}
-                        </p>
-
+                
                         <p>
                             <strong>Observações:</strong>
                             ${observacoes}
@@ -701,11 +676,7 @@ function limparFormularioFinanceiro() {
         campoValorPagoLancamento.value =
             "";
     }
-
-    if (campoEncomendaLancamento) {
-        campoEncomendaLancamento.value =
-            "";
-    }
+}
 
     if (campoOrigemLancamento) {
         campoOrigemLancamento.value =
@@ -806,15 +777,6 @@ if (botaoSalvarLancamento) {
                             .value || 0
                     )
                     : 0;
-
-            const encomendaId =
-                campoEncomendaLancamento &&
-                campoEncomendaLancamento.value
-                    ? Number(
-                        campoEncomendaLancamento
-                            .value
-                    )
-                    : null;
 
             const origem =
                 campoOrigemLancamento
@@ -936,10 +898,7 @@ if (botaoSalvarLancamento) {
                     formaPagamento,
                 situacao: situacao,
                 valorPago: valorPago,
-                encomendaId:
-                    encomendaId,
-                encomendaDescricao:
-                    encomendaDescricao,
+               
                 origem: origem,
                 observacoes:
                     observacoes,
@@ -1031,58 +990,6 @@ window.excluirLancamentoFinanceiro =
         mostrarLancamentosFinanceiros();
     };
 
-
-// =========================
-// ENCOMENDAS DISPONÍVEIS
-// =========================
-
-function atualizarOpcoesEncomendasFinanceiro() {
-    if (!campoEncomendaLancamento) {
-        return;
-    }
-
-    const encomendaSelecionada =
-        campoEncomendaLancamento.value;
-
-    campoEncomendaLancamento.innerHTML =
-        `
-            <option value="">
-                Nenhuma encomenda vinculada
-            </option>
-        `;
-
-    if (
-        typeof encomendas === "undefined" ||
-        !Array.isArray(encomendas)
-    ) {
-        return;
-    }
-
-    encomendas.forEach(
-        function (encomenda) {
-            campoEncomendaLancamento
-                .innerHTML += `
-                    <option value="${encomenda.id}">
-                        ${escaparTexto(
-                            encomenda.clienteNome
-                        )}
-                        —
-                        ${escaparTexto(
-                            encomenda.produtoNome
-                        )}
-                        —
-                        ${formatarDinheiro(
-                            encomenda.valorTotal
-                        )}
-                    </option>
-                `;
-        }
-    );
-
-    campoEncomendaLancamento.value =
-        encomendaSelecionada;
-}
-
 // =========================
 // FORMULÁRIO INICIAL
 // =========================
@@ -1096,7 +1003,6 @@ function prepararFormularioFinanceiro() {
             obterDataHojeFinanceiro();
     }
 
-    atualizarOpcoesEncomendasFinanceiro();
 }
 
 // =========================
@@ -1107,7 +1013,7 @@ if (menuFinanceiro) {
     menuFinanceiro.addEventListener(
         "click",
         function () {
-            atualizarOpcoesEncomendasFinanceiro();
+           
             atualizarResumoFinanceiro();
         }
     );
