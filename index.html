@@ -1105,44 +1105,157 @@
 
             </div>
 
-            <button
-                id="adicionar-filamento-produto"
-                type="button">
-                + Adicionar outro filamento
-            </button>
+            <!-- ================================================= -->
+<!-- FILAMENTO - LINHA HORIZONTAL COMPACTA -->
+<!-- ================================================= -->
 
-            <div class="linha">
+<div class="grupo-insumo-produto grupo-filamento-produto">
 
-                <div class="campo">
+    <!-- LINHAS DE FILAMENTO -->
 
-                    <label for="produto-custo-filamentos">
-                        Custo total dos filamentos
-                    </label>
+    <div id="lista-filamentos-produto">
 
-                    <input
-                        type="text"
-                        id="produto-custo-filamentos"
-                        value="R$ 0,00"
-                        readonly>
+        <div
+            class="linha item-filamento-produto"
+            data-item-filamento>
 
-                </div>
+            <!-- FILAMENTO -->
 
-                <div class="campo">
+            <div class="campo">
 
-                    <label for="produto-peso-total-filamentos">
-                        Peso total utilizado
-                    </label>
+                <label>
+                    Filamento / lote
+                </label>
 
-                    <input
-                        type="text"
-                        id="produto-peso-total-filamentos"
-                        value="0 g"
-                        readonly>
+                <select
+                    class="produto-filamento-select">
 
-                </div>
+                    <option value="">
+                        Selecione o filamento
+                    </option>
+
+                </select>
 
             </div>
-                        <!-- ================================================= -->
+
+
+            <!-- QUANTIDADE -->
+
+            <div class="campo">
+
+                <label>
+                    Quantidade (g)
+                </label>
+
+                <input
+                    type="number"
+                    class="produto-filamento-quantidade"
+                    min="0.01"
+                    step="0.01"
+                    placeholder="Ex.: 80">
+
+            </div>
+
+
+            <!-- CUSTO DA LINHA -->
+
+            <div class="campo">
+
+                <label>
+                    Custo da linha
+                </label>
+
+                <input
+                    type="text"
+                    class="produto-filamento-custo"
+                    value="R$ 0,00"
+                    readonly>
+
+            </div>
+
+
+            <!-- REMOVER -->
+
+            <div class="campo campo-acao-insumo">
+
+                <label>
+                    Ação
+                </label>
+
+                <button
+                    type="button"
+                    class="botao-excluir remover-filamento-produto">
+
+                    Remover
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CUSTO TOTAL -->
+
+    <div class="campo campo-total-insumo">
+
+        <label for="produto-custo-filamentos">
+            Custo total
+        </label>
+
+        <input
+            type="text"
+            id="produto-custo-filamentos"
+            value="R$ 0,00"
+            readonly>
+
+    </div>
+
+
+    <!-- ADICIONAR -->
+
+    <div class="campo campo-adicionar-insumo">
+
+        <label>
+            &nbsp;
+        </label>
+
+        <button
+            id="adicionar-filamento-produto"
+            type="button">
+
+            + Adicionar
+
+        </button>
+
+    </div>
+
+
+    <!--
+        CAMPO MANTIDO PARA OS CÁLCULOS,
+        MAS NÃO PRECISA APARECER NA TELA
+    -->
+
+    <div
+        class="campo campo-interno-oculto"
+        hidden>
+
+        <label for="produto-peso-total-filamentos">
+            Peso total utilizado
+        </label>
+
+        <input
+            type="text"
+            id="produto-peso-total-filamentos"
+            value="0 g"
+            readonly>
+
+    </div>
+
+</div>
+            <!-- ================================================= -->
             <!-- ACESSÓRIOS UTILIZADOS -->
             <!-- ================================================= -->
 
@@ -1152,114 +1265,151 @@
                 Adicione todos os acessórios usados nesta produção.
             </p>
 
-            <div id="lista-acessorios-produto">
+            <!-- ================================================= -->
+<!-- ACESSÓRIO - LINHA HORIZONTAL COMPACTA -->
+<!-- ================================================= -->
 
-                <div
-                    class="linha item-acessorio-produto"
-                    data-item-acessorio>
+<div class="grupo-insumo-produto grupo-acessorio-produto">
 
-                    <div class="campo">
+    <div id="lista-acessorios-produto">
 
-                        <label>
-                            Acessório
-                        </label>
+        <div
+            class="linha item-acessorio-produto"
+            data-item-acessorio>
 
-                        <select
-                            class="produto-acessorio-select">
+            <!-- ACESSÓRIO -->
 
-                            <option value="">
-                                Selecione o acessório
-                            </option>
+            <div class="campo">
 
-                        </select>
+                <label>
+                    Acessório
+                </label>
 
-                    </div>
+                <select class="produto-acessorio-select">
 
-                    <div class="campo">
+                    <option value="">
+                        Selecione o acessório
+                    </option>
 
-                        <label>
-                            Quantidade utilizada
-                        </label>
-
-                        <input
-                            type="number"
-                            class="produto-acessorio-quantidade"
-                            min="1"
-                            step="1"
-                            placeholder="Ex.: 10">
-
-                    </div>
-
-                    <div class="campo">
-
-                        <label>
-                            Custo desta linha
-                        </label>
-
-                        <input
-                            type="text"
-                            class="produto-acessorio-custo"
-                            value="R$ 0,00"
-                            readonly>
-
-                    </div>
-
-                    <div class="campo">
-
-                        <label>
-                            Ação
-                        </label>
-
-                        <button
-                            type="button"
-                            class="botao-excluir remover-acessorio-produto">
-                            Remover
-                        </button>
-
-                    </div>
-
-                </div>
+                </select>
 
             </div>
 
-            <button
-                id="adicionar-acessorio-produto"
-                type="button">
-                + Adicionar outro acessório
-            </button>
 
-            <div class="linha">
+            <!-- QUANTIDADE -->
 
-                <div class="campo">
+            <div class="campo">
 
-                    <label for="produto-custo-acessorios">
-                        Custo total dos acessórios
-                    </label>
+                <label>
+                    Quantidade
+                </label>
 
-                    <input
-                        type="text"
-                        id="produto-custo-acessorios"
-                        value="R$ 0,00"
-                        readonly>
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="produto-quantidade-total-acessorios">
-                        Quantidade total utilizada
-                    </label>
-
-                    <input
-                        type="text"
-                        id="produto-quantidade-total-acessorios"
-                        value="0"
-                        readonly>
-
-                </div>
+                <input
+                    type="number"
+                    class="produto-acessorio-quantidade"
+                    min="1"
+                    step="1"
+                    placeholder="Ex.: 10">
 
             </div>
-                        <!-- ================================================= -->
+
+
+            <!-- CUSTO DA LINHA -->
+
+            <div class="campo">
+
+                <label>
+                    Custo da linha
+                </label>
+
+                <input
+                    type="text"
+                    class="produto-acessorio-custo"
+                    value="R$ 0,00"
+                    readonly>
+
+            </div>
+
+
+            <!-- REMOVER -->
+
+            <div class="campo campo-acao-insumo">
+
+                <label>
+                    Ação
+                </label>
+
+                <button
+                    type="button"
+                    class="botao-excluir remover-acessorio-produto">
+
+                    Remover
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CUSTO TOTAL -->
+
+    <div class="campo campo-total-insumo">
+
+        <label for="produto-custo-acessorios">
+            Custo total
+        </label>
+
+        <input
+            type="text"
+            id="produto-custo-acessorios"
+            value="R$ 0,00"
+            readonly>
+
+    </div>
+
+
+    <!-- ADICIONAR -->
+
+    <div class="campo campo-adicionar-insumo">
+
+        <label>
+            &nbsp;
+        </label>
+
+        <button
+            id="adicionar-acessorio-produto"
+            type="button">
+
+            + Adicionar
+
+        </button>
+
+    </div>
+
+
+    <!-- CAMPO INTERNO MANTIDO PARA CÁLCULO -->
+
+    <div
+        class="campo campo-interno-oculto"
+        hidden>
+
+        <label for="produto-quantidade-total-acessorios">
+            Quantidade total utilizada
+        </label>
+
+        <input
+            type="text"
+            id="produto-quantidade-total-acessorios"
+            value="0"
+            readonly>
+
+    </div>
+
+</div>
+            <!-- ================================================= -->
             <!-- EMBALAGENS UTILIZADAS -->
             <!-- ================================================= -->
 
@@ -1269,114 +1419,152 @@
                 Adicione as embalagens usadas nesta produção.
             </p>
 
-            <div id="lista-embalagens-produto">
-
-                <div
-                    class="linha item-embalagem-produto"
-                    data-item-embalagem>
-
-                    <div class="campo">
-
-                        <label>
-                            Embalagem
-                        </label>
-
-                        <select
-                            class="produto-embalagem-select">
-
-                            <option value="">
-                                Selecione a embalagem
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                    <div class="campo">
-
-                        <label>
-                            Quantidade utilizada
-                        </label>
-
-                        <input
-                            type="number"
-                            class="produto-embalagem-quantidade"
-                            min="1"
-                            step="1"
-                            placeholder="Ex.: 10">
-
-                    </div>
-
-                    <div class="campo">
-
-                        <label>
-                            Custo desta linha
-                        </label>
-
-                        <input
-                            type="text"
-                            class="produto-embalagem-custo"
-                            value="R$ 0,00"
-                            readonly>
-
-                    </div>
-
-                    <div class="campo">
-
-                        <label>
-                            Ação
-                        </label>
-
-                        <button
-                            type="button"
-                            class="botao-excluir remover-embalagem-produto">
-                            Remover
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <button
-                id="adicionar-embalagem-produto"
-                type="button">
-                + Adicionar outra embalagem
-            </button>
-
-            <div class="linha">
-
-                <div class="campo">
-
-                    <label for="produto-custo-embalagens">
-                        Custo total das embalagens
-                    </label>
-
-                    <input
-                        type="text"
-                        id="produto-custo-embalagens"
-                        value="R$ 0,00"
-                        readonly>
-
-                </div>
-
-                <div class="campo">
-
-                    <label for="produto-quantidade-total-embalagens">
-                        Quantidade total utilizada
-                    </label>
-
-                    <input
-                        type="text"
-                        id="produto-quantidade-total-embalagens"
-                        value="0"
-                        readonly>
-
-                </div>
-
-            </div>
             <!-- ================================================= -->
+<!-- EMBALAGEM - LINHA HORIZONTAL COMPACTA -->
+<!-- ================================================= -->
+
+<div class="grupo-insumo-produto grupo-embalagem-produto">
+
+    <div id="lista-embalagens-produto">
+
+        <div
+            class="linha item-embalagem-produto"
+            data-item-embalagem>
+
+            <!-- EMBALAGEM -->
+
+            <div class="campo">
+
+                <label>
+                    Embalagem
+                </label>
+
+                <select class="produto-embalagem-select">
+
+                    <option value="">
+                        Selecione a embalagem
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- QUANTIDADE -->
+
+            <div class="campo">
+
+                <label>
+                    Quantidade
+                </label>
+
+                <input
+                    type="number"
+                    class="produto-embalagem-quantidade"
+                    min="1"
+                    step="1"
+                    placeholder="Ex.: 10">
+
+            </div>
+
+
+            <!-- CUSTO DA LINHA -->
+
+            <div class="campo">
+
+                <label>
+                    Custo da linha
+                </label>
+
+                <input
+                    type="text"
+                    class="produto-embalagem-custo"
+                    value="R$ 0,00"
+                    readonly>
+
+            </div>
+
+
+            <!-- REMOVER -->
+
+            <div class="campo campo-acao-insumo">
+
+                <label>
+                    Ação
+                </label>
+
+                <button
+                    type="button"
+                    class="botao-excluir remover-embalagem-produto">
+
+                    Remover
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CUSTO TOTAL -->
+
+    <div class="campo campo-total-insumo">
+
+        <label for="produto-custo-embalagens">
+            Custo total
+        </label>
+
+        <input
+            type="text"
+            id="produto-custo-embalagens"
+            value="R$ 0,00"
+            readonly>
+
+    </div>
+
+
+    <!-- ADICIONAR -->
+
+    <div class="campo campo-adicionar-insumo">
+
+        <label>
+            &nbsp;
+        </label>
+
+        <button
+            id="adicionar-embalagem-produto"
+            type="button">
+
+            + Adicionar
+
+        </button>
+
+    </div>
+
+
+    <!-- CAMPO INTERNO MANTIDO PARA CÁLCULO -->
+
+    <div
+        class="campo campo-interno-oculto"
+        hidden>
+
+        <label for="produto-quantidade-total-embalagens">
+            Quantidade total utilizada
+        </label>
+
+        <input
+            type="text"
+            id="produto-quantidade-total-embalagens"
+            value="0"
+            readonly>
+
+    </div>
+
+</div>
+
+<!-- ================================================= -->
 <!-- IMPRESSORA, TEMPO E ENERGIA - LAYOUT COMPACTO -->
 <!-- ================================================= -->
 
