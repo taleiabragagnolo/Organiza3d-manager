@@ -6941,3 +6941,69 @@ button {
 #lista-consumo-proprio {
     overflow-x: auto;
 }
+/* =========================================================
+   IMPRESSÃO E CUSTOS - LINHA ÚNICA DEFINITIVA
+   ========================================================= */
+
+#produto .linha-impressao-principal,
+#produto .linha-impressao-custos {
+    display: contents !important;
+}
+
+/* Impressora */
+#produto .campo-impressora-produto {
+    grid-column: 1 / 4 !important;
+}
+
+/* Horas */
+#produto .campo-tempo-produto:has(#produto-tempo-impressao-horas) {
+    grid-column: 4 / 5 !important;
+}
+
+/* Minutos */
+#produto .campo-tempo-produto:has(#produto-tempo-impressao-minutos) {
+    grid-column: 5 / 6 !important;
+}
+
+/* Tarifa */
+#produto .campo-tarifa-produto {
+    grid-column: 6 / 8 !important;
+}
+
+/* Custo energia */
+#produto .campo-custo-produto {
+    grid-column: 8 / 9 !important;
+}
+
+/* Custo máquina / hora */
+#produto .campo-custo-hora-produto {
+    grid-column: 9 / 11 !important;
+}
+
+/* Custo máquina nesta produção */
+#produto .campo-custo-producao-maquina {
+    grid-column: 11 / 13 !important;
+}
+
+#produto .campo-impressora-produto,
+#produto .campo-tempo-produto,
+#produto .campo-tarifa-produto,
+#produto .campo-custo-produto,
+#produto .campo-custo-hora-produto,
+#produto .campo-custo-producao-maquina {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+}
+
+#produto .campo-impressora-produto input,
+#produto .campo-impressora-produto select,
+#produto .campo-tempo-produto input,
+#produto .campo-tarifa-produto input,
+#produto .campo-custo-produto input,
+#produto .campo-custo-hora-produto input,
+#produto .campo-custo-producao-maquina input {
+    width: 100% !important;
+    max-width: none !important;
+}
