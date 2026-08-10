@@ -7535,141 +7535,163 @@ produtos =
     // MOSTRAR PERDAS
     // ==================================================
 
-    function mostrarPerdas() {
+   function mostrarPerdas() {
 
-        if (!listaPerdas) {
-            return;
-        }
+    if (!listaPerdas) {
+        return;
+    }
 
-        if (
-            !Array.isArray(perdas) ||
-            perdas.length === 0
-        ) {
-
-            listaPerdas.innerHTML =
-                "<p>Nenhuma perda registrada.</p>";
-
-            atualizarResumoPerdas();
-
-            return;
-
-        }
+    if (
+        !Array.isArray(perdas) ||
+        perdas.length === 0
+    ) {
 
         listaPerdas.innerHTML =
-            [...perdas]
-                .sort(
-                    function (a, b) {
-
-                        return String(
-                            b.data || ""
-                        ).localeCompare(
-                            String(
-                                a.data || ""
-                            )
-                        );
-
-                    }
-                )
-                .map(
-                    function (perda) {
-
-                        return `
-                            <div class="card-item">
-
-                                <h4>
-                                    ${textoSeguro(
-                                        perda.produtoNome ||
-                                        "Produto não informado"
-                                    )}
-                                </h4>
-
-                                <p>
-                                    <strong>Lote:</strong>
-                                    ${textoSeguro(
-                                        perda.lote ||
-                                        "Não informado"
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Data:</strong>
-                                    ${dataFormatada(
-                                        perda.data
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Quantidade perdida:</strong>
-                                    ${numeroFormatado(
-                                        perda.quantidade,
-                                        0
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Tipo de falha:</strong>
-                                    ${textoSeguro(
-                                        perda.tipo ||
-                                        "Não informado"
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Reaproveitável:</strong>
-                                    ${textoSeguro(
-                                        perda.reaproveitavel ||
-                                        "Não"
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Quantidade reaproveitável:</strong>
-                                    ${numeroFormatado(
-                                        perda.quantidadeReaproveitavel,
-                                        0
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Custo unitário:</strong>
-                                    ${dinheiro(
-                                        perda.custoUnitario
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Custo total perdido:</strong>
-                                    ${dinheiro(
-                                        perda.custoTotal
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Destino:</strong>
-                                    ${textoSeguro(
-                                        perda.destino ||
-                                        "Não informado"
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Descrição:</strong>
-                                    ${textoSeguro(
-                                        perda.motivo ||
-                                        "Não informada"
-                                    )}
-                                </p>
-
-                            </div>
-                        `;
-
-                    }
-                )
-                .join("");
+            "<p>Nenhuma perda registrada.</p>";
 
         atualizarResumoPerdas();
 
+        return;
     }
+
+    const listaOrdenada =
+        [...perdas].sort(
+            function (a, b) {
+
+                return String(
+                    b.data || ""
+                ).localeCompare(
+                    String(
+                        a.data || ""
+                    )
+                );
+
+            }
+        );
+
+    listaPerdas.innerHTML = `
+        <table class="tabela tabela-perdas">
+
+            <thead>
+
+                <tr>
+
+                    <th>Produto</th>
+
+                    <th>Data</th>
+
+                    <th>Qtd. falha</th>
+
+                    <th>Tipo de falha</th>
+
+                    <th>Reaprov.</th>
+
+                    <th>Qtd. reaprov.</th>
+
+                    <th>Custo</th>
+
+                    <th>Destino</th>
+
+                    <th>Descrição</th>
+
+                    <th>Observações</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                ${listaOrdenada
+                    .map(
+                        function (perda) {
+
+                            return `
+                                <tr>
+
+                                    <td>
+                                        ${textoSeguro(
+                                            perda.produtoNome ||
+                                            "Produto não informado"
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        ${dataFormatada(
+                                            perda.data
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        ${numeroFormatado(
+                                            perda.quantidade,
+                                            0
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        ${textoSeguro(
+                                            perda.tipo ||
+                                            "Não informado"
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        ${textoSeguro(
+                                            perda.reaproveitavel ||
+                                            "Não"
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        ${numeroFormatado(
+                                            perda.quantidadeReaproveitavel,
+                                            0
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        ${dinheiro(
+                                            perda.custoTotal
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        ${textoSeguro(
+                                            perda.destino ||
+                                            "Não informado"
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        ${textoSeguro(
+                                            perda.motivo ||
+                                            "-"
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        ${textoSeguro(
+                                            perda.observacoes ||
+                                            "-"
+                                        )}
+                                    </td>
+
+                                </tr>
+                            `;
+
+                        }
+                    )
+                    .join("")}
+
+            </tbody>
+
+        </table>
+    `;
+
+    atualizarResumoPerdas();
+
+}
 
     // ==================================================
     // EVENTOS DOS BOTÕES DA PERDA
@@ -8452,141 +8474,162 @@ produtos =
 
     function mostrarConsumosProprios() {
 
-        if (!listaConsumoProprio) {
-            return;
-        }
+    if (!listaConsumoProprio) {
+        return;
+    }
 
-        if (
-            !Array.isArray(
-                consumosProprios
-            ) ||
-            consumosProprios.length === 0
-        ) {
-
-            listaConsumoProprio.innerHTML =
-                "<p>Nenhum consumo próprio registrado.</p>";
-
-            atualizarResumoConsumoProprio();
-
-            return;
-
-        }
+    if (
+        !Array.isArray(
+            consumosProprios
+        ) ||
+        consumosProprios.length === 0
+    ) {
 
         listaConsumoProprio.innerHTML =
-            [...consumosProprios]
-                .sort(
-                    function (a, b) {
-
-                        return String(
-                            b.data || ""
-                        ).localeCompare(
-                            String(
-                                a.data || ""
-                            )
-                        );
-
-                    }
-                )
-                .map(
-                    function (consumo) {
-
-                        return `
-                            <div class="card-item">
-
-                                <h4>
-                                    ${textoSeguro(
-                                        consumo.produtoNome ||
-                                        "Produto não informado"
-                                    )}
-                                </h4>
-
-                                <p>
-                                    <strong>Lote:</strong>
-                                    ${textoSeguro(
-                                        consumo.lote ||
-                                        "Não informado"
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Data:</strong>
-                                    ${dataFormatada(
-                                        consumo.data
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Quantidade:</strong>
-                                    ${numeroFormatado(
-                                        consumo.quantidade,
-                                        0
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Finalidade:</strong>
-                                    ${textoSeguro(
-                                        consumo.finalidade ||
-                                        "Não informada"
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Local de uso:</strong>
-                                    ${textoSeguro(
-                                        consumo.local ||
-                                        "Não informado"
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Responsável:</strong>
-                                    ${textoSeguro(
-                                        consumo.responsavel ||
-                                        "Não informado"
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Custo unitário:</strong>
-                                    ${dinheiro(
-                                        consumo.custoUnitario
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Custo interno total:</strong>
-                                    ${dinheiro(
-                                        consumo.custoTotal
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Descrição:</strong>
-                                    ${textoSeguro(
-                                        consumo.descricao ||
-                                        "Não informada"
-                                    )}
-                                </p>
-
-                                <p>
-                                    <strong>Status:</strong>
-                                    ${textoSeguro(
-                                        consumo.status ||
-                                        "Em uso"
-                                    )}
-                                </p>
-
-                            </div>
-                        `;
-
-                    }
-                )
-                .join("");
+            "<p>Nenhum consumo próprio registrado.</p>";
 
         atualizarResumoConsumoProprio();
 
+        return;
     }
+
+    const listaOrdenada =
+        [...consumosProprios].sort(
+            function (a, b) {
+
+                return String(
+                    b.data || ""
+                ).localeCompare(
+                    String(
+                        a.data || ""
+                    )
+                );
+
+            }
+        );
+
+    listaConsumoProprio.innerHTML = `
+        <table class="tabela tabela-consumo-proprio">
+
+            <thead>
+
+                <tr>
+
+                    <th>Produto</th>
+
+                    <th>Data</th>
+
+                    <th>Qtd.</th>
+
+                    <th>Finalidade</th>
+
+                    <th>Local</th>
+
+                    <th>Responsável</th>
+
+                    <th>Custo unit.</th>
+
+                    <th>Custo total</th>
+
+                    <th>Descrição</th>
+
+                    <th>Status</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                ${listaOrdenada
+                    .map(
+                        function (consumo) {
+
+                            return `
+                                <tr>
+
+                                    <td>
+                                        ${textoSeguro(
+                                            consumo.produtoNome ||
+                                            "Produto não informado"
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        ${dataFormatada(
+                                            consumo.data
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        ${numeroFormatado(
+                                            consumo.quantidade,
+                                            0
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        ${textoSeguro(
+                                            consumo.finalidade ||
+                                            "-"
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        ${textoSeguro(
+                                            consumo.local ||
+                                            "-"
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        ${textoSeguro(
+                                            consumo.responsavel ||
+                                            "-"
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        ${dinheiro(
+                                            consumo.custoUnitario
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        ${dinheiro(
+                                            consumo.custoTotal
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        ${textoSeguro(
+                                            consumo.descricao ||
+                                            "-"
+                                        )}
+                                    </td>
+
+                                    <td>
+                                        ${textoSeguro(
+                                            consumo.status ||
+                                            "Em uso"
+                                        )}
+                                    </td>
+
+                                </tr>
+                            `;
+
+                        }
+                    )
+                    .join("")}
+
+            </tbody>
+
+        </table>
+    `;
+
+    atualizarResumoConsumoProprio();
+
+}
 
     // ==================================================
     // EVENTOS DOS BOTÕES DO CONSUMO PRÓPRIO

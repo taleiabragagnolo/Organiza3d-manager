@@ -6389,3 +6389,261 @@ button {
     }
 
 }
+/* =========================================================
+   PRODUTOS - AJUSTES FINAIS
+   FILAMENTOS / FALHAS / CONSUMO PRÓPRIO
+   ========================================================= */
+
+
+/* =========================================================
+   FILAMENTOS - CADA FILAMENTO EM UMA LINHA
+   ========================================================= */
+
+#produto .grupo-filamento-produto {
+    display: grid !important;
+    grid-template-columns:
+        minmax(0, 1fr)
+        110px
+        135px !important;
+    gap: 10px;
+    align-items: end;
+    width: 100%;
+}
+
+#produto .grupo-filamento-produto
+#lista-filamentos-produto {
+    display: block !important;
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+}
+
+#produto .grupo-filamento-produto
+.item-filamento-produto {
+    display: grid !important;
+
+    grid-template-columns:
+        minmax(300px, 1fr)
+        105px
+        115px
+        85px !important;
+
+    gap: 10px;
+
+    align-items: end;
+
+    width: 100% !important;
+}
+
+#produto .grupo-filamento-produto
+.item-filamento-produto +
+.item-filamento-produto {
+    margin-top: 8px !important;
+}
+
+#produto .grupo-filamento-produto
+.campo-total-insumo {
+    grid-column: 2 !important;
+}
+
+#produto .grupo-filamento-produto
+.campo-adicionar-insumo {
+    grid-column: 3 !important;
+}
+
+
+/* =========================================================
+   PEÇAS COM FALHA - FORMULÁRIO HORIZONTAL
+   ========================================================= */
+
+#aba-perdas > .formulario {
+    display: grid !important;
+    grid-template-columns:
+        repeat(12, minmax(0, 1fr)) !important;
+
+    gap: 10px 12px !important;
+    align-items: end;
+}
+
+#aba-perdas > .formulario > .linha {
+    display: contents !important;
+}
+
+#aba-perdas .campo:has(#perda-produto-lote) {
+    grid-column: span 3;
+}
+
+#aba-perdas .campo:has(#perda-data) {
+    grid-column: span 2;
+}
+
+#aba-perdas .campo:has(#perda-quantidade) {
+    grid-column: span 1;
+}
+
+#aba-perdas .campo:has(#perda-tipo) {
+    grid-column: span 2;
+}
+
+#aba-perdas .campo:has(#perda-reaproveitavel) {
+    grid-column: span 2;
+}
+
+#aba-perdas .campo:has(#perda-quantidade-reaproveitavel) {
+    grid-column: span 2;
+}
+
+#aba-perdas .campo:has(#perda-custo-unitario),
+#aba-perdas .campo:has(#perda-custo-total) {
+    grid-column: span 2;
+}
+
+#aba-perdas .campo:has(#perda-motivo) {
+    grid-column: span 3 !important;
+}
+
+#aba-perdas .campo:has(#perda-destino) {
+    grid-column: span 2 !important;
+}
+
+#aba-perdas .campo:has(#perda-observacoes) {
+    grid-column: span 3 !important;
+}
+
+#aba-perdas textarea {
+    min-height: 40px !important;
+    height: 40px !important;
+    resize: vertical;
+}
+
+
+/* =========================================================
+   CONSUMO PRÓPRIO - FORMULÁRIO HORIZONTAL
+   ========================================================= */
+
+#aba-consumo-proprio > .formulario {
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(12, minmax(0, 1fr)) !important;
+
+    gap: 10px 12px !important;
+
+    align-items: end;
+}
+
+#aba-consumo-proprio > .formulario > .linha {
+    display: contents !important;
+}
+
+#aba-consumo-proprio
+.campo:has(#consumo-proprio-produto-lote) {
+    grid-column: span 3;
+}
+
+#aba-consumo-proprio
+.campo:has(#consumo-proprio-data) {
+    grid-column: span 2;
+}
+
+#aba-consumo-proprio
+.campo:has(#consumo-proprio-quantidade) {
+    grid-column: span 1;
+}
+
+#aba-consumo-proprio
+.campo:has(#consumo-proprio-finalidade) {
+    grid-column: span 2;
+}
+
+#aba-consumo-proprio
+.campo:has(#consumo-proprio-local) {
+    grid-column: span 2;
+}
+
+#aba-consumo-proprio
+.campo:has(#consumo-proprio-responsavel) {
+    grid-column: span 2;
+}
+
+#aba-consumo-proprio
+.campo:has(#consumo-proprio-custo-unitario),
+#aba-consumo-proprio
+.campo:has(#consumo-proprio-custo-total) {
+    grid-column: span 2;
+}
+
+#aba-consumo-proprio
+.campo:has(#consumo-proprio-descricao),
+#aba-consumo-proprio
+.campo:has(#consumo-proprio-observacoes) {
+    grid-column: span 4 !important;
+}
+
+#aba-consumo-proprio textarea {
+    min-height: 40px !important;
+    height: 40px !important;
+    resize: vertical;
+}
+
+
+/* =========================================================
+   LISTAS HORIZONTAIS - FALHAS E CONSUMO
+   ========================================================= */
+
+#lista-perdas-produtos,
+#lista-consumo-proprio {
+    width: 100%;
+    overflow-x: auto;
+}
+
+#lista-perdas-produtos .tabela,
+#lista-consumo-proprio .tabela {
+    width: 100%;
+    min-width: 950px;
+    border-collapse: collapse;
+}
+
+#lista-perdas-produtos .tabela th,
+#lista-perdas-produtos .tabela td,
+#lista-consumo-proprio .tabela th,
+#lista-consumo-proprio .tabela td {
+    padding: 9px 10px;
+    border-bottom:
+        1px solid var(--nova-borda);
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+#lista-perdas-produtos .tabela th,
+#lista-consumo-proprio .tabela th {
+    font-size: 11px;
+    color: var(--nova-marrom-claro);
+}
+
+
+/* =========================================================
+   RESPONSIVO
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    #aba-perdas > .formulario,
+    #aba-consumo-proprio > .formulario {
+        grid-template-columns: 1fr !important;
+    }
+
+    #aba-perdas .campo,
+    #aba-consumo-proprio .campo {
+        grid-column: 1 / -1 !important;
+    }
+
+    #produto .grupo-filamento-produto {
+        grid-template-columns: 1fr !important;
+    }
+
+    #produto .grupo-filamento-produto
+    .item-filamento-produto {
+        grid-template-columns: 1fr !important;
+    }
+
+}
