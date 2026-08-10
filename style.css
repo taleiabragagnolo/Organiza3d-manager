@@ -2805,20 +2805,18 @@ button:not(.botao-principal):not(.menu-item):not(.botao-sair) {
    única linha sempre que houver espaço.
 */
 
-#produto .linha:has(#produto-impressora-utilizada) {
-
-    display: flex !important;
-
-    flex-wrap: nowrap;
-
-    align-items: end;
-
-    gap: 11px;
-
-    width: 100%;
-
+#produto .linha:has(#produto-impressora-utilizada),
+#produto .linha:has(#produto-custo-energia) {
+    display: contents !important;
 }
-
+#produto .campo-potencia-produto,
+#produto .campo-tarifa-produto,
+#produto .campo-consumo-produto,
+#produto .campo-custo-hora-produto,
+#produto .campo-tempo-total-produto,
+#produto .campo-horas-decimais-produto {
+    display: none !important;
+}
 
 /* IMPRESSORA */
 
@@ -6600,17 +6598,4 @@ button {
 #lista-perdas-produtos,
 #lista-consumo-proprio {
     overflow-x: auto;
-}
-/* =========================================================
-   PRODUTOS - OCULTAR CAMPOS AUTOMÁTICOS DA IMPRESSÃO
-   Os campos permanecem no HTML para os cálculos
-   ========================================================= */
-
-#produto .campo-potencia-produto,
-#produto .campo-tarifa-produto,
-#produto .campo-consumo-produto,
-#produto .campo-custo-hora-produto,
-#produto .campo-tempo-total-produto,
-#produto .campo-horas-decimais-produto {
-    display: none !important;
 }
