@@ -6768,4 +6768,176 @@ button {
         flex: 1 1 120px !important;
     }
 
+}/* =========================================================
+   AJUSTE FINO - PEÇAS COM FALHA
+   ========================================================= */
+
+#aba-perdas > .formulario {
+    grid-template-columns:
+        1.8fr
+        1.15fr
+        0.8fr
+        1.25fr
+        1.15fr
+        1.15fr !important;
+
+    gap: 10px 12px !important;
+}
+
+#aba-perdas > .formulario > .linha {
+    display: contents !important;
+}
+
+#aba-perdas .campo:has(#perda-produto-lote),
+#aba-perdas .campo:has(#perda-data),
+#aba-perdas .campo:has(#perda-quantidade),
+#aba-perdas .campo:has(#perda-tipo),
+#aba-perdas .campo:has(#perda-reaproveitavel),
+#aba-perdas .campo:has(#perda-quantidade-reaproveitavel) {
+    grid-column: auto !important;
+}
+
+#aba-perdas .campo:has(#perda-custo-unitario) {
+    grid-column: 1 / 2 !important;
+}
+
+#aba-perdas .campo:has(#perda-custo-total) {
+    grid-column: 2 / 3 !important;
+}
+
+#aba-perdas .campo:has(#perda-motivo) {
+    grid-column: 3 / 5 !important;
+}
+
+#aba-perdas .campo:has(#perda-destino) {
+    grid-column: 5 / 6 !important;
+}
+
+#aba-perdas .campo:has(#perda-observacoes) {
+    grid-column: 6 / 7 !important;
+}
+
+#aba-perdas .campo {
+    min-width: 0 !important;
+}
+
+#aba-perdas .campo label {
+    font-size: 11px !important;
+    line-height: 1.15 !important;
+    white-space: normal !important;
+}
+
+#aba-perdas input,
+#aba-perdas select,
+#aba-perdas textarea {
+    width: 100% !important;
+    max-width: none !important;
+}
+
+#aba-perdas textarea {
+    min-height: 40px !important;
+    height: 40px !important;
+}
+
+
+/* =========================================================
+   AJUSTE FINO - CONSUMO PRÓPRIO
+   ========================================================= */
+
+#aba-consumo-proprio > .formulario {
+    grid-template-columns:
+        1.9fr
+        1.1fr
+        0.8fr
+        1.25fr
+        1.25fr
+        1.25fr !important;
+
+    gap: 10px 12px !important;
+}
+
+#aba-consumo-proprio > .formulario > .linha {
+    display: contents !important;
+}
+
+#aba-consumo-proprio
+.campo:has(#consumo-proprio-produto-lote),
+#aba-consumo-proprio
+.campo:has(#consumo-proprio-data),
+#aba-consumo-proprio
+.campo:has(#consumo-proprio-quantidade),
+#aba-consumo-proprio
+.campo:has(#consumo-proprio-finalidade),
+#aba-consumo-proprio
+.campo:has(#consumo-proprio-local),
+#aba-consumo-proprio
+.campo:has(#consumo-proprio-responsavel) {
+    grid-column: auto !important;
+}
+
+#aba-consumo-proprio
+.campo:has(#consumo-proprio-custo-unitario) {
+    grid-column: 1 / 2 !important;
+}
+
+#aba-consumo-proprio
+.campo:has(#consumo-proprio-custo-total) {
+    grid-column: 2 / 3 !important;
+}
+
+#aba-consumo-proprio
+.campo:has(#consumo-proprio-descricao) {
+    grid-column: 3 / 5 !important;
+}
+
+#aba-consumo-proprio
+.campo:has(#consumo-proprio-observacoes) {
+    grid-column: 5 / 7 !important;
+}
+
+#aba-consumo-proprio .campo {
+    min-width: 0 !important;
+}
+
+#aba-consumo-proprio .campo label {
+    font-size: 11px !important;
+    line-height: 1.15 !important;
+    white-space: normal !important;
+}
+
+#aba-consumo-proprio input,
+#aba-consumo-proprio select,
+#aba-consumo-proprio textarea {
+    width: 100% !important;
+    max-width: none !important;
+}
+
+#aba-consumo-proprio textarea {
+    min-height: 40px !important;
+    height: 40px !important;
+}
+
+
+/* =========================================================
+   TABELAS - PERDAS E CONSUMO PRÓPRIO
+   ========================================================= */
+
+#lista-perdas-produtos .tabela,
+#lista-consumo-proprio .tabela {
+    min-width: 1050px;
+    table-layout: auto;
+}
+
+#lista-perdas-produtos .tabela th,
+#lista-perdas-produtos .tabela td,
+#lista-consumo-proprio .tabela th,
+#lista-consumo-proprio .tabela td {
+    padding: 8px 9px !important;
+    font-size: 11px !important;
+    vertical-align: middle;
+}
+
+#lista-perdas-produtos,
+#lista-consumo-proprio {
+    overflow-x: auto;
 }
