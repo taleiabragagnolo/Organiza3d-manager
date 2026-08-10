@@ -36,7 +36,7 @@ const botaoLimparFormularioLancamento =
 
 const listaLancamentos =
     document.getElementById(
-        "lista-lancamentos"
+        "lista-financeiro"
     );
 
 const campoTipoLancamento =
