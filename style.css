@@ -6576,3 +6576,39 @@ button {
 #lista-consumo-proprio {
     overflow-x: auto;
 }
+/* =========================================================
+   BLOCO IMPRESSORA E CUSTOS - UMA ÚNICA LINHA
+   ========================================================= */
+
+#produto .linha:has(#produto-impressora-utilizada) {
+    grid-column: 1 / -1;
+    display: grid !important;
+    grid-template-columns: minmax(220px, 1fr) 90px 90px 120px 120px;
+    gap: 12px;
+    align-items: end;
+    width: 100%;
+}
+
+/* Garante que os campos ocupem 100% da largura de cada coluna do Grid */
+#produto .linha:has(#produto-impressora-utilizada) .campo {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+}
+
+#produto-impressora-utilizada,
+#produto-tempo-impressao-horas,
+#produto-tempo-impressao-minutos,
+#produto-custo-energia,
+#produto-custo-maquina {
+    width: 100% !important;
+    max-width: none !important;
+}
+
+/* Ajuste Responsivo para Mobile */
+@media (max-width: 700px) {
+    #produto .linha:has(#produto-impressora-utilizada) {
+        grid-template-columns: 1fr !important;
+    }
+}
