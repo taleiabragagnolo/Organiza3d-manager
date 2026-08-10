@@ -6647,3 +6647,125 @@ button {
     }
 
 }
+/* =========================================================
+   PRODUTOS - IMPRESSÃO E CUSTOS DA MÁQUINA
+   TUDO EM UMA ÚNICA LINHA
+   ========================================================= */
+
+#produto .linha-impressao-principal,
+#produto .linha-impressao-custos {
+    display: contents !important;
+}
+
+/* CAMPOS VISÍVEIS EM UMA ÚNICA LINHA */
+
+#produto .campo-impressora-produto,
+#produto .campo-tempo-produto,
+#produto .campo-tarifa-produto,
+#produto .campo-custo-produto,
+#produto .campo-custo-hora-produto,
+#produto .campo-custo-producao-maquina {
+    display: flex !important;
+    flex-direction: column !important;
+
+    margin: 0 !important;
+
+    min-width: 0 !important;
+}
+
+/* IMPRESSORA */
+
+#produto .campo-impressora-produto {
+    width: 210px !important;
+    flex: 0 0 210px !important;
+}
+
+#produto #produto-impressora-utilizada {
+    width: 210px !important;
+    max-width: 210px !important;
+}
+
+/* HORAS E MINUTOS */
+
+#produto .campo-tempo-produto {
+    width: 70px !important;
+    flex: 0 0 70px !important;
+}
+
+#produto #produto-tempo-impressao-horas,
+#produto #produto-tempo-impressao-minutos {
+    width: 70px !important;
+    max-width: 70px !important;
+}
+
+/* TARIFA */
+
+#produto .campo-tarifa-produto {
+    width: 95px !important;
+    flex: 0 0 95px !important;
+}
+
+#produto #produto-tarifa-energia {
+    width: 95px !important;
+    max-width: 95px !important;
+}
+
+/* CUSTO DE ENERGIA */
+
+#produto .campo-custo-produto {
+    width: 100px !important;
+    flex: 0 0 100px !important;
+}
+
+#produto #produto-custo-energia {
+    width: 100px !important;
+    max-width: 100px !important;
+}
+
+/* CUSTO DA MÁQUINA POR HORA */
+
+#produto .campo-custo-hora-produto {
+    width: 115px !important;
+    flex: 0 0 115px !important;
+}
+
+/* CUSTO DA MÁQUINA NESTA PRODUÇÃO */
+
+#produto .campo-custo-producao-maquina {
+    width: 135px !important;
+    flex: 0 0 135px !important;
+}
+
+/* CONTAINER DA SEÇÃO */
+
+#produto .formulario:has(#produto-impressora-utilizada) {
+    column-gap: 10px !important;
+}
+
+/* LABELS */
+
+#produto .campo-impressora-produto label,
+#produto .campo-tempo-produto label,
+#produto .campo-tarifa-produto label,
+#produto .campo-custo-produto label,
+#produto .campo-custo-hora-produto label,
+#produto .campo-custo-producao-maquina label {
+    font-size: 11px !important;
+    line-height: 1.15;
+    white-space: nowrap;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 900px) {
+
+    #produto .campo-impressora-produto,
+    #produto .campo-tempo-produto,
+    #produto .campo-tarifa-produto,
+    #produto .campo-custo-produto,
+    #produto .campo-custo-hora-produto,
+    #produto .campo-custo-producao-maquina {
+        flex: 1 1 120px !important;
+    }
+
+}
