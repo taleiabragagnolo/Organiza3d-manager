@@ -2821,33 +2821,22 @@ button:not(.botao-principal):not(.menu-item):not(.botao-sair) {
 /* IMPRESSORA */
 
 #produto .campo:has(#produto-impressora-utilizada) {
-
-    flex:
-        0 0 190px;
-
-    min-width: 190px;
-
+    grid-column: 1 / 4;
+    min-width: 0 !important;
 }
 
 
 #produto-impressora-utilizada {
-
-    width: 190px !important;
-
-    max-width: 190px !important;
-
+    width: 100% !important;
+    max-width: none !important;
 }
 
 
 /* HORAS */
 
 #produto .campo:has(#produto-tempo-impressao-horas) {
-
-    flex:
-        0 0 78px;
-
-    min-width: 78px;
-
+    grid-column: 4 / 5;
+    min-width: 0 !important;
 }
 
 
@@ -2863,12 +2852,8 @@ button:not(.botao-principal):not(.menu-item):not(.botao-sair) {
 /* MINUTOS */
 
 #produto .campo:has(#produto-tempo-impressao-minutos) {
-
-    flex:
-        0 0 78px;
-
-    min-width: 78px;
-
+    grid-column: 5 / 6;
+    min-width: 0 !important;
 }
 
 
@@ -2905,12 +2890,8 @@ button:not(.botao-principal):not(.menu-item):not(.botao-sair) {
 /* CUSTO DE ENERGIA - EX.: 34,89 */
 
 #produto .campo:has(#produto-custo-energia) {
-
-    flex:
-        0 0 92px;
-
-    min-width: 92px;
-
+    grid-column: 6 / 8;
+    min-width: 0 !important;
 }
 
 
@@ -2926,12 +2907,8 @@ button:not(.botao-principal):not(.menu-item):not(.botao-sair) {
 /* CUSTO DA MÁQUINA - EX.: 00,00 */
 
 #produto .campo:has(#produto-custo-maquina) {
-
-    flex:
-        0 0 90px;
-
-    min-width: 90px;
-
+    grid-column: 8 / 10;
+    min-width: 0 !important;
 }
 
 
