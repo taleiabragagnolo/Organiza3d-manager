@@ -1406,126 +1406,72 @@ if (filamentosAtivos.length === 0) {
                         : "Nenhuma";
 
                 return `
-                    <div class="card-item">
+    <div class="card-item filamento-linha">
 
-                        <h4>
-                            ${escaparTexto(
-                                filamento.material
-                            )}
-                            ${escaparTexto(
-                                filamento.cor
-                            )}
-                        </h4>
+        <div class="filamento-resumo">
 
-                        <p>
-                            <strong>Fabricante:</strong>
-                            ${fabricante}
-                        </p>
+            <strong>
+                ${escaparTexto(filamento.material)}
+                ${escaparTexto(filamento.cor)}
+            </strong>
 
-                        <p>
-                            <strong>Peso inicial:</strong>
-                            ${Number(
-                                filamento.pesoInicial ||
-                                0
-                            ).toLocaleString(
-                                "pt-BR",
-                                {
-                                    maximumFractionDigits: 1
-                                }
-                            )} g
-                        </p>
+            <span>•</span>
 
-                        <p>
-                            <strong>Peso restante:</strong>
-                            ${Number(
-                                filamento.pesoRestante ||
-                                0
-                            ).toLocaleString(
-                                "pt-BR",
-                                {
-                                    maximumFractionDigits: 1
-                                }
-                            )} g
-                        </p>
+            <span>${fabricante}</span>
 
-                        <p>
-                            <strong>Percentual restante:</strong>
-                            ${formatarPercentualFilamento(
-                                percentual
-                            )}
-                        </p>
+            <span>•</span>
 
-                        <p>
-                            <strong>Status:</strong>
-                            ${escaparTexto(
-                                filamento.status
-                            )}
-                        </p>
+            <span>
+                ${Number(filamento.pesoRestante || 0).toLocaleString(
+                    "pt-BR",
+                    { maximumFractionDigits: 1 }
+                )} g
+                (${formatarPercentualFilamento(percentual)})
+            </span>
 
-                        <p>
-                            <strong>Valor pago:</strong>
-                            ${formatarDinheiro(
-                                filamento.valor
-                            )}
-                        </p>
+            <span>•</span>
 
-                        <p>
-                            <strong>Data da compra:</strong>
-                            ${formatarDataFilamento(
-                                filamento.dataCompra
-                            )}
-                        </p>
+            <span>${escaparTexto(filamento.status)}</span>
 
-                        <p>
-                            <strong>Fornecedor:</strong>
-                            ${fornecedor}
-                        </p>
+            <span>•</span>
 
-                        <p>
-                            <strong>Observações:</strong>
-                            ${observacoes}
-                        </p>
+            <span>${formatarDinheiro(filamento.valor)}</span>
 
-                        <div class="acoes-card">
+        </div>
 
-                            ${
-                                filamento.status !==
-                                "Finalizado"
-                                    ? `
-                                        <button
-                                            type="button"
-                                            class="botao-principal"
-                                            onclick="registrarConsumoFilamento(
-                                                ${filamento.id}
-                                            )">
-                                            Registrar Consumo
-                                        </button>
-                                    `
-                                    : ""
-                            }
+        <div class="acoes-card">
 
-                            <button
-                                type="button"
-                                class="botao-principal"
-                                onclick="editarFilamento(
-                                    ${filamento.id}
-                                )">
-                                Editar
-                            </button>
+            ${
+                filamento.status !== "Finalizado"
+                    ? `
+                        <button
+                            type="button"
+                            class="botao-principal"
+                            onclick="registrarConsumoFilamento(${filamento.id})">
+                            Registrar Consumo
+                        </button>
+                    `
+                    : ""
+            }
 
-                            <button
-                                type="button"
-                                class="botao-excluir"
-                                onclick="excluirFilamento(
-                                    ${filamento.id}
-                                )">
-                                Excluir
-                            </button>
+            <button
+                type="button"
+                class="botao-principal"
+                onclick="editarFilamento(${filamento.id})">
+                Editar
+            </button>
 
-                        </div>
+            <button
+                type="button"
+                class="botao-excluir"
+                onclick="excluirFilamento(${filamento.id})">
+                Excluir
+            </button>
 
-                    </div>
-                `;
+        </div>
+
+    </div>
+`;
             })
             .join("");
 
