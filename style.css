@@ -6601,3 +6601,16 @@ button {
 #lista-consumo-proprio {
     overflow-x: auto;
 }
+/* =========================================================
+   PRODUTOS - OCULTAR CAMPOS AUTOMÁTICOS DA IMPRESSÃO
+   Os campos permanecem no HTML para os cálculos
+   ========================================================= */
+
+#produto .campo-potencia-produto,
+#produto .campo-tarifa-produto,
+#produto .campo-consumo-produto,
+#produto .campo-custo-hora-produto,
+#produto .campo-tempo-total-produto,
+#produto .campo-horas-decimais-produto {
+    display: none !important;
+}
