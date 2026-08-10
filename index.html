@@ -3224,20 +3224,20 @@
 
 <div class="formulario formulario-filamento-horizontal">
 
-    <!-- LINHA 1 -->
+    <!-- LINHA 1: IDENTIFICAÇÃO DO FILAMENTO -->
 
     <div class="linha linha-filamento-principal">
 
-        <div class="campo campo-filamento-fabricante">
+        <div class="campo campo-filamento-cor">
 
-            <label for="filamento-fabricante">
-                Fabricante
+            <label for="filamento-cor">
+                Cor
             </label>
 
             <input
                 type="text"
-                id="filamento-fabricante"
-                placeholder="Ex.: Voolt3D">
+                id="filamento-cor"
+                placeholder="Ex.: Branco Fosco">
 
         </div>
 
@@ -3266,16 +3266,16 @@
         </div>
 
 
-        <div class="campo campo-filamento-cor">
+        <div class="campo campo-filamento-fabricante">
 
-            <label for="filamento-cor">
-                Cor
+            <label for="filamento-fabricante">
+                Fabricante
             </label>
 
             <input
                 type="text"
-                id="filamento-cor"
-                placeholder="Ex.: Branco Fosco">
+                id="filamento-fabricante"
+                placeholder="Ex.: Voolt3D">
 
         </div>
 
@@ -3293,24 +3293,10 @@
 
         </div>
 
-
-        <div class="campo campo-filamento-fornecedor">
-
-            <label for="filamento-fornecedor">
-                Fornecedor
-            </label>
-
-            <input
-                type="text"
-                id="filamento-fornecedor"
-                placeholder="Ex.: Loja de filamentos">
-
-        </div>
-
     </div>
 
 
-    <!-- LINHA 2 -->
+    <!-- LINHA 2: PESO E VALOR -->
 
     <div class="linha linha-filamento-valores">
 
@@ -3339,7 +3325,22 @@
                 type="number"
                 id="filamento-peso-restante"
                 min="0"
-                placeholder="Ex.: 757">
+                placeholder="Ex.: 1000">
+
+        </div>
+
+
+        <div class="campo campo-filamento-percentual">
+
+            <label for="filamento-percentual">
+                Restante
+            </label>
+
+            <input
+                type="text"
+                id="filamento-percentual"
+                value="0%"
+                readonly>
 
         </div>
 
@@ -3347,7 +3348,7 @@
         <div class="campo campo-filamento-valor">
 
             <label for="filamento-valor">
-                Valor de compra
+                Valor pago
             </label>
 
             <input
@@ -3360,172 +3361,50 @@
         </div>
 
 
-        <div class="campo campo-filamento-percentual">
-
-            <label for="filamento-percentual">
-                Percentual disponível
-            </label>
-
-            <input
-                type="text"
-                id="filamento-percentual"
-                value="0%"
-                readonly>
-
-        </div>
-
-
-        <div class="campo campo-filamento-status">
-
-            <label for="filamento-status">
-                Status
-            </label>
-
-            <input
-                type="text"
-                id="filamento-status"
-                value="Finalizado"
-                readonly>
-
-        </div>
-
-
-        <div class="campo campo-filamento-data">
-
-            <label for="filamento-data-compra">
-                Data da compra
-            </label>
-
-            <input
-                type="date"
-                id="filamento-data-compra">
-
-        </div>
-
-    </div>
-
-
-    <!-- LINHA 3 -->
-
-    <div class="linha linha-filamento-final">
-
-        <div class="campo campo-filamento-observacoes">
-
-            <label for="filamento-observacoes">
-                Observações
-            </label>
-
-            <textarea
-                id="filamento-observacoes"
-                rows="2"
-                placeholder="Temperatura recomendada ou outras informações"></textarea>
-
-        </div>
-
-
         <div class="acoes-filamento">
 
             <button
                 id="salvar-filamento"
                 class="botao-principal"
                 type="button">
-
-                💾 Salvar Filamento
-
+                💾 Salvar
             </button>
-
 
             <button
                 id="limpar-formulario-filamento"
                 type="button">
-
-                🧹 Limpar Formulário
-
+                🧹 Limpar
             </button>
 
         </div>
 
     </div>
 
-</div>
 
-<div class="linha">
+    <!-- CAMPOS INTERNOS
+         Mantidos para não quebrar o JavaScript atual -->
 
-    <div class="campo">
+    <input
+        type="hidden"
+        id="filamento-status"
+        value="Finalizado">
 
-        <label for="filamento-status">
-            Status
-        </label>
+    <input
+        type="hidden"
+        id="filamento-data-compra"
+        value="">
 
-        <input
-            type="text"
-            id="filamento-status"
-            value="Finalizado"
-            readonly>
+    <input
+        type="hidden"
+        id="filamento-fornecedor"
+        value="">
 
-        <small>
-            O status será calculado automaticamente.
-        </small>
-
-    </div>
-
-    <div class="campo">
-
-        <label for="filamento-data-compra">
-            Data da compra
-        </label>
-
-        <input
-            type="date"
-            id="filamento-data-compra">
-
-    </div>
-
-</div>
-
-<div class="linha">
-
-    <div class="campo">
-
-        <label for="filamento-fornecedor">
-            Fornecedor
-        </label>
-
-        <input
-            type="text"
-            id="filamento-fornecedor"
-            placeholder="Ex.: Loja de filamentos">
-
-    </div>
-
-</div>
-
-<div class="campo">
-
-    <label for="filamento-observacoes">
-        Observações
-    </label>
-
-    <textarea
+    <input
+        type="hidden"
         id="filamento-observacoes"
-        rows="3"
-        placeholder="Temperatura recomendada ou outras informações"></textarea>
+        value="">
 
 </div>
-
-<button
-    id="salvar-filamento"
-    class="botao-principal"
-    type="button">
-    Salvar Filamento
-</button>
-
-<button
-    id="limpar-formulario-filamento"
-    type="button">
-    Limpar Formulário
-</button>
-
 </div>
 
 <h3>Filamentos cadastrados</h3>
@@ -3538,7 +3417,6 @@
 
 </div>
 
-</div>
 <div
     id="aba-acessorios"
     class="conteudo-aba-filamento"

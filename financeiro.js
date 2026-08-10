@@ -1,5 +1,5 @@
 // =========================
-// FINANCEIRO 2.0
+// FINANCEIRO
 // =========================
 
 let lancamentosFinanceiros = [];
