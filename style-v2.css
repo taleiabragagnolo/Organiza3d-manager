@@ -995,3 +995,27 @@ tbody tr:hover {
         box-shadow: none;
     }
 }
+/* =========================================================
+   FINANCEIRO - BOTÕES ALINHADOS
+   ========================================================= */
+
+#salvar-lancamento,
+#limpar-formulario-lancamento,
+#aplicar-filtros-financeiro,
+#limpar-filtros-financeiro {
+    width: 100% !important;
+    min-width: 150px !important;
+    grid-column: span 2 !important;
+    white-space: nowrap !important;
+    align-self: end !important;
+}
+
+#salvar-lancamento,
+#aplicar-filtros-financeiro {
+    justify-self: stretch !important;
+}
+
+#limpar-formulario-lancamento,
+#limpar-filtros-financeiro {
+    justify-self: stretch !important;
+}
