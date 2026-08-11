@@ -1347,22 +1347,53 @@ function mostrarFilamentos() {
         return;
     }
 const filamentosAtivos =
-    filamentos.filter(
-        function (filamento) {
+    filamentos
+        .filter(
+            function (filamento) {
 
-            return (
-                filamento.status !==
-                    "Inativo" &&
-                filamento.status !==
-                    "Finalizado" &&
-                Number(
-                    filamento.pesoRestante ||
-                    0
-                ) > 0
-            );
+                const status =
+                    String(
+                        filamento.status || ""
+                    )
+                        .trim()
+                        .toLowerCase();
 
-        }
-    );
+                return (
+                    status !== "inativo" &&
+                    status !== "finalizado" &&
+                    Number(
+                        filamento.pesoRestante || 0
+                    ) > 0
+                );
+
+            }
+        )
+        .sort(
+            function (a, b) {
+
+                const ordemA = [
+                    a.material || "",
+                    a.cor || "",
+                    a.fabricante || ""
+                ].join(" ");
+
+                const ordemB = [
+                    b.material || "",
+                    b.cor || "",
+                    b.fabricante || ""
+                ].join(" ");
+
+                return ordemA.localeCompare(
+                    ordemB,
+                    "pt-BR",
+                    {
+                        sensitivity: "base",
+                        numeric: true
+                    }
+                );
+
+            }
+        );
 
 if (filamentosAtivos.length === 0) {
 

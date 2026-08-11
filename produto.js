@@ -865,47 +865,102 @@ function iniciarProduto() {
     // ==================================================
 
     function preencherSelectFilamentos(
-        select,
-        valorSelecionado = ""
-    ) {
+    select,
+    valorSelecionado = ""
+) {
 
-        if (!select) {
-            return;
-        }
+    if (!select) {
+        return;
+    }
 
-        select.innerHTML =
-            '<option value="">' +
-            "Selecione o filamento" +
-            "</option>";
+    select.innerHTML =
+        '<option value="">' +
+        "Selecione o filamento" +
+        "</option>";
 
-        filamentos.forEach(
-            function (filamento) {
+    const filamentosDisponiveis =
+        filamentos
+            .filter(function (filamento) {
 
-                const option =
-                    document.createElement(
-                        "option"
+                const status =
+                    String(
+                        filamento.status || ""
+                    )
+                        .trim()
+                        .toLowerCase();
+
+                const pesoRestante =
+                    Number(
+                        filamento.pesoRestante || 0
                     );
 
-                option.value =
-                    String(filamento.id);
+                const filamentoSelecionado =
+                    String(filamento.id) ===
+                    String(valorSelecionado);
 
-                option.textContent =
-                    textoFilamento(
-                        filamento
-                    );
-
-                option.selected =
-                    String(valorSelecionado) ===
-                    String(filamento.id);
-
-                select.appendChild(
-                    option
+                return (
+                    filamentoSelecionado ||
+                    (
+                        status !== "finalizado" &&
+                        status !== "inativo" &&
+                        pesoRestante > 0
+                    )
                 );
 
-            }
-        );
+            })
+            .sort(function (a, b) {
 
-    }
+                const ordemA = [
+                    a.material || "",
+                    a.cor || "",
+                    a.fabricante || ""
+                ].join(" ");
+
+                const ordemB = [
+                    b.material || "",
+                    b.cor || "",
+                    b.fabricante || ""
+                ].join(" ");
+
+                return ordemA.localeCompare(
+                    ordemB,
+                    "pt-BR",
+                    {
+                        sensitivity: "base",
+                        numeric: true
+                    }
+                );
+
+            });
+
+    filamentosDisponiveis.forEach(
+        function (filamento) {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                String(filamento.id);
+
+            option.textContent =
+                textoFilamento(
+                    filamento
+                );
+
+            option.selected =
+                String(valorSelecionado) ===
+                String(filamento.id);
+
+            select.appendChild(
+                option
+            );
+
+        }
+    );
+
+}
 
     function preencherSelectAcessorios(
         select,
