@@ -1,0 +1,997 @@
+/* =========================================================
+   ORGANIZA 3D MANAGER — STYLE V2
+   Folha de estilos reconstruída do zero
+   ========================================================= */
+
+/* 1. IDENTIDADE DA MARCA */
+
+:root {
+    /* Verde de folhas e plantas */
+    --verde-900: #3f4a32;
+    --verde-800: #566246;
+    --verde-700: #718064;
+    --verde-500: #98a186;
+    --verde-200: #d9dece;
+    --verde-100: #eef0e8;
+
+    /* Cobre: único destaque quente da interface */
+    --cobre-800: #684128;
+    --cobre-700: #825333;
+    --cobre-500: #a96b3f;
+    --cobre-200: #d5b59e;
+    --cobre-100: #f0e8e2;
+
+    /* Branco neutro, madeira e pedra */
+    --neutro-50: #ffffff;
+    --neutro-100: #f5f5f2;
+    --neutro-200: #e8e8e3;
+    --marrom-900: #4d3c2d;
+    --marrom-700: #6b5847;
+    --marrom-500: #88786b;
+    --madeira-700: #755438;
+    --madeira-500: #987352;
+    --pedra-700: #73746d;
+    --pedra-500: #92938b;
+    --pedra-200: #d9d8d2;
+    --pedra-100: #efeee9;
+
+    --branco: #ffffff;
+    --perigo: #b95757;
+    --perigo-claro: #f9e7e7;
+    --aviso: #b27a2d;
+    --aviso-claro: #fff2dc;
+    --sucesso: #607b57;
+
+    --borda: #ddd8cf;
+    --borda-forte: #c6c0b6;
+    --sombra: 0 5px 18px rgba(70, 54, 44, 0.08);
+    --sombra-forte: 0 8px 24px rgba(70, 54, 44, 0.13);
+
+    --raio-pequeno: 8px;
+    --raio: 12px;
+    --raio-grande: 16px;
+    --menu-largura: 225px;
+    --fonte: "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+
+/* 2. BASE */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+    background: var(--neutro-100);
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    background: var(--neutro-100);
+    color: var(--marrom-900);
+    font-family: var(--fonte);
+    font-size: 15px;
+    line-height: 1.45;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+    margin-top: 0;
+}
+
+h1,
+h2 {
+    color: var(--marrom-900);
+}
+
+h2 {
+    margin-bottom: 4px;
+    font-size: 29px;
+    font-weight: 700;
+}
+
+h3 {
+    margin: 22px 0 10px;
+    color: var(--cobre-700);
+    font-size: 15px;
+    font-weight: 700;
+}
+
+h4 {
+    margin-bottom: 8px;
+    color: var(--marrom-900);
+    font-size: 16px;
+}
+
+small {
+    display: block;
+    margin-top: 4px;
+    color: var(--marrom-500);
+    font-size: 12px;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+/* 3. ESTRUTURA PRINCIPAL */
+
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+.menu-lateral {
+    position: sticky;
+    top: 0;
+    display: flex;
+    width: var(--menu-largura);
+    height: 100vh;
+    flex: 0 0 var(--menu-largura);
+    flex-direction: column;
+    padding: 22px 16px;
+    overflow-y: auto;
+    border-right: 1px solid var(--pedra-200);
+    background: linear-gradient(
+        180deg,
+        var(--neutro-50),
+        var(--pedra-100)
+    );
+}
+
+.logo {
+    margin-bottom: 22px;
+    padding: 14px 12px;
+    border: 1px solid var(--pedra-200);
+    border-radius: var(--raio);
+    background: var(--branco);
+}
+
+.logo h2 {
+    margin: 0;
+    color: var(--madeira-700);
+    font-size: 21px;
+}
+
+.logo p {
+    margin: 2px 0 0;
+    color: var(--cobre-700);
+    font-size: 12px;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.menu-item {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--marrom-900);
+    text-align: left;
+    transition:
+        background 0.18s ease,
+        color 0.18s ease;
+}
+
+.menu-item:hover {
+    background: var(--verde-100);
+    color: var(--verde-900);
+}
+
+.menu-item.ativo {
+    background: var(--verde-700);
+    color: var(--branco);
+    box-shadow:
+        0 4px 12px rgba(63, 74, 50, 0.2);
+}
+
+.menu-lateral > button,
+.menu-lateral .botao-sair {
+    margin-top: auto;
+}
+.conteudo {
+    width: calc(100% - var(--menu-largura));
+    min-width: 0;
+    flex: 1 1 auto;
+    padding: 24px 30px 40px;
+}
+
+.pagina {
+    display: none;
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.pagina.ativa {
+    display: block;
+}
+
+.pagina > p,
+.titulo-pagina p {
+    margin-bottom: 16px;
+    color: var(--marrom-700);
+}
+
+.titulo-pagina {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 16px;
+}
+
+.cabecalho {
+    margin-bottom: 20px;
+    padding: 18px 22px;
+    border-radius: var(--raio-grande);
+    background: linear-gradient(
+        135deg,
+        var(--madeira-700),
+        var(--verde-700)
+    );
+    color: var(--branco);
+    box-shadow: var(--sombra);
+}
+
+.cabecalho h1,
+.cabecalho h2,
+.cabecalho p {
+    color: var(--branco);
+}
+
+.cabecalho p {
+    margin-bottom: 0;
+}
+
+/* 4. BOTÕES PADRONIZADOS */
+
+button,
+.botao-principal,
+.botao-secundario,
+.botao-excluir {
+    min-height: 40px;
+    padding: 9px 15px;
+    border: 1px solid var(--borda-forte);
+    border-radius: var(--raio-pequeno);
+    background: var(--branco);
+    color: var(--marrom-900);
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    transition:
+        transform 0.15s ease,
+        background 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+button:hover {
+    background: var(--neutro-200);
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+.botao-principal,
+button.botao-principal {
+    border-color: var(--verde-700);
+    background: var(--verde-700);
+    color: var(--branco);
+}
+
+.botao-principal:hover,
+button.botao-principal:hover {
+    background: var(--verde-800);
+    box-shadow:
+        0 4px 12px rgba(70, 81, 61, 0.2);
+}
+
+.botao-secundario,
+button.botao-secundario {
+    border-color: var(--pedra-200);
+    background: var(--pedra-100);
+    color: var(--pedra-700);
+}
+
+.botao-excluir,
+button.botao-excluir {
+    border-color: #e8bcbc;
+    background: var(--perigo-claro);
+    color: var(--perigo);
+}
+
+.botao-excluir:hover,
+button.botao-excluir:hover {
+    background: #f3d2d2;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+/* 5. CARTÕES DE RESUMO */
+
+.cards {
+    display: grid;
+    grid-template-columns:
+        repeat(4, minmax(150px, 1fr));
+    gap: 14px;
+    margin: 10px 0 18px;
+}
+
+.card {
+    display: flex;
+    min-height: 104px;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 17px 19px;
+    border: 1px solid var(--borda);
+    border-top: 3px solid var(--verde-700);
+    border-radius: var(--raio);
+    background: var(--neutro-50);
+    box-shadow: var(--sombra);
+}
+
+.card span {
+    color: var(--marrom-700);
+    font-size: 13px;
+}
+
+.card strong {
+    color: var(--marrom-900);
+    font-size: 24px;
+    line-height: 1.1;
+}
+
+/* 6. FORMULÁRIOS HORIZONTAIS */
+
+.formulario {
+    display: grid;
+    grid-template-columns:
+        repeat(12, minmax(0, 1fr));
+    gap: 13px 14px;
+    width: 100%;
+    padding: 20px 22px;
+    border: 1px solid var(--borda);
+    border-radius: var(--raio-grande);
+    background: var(--neutro-50);
+    box-shadow: var(--sombra);
+}
+
+.formulario > .linha {
+    display: contents;
+}
+
+.campo {
+    display: flex;
+    min-width: 0;
+    grid-column: span 3;
+    flex-direction: column;
+}
+
+.campo label {
+    margin-bottom: 5px;
+    color: var(--marrom-900);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    border: 1px solid var(--borda);
+    border-radius: var(--raio-pequeno);
+    outline: none;
+    background: var(--branco);
+    color: var(--marrom-900);
+    transition:
+        border 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+input,
+select {
+    height: 42px;
+    padding: 8px 12px;
+}
+
+textarea {
+    min-height: 70px;
+    padding: 10px 12px;
+    resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--verde-700);
+    box-shadow:
+        0 0 0 3px rgba(113, 129, 100, 0.14);
+}
+
+input[readonly],
+input:disabled,
+select:disabled,
+textarea:disabled {
+    background: var(--verde-100);
+    color: var(--marrom-700);
+}
+.campo:has(textarea) {
+    grid-column: span 6;
+}
+
+.campo:has(input[type="file"]) {
+    grid-column: span 6;
+}
+
+.formulario > button,
+.formulario > .acoes,
+.formulario > .botoes-formulario {
+    align-self: end;
+}
+
+.formulario > button {
+    width: auto;
+    min-width: 135px;
+}
+
+.acoes,
+.botoes-formulario,
+.acoes-formulario {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    align-items: center;
+}
+
+/* Campos naturalmente mais largos */
+
+.campo:has(#cliente-nome),
+.campo:has(#produto-produzido-nome),
+.campo:has(#nome-impressora),
+.campo:has(#marca-impressora),
+.campo:has(#acessorio-nome),
+.campo:has(#embalagem-nome),
+.campo:has(#financeiro-descricao) {
+    grid-column: span 6;
+}
+
+.campo:has(#acessorio-observacoes),
+.campo:has(#embalagem-observacoes),
+.campo:has(#observacoes-impressora) {
+    grid-column: span 6;
+}
+
+/* Acessórios e embalagens em grade horizontal */
+
+#aba-acessorios .formulario .campo,
+#aba-embalagens .formulario .campo,
+#aba-impressoras .formulario .campo {
+    grid-column: span 3;
+}
+
+#aba-acessorios
+.formulario
+.campo:has(textarea),
+
+#aba-embalagens
+.formulario
+.campo:has(textarea),
+
+#aba-impressoras
+.formulario
+.campo:has(textarea) {
+    grid-column: span 6;
+}
+
+#aba-acessorios .formulario > button,
+#aba-embalagens .formulario > button,
+#aba-impressoras .formulario > button {
+    grid-column: span 2;
+}
+
+/* 7. NAVEGAÇÃO INTERNA DOS MÓDULOS */
+
+.botoes-abas-equipamento,
+.botoes-abas-produto,
+.abas-produto,
+.botoes-abas-filamento,
+.abas-filamento,
+.equipamento-navegacao > div {
+    display: flex;
+    grid-column: 1 / -1;
+    flex-wrap: nowrap;
+    gap: 9px;
+    width: 100%;
+}
+
+.equipamento-navegacao > h3 {
+    grid-column: 1 / -1;
+    margin: 0;
+}
+
+.aba-equipamento,
+.aba-produto,
+.aba-filamento {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 50px;
+    padding: 8px 10px;
+}
+
+.aba-equipamento.ativo,
+.aba-produto.ativo,
+.aba-filamento.ativo,
+.aba-equipamento.botao-principal,
+.aba-produto.botao-principal,
+.aba-filamento.botao-principal {
+    border-color: var(--verde-700);
+    background: var(--verde-700);
+    color: var(--branco);
+}
+
+.conteudo-aba-equipamento,
+.conteudo-aba-produto,
+.conteudo-aba-filamento {
+    width: 100%;
+}
+
+/* 8. LISTAS E CARTÕES CADASTRADOS */
+
+#lista-impressoras,
+#lista-pecas,
+#lista-lubrificantes,
+#lista-manutencoes,
+#lista-acessorios,
+#lista-embalagens,
+#lista-filamentos,
+#lista-clientes,
+#lista-produtos,
+#lista-vendas,
+#lista-financeiro {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.card-item,
+.item-lista,
+.cliente-card,
+.produto-card,
+.venda-card {
+    display: grid;
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+    gap: 8px 16px;
+    align-items: center;
+    padding: 16px 18px;
+    border: 1px solid var(--borda);
+    border-left: 4px solid var(--madeira-500);
+    border-radius: var(--raio);
+    background: var(--neutro-50);
+    box-shadow: var(--sombra);
+}
+
+.card-item h4,
+.item-lista h4,
+.cliente-card h4,
+.produto-card h4,
+.venda-card h4 {
+    grid-column: 1 / -1;
+    margin: 0 0 3px;
+}
+
+.card-item p,
+.item-lista p,
+.cliente-card p,
+.produto-card p,
+.venda-card p {
+    margin: 0;
+    color: var(--marrom-700);
+}
+
+.card-item p strong,
+.item-lista p strong {
+    color: var(--marrom-900);
+}
+
+.card-item button,
+.item-lista button,
+.cliente-card button,
+.produto-card button,
+.venda-card button {
+    width: auto;
+    min-width: 105px;
+    justify-self: start;
+    margin-top: 5px;
+}
+/* 9. TABELAS */
+
+.tabela-container,
+.tabela-responsiva,
+#relatorio-vendas,
+#relatorio-financeiro,
+#relatorio-produtos,
+#relatorio-consumo-proprio,
+#relatorio-perdas,
+#relatorio-filamentos,
+#relatorio-equipamentos {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    background: var(--neutro-50);
+}
+
+table,
+.tabela {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+    background: var(--neutro-50);
+}
+
+th,
+td,
+.tabela th,
+.tabela td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--borda);
+    text-align: left;
+    vertical-align: middle;
+}
+
+th,
+.tabela th {
+    background: var(--verde-100);
+    color: var(--verde-900);
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+td,
+.tabela td {
+    font-size: 13px;
+}
+
+tbody tr:hover {
+    background: var(--verde-100);
+}
+
+/* 10. PRODUTOS E INSUMOS */
+
+.grupo-insumo-produto,
+.grupo-filamento-produto,
+.grupo-acessorio-produto,
+.grupo-embalagem-produto {
+    grid-column: 1 / -1;
+    padding: 14px;
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    background: var(--branco);
+}
+
+.item-filamento-produto,
+.item-acessorio-produto,
+.item-embalagem-produto {
+    display: grid !important;
+    grid-template-columns:
+        minmax(220px, 2fr)
+        minmax(100px, 0.7fr)
+        minmax(120px, 0.8fr)
+        auto;
+    gap: 10px;
+    align-items: end;
+}
+
+.item-filamento-produto .campo,
+.item-acessorio-produto .campo,
+.item-embalagem-produto .campo {
+    grid-column: auto;
+}
+
+#produto .formulario {
+    grid-template-columns:
+        repeat(12, minmax(0, 1fr));
+}
+
+#produto .grupo-filamento-produto,
+#produto .grupo-acessorio-produto,
+#produto .grupo-embalagem-produto {
+    grid-column: 1 / -1;
+}
+
+/* 11. MENSAGENS E ESTADOS */
+
+.mensagem,
+.aviso,
+.alerta,
+.mensagem-vazia {
+    padding: 12px 14px;
+    border: 1px solid var(--borda);
+    border-radius: var(--raio-pequeno);
+    background: var(--verde-100);
+    color: var(--marrom-700);
+}
+
+.erro,
+.mensagem-erro {
+    border-color: #e8bcbc;
+    background: var(--perigo-claro);
+    color: var(--perigo);
+}
+
+.sucesso,
+.mensagem-sucesso {
+    border-color: var(--verde-200);
+    background: var(--verde-100);
+    color: var(--sucesso);
+}
+
+.estoque-baixo,
+.status-aviso {
+    color: var(--aviso);
+    font-weight: 700;
+}
+
+/* 12. MODAIS */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(46, 36, 30, 0.52);
+}
+
+.modal-conteudo {
+    width: min(760px, 100%);
+    max-height: 90vh;
+    padding: 22px;
+    overflow-y: auto;
+    border-radius: var(--raio-grande);
+    background: var(--neutro-50);
+    box-shadow: var(--sombra-forte);
+}
+/* 13. RESPONSIVIDADE */
+
+@media (max-width: 1180px) {
+    .cards {
+        grid-template-columns:
+            repeat(2, minmax(160px, 1fr));
+    }
+
+    .campo,
+    #aba-acessorios .formulario .campo,
+    #aba-embalagens .formulario .campo,
+    #aba-impressoras .formulario .campo {
+        grid-column: span 4;
+    }
+
+    .campo:has(textarea),
+    #aba-acessorios
+    .formulario
+    .campo:has(textarea),
+
+    #aba-embalagens
+    .formulario
+    .campo:has(textarea),
+
+    #aba-impressoras
+    .formulario
+    .campo:has(textarea) {
+        grid-column: span 8;
+    }
+}
+
+@media (max-width: 900px) {
+    :root {
+        --menu-largura: 190px;
+    }
+
+    .conteudo {
+        padding: 20px;
+    }
+
+    .campo,
+    #aba-acessorios .formulario .campo,
+    #aba-embalagens .formulario .campo,
+    #aba-impressoras .formulario .campo {
+        grid-column: span 6;
+    }
+
+    .campo:has(textarea),
+    .campo:has(input[type="file"]) {
+        grid-column: 1 / -1;
+    }
+
+    .card-item,
+    .item-lista,
+    .cliente-card,
+    .produto-card,
+    .venda-card {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .botoes-abas-equipamento,
+    .botoes-abas-produto,
+    .abas-produto,
+    .botoes-abas-filamento,
+    .abas-filamento,
+    .equipamento-navegacao > div {
+        flex-wrap: wrap;
+    }
+
+    .aba-equipamento,
+    .aba-produto,
+    .aba-filamento {
+        flex: 1 1 140px;
+    }
+}
+
+@media (max-width: 680px) {
+    .app {
+        display: block;
+    }
+
+    .menu-lateral {
+        position: static;
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        padding: 12px;
+        border-right: 0;
+        border-bottom:
+            1px solid var(--borda);
+    }
+
+    .logo {
+        margin-bottom: 10px;
+        padding: 10px 12px;
+    }
+
+    .menu {
+        display: grid;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .menu-item {
+        text-align: center;
+    }
+
+    .conteudo {
+        width: 100%;
+        padding: 16px 12px 30px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .formulario {
+        grid-template-columns: 1fr;
+        padding: 16px;
+    }
+
+    .campo,
+    .campo:has(textarea),
+    .campo:has(input[type="file"]),
+    #aba-acessorios .formulario .campo,
+    #aba-embalagens .formulario .campo,
+    #aba-impressoras .formulario .campo,
+
+    #aba-acessorios
+    .formulario
+    .campo:has(textarea),
+
+    #aba-embalagens
+    .formulario
+    .campo:has(textarea),
+
+    #aba-impressoras
+    .formulario
+    .campo:has(textarea) {
+        grid-column: 1;
+    }
+
+    .formulario > button,
+    #aba-acessorios .formulario > button,
+    #aba-embalagens .formulario > button,
+    #aba-impressoras .formulario > button {
+        width: 100%;
+        grid-column: 1;
+    }
+
+    .card-item,
+    .item-lista,
+    .cliente-card,
+    .produto-card,
+    .venda-card {
+        grid-template-columns: 1fr;
+    }
+
+    .card-item h4,
+    .item-lista h4,
+    .cliente-card h4,
+    .produto-card h4,
+    .venda-card h4 {
+        grid-column: 1;
+    }
+
+    .item-filamento-produto,
+    .item-acessorio-produto,
+    .item-embalagem-produto {
+        grid-template-columns:
+            1fr !important;
+    }
+
+    .titulo-pagina {
+        align-items: stretch;
+        flex-direction: column;
+    }
+}
+/* 14. IMPRESSÃO */
+
+@media print {
+    .menu-lateral,
+    button,
+    .acoes,
+    .botoes-formulario {
+        display: none !important;
+    }
+
+    .conteudo {
+        width: 100%;
+        padding: 0;
+    }
+
+    .pagina {
+        display: block;
+    }
+
+    .card,
+    .formulario,
+    .card-item {
+        box-shadow: none;
+    }
+}
