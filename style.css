@@ -6537,3 +6537,144 @@ button {
         grid-template-columns: 1fr !important;
     }
 }
+/* =========================================================
+   EQUIPAMENTOS - BOTÕES DAS ÁREAS EM UMA LINHA
+   ========================================================= */
+
+:has(> .aba-equipamento) {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    width: 100% !important;
+}
+
+.aba-equipamento {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    min-height: 64px;
+    padding: 10px 12px !important;
+    white-space: normal;
+    text-align: center;
+}
+
+@media (max-width: 800px) {
+    :has(> .aba-equipamento) {
+        flex-wrap: wrap !important;
+    }
+
+    .aba-equipamento {
+        flex: 1 1 140px !important;
+    }
+}
+/* =========================================================
+   EQUIPAMENTOS - CADASTRO DA IMPRESSORA HORIZONTAL
+   ========================================================= */
+
+.formulario:has(#nome-impressora) {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 14px 16px !important;
+    align-items: end !important;
+}
+
+.formulario:has(#nome-impressora) > .linha {
+    display: contents !important;
+}
+
+.formulario:has(#nome-impressora) .campo {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+}
+
+.formulario:has(#nome-impressora) input,
+.formulario:has(#nome-impressora) select,
+.formulario:has(#nome-impressora) textarea {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+}
+
+/* Observações permanece ocupando a largura completa */
+
+.formulario:has(#nome-impressora)
+.campo:has(#observacoes-impressora) {
+    grid-column: 1 / -1 !important;
+}
+
+/* Botões Salvar e Limpar lado a lado */
+
+.formulario:has(#nome-impressora)
+.linha:has(#salvar-impressora) {
+    display: flex !important;
+    grid-column: 1 / -1 !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+#salvar-impressora,
+#limpar-formulario-impressora {
+    width: auto !important;
+    min-width: 145px !important;
+    padding: 10px 16px !important;
+}
+
+
+/* =========================================================
+   IMPRESSORA CADASTRADA - INFORMAÇÕES HORIZONTAIS
+   ========================================================= */
+
+#lista-impressoras .card-item {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 10px 18px !important;
+    align-items: center !important;
+}
+
+#lista-impressoras .card-item h4 {
+    grid-column: 1 / -1 !important;
+    margin-bottom: 4px !important;
+}
+
+#lista-impressoras .card-item p {
+    margin: 0 !important;
+    min-width: 0 !important;
+}
+
+#lista-impressoras .card-item button {
+    width: auto !important;
+    min-width: 120px !important;
+    justify-self: start !important;
+    margin-top: 8px !important;
+    padding: 9px 14px !important;
+}
+
+
+/* =========================================================
+   RESPONSIVO
+   ========================================================= */
+
+@media (max-width: 1000px) {
+    .formulario:has(#nome-impressora),
+    #lista-impressoras .card-item {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 650px) {
+    .formulario:has(#nome-impressora),
+    #lista-impressoras .card-item {
+        grid-template-columns: 1fr !important;
+    }
+
+    .formulario:has(#nome-impressora)
+    .campo:has(#observacoes-impressora),
+    #lista-impressoras .card-item h4 {
+        grid-column: 1 !important;
+    }
+}
