@@ -690,51 +690,381 @@ textarea:disabled {
     justify-self: start;
     margin-top: 5px;
 }
-.card-item,
-.item-lista,
-.produto-card,
-.venda-card {
+/* =========================================================
+   VENDAS — ORGANIZAÇÃO HORIZONTAL
+   Mantém as cores e os componentes do Style V2
+   ========================================================= */
+
+/* Formulário principal */
+
+#vendas .formulario {
+    display: block;
+    width: 100%;
+    padding: 20px 22px;
+}
+
+/* Linhas gerais do formulário */
+
+#vendas .formulario > .linha {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 14px;
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+#vendas .formulario > .linha > .campo {
+    flex: 1 1 180px;
+    width: auto;
+    min-width: 0;
+    grid-column: auto;
+}
+
+/* Cliente e data */
+
+#vendas .formulario > .linha:has(#venda-cliente) {
+    flex-wrap: nowrap;
+}
+
+#vendas .formulario > .linha:has(#venda-cliente) > .campo:first-child {
+    flex: 1 1 auto;
+}
+
+#vendas .formulario > .linha:has(#venda-data) > .campo:last-child {
+    flex: 0 0 220px;
+}
+
+#venda-cliente,
+#venda-data {
+    width: 100%;
+    max-width: none;
+}
+
+/* Títulos internos */
+
+#vendas .formulario > h3 {
+    display: block;
+    width: 100%;
+    margin: 22px 0 6px;
+    padding-top: 18px;
+    border-top: 1px solid var(--borda);
+    color: var(--cobre-700);
+    font-size: 16px;
+}
+
+#vendas .formulario > p {
+    display: block;
+    width: 100%;
+    margin: 0 0 12px;
+    color: var(--marrom-700);
+}
+
+/* Lista de produtos da venda */
+
+#lista-itens-venda {
+    display: block;
+    width: 100%;
+}
+
+/* Uma linha horizontal para cada produto */
+
+#vendas .item-venda {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 8px 16px;
+    grid-template-columns:
+        minmax(210px, 2fr)
+        130px
+        90px
+        115px
+        90px
+        115px
+        95px;
+    gap: 12px;
+    align-items: end;
+    width: 100%;
+    margin-top: 12px;
+}
+
+#vendas .item-venda > .campo {
+    display: flex;
+    grid-column: auto;
+    flex-direction: column;
+    width: auto;
+    min-width: 0;
+}
+
+#vendas .item-venda .campo label {
+    min-height: 18px;
+    margin-bottom: 5px;
+    white-space: normal;
+}
+
+#vendas .item-venda input,
+#vendas .item-venda select {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    height: 42px;
+}
+
+#vendas .item-venda .remover-item-venda {
+    width: 100%;
+    min-width: 0;
+    height: 42px;
+    margin: 0;
+    padding: 8px 10px;
+    white-space: nowrap;
+}
+
+/* Botão adicionar produto */
+
+#adicionar-item-venda {
+    display: block;
+    width: max-content;
+    min-width: 190px;
+    margin: 12px 0 4px auto;
+    padding: 9px 16px;
+}
+
+/* Totais da venda */
+
+#vendas .formulario > .linha:has(#venda-subtotal),
+#vendas .formulario > .linha:has(#venda-total-final) {
+    display: grid;
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    align-items: end;
+}
+
+#vendas .formulario > .linha:has(#venda-subtotal) > .campo,
+#vendas .formulario > .linha:has(#venda-total-final) > .campo {
+    width: auto;
+    min-width: 0;
+}
+
+#venda-subtotal,
+#venda-desconto,
+#venda-frete,
+#venda-total-final,
+#venda-valor-pago,
+#venda-valor-pendente {
+    width: 100%;
+    max-width: none;
+}
+
+/* Pagamento */
+
+#vendas .formulario > .linha:has(#venda-forma-pagamento) {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(220px, 1fr));
+    gap: 14px;
+    align-items: end;
+}
+
+#vendas .formulario > .linha:has(#venda-forma-pagamento) > .campo {
+    width: auto;
+    min-width: 0;
+}
+
+#venda-forma-pagamento,
+#venda-situacao-pagamento {
+    width: 100%;
+    max-width: none;
+}
+
+/* Observações */
+
+#vendas .campo-completo:has(#venda-observacoes) {
+    display: flex;
+    width: 100%;
+    margin-top: 4px;
+    grid-column: auto;
+}
+
+#venda-observacoes {
+    width: 100%;
+    max-width: none;
+    min-height: 72px;
+}
+
+/* Botões Salvar e Limpar */
+
+#vendas #salvar-venda,
+#vendas #limpar-formulario-venda {
+    display: inline-flex;
+    width: auto;
+    min-width: 155px;
+    min-height: 42px;
+    margin-top: 16px;
+    margin-right: 10px;
     align-items: center;
-    padding: 16px 18px;
+    justify-content: center;
+    vertical-align: top;
+}
+
+/* =========================================================
+   VENDAS REGISTRADAS — TABELA HORIZONTAL
+   ========================================================= */
+
+#lista-vendas {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+}
+
+.vendas-tabela {
+    width: 100%;
+    overflow-x: auto;
     border: 1px solid var(--borda);
-    border-left: 4px solid var(--madeira-500);
-    border-radius: var(--raio);
+    border-radius: var(--raio-grande);
     background: var(--neutro-50);
     box-shadow: var(--sombra);
 }
 
-.card-item h4,
-.item-lista h4,
-.produto-card h4,
-.venda-card h4 {
-    grid-column: 1 / -1;
-    margin: 0 0 3px;
+.venda-tabela-cabecalho,
+.venda-tabela-linha {
+    display: grid;
+    grid-template-columns:
+        130px
+        95px
+        minmax(150px, 1.3fr)
+        85px
+        100px
+        100px
+        90px
+        100px
+        100px
+        105px
+        110px
+        100px;
+    gap: 10px;
+    align-items: center;
+    min-width: 1180px;
 }
 
-.card-item p,
-.item-lista p,
-.produto-card p,
-.venda-card p {
-    margin: 0;
+.venda-tabela-cabecalho {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--borda);
+    background: var(--verde-100);
+    color: var(--marrom-900);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.venda-tabela-linha {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--borda);
+    background: var(--neutro-50);
     color: var(--marrom-700);
+    font-size: 13px;
 }
 
-.card-item p strong,
-.item-lista p strong {
+.venda-tabela-linha:last-child {
+    border-bottom: 0;
+}
+
+.venda-tabela-linha:hover {
+    background: var(--pedra-100);
+}
+
+.venda-coluna {
+    min-width: 0;
+    line-height: 1.35;
+}
+
+.venda-coluna-id,
+.venda-coluna-cliente {
     color: var(--marrom-900);
 }
 
-.card-item button,
-.item-lista button,
-.produto-card button,
-.venda-card button {
+.venda-coluna-id,
+.venda-coluna-total {
+    font-weight: 700;
+}
+
+.venda-coluna-total {
+    color: var(--verde-800);
+}
+
+.valor-pendente-destaque {
+    color: var(--perigo);
+    font-weight: 700;
+}
+
+.venda-coluna-acoes {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.venda-coluna-acoes .estornar-venda {
     width: auto;
-    min-width: 105px;
-    justify-self: start;
-    margin-top: 5px;
+    min-width: 78px;
+    margin: 0;
+    padding: 7px 10px;
+    white-space: nowrap;
+}
+
+/* Responsividade de Vendas */
+
+@media (max-width: 1180px) {
+    #vendas .item-venda {
+        grid-template-columns:
+            repeat(2, minmax(220px, 1fr));
+    }
+}
+
+@media (max-width: 680px) {
+    #vendas .formulario > .linha,
+    #vendas .formulario > .linha:has(#venda-cliente),
+    #vendas .formulario > .linha:has(#venda-subtotal),
+    #vendas .formulario > .linha:has(#venda-total-final),
+    #vendas .formulario > .linha:has(#venda-forma-pagamento),
+    #vendas .item-venda {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    #vendas .formulario > .linha > .campo {
+        width: 100%;
+    }
+
+    #vendas #salvar-venda,
+    #vendas #limpar-formulario-venda {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .venda-tabela-cabecalho {
+        display: none;
+    }
+
+    .venda-tabela-linha {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+        min-width: 0;
+        gap: 12px 16px;
+        padding: 16px;
+    }
+
+    .venda-coluna {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .venda-coluna::before {
+        content: attr(data-titulo);
+        color: var(--marrom-900);
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .venda-coluna-acoes {
+        grid-column: 1 / -1;
+    }
 }
 
 /* Tabela horizontal de clientes */
