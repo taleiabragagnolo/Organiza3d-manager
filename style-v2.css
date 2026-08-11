@@ -473,9 +473,8 @@ textarea:disabled {
     align-items: center;
 }
 
-/* Campos naturalmente mais largos */
+/* Campos largos e formulário de cliente */
 
-.campo:has(#cliente-nome),
 .campo:has(#produto-produzido-nome),
 .campo:has(#nome-impressora),
 .campo:has(#marca-impressora),
@@ -483,6 +482,62 @@ textarea:disabled {
 .campo:has(#embalagem-nome),
 .campo:has(#financeiro-descricao) {
     grid-column: span 6;
+}
+
+/* Cliente: todos os campos em uma única linha horizontal */
+
+#cliente .formulario-cliente {
+    display: grid;
+    grid-template-columns:
+        72px
+        minmax(0, 1.25fr)
+        minmax(0, 1fr)
+        minmax(0, 1.25fr)
+        minmax(0, 0.9fr)
+        minmax(0, 1.6fr)
+        176px;
+    gap: 10px;
+    align-items: end;
+}
+
+#cliente .cliente-titulo-formulario,
+#cliente .cliente-campo-nome,
+#cliente .cliente-campo-telefone,
+#cliente .cliente-campo-email,
+#cliente .cliente-campo-cidade,
+#cliente .cliente-campo-observacoes,
+#cliente .acoes-cliente {
+    grid-column: auto;
+    margin: 0;
+    min-width: 0;
+}
+
+#cliente .cliente-titulo-formulario {
+    align-self: center;
+}
+
+#cliente .cliente-campo-observacoes textarea {
+    width: 100%;
+    height: 42px;
+    min-height: 42px;
+    resize: none;
+}
+
+#cliente .acoes-cliente {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: end;
+    gap: 8px;
+}
+
+#cliente .acoes-cliente button {
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+    height: 42px;
+    margin: 0;
+    padding: 7px 8px;
+    white-space: normal;
 }
 
 .campo:has(#acessorio-observacoes),
@@ -574,7 +629,7 @@ textarea:disabled {
 #lista-acessorios,
 #lista-embalagens,
 #lista-filamentos,
-#lista-clientes,
+#lista-cliente,
 #lista-produtos,
 #lista-vendas,
 #lista-financeiro {
@@ -635,54 +690,112 @@ textarea:disabled {
     justify-self: start;
     margin-top: 5px;
 }
-/* 9. TABELAS */
-
-.tabela-container,
-.tabela-responsiva,
-#relatorio-vendas,
-#relatorio-financeiro,
-#relatorio-produtos,
-#relatorio-consumo-proprio,
-#relatorio-perdas,
-#relatorio-filamentos,
-#relatorio-equipamentos {
-    width: 100%;
-    overflow-x: auto;
+.card-item,
+.item-lista,
+.produto-card,
+.venda-card {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px 16px;
+    align-items: center;
+    padding: 16px 18px;
     border: 1px solid var(--borda);
+    border-left: 4px solid var(--madeira-500);
     border-radius: var(--raio);
     background: var(--neutro-50);
+    box-shadow: var(--sombra);
 }
 
-table,
-.tabela {
+.card-item h4,
+.item-lista h4,
+.produto-card h4,
+.venda-card h4 {
+    grid-column: 1 / -1;
+    margin: 0 0 3px;
+}
+
+.card-item p,
+.item-lista p,
+.produto-card p,
+.venda-card p {
+    margin: 0;
+    color: var(--marrom-700);
+}
+
+.card-item p strong,
+.item-lista p strong {
+    color: var(--marrom-900);
+}
+
+.card-item button,
+.item-lista button,
+.produto-card button,
+.venda-card button {
+    width: auto;
+    min-width: 105px;
+    justify-self: start;
+    margin-top: 5px;
+}
+
+/* Tabela horizontal de clientes */
+
+#cliente .cliente-tabela-cabecalho,
+#cliente .cliente-tabela-linha {
+    display: grid;
+    grid-template-columns:
+        minmax(150px, 1.25fr)
+        minmax(125px, 0.9fr)
+        minmax(180px, 1.4fr)
+        minmax(110px, 0.8fr)
+        minmax(160px, 1.2fr)
+        170px;
+    gap: 12px;
+    align-items: center;
     width: 100%;
-    min-width: 760px;
-    border-collapse: collapse;
+}
+
+#cliente .cliente-tabela-cabecalho {
+    padding: 10px 12px;
+    border: 1px solid var(--borda);
+    border-radius: var(--raio) var(--raio) 0 0;
+    background: var(--cinza-100);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+#cliente .cliente-tabela-linha {
+    padding: 11px 12px;
+    border: 1px solid var(--borda);
+    border-top: 0;
     background: var(--neutro-50);
 }
 
-th,
-td,
-.tabela th,
-.tabela td {
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--borda);
-    text-align: left;
-    vertical-align: middle;
-}
-
-th,
-.tabela th {
-    background: var(--verde-100);
-    color: var(--verde-900);
-    font-size: 12px;
-    font-weight: 700;
+#cliente .cliente-coluna {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-td,
-.tabela td {
-    font-size: 13px;
+#cliente .cliente-nome {
+    font-weight: 700;
+}
+
+#cliente .cliente-acoes {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 8px;
+}
+
+#cliente .cliente-acoes button {
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+    min-height: 38px;
+    margin: 0;
+    padding: 7px 10px;
+    white-space: nowrap;
 }
 
 tbody tr:hover {
@@ -1018,4 +1131,265 @@ tbody tr:hover {
 #limpar-formulario-lancamento,
 #limpar-filtros-financeiro {
     justify-self: stretch !important;
+}
+/* =========================================================
+   EQUIPAMENTOS - BOTÕES DOS FORMULÁRIOS
+   ========================================================= */
+
+/* Botões Salvar */
+
+#salvar-impressora,
+#salvar-peca,
+#salvar-lubrificante,
+#salvar-manutencao,
+#salvar-ajuste-horas {
+    grid-column: 1 / span 2 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 44px !important;
+    align-self: end !important;
+    white-space: nowrap !important;
+}
+
+/* Botões Limpar */
+
+#limpar-formulario-impressora,
+#limpar-formulario-peca,
+#limpar-formulario-lubrificante,
+#limpar-formulario-manutencao,
+#limpar-ajuste-horas {
+    grid-column: 3 / span 2 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 44px !important;
+    align-self: end !important;
+    white-space: nowrap !important;
+}
+
+/* No celular, os botões ficam inteiros e empilhados */
+
+@media (max-width: 680px) {
+    #salvar-impressora,
+    #salvar-peca,
+    #salvar-lubrificante,
+    #salvar-manutencao,
+    #salvar-ajuste-horas,
+    #limpar-formulario-impressora,
+    #limpar-formulario-peca,
+    #limpar-formulario-lubrificante,
+    #limpar-formulario-manutencao,
+    #limpar-ajuste-horas {
+        grid-column: 1 !important;
+        width: 100% !important;
+    }
+}
+/* =========================================================
+   FILAMENTOS - ABAS INTERNAS PROPORCIONAIS
+   ========================================================= */
+
+#filamentos > .formulario:has(.aba-filamento) {
+    display: grid !important;
+    grid-template-columns:
+        140px minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 16px !important;
+}
+
+#filamentos
+> .formulario:has(.aba-filamento)
+> h3 {
+    grid-column: 1 !important;
+    margin: 0 !important;
+}
+
+#filamentos
+> .formulario:has(.aba-filamento)
+> .linha {
+    display: grid !important;
+    grid-column: 2 !important;
+    grid-template-columns:
+        repeat(3, minmax(160px, 1fr)) !important;
+    gap: 10px !important;
+}
+
+#filamentos .aba-filamento {
+    width: 100% !important;
+    min-width: 160px !important;
+    min-height: 54px !important;
+    padding: 10px 16px !important;
+    white-space: nowrap !important;
+}
+
+
+/* =========================================================
+   CADASTRO DE FILAMENTO - UMA LINHA HORIZONTAL
+   ========================================================= */
+
+#aba-filamentos .formulario-filamento-horizontal {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: end !important;
+    gap: 9px !important;
+    padding: 16px !important;
+    overflow-x: auto !important;
+}
+
+#aba-filamentos
+.formulario-filamento-horizontal
+> .linha {
+    display: contents !important;
+}
+
+#aba-filamentos
+.formulario-filamento-horizontal
+.campo {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    min-width: 95px !important;
+    max-width: none !important;
+    grid-column: auto !important;
+}
+
+#aba-filamentos
+.formulario-filamento-horizontal
+.campo-filamento-cor,
+
+#aba-filamentos
+.formulario-filamento-horizontal
+.campo-filamento-fabricante {
+    flex-grow: 1.25 !important;
+    min-width: 115px !important;
+}
+
+#aba-filamentos
+.formulario-filamento-horizontal
+.campo label {
+    font-size: 12px !important;
+    white-space: nowrap !important;
+}
+
+#aba-filamentos
+.formulario-filamento-horizontal
+input,
+
+#aba-filamentos
+.formulario-filamento-horizontal
+select {
+    width: 100% !important;
+    height: 42px !important;
+}
+
+#aba-filamentos .acoes-filamento {
+    display: flex !important;
+    flex: 0 0 auto !important;
+    gap: 8px !important;
+    align-items: end !important;
+}
+
+#salvar-filamento,
+#limpar-formulario-filamento {
+    width: auto !important;
+    min-width: 85px !important;
+    height: 42px !important;
+    padding: 8px 12px !important;
+    white-space: nowrap !important;
+}
+
+
+/* =========================================================
+   FILAMENTOS CADASTRADOS - BOTÕES NA MESMA LINHA
+   ========================================================= */
+
+#lista-filamentos .filamento-linha {
+    display: flex !important;
+    grid-template-columns: none !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 18px !important;
+}
+
+#lista-filamentos .filamento-resumo {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    flex-wrap: wrap !important;
+    gap: 5px !important;
+    align-items: center !important;
+}
+
+#lista-filamentos .acoes-card {
+    display: flex !important;
+    flex: 0 0 auto !important;
+    flex-wrap: nowrap !important;
+    gap: 8px !important;
+    align-items: center !important;
+}
+
+#lista-filamentos .acoes-card button {
+    width: auto !important;
+    min-width: 105px !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+}
+
+
+/* =========================================================
+   FILAMENTOS - CELULAR
+   ========================================================= */
+
+@media (max-width: 680px) {
+    #filamentos > .formulario:has(.aba-filamento) {
+        grid-template-columns: 1fr !important;
+    }
+
+    #filamentos
+    > .formulario:has(.aba-filamento)
+    > h3,
+
+    #filamentos
+    > .formulario:has(.aba-filamento)
+    > .linha {
+        grid-column: 1 !important;
+    }
+
+    #filamentos
+    > .formulario:has(.aba-filamento)
+    > .linha {
+        grid-template-columns: 1fr !important;
+    }
+
+    #filamentos .aba-filamento {
+        min-width: 0 !important;
+    }
+
+    #aba-filamentos
+    .formulario-filamento-horizontal {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+
+    #aba-filamentos
+    .formulario-filamento-horizontal
+    .campo {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    #aba-filamentos .acoes-filamento {
+        width: 100% !important;
+    }
+
+    #salvar-filamento,
+    #limpar-formulario-filamento {
+        flex: 1 1 50% !important;
+    }
+
+    #lista-filamentos .filamento-linha {
+        align-items: stretch !important;
+        flex-direction: column !important;
+    }
+
+    #lista-filamentos .acoes-card {
+        flex-wrap: wrap !important;
+    }
 }
