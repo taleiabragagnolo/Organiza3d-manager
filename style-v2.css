@@ -1720,3 +1720,141 @@ select {
         flex-wrap: wrap !important;
     }
 }        
+/* ==================================================
+   PRODUTOS PRODUZIDOS - TABELA HORIZONTAL
+   ================================================== */
+
+#lista-produtos-produzidos {
+    width: 100%;
+    margin-top: 8px;
+}
+
+.produtos-tabela {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #eadfd5;
+    border-radius: 14px;
+    background: #fffdf9;
+    box-shadow: 0 4px 14px rgba(92, 70, 52, 0.06);
+}
+
+/* Cabeçalho */
+
+.produto-tabela-cabecalho {
+    display: grid;
+    grid-template-columns:
+        minmax(180px, 2fr)
+        minmax(100px, 1fr)
+        minmax(90px, 1fr)
+        75px
+        80px
+        95px
+        95px
+        75px
+        95px
+        90px
+        150px;
+    align-items: center;
+    gap: 10px;
+    min-width: 1200px;
+    padding: 11px 14px;
+    background: #f5eee7;
+    border-bottom: 1px solid #e5d8cd;
+    font-size: 12px;
+    font-weight: 700;
+    color: #6d513d;
+}
+
+/* Cada produto */
+
+.produto-tabela-linha {
+    display: grid;
+    grid-template-columns:
+        minmax(180px, 2fr)
+        minmax(100px, 1fr)
+        minmax(90px, 1fr)
+        75px
+        80px
+        95px
+        95px
+        75px
+        95px
+        90px
+        150px;
+    align-items: center;
+    gap: 10px;
+    min-width: 1200px;
+    padding: 10px 14px;
+    border-bottom: 1px solid #eee4dc;
+    font-size: 13px;
+    transition: background 0.2s ease;
+}
+
+.produto-tabela-linha:last-child {
+    border-bottom: none;
+}
+
+.produto-tabela-linha:hover {
+    background: #fcf8f4;
+}
+
+/* Colunas */
+
+.produto-coluna {
+    min-width: 0;
+    color: #634936;
+    line-height: 1.25;
+}
+
+.produto-coluna-nome {
+    font-weight: 700;
+    color: #4f3929;
+    white-space: normal;
+}
+
+.produto-coluna-preco {
+    font-weight: 700;
+}
+
+/* Status */
+
+.produto-status-disponivel {
+    color: #748462;
+    font-weight: 700;
+}
+
+.produto-status-baixo {
+    color: #b5844d;
+    font-weight: 700;
+}
+
+.produto-status-indisponivel {
+    color: #b45e5e;
+    font-weight: 700;
+}
+
+/* Ações */
+
+.produto-coluna-acoes {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.produto-coluna-acoes button {
+    width: auto !important;
+    min-width: 66px !important;
+    height: 34px !important;
+    padding: 6px 11px !important;
+    margin: 0 !important;
+    font-size: 12px !important;
+    line-height: 1 !important;
+}
+
+/* Telas menores */
+
+@media (max-width: 900px) {
+    .produtos-tabela {
+        overflow-x: auto;
+    }
+}
