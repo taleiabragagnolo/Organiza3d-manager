@@ -1032,9 +1032,14 @@
                 CHAVE_CONSUMO_PROPRIO
             );
 
-        const perdas =
+               const perdas =
             lerListaDashboard(
                 CHAVE_PERDAS
+            );
+
+        const prejuizosFilamentos =
+            lerListaDashboard(
+                CHAVE_PREJUIZOS_FILAMENTOS
             );
 
         const resumoVendas =
@@ -1073,10 +1078,19 @@
                 perdas
             );
 
-        const valorPerdas =
+                const valorPerdasProdutos =
             calcularValorPerdasDashboard(
                 perdas
             );
+
+        const valorPerdasFilamentos =
+            calcularValorPerdasDashboard(
+                prejuizosFilamentos
+            );
+
+        const valorPerdas =
+            valorPerdasProdutos +
+            valorPerdasFilamentos;
 
         const custoProducoes =
             calcularCustoProducoesDashboard(
