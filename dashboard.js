@@ -41,6 +41,9 @@
 
     const CHAVE_PERDAS =
         "organiza3d_perdas_produtos";
+           
+    const CHAVE_PREJUIZOS_FILAMENTOS =
+        "organiza3d_prejuizos_filamentos";
 
     // ==================================================
     // FUNÇÕES AUXILIARES
