@@ -21,8 +21,14 @@
     const CHAVE_CLIENTES =
         "organiza3d_cliente";
 
-    const CHAVE_FILAMENTOS =
+        const CHAVE_FILAMENTOS =
         "organiza3d_filamentos";
+
+    const CHAVE_ACESSORIOS =
+        "organiza3d_acessorios";
+
+    const CHAVE_EMBALAGENS =
+        "organiza3d_embalagens";
 
     const CHAVE_IMPRESSORAS =
         "organiza3d_impressoras";
@@ -509,7 +515,163 @@
         );
 
     }
+    // ==================================================
+    // VALOR DAS PERDAS
+    // ==================================================
 
+    function calcularValorPerdasDashboard(
+        perdas
+    ) {
+
+        return perdas.reduce(
+            function (
+                total,
+                perda
+            ) {
+
+                return (
+                    total +
+                    numeroPositivoDashboard(
+                        perda.custoTotal
+                    )
+                );
+
+            },
+            0
+        );
+
+    }
+
+    // ==================================================
+    // CUSTO TOTAL DAS PRODUÇÕES
+    // ==================================================
+
+    function calcularCustoProducoesDashboard(
+        produtos
+    ) {
+
+        return produtos.reduce(
+            function (
+                total,
+                produto
+            ) {
+
+                return (
+                    total +
+                    numeroPositivoDashboard(
+                        produto.custoTotalProducao
+                    )
+                );
+
+            },
+            0
+        );
+
+    }
+
+    // ==================================================
+    // VALOR ATUAL DA MATÉRIA-PRIMA
+    // ==================================================
+
+    function calcularMateriaPrimaDashboard(
+        filamentos,
+        acessorios,
+        embalagens
+    ) {
+
+        const valorFilamentos =
+            filamentos.reduce(
+                function (
+                    total,
+                    filamento
+                ) {
+
+                    const pesoInicial =
+                        numeroPositivoDashboard(
+                            filamento.pesoInicial
+                        );
+
+                    const pesoRestante =
+                        numeroPositivoDashboard(
+                            filamento.pesoRestante
+                        );
+
+                    const valorRolo =
+                        numeroPositivoDashboard(
+                            filamento.valor
+                        );
+
+                    const valorRestante =
+                        pesoInicial > 0
+                            ? (
+                                pesoRestante /
+                                pesoInicial
+                            ) *
+                            valorRolo
+                            : 0;
+
+                    return (
+                        total +
+                        valorRestante
+                    );
+
+                },
+                0
+            );
+
+        const valorAcessorios =
+            acessorios.reduce(
+                function (
+                    total,
+                    acessorio
+                ) {
+
+                    return (
+                        total +
+                        (
+                            numeroPositivoDashboard(
+                                acessorio.quantidade
+                            ) *
+                            numeroPositivoDashboard(
+                                acessorio.valorUnitario
+                            )
+                        )
+                    );
+
+                },
+                0
+            );
+
+        const valorEmbalagens =
+            embalagens.reduce(
+                function (
+                    total,
+                    embalagem
+                ) {
+
+                    return (
+                        total +
+                        (
+                            numeroPositivoDashboard(
+                                embalagem.quantidade
+                            ) *
+                            numeroPositivoDashboard(
+                                embalagem.valorUnitario
+                            )
+                        )
+                    );
+
+                },
+                0
+            );
+
+        return (
+            valorFilamentos +
+            valorAcessorios +
+            valorEmbalagens
+        );
+
+    }
     // ==================================================
     // FILAMENTOS
     // ==================================================
@@ -837,9 +999,19 @@
                 CHAVE_CLIENTES
             );
 
-        const filamentos =
+                const filamentos =
             lerListaDashboard(
                 CHAVE_FILAMENTOS
+            );
+
+        const acessorios =
+            lerListaDashboard(
+                CHAVE_ACESSORIOS
+            );
+
+        const embalagens =
+            lerListaDashboard(
+                CHAVE_EMBALAGENS
             );
 
         const impressoras =
@@ -892,9 +1064,35 @@
                 consumosProprios
             );
 
-        const totalPerdas =
+        
+                  const totalPerdas =
             calcularPerdasDashboard(
                 perdas
+            );
+
+        const valorPerdas =
+            calcularValorPerdasDashboard(
+                perdas
+            );
+
+        const custoProducoes =
+            calcularCustoProducoesDashboard(
+                produtos
+            );
+
+        const percentualFalhas =
+            custoProducoes > 0
+                ? (
+                    valorPerdas /
+                    custoProducoes
+                ) * 100
+                : 0;
+
+        const valorMateriaPrima =
+            calcularMateriaPrimaDashboard(
+                filamentos,
+                acessorios,
+                embalagens
             );
 
         // ==============================================
@@ -991,12 +1189,30 @@
             )
         );
 
-        definirTextoDashboard(
+                definirTextoDashboard(
             "dashboard-perdas-produtos",
             numeroFormatadoDashboard(
                 totalPerdas,
                 0
             )
+        );
+
+        definirDinheiroDashboard(
+            "dashboard-valor-materia-prima",
+            valorMateriaPrima
+        );
+
+        definirDinheiroDashboard(
+            "dashboard-valor-perdas",
+            valorPerdas
+        );
+
+        definirTextoDashboard(
+            "dashboard-percentual-falhas",
+            numeroFormatadoDashboard(
+                percentualFalhas,
+                2
+            ) + "%"
         );
 
         definirTextoDashboard(
