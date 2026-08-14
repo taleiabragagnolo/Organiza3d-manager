@@ -2363,21 +2363,29 @@
         vendaId
     ) {
 
-        const venda =
-    criarObjetoVenda();
+        
+            vendas.find(
+                function (item) {
 
-const estoqueBaixado =
-    baixarEstoqueVenda(
-        venda
-    );
+                    return String(
+                        item.id
+              const venda =      ) ===
+                    String(
+                        vendaId
+                    );
 
-if (
-    !estoqueBaixado
-) {
+                }
+            );
 
-    return;
+        if (!venda) {
 
-}
+            alert(
+                "Venda não encontrada."
+            );
+
+            return;
+
+        }
 
         const confirmar =
             confirm(
@@ -3066,10 +3074,13 @@ if (
 
         }
 
-       const estoqueBaixado =
-    baixarEstoqueVenda(
-        venda
-    );
+               const venda =
+            criarObjetoVenda();
+
+        const estoqueBaixado =
+            baixarEstoqueVenda(
+                venda
+            );
 
         if (
             !estoqueBaixado
