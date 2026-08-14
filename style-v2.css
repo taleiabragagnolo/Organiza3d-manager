@@ -1858,3 +1858,111 @@ select {
         overflow-x: auto;
     }
 }
+/* =========================================================
+   FILAMENTOS — CADASTRO EM DUAS LINHAS
+   ========================================================= */
+
+#aba-filamentos .formulario-filamento-horizontal {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+    width: 100% !important;
+    padding: 16px !important;
+    overflow: visible !important;
+}
+
+#aba-filamentos
+.formulario-filamento-horizontal
+> .linha {
+    display: grid !important;
+    width: 100% !important;
+    gap: 10px !important;
+    align-items: end !important;
+}
+
+#aba-filamentos
+.formulario-filamento-horizontal
+> .linha-filamento-principal {
+    grid-template-columns:
+        repeat(6, minmax(0, 1fr)) !important;
+}
+
+#aba-filamentos
+.formulario-filamento-horizontal
+> .linha-filamento-valores {
+    grid-template-columns:
+        repeat(5, minmax(0, 1fr))
+        auto !important;
+}
+
+#aba-filamentos
+.formulario-filamento-horizontal
+.campo {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+}
+
+#aba-filamentos
+.formulario-filamento-horizontal
+.campo label {
+    margin-bottom: 5px !important;
+    font-size: 12px !important;
+    white-space: nowrap !important;
+}
+
+#aba-filamentos
+.formulario-filamento-horizontal
+input,
+
+#aba-filamentos
+.formulario-filamento-horizontal
+select {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 42px !important;
+}
+
+#aba-filamentos .acoes-filamento {
+    display: flex !important;
+    align-items: end !important;
+    gap: 8px !important;
+    width: auto !important;
+}
+
+#salvar-filamento,
+#limpar-formulario-filamento {
+    width: auto !important;
+    min-width: 90px !important;
+    height: 42px !important;
+    margin: 0 !important;
+    padding: 8px 12px !important;
+    white-space: nowrap !important;
+}
+
+/* Ajuste para celular */
+
+@media (max-width: 680px) {
+
+    #aba-filamentos
+    .formulario-filamento-horizontal
+    > .linha-filamento-principal,
+
+    #aba-filamentos
+    .formulario-filamento-horizontal
+    > .linha-filamento-valores {
+        grid-template-columns: 1fr !important;
+    }
+
+    #aba-filamentos .acoes-filamento {
+        width: 100% !important;
+    }
+
+    #salvar-filamento,
+    #limpar-formulario-filamento {
+        flex: 1 1 50% !important;
+    }
+}

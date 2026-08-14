@@ -1422,6 +1422,13 @@ if (filamentosAtivos.length === 0) {
                         )
                         : "Não informado";
 
+                const dataCompra =
+                    filamento.dataCompra
+                        ? formatarDataFilamento(
+                            filamento.dataCompra
+                        )
+                        : "Não informada";
+
                 const fornecedor =
                     filamento.fornecedor
                         ? escaparTexto(
@@ -1448,11 +1455,18 @@ if (filamentosAtivos.length === 0) {
 
             <span>•</span>
 
-            <span>${fabricante}</span>
+                        <span>${fabricante}</span>
 
             <span>•</span>
 
             <span>
+                Compra: ${dataCompra}
+            </span>
+
+            <span>•</span>
+
+            <span>
+
                 ${Number(filamento.pesoRestante || 0).toLocaleString(
                     "pt-BR",
                     { maximumFractionDigits: 1 }
