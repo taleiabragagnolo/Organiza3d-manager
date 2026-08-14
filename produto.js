@@ -751,36 +751,49 @@ function iniciarProduto() {
     // TEXTOS DOS SELECTS
     // ==================================================
 
-    function textoFilamento(
+        function textoFilamento(
         filamento
     ) {
 
-        const fabricante =
-            filamento.fabricante ||
-            "Fabricante não informado";
+        const cor =
+            filamento.cor ||
+            "Cor não informada";
 
         const material =
             filamento.material ||
             filamento.tipo ||
             "Material não informado";
 
-        const cor =
-            filamento.cor ||
-            "Cor não informada";
+        const fabricante =
+            filamento.fabricante ||
+            "Fabricante não informado";
 
         const lote =
             filamento.lote ||
             "Sem lote";
 
+        const dataCompra =
+            dataFormatada(
+                filamento.dataCompra
+            );
+
+        const fornecedor =
+            filamento.fornecedor ||
+            "Fornecedor não informado";
+
         return (
-            fabricante +
-            " — " +
-            material +
-            " — " +
             cor +
-            " — lote " +
+            " | " +
+            material +
+            " | " +
+            fabricante +
+            " | " +
             lote +
-            " — " +
+            " | " +
+            dataCompra +
+            " | " +
+            fornecedor +
+            " | " +
             numeroFormatado(
                 pesoRestanteFilamento(
                     filamento
