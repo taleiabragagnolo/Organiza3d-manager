@@ -1943,54 +1943,336 @@
     // ==================================================
 
     function baixarEstoqueVenda(
-        venda
-    ) {
+    venda
+) {
+
+    const textoOriginal =
+        localStorage.getItem(
+            CHAVE_PRODUTOS
+        );
+
+    try {
+
+        const produtosAtuais =
+            JSON.parse(
+                textoOriginal || "[]"
+            );
+
+        if (
+            !Array.isArray(
+                produtosAtuais
+            )
+        ) {
+
+            alert(
+                "Não foi possível carregar o estoque atual. A venda não foi registrada."
+            );
+
+            return false;
+
+        }
+
+        // Soma quantidades quando o mesmo produto
+        // aparece mais de uma vez na venda.
+        const quantidadesPorProduto = {};
 
         venda.itens.forEach(
             function (itemVenda) {
 
-                const produto =
-                    encontrarProdutoVenda(
+                const produtoId =
+                    String(
                         itemVenda.produtoId
                     );
 
-                if (!produto) {
-
-                    return;
-
-                }
-
-                const quantidadeAtual =
+                const quantidade =
                     numeroPositivoVenda(
-                        produto.quantidadeDisponivel
-                    );
-
-                produto.quantidadeDisponivel =
-                    Math.max(
-                        0,
-                        quantidadeAtual -
                         itemVenda.quantidade
                     );
 
                 if (
-                    produto.quantidadeDisponivel ===
-                    0
+                    !quantidadesPorProduto[
+                        produtoId
+                    ]
                 ) {
 
-                    produto.status =
-                        "Inativo";
+                    quantidadesPorProduto[
+                        produtoId
+                    ] = 0;
 
                 }
+
+                quantidadesPorProduto[
+                    produtoId
+                ] += quantidade;
+
+            }
+        );
+
+        const baixasPreparadas = [];
+
+        const idsProdutos =
+            Object.keys(
+                quantidadesPorProduto
+            );
+
+        // Confere todos os produtos antes
+        // de alterar qualquer quantidade.
+        for (
+            const produtoId of
+            idsProdutos
+        ) {
+
+            const produto =
+                produtosAtuais.find(
+                    function (
+                        itemProduto
+                    ) {
+
+                        return String(
+                            itemProduto.id
+                        ) ===
+                        String(
+                            produtoId
+                        );
+
+                    }
+                );
+
+            if (!produto) {
+
+                alert(
+                    "O produto de código " +
+                    produtoId +
+                    " não foi encontrado no estoque atual.\n\n" +
+                    "A venda não foi registrada e nenhuma baixa foi realizada."
+                );
+
+                return false;
+
+            }
+
+            const quantidadeAtual =
+                numeroPositivoVenda(
+                    produto
+                        .quantidadeDisponivel
+                );
+
+            const quantidadeBaixar =
+                numeroPositivoVenda(
+                    quantidadesPorProduto[
+                        produtoId
+                    ]
+                );
+
+            if (
+                quantidadeBaixar <= 0
+            ) {
+
+                alert(
+                    'A quantidade informada para "' +
+                    (
+                        produto.nome ||
+                        "Produto sem nome"
+                    ) +
+                    '" é inválida.\n\n' +
+                    "A venda não foi registrada."
+                );
+
+                return false;
+
+            }
+
+            if (
+                quantidadeBaixar >
+                quantidadeAtual
+            ) {
+
+                alert(
+                    'Estoque insuficiente para "' +
+                    (
+                        produto.nome ||
+                        "Produto sem nome"
+                    ) +
+                    '".\n\n' +
+                    "Disponível: " +
+                    quantidadeAtual +
+                    "\nQuantidade da venda: " +
+                    quantidadeBaixar +
+                    "\n\nA venda não foi registrada."
+                );
+
+                return false;
+
+            }
+
+            baixasPreparadas.push({
+
+                produto:
+                    produto,
+
+                quantidadeAnterior:
+                    quantidadeAtual,
+
+                quantidadeBaixar:
+                    quantidadeBaixar,
+
+                quantidadeFinal:
+                    quantidadeAtual -
+                    quantidadeBaixar
+
+            });
+
+        }
+
+        // Executa as baixas somente depois
+        // de todas as conferências.
+        baixasPreparadas.forEach(
+            function (
+                baixa
+            ) {
+
+                const produto =
+                    baixa.produto;
+
+                produto.quantidadeDisponivel =
+                    baixa.quantidadeFinal;
+
+                produto.valorTotalEstoque =
+                    Number(
+                        (
+                            baixa.quantidadeFinal *
+                            numeroPositivoVenda(
+                                produto.precoVenda
+                            )
+                        ).toFixed(
+                            2
+                        )
+                    );
+
+                produto.status =
+                    baixa.quantidadeFinal > 0
+                        ? "Ativo"
+                        : "Inativo";
+
+                produto.atualizadoEm =
+                    new Date()
+                        .toISOString();
 
             }
         );
 
         salvarListaVenda(
             CHAVE_PRODUTOS,
-            produtosVenda
+            produtosAtuais
         );
 
+        // Relê o localStorage e confirma
+        // se todas as baixas foram gravadas.
+        const produtosConfirmados =
+            lerListaVenda(
+                CHAVE_PRODUTOS
+            );
+
+        const baixaConfirmada =
+            baixasPreparadas.every(
+                function (
+                    baixa
+                ) {
+
+                    const produtoGravado =
+                        produtosConfirmados.find(
+                            function (
+                                itemProduto
+                            ) {
+
+                                return String(
+                                    itemProduto.id
+                                ) ===
+                                    String(
+                                        baixa
+                                            .produto
+                                            .id
+                                    );
+
+                            }
+                        );
+
+                    return (
+                        produtoGravado &&
+                        numeroPositivoVenda(
+                            produtoGravado
+                                .quantidadeDisponivel
+                        ) ===
+                            baixa
+                                .quantidadeFinal
+                    );
+
+                }
+            );
+
+        if (
+            !baixaConfirmada
+        ) {
+
+            if (
+                textoOriginal !==
+                null
+            ) {
+
+                localStorage.setItem(
+                    CHAVE_PRODUTOS,
+                    textoOriginal
+                );
+
+            }
+
+            alert(
+                "A baixa do estoque não pôde ser confirmada.\n\n" +
+                "O estoque anterior foi restaurado e a venda não foi registrada."
+            );
+
+            return false;
+
+        }
+
+        // Atualiza a lista usada pelo módulo
+        // com os valores realmente gravados.
+        produtosVenda =
+            produtosConfirmados;
+
+        return true;
+
+    } catch (
+        erro
+    ) {
+
+        if (
+            textoOriginal !==
+            null
+        ) {
+
+            localStorage.setItem(
+                CHAVE_PRODUTOS,
+                textoOriginal
+            );
+
+        }
+
+        console.error(
+            "Erro ao baixar o estoque da venda:",
+            erro
+        );
+
+        alert(
+            "Ocorreu um erro ao baixar o estoque.\n\n" +
+            "Nenhum produto foi alterado e a venda não foi registrada."
+        );
+
+        return false;
+
     }
+
+}
 
     // ==================================================
     // LANÇAR NO FINANCEIRO
@@ -2082,28 +2364,20 @@
     ) {
 
         const venda =
-            vendas.find(
-                function (item) {
+    criarObjetoVenda();
 
-                    return String(
-                        item.id
-                    ) ===
-                    String(
-                        vendaId
-                    );
+const estoqueBaixado =
+    baixarEstoqueVenda(
+        venda
+    );
 
-                }
-            );
+if (
+    !estoqueBaixado
+) {
 
-        if (!venda) {
+    return;
 
-            alert(
-                "Venda não encontrada."
-            );
-
-            return;
-
-        }
+}
 
         const confirmar =
             confirm(
@@ -2792,12 +3066,18 @@
 
         }
 
-        const venda =
-            criarObjetoVenda();
+       const estoqueBaixado =
+    baixarEstoqueVenda(
+        venda
+    );
 
-        baixarEstoqueVenda(
-            venda
-        );
+        if (
+            !estoqueBaixado
+        ) {
+
+    return;
+
+}
 
         vendas.push(
             venda
