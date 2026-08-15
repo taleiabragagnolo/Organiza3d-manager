@@ -3287,7 +3287,7 @@ function iniciarProduto() {
             custoHoraImpressora:
                 maquina.custoPorHora,
 
-                        custoMaquina:
+            custoMaquina:
                 maquina.custoTotal,
 
             custoTotalProducao:
