@@ -3287,23 +3287,8 @@ function iniciarProduto() {
             custoHoraImpressora:
                 maquina.custoPorHora,
 
-                        custoMaquina:
-                calculos.custoMaquina,
-
-            custoDiretoProducao:
-                calculos.custoDiretoProducao,
-
-            custoUnitarioDireto:
-                calculos.custoUnitarioDireto,
-
-            totalPerdasConsumo:
-                calculos.totalPerdasConsumo,
-
-            percentualRateio:
-                calculos.percentualRateio,
-
-            custoRateio:
-                calculos.custoRateio,
+            custoTotalProducao:
+                custoTotalProducao,
 
             custoTotalProducao:
                 custoTotalProducao,
