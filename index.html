@@ -1720,6 +1720,65 @@
             <!-- ================================================= -->
 
             <h3>Resumo financeiro da produção</h3>
+            <div class="linha linha-rateio-producao">
+
+    <div class="campo campo-rateio-produto">
+
+        <label for="produto-custo-direto-producao">
+            Custo direto
+        </label>
+
+        <input
+            type="text"
+            id="produto-custo-direto-producao"
+            value="R$ 0,00"
+            readonly>
+
+    </div>
+
+    <div class="campo campo-rateio-produto">
+
+        <label for="produto-total-perdas-consumo">
+            Perdas e consumo
+        </label>
+
+        <input
+            type="text"
+            id="produto-total-perdas-consumo"
+            value="R$ 0,00"
+            readonly>
+
+    </div>
+
+    <div class="campo campo-rateio-produto">
+
+        <label for="produto-percentual-rateio">
+            Percentual de rateio
+        </label>
+
+        <input
+            type="text"
+            id="produto-percentual-rateio"
+            value="0%"
+            readonly>
+
+    </div>
+
+    <div class="campo campo-rateio-produto">
+
+        <label for="produto-custo-rateio">
+            Rateio nesta produção
+        </label>
+
+        <input
+            type="text"
+            id="produto-custo-rateio"
+            value="R$ 0,00"
+            readonly>
+
+    </div>
+
+</div>
 
 <!-- ================================================= -->
 <!-- RESUMO FINANCEIRO - LAYOUT COMPACTO -->
@@ -1753,8 +1812,8 @@
     <div class="campo campo-resumo-produto">
 
         <label for="produto-custo-total-producao">
-            Custo produção
-        </label>
+    Custo final
+</label>
 
         <input
             type="text"
@@ -1871,18 +1930,103 @@
 
 </div>
 
-            <div class="campo campo-completo">
+            <div class="painel-preco-sugerido">
 
-                <label for="produto-produzido-observacoes">
-                    Observações da produção
-                </label>
+    <div class="titulo-preco-sugerido">
+        Quanto você quer ganhar em cima do custo?
+    </div>
 
-                <textarea
-                    id="produto-produzido-observacoes"
-                    rows="3"
-                    placeholder="Falhas durante a impressão, ajustes, acabamento ou outras informações"></textarea>
+    <div class="opcoes-lucro-produto">
 
-            </div>
+        <button
+            type="button"
+            class="botao-percentual-lucro"
+            data-percentual-lucro="50">
+            +50%
+        </button>
+
+        <button
+            type="button"
+            class="botao-percentual-lucro"
+            data-percentual-lucro="75">
+            +75%
+        </button>
+
+        <button
+            type="button"
+            class="botao-percentual-lucro ativo"
+            data-percentual-lucro="100">
+            +100%
+        </button>
+
+        <button
+            type="button"
+            class="botao-percentual-lucro"
+            data-percentual-lucro="200">
+            +200%
+        </button>
+
+        <div class="campo campo-percentual-personalizado">
+
+            <label for="produto-lucro-desejado">
+                Personalizado
+            </label>
+
+            <input
+                type="number"
+                id="produto-lucro-desejado"
+                min="0"
+                step="1"
+                value="100">
+
+        </div>
+
+    </div>
+
+    <div class="resultado-preco-sugerido">
+
+        <div class="campo">
+
+            <label for="produto-preco-sugerido">
+                Preço sugerido
+            </label>
+
+            <input
+                type="text"
+                id="produto-preco-sugerido"
+                value="R$ 0,00"
+                readonly>
+
+        </div>
+
+        <button
+            type="button"
+            id="produto-usar-preco-sugerido"
+            class="botao-principal">
+            Usar preço sugerido
+        </button>
+
+    </div>
+
+    <p
+        id="produto-aviso-preco"
+        class="aviso-preco-produto">
+    </p>
+
+</div>
+
+<div class="campo campo-completo">
+
+    <label for="produto-produzido-observacoes">
+        Observações da produção
+    </label>
+
+    <textarea
+        id="produto-produzido-observacoes"
+        rows="3"
+        placeholder="Falhas durante a impressão, ajustes, acabamento ou outras informações"></textarea>
+
+</div>
 
 <!-- ================================================= -->
 <!-- AÇÕES DA PRODUÇÃO -->

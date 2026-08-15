@@ -1966,3 +1966,173 @@ select {
         flex: 1 1 50% !important;
     }
 }
+/* =========================================================
+   PRODUTOS — RATEIO E PREÇO SUGERIDO
+   ========================================================= */
+
+#produto .linha-rateio-producao {
+    display: grid !important;
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr)) !important;
+    grid-column: 1 / -1 !important;
+    gap: 10px !important;
+    width: 100% !important;
+    align-items: end !important;
+}
+
+#produto .campo-rateio-produto {
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important;
+}
+
+#produto .campo-rateio-produto label {
+    margin-bottom: 5px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+}
+
+#produto .campo-rateio-produto input {
+    width: 100% !important;
+    height: 42px !important;
+}
+
+#produto .painel-preco-sugerido {
+    display: grid !important;
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(250px, 0.65fr) !important;
+    grid-column: 1 / -1 !important;
+    gap: 12px 18px !important;
+    width: 100% !important;
+    padding: 16px !important;
+    border: 1px solid var(--borda) !important;
+    border-radius: 14px !important;
+    background: #f8f5f0 !important;
+}
+
+#produto .titulo-preco-sugerido {
+    grid-column: 1 / -1 !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: var(--marrom-900) !important;
+}
+
+#produto .opcoes-lucro-produto {
+    display: flex !important;
+    align-items: end !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+}
+
+#produto .botao-percentual-lucro {
+    width: auto !important;
+    min-width: 70px !important;
+    height: 42px !important;
+    margin: 0 !important;
+    padding: 8px 14px !important;
+    border: 1px solid var(--borda) !important;
+    border-radius: 20px !important;
+    background: #ffffff !important;
+    color: var(--marrom-900) !important;
+    white-space: nowrap !important;
+}
+
+#produto .botao-percentual-lucro.ativo {
+    border-color: var(--verde-700) !important;
+    background: var(--verde-700) !important;
+    color: #ffffff !important;
+}
+
+#produto .campo-percentual-personalizado {
+    width: 125px !important;
+    min-width: 125px !important;
+}
+
+#produto .campo-percentual-personalizado label {
+    margin-bottom: 5px !important;
+    font-size: 11px !important;
+}
+
+#produto .campo-percentual-personalizado input {
+    width: 100% !important;
+    height: 42px !important;
+}
+
+#produto .resultado-preco-sugerido {
+    display: grid !important;
+    grid-template-columns:
+        minmax(130px, 1fr)
+        auto !important;
+    align-items: end !important;
+    gap: 8px !important;
+}
+
+#produto .resultado-preco-sugerido .campo {
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important;
+}
+
+#produto .resultado-preco-sugerido input {
+    width: 100% !important;
+    height: 42px !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: var(--verde-700) !important;
+}
+
+#produto-usar-preco-sugerido {
+    width: auto !important;
+    min-width: 150px !important;
+    height: 42px !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+}
+
+#produto .aviso-preco-produto {
+    grid-column: 1 / -1 !important;
+    min-height: 18px !important;
+    margin: 0 !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+}
+
+#produto .aviso-preco-produto.aviso-prejuizo {
+    color: #b45e5e !important;
+}
+
+@media (max-width: 800px) {
+
+    #produto .linha-rateio-producao {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    #produto .painel-preco-sugerido {
+        grid-template-columns: 1fr !important;
+    }
+
+    #produto .resultado-preco-sugerido {
+        grid-template-columns: 1fr !important;
+    }
+
+    #produto-usar-preco-sugerido {
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 520px) {
+
+    #produto .linha-rateio-producao {
+        grid-template-columns: 1fr !important;
+    }
+
+    #produto .botao-percentual-lucro {
+        flex: 1 1 45% !important;
+    }
+
+    #produto .campo-percentual-personalizado {
+        width: 100% !important;
+    }
+}

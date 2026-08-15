@@ -21,6 +21,9 @@ function iniciarProduto() {
     const CHAVE_CONSUMO_PROPRIO =
         "organiza3d_consumo_proprio";
 
+    const CHAVE_PREJUIZOS_FILAMENTOS =
+        "organiza3d_prejuizos_filamentos";
+
     const CHAVE_MOVIMENTACOES =
         "organiza3d_movimentacoes_produtos";
 
@@ -2268,6 +2271,213 @@ function iniciarProduto() {
         document.getElementById(
             "produto-valor-total-estoque"
         );
+            const campoCustoDiretoProduto =
+        document.getElementById(
+            "produto-custo-direto-producao"
+        );
+
+    const campoTotalPerdasConsumoProduto =
+        document.getElementById(
+            "produto-total-perdas-consumo"
+        );
+
+    const campoPercentualRateioProduto =
+        document.getElementById(
+            "produto-percentual-rateio"
+        );
+
+    const campoCustoRateioProduto =
+        document.getElementById(
+            "produto-custo-rateio"
+        );
+
+    const campoLucroDesejadoProduto =
+        document.getElementById(
+            "produto-lucro-desejado"
+        );
+
+    const campoPrecoSugeridoProduto =
+        document.getElementById(
+            "produto-preco-sugerido"
+        );
+
+    const botaoUsarPrecoSugeridoProduto =
+        document.getElementById(
+            "produto-usar-preco-sugerido"
+        );
+
+    const campoAvisoPrecoProduto =
+        document.getElementById(
+            "produto-aviso-preco"
+        );
+
+    const botoesPercentualLucroProduto =
+        document.querySelectorAll(
+            ".botao-percentual-lucro"
+        );
+            // ==================================================
+    // CALCULAR RATEIO DE PERDAS E CONSUMO INTERNO
+    // ==================================================
+
+    function calcularRateioPerdasProduto() {
+
+        const prejuizosFilamentos =
+            lerLista(
+                CHAVE_PREJUIZOS_FILAMENTOS
+            );
+
+        const custoPecasComFalha =
+            perdas.reduce(
+                function (
+                    total,
+                    perda
+                ) {
+
+                    return (
+                        total +
+                        numeroPositivo(
+                            perda.custoTotal
+                        )
+                    );
+
+                },
+                0
+            );
+
+        const custoConsumoProprio =
+            consumosProprios.reduce(
+                function (
+                    total,
+                    consumo
+                ) {
+
+                    return (
+                        total +
+                        numeroPositivo(
+                            consumo.custoTotal
+                        )
+                    );
+
+                },
+                0
+            );
+
+        const custoFalhasFilamento =
+            prejuizosFilamentos.reduce(
+                function (
+                    total,
+                    prejuizo
+                ) {
+
+                    return (
+                        total +
+                        numeroPositivo(
+                            prejuizo.custoTotal
+                        )
+                    );
+
+                },
+                0
+            );
+
+        const totalPerdasConsumo =
+            custoPecasComFalha +
+            custoConsumoProprio +
+            custoFalhasFilamento;
+
+        const custoDiretoProducoes =
+            produtos.reduce(
+                function (
+                    total,
+                    produto
+                ) {
+
+                    const custoDireto =
+                        produto.custoDiretoProducao !==
+                        undefined
+                            ? numeroPositivo(
+                                produto.custoDiretoProducao
+                            )
+                            : numeroPositivo(
+                                produto.custoTotalProducao
+                            );
+
+                    return (
+                        total +
+                        custoDireto
+                    );
+
+                },
+                0
+            );
+
+        const percentualRateio =
+            custoDiretoProducoes > 0
+                ? (
+                    totalPerdasConsumo /
+                    custoDiretoProducoes
+                ) * 100
+                : 0;
+
+        return {
+
+            custoPecasComFalha:
+                custoPecasComFalha,
+
+            custoConsumoProprio:
+                custoConsumoProprio,
+
+            custoFalhasFilamento:
+                custoFalhasFilamento,
+
+            totalPerdasConsumo:
+                totalPerdasConsumo,
+
+            custoDiretoProducoes:
+                custoDiretoProducoes,
+
+            percentualRateio:
+                percentualRateio
+
+        };
+
+    }
+
+    // ==================================================
+    // CALCULAR PREÇO SUGERIDO
+    // ==================================================
+
+    function calcularPrecoSugeridoProduto(
+        custoUnitarioFinal
+    ) {
+
+        const percentualLucro =
+            numeroPositivo(
+                campoLucroDesejadoProduto
+                    ? campoLucroDesejadoProduto.value
+                    : 100
+            );
+
+        const custo =
+            numeroPositivo(
+                custoUnitarioFinal
+            );
+
+        return {
+
+            percentualLucro:
+                percentualLucro,
+
+            precoSugerido:
+                custo *
+                (
+                    1 +
+                    percentualLucro / 100
+                )
+
+        };
+
+    }
 
     // ==================================================
     // CALCULAR TEMPO EM HORAS DECIMAIS
@@ -2491,468 +2701,7 @@ function iniciarProduto() {
     // CÁLCULO COMPLETO DA PRODUÇÃO
     // ==================================================
 
-    function atualizarCalculosProduto() {
-
-        // ==============================================
-        // INSUMOS UTILIZADOS
-        // ==============================================
-
-        const filamentosUsados =
-            obterFilamentosProduto();
-
-        const acessoriosUsados =
-            obterAcessoriosProduto();
-
-        const embalagensUsadas =
-            obterEmbalagensProduto();
-
-        // ==============================================
-        // TOTAIS DOS FILAMENTOS
-        // ==============================================
-
-        const custoFilamentos =
-            somar(
-                filamentosUsados,
-                "custoTotal"
-            );
-
-        const pesoTotalFilamentos =
-            somar(
-                filamentosUsados,
-                "quantidade"
-            );
-
-        // ==============================================
-        // TOTAIS DOS ACESSÓRIOS
-        // ==============================================
-
-        const custoAcessorios =
-            somar(
-                acessoriosUsados,
-                "custoTotal"
-            );
-
-        const quantidadeTotalAcessorios =
-            somar(
-                acessoriosUsados,
-                "quantidade"
-            );
-
-        // ==============================================
-        // TOTAIS DAS EMBALAGENS
-        // ==============================================
-
-        const custoEmbalagens =
-            somar(
-                embalagensUsadas,
-                "custoTotal"
-            );
-
-        const quantidadeTotalEmbalagens =
-            somar(
-                embalagensUsadas,
-                "quantidade"
-            );
-
-        // ==============================================
-        // TEMPO DE IMPRESSÃO
-        // ==============================================
-
-        const tempo =
-            calcularTempoDecimal(
-                campoHorasProduto,
-                campoMinutosProduto
-            );
-
-        // ==============================================
-        // ENERGIA
-        // ==============================================
-
-        const energia =
-            calcularEnergia(
-
-                campoPotenciaProduto
-                    ? campoPotenciaProduto.value
-                    : 0,
-
-                tempo.horasDecimais,
-
-                campoTarifaProduto
-                    ? campoTarifaProduto.value
-                    : 0
-
-            );
-
-        // ==============================================
-        // CUSTO DA MÁQUINA
-        // ==============================================
-
-        const maquina =
-            calcularCustoMaquina(
-
-                tempo.horasDecimais,
-
-                campoCustoHoraProduto
-                    ? campoCustoHoraProduto.value
-                    : 0
-
-            );
-
-        // ==============================================
-        // CUSTOS DA PRODUÇÃO
-        // ==============================================
-
-        const custoInsumos =
-            custoFilamentos +
-            custoAcessorios +
-            custoEmbalagens;
-
-        const custoTotalProducao =
-            custoInsumos +
-            energia.custoEnergia +
-            maquina.custoTotal;
-
-        // ==============================================
-        // QUANTIDADE PRODUZIDA
-        // ==============================================
-
-        const quantidadeProduzida =
-            numeroPositivo(
-                campoQuantidadeProduzida
-                    ? campoQuantidadeProduzida.value
-                    : 0
-            );
-
-        const custoUnitario =
-            quantidadeProduzida > 0
-                ? custoTotalProducao /
-                    quantidadeProduzida
-                : 0;
-
-        // ==============================================
-        // PREÇO, LUCRO E MARGEM
-        // ==============================================
-
-        const precoVenda =
-            numeroPositivo(
-                campoPrecoVendaProduto
-                    ? campoPrecoVendaProduto.value
-                    : 0
-            );
-
-        const lucroUnitario =
-            precoVenda -
-            custoUnitario;
-
-        const margemReal =
-            calcularMargemReal(
-                precoVenda,
-                custoUnitario
-            );
-
-        const valorTotalEstoque =
-            precoVenda *
-            quantidadeProduzida;
-
-        // ==============================================
-        // MOSTRAR CUSTOS DOS FILAMENTOS
-        // ==============================================
-
-        if (campoCustoFilamentosProduto) {
-
-            campoCustoFilamentosProduto.value =
-                dinheiro(
-                    custoFilamentos
-                );
-
-        }
-
-        if (campoPesoFilamentosProduto) {
-
-            campoPesoFilamentosProduto.value =
-                numeroFormatado(
-                    pesoTotalFilamentos,
-                    2
-                ) +
-                " g";
-
-        }
-
-        // ==============================================
-        // MOSTRAR CUSTOS DOS ACESSÓRIOS
-        // ==============================================
-
-        if (campoCustoAcessoriosProduto) {
-
-            campoCustoAcessoriosProduto.value =
-                dinheiro(
-                    custoAcessorios
-                );
-
-        }
-
-        if (campoQuantidadeAcessoriosProduto) {
-
-            campoQuantidadeAcessoriosProduto.value =
-                numeroFormatado(
-                    quantidadeTotalAcessorios,
-                    0
-                );
-
-        }
-
-        // ==============================================
-        // MOSTRAR CUSTOS DAS EMBALAGENS
-        // ==============================================
-
-        if (campoCustoEmbalagensProduto) {
-
-            campoCustoEmbalagensProduto.value =
-                dinheiro(
-                    custoEmbalagens
-                );
-
-        }
-
-        if (campoQuantidadeEmbalagensProduto) {
-
-            campoQuantidadeEmbalagensProduto.value =
-                numeroFormatado(
-                    quantidadeTotalEmbalagens,
-                    0
-                );
-
-        }
-
-        // ==============================================
-        // MOSTRAR TEMPO
-        // ==============================================
-
-        if (campoTempoTotalProduto) {
-
-            campoTempoTotalProduto.value =
-                numeroFormatado(
-                    tempo.horas,
-                    0
-                ) +
-                "h " +
-                numeroFormatado(
-                    tempo.minutos,
-                    0
-                ) +
-                "min";
-
-        }
-
-        if (campoHorasDecimaisProduto) {
-
-            campoHorasDecimaisProduto.value =
-                numeroFormatado(
-                    tempo.horasDecimais,
-                    2
-                ) +
-                " h";
-
-        }
-
-        // ==============================================
-        // MOSTRAR ENERGIA
-        // ==============================================
-
-        if (campoConsumoEnergiaProduto) {
-
-            campoConsumoEnergiaProduto.value =
-                numeroFormatado(
-                    energia.consumoKwh,
-                    4
-                ) +
-                " kWh";
-
-        }
-
-        if (campoCustoEnergiaProduto) {
-
-            campoCustoEnergiaProduto.value =
-                dinheiro(
-                    energia.custoEnergia
-                );
-
-        }
-
-        // ==============================================
-        // MOSTRAR CUSTO DA MÁQUINA
-        // ==============================================
-
-        if (campoCustoMaquinaProduto) {
-
-            campoCustoMaquinaProduto.value =
-                dinheiro(
-                    maquina.custoTotal
-                );
-
-        }
-
-        // ==============================================
-        // MOSTRAR RESUMO FINANCEIRO
-        // ==============================================
-
-        if (campoCustoInsumosProduto) {
-
-            campoCustoInsumosProduto.value =
-                dinheiro(
-                    custoInsumos
-                );
-
-        }
-
-        if (campoCustoTotalProduto) {
-
-            campoCustoTotalProduto.value =
-                dinheiro(
-                    custoTotalProducao
-                );
-
-        }
-
-        if (campoCustoUnitarioProduto) {
-
-            campoCustoUnitarioProduto.value =
-                dinheiro(
-                    custoUnitario
-                );
-
-        }
-
-        if (campoLucroUnitarioProduto) {
-
-            campoLucroUnitarioProduto.value =
-                dinheiro(
-                    lucroUnitario
-                );
-
-        }
-
-        if (campoMargemRealProduto) {
-
-            campoMargemRealProduto.value =
-                numeroFormatado(
-                    margemReal,
-                    2
-                ) +
-                "%";
-
-        }
-
-        if (campoValorTotalEstoqueProduto) {
-
-            campoValorTotalEstoqueProduto.value =
-                dinheiro(
-                    valorTotalEstoque
-                );
-
-        }
-
-        // ==============================================
-        // QUANTIDADE DISPONÍVEL INICIAL
-        // ==============================================
-
-        if (
-            campoQuantidadeDisponivel &&
-            produtoEmEdicaoId === null
-        ) {
-
-            campoQuantidadeDisponivel.value =
-                quantidadeProduzida;
-
-        }
-
-        // ==============================================
-        // RESULTADO COMPLETO
-        // ==============================================
-
-        return {
-
-            filamentos:
-                filamentosUsados,
-
-            acessorios:
-                acessoriosUsados,
-
-            embalagens:
-                embalagensUsadas,
-
-            custoFilamentos:
-                custoFilamentos,
-
-            pesoTotalFilamentos:
-                pesoTotalFilamentos,
-
-            custoAcessorios:
-                custoAcessorios,
-
-            quantidadeTotalAcessorios:
-                quantidadeTotalAcessorios,
-
-            custoEmbalagens:
-                custoEmbalagens,
-
-            quantidadeTotalEmbalagens:
-                quantidadeTotalEmbalagens,
-
-            custoInsumos:
-                custoInsumos,
-
-            horas:
-                tempo.horas,
-
-            minutos:
-                tempo.minutos,
-
-            horasDecimais:
-                tempo.horasDecimais,
-
-            potenciaWatts:
-                energia.potenciaWatts,
-
-            tarifaEnergia:
-                energia.tarifa,
-
-            consumoKwh:
-                energia.consumoKwh,
-
-            custoEnergia:
-                energia.custoEnergia,
-
-            custoHoraImpressora:
-                maquina.custoPorHora,
-
-            custoMaquina:
-                maquina.custoTotal,
-
-            custoTotalProducao:
-                custoTotalProducao,
-
-            quantidadeProduzida:
-                quantidadeProduzida,
-
-            custoUnitario:
-                custoUnitario,
-
-            precoVenda:
-                precoVenda,
-
-            lucroUnitario:
-                lucroUnitario,
-
-            margemReal:
-                margemReal,
-
-            valorTotalEstoque:
-                valorTotalEstoque
-
-        };
-
-    }
+     
     // ==================================================
     // PARTE 6B
     // CÁLCULO COMPLETO DA PRODUÇÃO
@@ -3065,8 +2814,8 @@ function iniciarProduto() {
 
             );
 
-        // ==============================================
-        // CUSTOS DA PRODUÇÃO
+                // ==============================================
+        // CUSTOS DIRETOS DA PRODUÇÃO
         // ==============================================
 
         const custoInsumos =
@@ -3074,13 +2823,31 @@ function iniciarProduto() {
             custoAcessorios +
             custoEmbalagens;
 
-        const custoTotalProducao =
+        const custoDiretoProducao =
             custoInsumos +
             energia.custoEnergia +
             maquina.custoTotal;
 
         // ==============================================
-        // QUANTIDADE PRODUZIDA
+        // RATEIO DE PERDAS E CONSUMO INTERNO
+        // ==============================================
+
+        const resumoRateio =
+            calcularRateioPerdasProduto();
+
+        const custoRateio =
+            custoDiretoProducao *
+            (
+                resumoRateio.percentualRateio /
+                100
+            );
+
+        const custoTotalProducao =
+            custoDiretoProducao +
+            custoRateio;
+
+        // ==============================================
+        // QUANTIDADE E CUSTOS UNITÁRIOS
         // ==============================================
 
         const quantidadeProduzida =
@@ -3090,6 +2857,12 @@ function iniciarProduto() {
                     : 0
             );
 
+        const custoUnitarioDireto =
+            quantidadeProduzida > 0
+                ? custoDiretoProducao /
+                    quantidadeProduzida
+                : 0;
+
         const custoUnitario =
             quantidadeProduzida > 0
                 ? custoTotalProducao /
@@ -3097,7 +2870,16 @@ function iniciarProduto() {
                 : 0;
 
         // ==============================================
-        // PREÇO, LUCRO E MARGEM
+        // PREÇO SUGERIDO
+        // ==============================================
+
+        const sugestaoPreco =
+            calcularPrecoSugeridoProduto(
+                custoUnitario
+            );
+
+        // ==============================================
+        // PREÇO ESCOLHIDO, LUCRO E MARGEM
         // ==============================================
 
         const precoVenda =
@@ -3262,6 +3044,101 @@ function iniciarProduto() {
         // ==============================================
         // MOSTRAR RESUMO FINANCEIRO
         // ==============================================
+        // ==============================================
+        // MOSTRAR RATEIO DE PERDAS E CONSUMO
+        // ==============================================
+
+        if (campoCustoDiretoProduto) {
+
+            campoCustoDiretoProduto.value =
+                dinheiro(
+                    custoDiretoProducao
+                );
+
+        }
+
+        if (campoTotalPerdasConsumoProduto) {
+
+            campoTotalPerdasConsumoProduto.value =
+                dinheiro(
+                    resumoRateio
+                        .totalPerdasConsumo
+                );
+
+        }
+
+        if (campoPercentualRateioProduto) {
+
+            campoPercentualRateioProduto.value =
+                numeroFormatado(
+                    resumoRateio
+                        .percentualRateio,
+                    2
+                ) +
+                "%";
+
+        }
+
+        if (campoCustoRateioProduto) {
+
+            campoCustoRateioProduto.value =
+                dinheiro(
+                    custoRateio
+                );
+
+        }
+
+        // ==============================================
+        // MOSTRAR PREÇO SUGERIDO
+        // ==============================================
+
+        if (campoPrecoSugeridoProduto) {
+
+            campoPrecoSugeridoProduto.value =
+                dinheiro(
+                    sugestaoPreco
+                        .precoSugerido
+                );
+
+        }
+
+        // ==============================================
+        // AVISO SOBRE O PREÇO ESCOLHIDO
+        // ==============================================
+
+        if (campoAvisoPrecoProduto) {
+
+            campoAvisoPrecoProduto
+                .classList.remove(
+                    "aviso-prejuizo"
+                );
+
+            if (
+                precoVenda > 0 &&
+                precoVenda < custoUnitario
+            ) {
+
+                campoAvisoPrecoProduto.textContent =
+                    "Atenção: o preço informado está abaixo do custo final da peça.";
+
+                campoAvisoPrecoProduto
+                    .classList.add(
+                        "aviso-prejuizo"
+                    );
+
+            } else if (precoVenda <= 0) {
+
+                campoAvisoPrecoProduto.textContent =
+                    "O preço pode ficar zerado para produtos destinados ao consumo próprio.";
+
+            } else {
+
+                campoAvisoPrecoProduto.textContent =
+                    "";
+
+            }
+
+        }
 
         if (campoCustoInsumosProduto) {
 
@@ -3337,7 +3214,7 @@ function iniciarProduto() {
         // RESULTADO COMPLETO
         // ==============================================
 
-        return {
+                    return {
 
             filamentos:
                 filamentosUsados,
@@ -3368,6 +3245,23 @@ function iniciarProduto() {
 
             custoInsumos:
                 custoInsumos,
+
+            custoDiretoProducao:
+                custoDiretoProducao,
+
+            custoUnitarioDireto:
+                custoUnitarioDireto,
+
+            totalPerdasConsumo:
+                resumoRateio
+                    .totalPerdasConsumo,
+
+            percentualRateio:
+                resumoRateio
+                    .percentualRateio,
+
+            custoRateio:
+                custoRateio,
 
             horas:
                 tempo.horas,
@@ -3404,6 +3298,14 @@ function iniciarProduto() {
 
             custoUnitario:
                 custoUnitario,
+
+            percentualLucroDesejado:
+                sugestaoPreco
+                    .percentualLucro,
+
+            precoSugerido:
+                sugestaoPreco
+                    .precoSugerido,
 
             precoVenda:
                 precoVenda,
@@ -4489,8 +4391,25 @@ dataProducao:
             custoMaquina:
                 calculos.custoMaquina,
 
+                        custoMaquina:
+                calculos.custoMaquina,
+
+            custoDiretoProducao:
+                calculos.custoDiretoProducao,
+
+            custoUnitarioDireto:
+                calculos.custoUnitarioDireto,
+
+            totalPerdasConsumo:
+                calculos.totalPerdasConsumo,
+
+            percentualRateio:
+                calculos.percentualRateio,
+
+            custoRateio:
+                calculos.custoRateio,
+
             custoTotalProducao:
-                calculos.custoTotalProducao,
 
             custoUnitario:
                 calculos.custoUnitario,
