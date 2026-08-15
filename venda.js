@@ -1579,8 +1579,15 @@
                     quantidade:
                         quantidade,
 
-                    valorUnitario:
+                                        valorUnitario:
                         valorUnitario,
+
+                    custoUnitarioProducao:
+                        numeroPositivoVenda(
+                            produto.custoUnitario ??
+                            produto.custoUnitarioDireto ??
+                            0
+                        ),
 
                     brinde:
                         brinde,

@@ -241,15 +241,40 @@
     // RESUMO DAS VENDAS
     // ==================================================
 
-    function calcularVendasDashboard(
-        vendas
+        function calcularVendasDashboard(
+        vendas,
+        produtos
     ) {
 
         let faturamento = 0;
 
+        let faturamentoProdutos = 0;
+
+        let fretesClientes = 0;
+
+        let custoProdutosVendidos = 0;
+
         let unidadesVendidas = 0;
 
         let brindes = 0;
+
+        let unidadesSemCusto = 0;
+
+        const produtosPorId =
+            new Map();
+
+        produtos.forEach(
+            function (produto) {
+
+                produtosPorId.set(
+                    String(
+                        produto.id
+                    ),
+                    produto
+                );
+
+            }
+        );
 
         vendas.forEach(
             function (venda) {
@@ -257,6 +282,28 @@
                 faturamento +=
                     numeroPositivoDashboard(
                         venda.total
+                    );
+
+                fretesClientes +=
+                    numeroPositivoDashboard(
+                        venda.frete
+                    );
+
+                const subtotalProdutos =
+                    numeroPositivoDashboard(
+                        venda.subtotal
+                    );
+
+                const desconto =
+                    numeroPositivoDashboard(
+                        venda.desconto
+                    );
+
+                faturamentoProdutos +=
+                    Math.max(
+                        0,
+                        subtotalProdutos -
+                        desconto
                     );
 
                 if (
@@ -276,6 +323,46 @@
                             numeroPositivoDashboard(
                                 item.quantidade
                             );
+
+                        const produto =
+                            produtosPorId.get(
+                                String(
+                                    item.produtoId
+                                )
+                            ) || null;
+
+                        let custoUnitario =
+                            numeroPositivoDashboard(
+                                item
+                                    .custoUnitarioProducao
+                            );
+
+                        if (
+                            custoUnitario <= 0 &&
+                            produto
+                        ) {
+
+                            custoUnitario =
+                                numeroPositivoDashboard(
+                                    produto.custoUnitario ??
+                                    produto.custoUnitarioDireto ??
+                                    0
+                                );
+
+                        }
+
+                        if (custoUnitario > 0) {
+
+                            custoProdutosVendidos +=
+                                quantidade *
+                                custoUnitario;
+
+                        } else if (quantidade > 0) {
+
+                            unidadesSemCusto +=
+                                quantidade;
+
+                        }
 
                         if (item.brinde) {
 
@@ -306,6 +393,15 @@
             faturamento:
                 faturamento,
 
+            faturamentoProdutos:
+                faturamentoProdutos,
+
+            fretesClientes:
+                fretesClientes,
+
+            custoProdutosVendidos:
+                custoProdutosVendidos,
+
             totalVendas:
                 vendas.length,
 
@@ -316,7 +412,10 @@
                 brindes,
 
             ticketMedio:
-                ticketMedio
+                ticketMedio,
+
+            unidadesSemCusto:
+                unidadesSemCusto
 
         };
 
@@ -953,6 +1052,20 @@
 
         }
 
+                if (
+            dados.vendas &&
+            dados.vendas
+                .unidadesSemCusto > 0
+        ) {
+
+            alertas.push(
+                dados.vendas
+                    .unidadesSemCusto +
+                " unidade(s) vendida(s) sem custo de produção identificado."
+            );
+
+        }
+
         if (
             alertas.length === 0
         ) {
@@ -1042,15 +1155,23 @@
                 CHAVE_PREJUIZOS_FILAMENTOS
             );
 
-        const resumoVendas =
+               const resumoVendas =
             calcularVendasDashboard(
-                vendas
+                vendas,
+                produtos
             );
 
         const resumoFinanceiro =
             calcularFinanceiroDashboard(
                 financeiro
             );
+
+        const resultadoDisponivel =
+            resumoFinanceiro.saldo -
+            resumoVendas
+                .custoProdutosVendidos -
+            resumoVendas
+                .fretesClientes;
 
         const resumoProdutos =
             calcularProdutosDashboard(
@@ -1131,9 +1252,26 @@
             resumoFinanceiro.despesas
         );
 
-        definirDinheiroDashboard(
+                definirDinheiroDashboard(
             "dashboard-saldo-financeiro",
             resumoFinanceiro.saldo
+        );
+
+        definirDinheiroDashboard(
+            "dashboard-custo-produtos-vendidos",
+            resumoVendas
+                .custoProdutosVendidos
+        );
+
+        definirDinheiroDashboard(
+            "dashboard-frete-clientes",
+            resumoVendas
+                .fretesClientes
+        );
+
+        definirDinheiroDashboard(
+            "dashboard-resultado-disponivel",
+            resultadoDisponivel
         );
 
         definirDinheiroDashboard(
@@ -1290,6 +1428,9 @@
 
             financeiro:
                 resumoFinanceiro,
+
+            vendas:
+                resumoVendas,
 
             produtos:
                 resumoProdutos,
