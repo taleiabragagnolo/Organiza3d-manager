@@ -1252,7 +1252,7 @@ function iniciarProduto() {
             <div class="campo">
 
                 <label>
-                    Filamento / lote
+                    Filamento/Cor
                 </label>
 
                 <select
@@ -1269,7 +1269,7 @@ function iniciarProduto() {
             <div class="campo">
 
                 <label>
-                    Quantidade utilizada (g)
+                    Qt. (gr)
                 </label>
 
                 <input
@@ -1284,7 +1284,7 @@ function iniciarProduto() {
             <div class="campo">
 
                 <label>
-                    Custo desta linha
+                    Custo
                 </label>
 
                 <input
@@ -1298,7 +1298,7 @@ function iniciarProduto() {
             <div class="campo">
 
                 <label>
-                    Ação
+                    &nbsp;
                 </label>
 
                 <button
@@ -1601,7 +1601,7 @@ function iniciarProduto() {
 
             <div class="campo">
 
-                <label>Quantidade</label>
+                <label>Qt.</label>
 
                 <input
                     type="number"
@@ -1877,7 +1877,7 @@ function iniciarProduto() {
 
             <div class="campo">
 
-                <label>Quantidade</label>
+                <label>Qt.</label>
 
                 <input
                     type="number"

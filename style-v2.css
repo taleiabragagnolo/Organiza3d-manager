@@ -1135,16 +1135,79 @@ tbody tr:hover {
 
 /* 10. PRODUTOS E INSUMOS */
 
-.grupo-insumo-produto,
-.grupo-filamento-produto,
-.grupo-acessorio-produto,
-.grupo-embalagem-produto {
+/* Cadastro inicial do produto */
+
+#produto .formulario {
+    grid-template-columns:
+        repeat(12, minmax(0, 1fr));
+}
+
+#produto .formulario > .linha {
+    display: contents;
+}
+
+#produto .formulario > h3 {
     grid-column: 1 / -1;
+}
+
+/* Nome | Categoria | Tipo */
+
+#produto .campo:has(
+    #produto-produzido-nome
+) {
+    grid-column: span 5;
+}
+
+#produto .campo:has(
+    #produto-produzido-categoria
+) {
+    grid-column: span 3;
+}
+
+#produto .campo:has(
+    #produto-tipo-producao
+) {
+    grid-column: span 4;
+}
+
+/* Data | Quantidade produzida */
+
+#produto .campo:has(
+    #produto-produzido-data
+) {
+    grid-column: span 3;
+}
+
+#produto .campo:has(
+    #produto-produzido-quantidade
+) {
+    grid-column: span 3;
+}
+
+/* Quadros de filamentos, acessórios e embalagens */
+
+#produto .grupo-insumo-produto,
+#produto .grupo-filamento-produto,
+#produto .grupo-acessorio-produto,
+#produto .grupo-embalagem-produto {
+    display: grid;
+    grid-template-columns:
+        repeat(12, minmax(0, 1fr));
+    grid-column: 1 / -1;
+    gap: 10px;
     padding: 14px;
     border: 1px solid var(--borda);
     border-radius: var(--raio);
     background: var(--branco);
 }
+
+#lista-filamentos-produto,
+#lista-acessorios-produto,
+#lista-embalagens-produto {
+    grid-column: 1 / -1;
+}
+
+/* Insumo | Quantidade | Custo | Remover */
 
 .item-filamento-produto,
 .item-acessorio-produto,
@@ -1152,9 +1215,9 @@ tbody tr:hover {
     display: grid !important;
     grid-template-columns:
         minmax(220px, 2fr)
-        minmax(100px, 0.7fr)
-        minmax(120px, 0.8fr)
-        auto;
+        minmax(100px, 0.75fr)
+        minmax(120px, 0.9fr)
+        95px;
     gap: 10px;
     align-items: end;
 }
@@ -1165,15 +1228,20 @@ tbody tr:hover {
     grid-column: auto;
 }
 
-#produto .formulario {
-    grid-template-columns:
-        repeat(12, minmax(0, 1fr));
+/* Custo total | Adicionar */
+
+#produto .grupo-insumo-produto
+> .campo-total-insumo {
+    grid-column: span 7;
 }
 
-#produto .grupo-filamento-produto,
-#produto .grupo-acessorio-produto,
-#produto .grupo-embalagem-produto {
-    grid-column: 1 / -1;
+#produto .grupo-insumo-produto
+> .campo-adicionar-insumo {
+    grid-column: span 5;
+}
+
+#produto .campo-adicionar-insumo button {
+    width: 100%;
 }
 
 /* 11. MENSAGENS E ESTADOS */
@@ -1970,19 +2038,42 @@ select {
    PRODUTOS — RATEIO E PREÇO SUGERIDO
    ========================================================= */
 
+
+/* Custos de impressão em uma linha */
+
+#produto .linha-impressao-principal,
+#produto .linha-impressao-custos {
+    display: contents !important;
+}
+
+#produto .campo-impressora-produto {
+    grid-column: span 4 !important;
+}
+
+#produto .campo-tempo-produto,
+#produto .campo-custo-produto,
+#produto .campo-custo-producao-maquina {
+    grid-column: span 2 !important;
+}
+
+/* C. insumos | Perdas/Consumo | % Falhas */
+
 #produto .linha-rateio-producao {
     display: grid !important;
     grid-template-columns:
-        repeat(4, minmax(0, 1fr)) !important;
+        repeat(3, minmax(120px, 1fr)) !important;
     grid-column: 1 / -1 !important;
     gap: 10px !important;
     width: 100% !important;
     align-items: end !important;
 }
 
-#produto .campo-rateio-produto {
+#produto .linha-rateio-producao
+> .campo-rateio-produto {
     display: flex !important;
+    grid-column: auto !important;
     flex-direction: column !important;
+    width: auto !important;
     min-width: 0 !important;
 }
 
@@ -1995,6 +2086,67 @@ select {
 #produto .campo-rateio-produto input {
     width: 100% !important;
     height: 42px !important;
+}
+
+/* O rateio continua calculado, mas não aparece separado */
+
+#produto .campo-rateio-produto:has(
+    #produto-custo-rateio
+) {
+    display: none !important;
+}
+
+/* Seis resultados financeiros em uma linha */
+
+#produto .linha-resumo-financeiro {
+    display: grid !important;
+    grid-template-columns:
+        repeat(6, minmax(100px, 1fr)) !important;
+    grid-column: 1 / -1 !important;
+    gap: 10px !important;
+    width: 100% !important;
+    align-items: end !important;
+}
+
+#produto .linha-resumo-financeiro
+> .campo-resumo-produto {
+    display: flex !important;
+    grid-column: auto !important;
+    flex-direction: column !important;
+    width: auto !important;
+    min-width: 0 !important;
+}
+
+/* Oculta o custo duplicado e a quantidade disponível */
+
+#produto .campo-resumo-produto:has(
+    #produto-custo-insumos
+),
+#produto .campo-resumo-produto:has(
+    #produto-quantidade-disponivel
+) {
+    display: none !important;
+}
+
+/* Observações | Salvar | Limpar */
+
+#produto .campo-completo:has(
+    #produto-produzido-observacoes
+) {
+    grid-column: span 8 !important;
+}
+
+#produto .acoes-produto-producao {
+    display: flex !important;
+    grid-column: span 4 !important;
+    align-items: end !important;
+    gap: 10px !important;
+}
+
+#produto .acoes-produto-producao button {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
 }
 
 #produto .painel-preco-sugerido {
@@ -2106,13 +2258,15 @@ select {
 
     #produto .linha-rateio-producao {
         grid-template-columns:
-            repeat(2, minmax(0, 1fr)) !important;
+            repeat(3, minmax(0, 1fr)) !important;
     }
 
-    #produto .painel-preco-sugerido {
-        grid-template-columns: 1fr !important;
+    #produto .linha-resumo-financeiro {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr)) !important;
     }
 
+    #produto .painel-preco-sugerido,
     #produto .resultado-preco-sugerido {
         grid-template-columns: 1fr !important;
     }
@@ -2122,9 +2276,21 @@ select {
     }
 }
 
-@media (max-width: 520px) {
+@media (max-width: 680px) {
 
-    #produto .linha-rateio-producao {
+    #produto .campo-impressora-produto,
+    #produto .campo-tempo-produto,
+    #produto .campo-custo-produto,
+    #produto .campo-custo-producao-maquina,
+    #produto .campo-completo:has(
+        #produto-produzido-observacoes
+    ),
+    #produto .acoes-produto-producao {
+        grid-column: 1 / -1 !important;
+    }
+
+    #produto .linha-rateio-producao,
+    #produto .linha-resumo-financeiro {
         grid-template-columns: 1fr !important;
     }
 
