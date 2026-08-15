@@ -3287,8 +3287,23 @@ function iniciarProduto() {
             custoHoraImpressora:
                 maquina.custoPorHora,
 
-            custoMaquina:
-                maquina.custoTotal,
+                        custoMaquina:
+                calculos.custoMaquina,
+
+            custoDiretoProducao:
+                calculos.custoDiretoProducao,
+
+            custoUnitarioDireto:
+                calculos.custoUnitarioDireto,
+
+            totalPerdasConsumo:
+                calculos.totalPerdasConsumo,
+
+            percentualRateio:
+                calculos.percentualRateio,
+
+            custoRateio:
+                calculos.custoRateio,
 
             custoTotalProducao:
                 custoTotalProducao,
@@ -3323,7 +3338,129 @@ function iniciarProduto() {
 
     }
     
-    
+    // ==================================================
+    // EVENTOS DO PREÇO SUGERIDO
+    // ==================================================
+
+    function marcarPercentualLucroAtivo(
+        percentual
+    ) {
+
+        botoesPercentualLucroProduto
+            .forEach(
+                function (botao) {
+
+                    const percentualBotao =
+                        numeroPositivo(
+                            botao.dataset
+                                .percentualLucro
+                        );
+
+                    botao.classList.toggle(
+                        "ativo",
+                        percentualBotao ===
+                            numeroPositivo(
+                                percentual
+                            )
+                    );
+
+                }
+            );
+
+    }
+
+    botoesPercentualLucroProduto
+        .forEach(
+            function (botao) {
+
+                botao.addEventListener(
+                    "click",
+                    function () {
+
+                        const percentual =
+                            numeroPositivo(
+                                botao.dataset
+                                    .percentualLucro
+                            );
+
+                        if (
+                            campoLucroDesejadoProduto
+                        ) {
+
+                            campoLucroDesejadoProduto.value =
+                                percentual;
+
+                        }
+
+                        marcarPercentualLucroAtivo(
+                            percentual
+                        );
+
+                        atualizarCalculosProduto();
+
+                    }
+                );
+
+            }
+        );
+
+    if (campoLucroDesejadoProduto) {
+
+        campoLucroDesejadoProduto
+            .addEventListener(
+                "input",
+                function () {
+
+                    marcarPercentualLucroAtivo(
+                        campoLucroDesejadoProduto
+                            .value
+                    );
+
+                    atualizarCalculosProduto();
+
+                }
+            );
+
+    }
+
+    if (botaoUsarPrecoSugeridoProduto) {
+
+        botaoUsarPrecoSugeridoProduto
+            .addEventListener(
+                "click",
+                function () {
+
+                    const calculos =
+                        atualizarCalculosProduto();
+
+                    if (
+                        !campoPrecoVendaProduto ||
+                        !calculos
+                    ) {
+                        return;
+                    }
+
+                    campoPrecoVendaProduto.value =
+                        numeroPositivo(
+                            calculos.precoSugerido
+                        ).toFixed(2);
+
+                    atualizarCalculosProduto();
+
+                }
+            );
+
+    }
+
+    if (campoPrecoVendaProduto) {
+
+        campoPrecoVendaProduto
+            .addEventListener(
+                "input",
+                atualizarCalculosProduto
+            );
+
+    }    
    
 
     // ==================================================
@@ -4385,13 +4522,10 @@ dataProducao:
             custoEnergia:
                 calculos.custoEnergia,
 
-            custoHoraImpressora:
+                       custoHoraImpressora:
                 calculos.custoHoraImpressora,
 
             custoMaquina:
-                calculos.custoMaquina,
-
-                        custoMaquina:
                 calculos.custoMaquina,
 
             custoDiretoProducao:
@@ -4410,9 +4544,16 @@ dataProducao:
                 calculos.custoRateio,
 
             custoTotalProducao:
+                calculos.custoTotalProducao,
 
             custoUnitario:
                 calculos.custoUnitario,
+
+            percentualLucroDesejado:
+                calculos.percentualLucroDesejado,
+
+            precoSugerido:
+                calculos.precoSugerido,
 
             precoVenda:
                 calculos.precoVenda,
@@ -5639,6 +5780,16 @@ if (campoDataProduto) {
             campoPrecoVendaProduto.value = "";
         }
 
+                if (campoLucroDesejadoProduto) {
+
+            campoLucroDesejadoProduto.value =
+                "100";
+
+            marcarPercentualLucroAtivo(
+                100
+            );
+
+        }
         limparLinhasFilamentosProduto();
 
         limparLinhasAcessoriosProduto();
@@ -6415,7 +6566,21 @@ if (campoDataProduto) {
             campoPrecoVendaProduto.value =
                 produto.precoVenda ||
                 "";
+                   
+            if (campoLucroDesejadoProduto) {
 
+            const percentualSalvo =
+                produto.percentualLucroDesejado ??
+                100;
+
+            campoLucroDesejadoProduto.value =
+                percentualSalvo;
+
+            marcarPercentualLucroAtivo(
+                percentualSalvo
+            );
+
+        }
         }
 
         limparLinhasFilamentosProduto(
@@ -6924,9 +7089,10 @@ produtos =
                     : 0
             );
 
-        const custoUnitario =
+                const custoUnitario =
             produto
                 ? numeroPositivo(
+                    produto.custoUnitarioDireto ??
                     produto.custoUnitario
                 )
                 : 0;
@@ -7889,9 +8055,10 @@ produtos =
                     : 0
             );
 
-        const custoUnitario =
+                const custoUnitario =
             produto
                 ? numeroPositivo(
+                    produto.custoUnitarioDireto ??
                     produto.custoUnitario
                 )
                 : 0;
@@ -8865,6 +9032,7 @@ window.recuperarHorasProdutosExistentes =
                 CHAVE_PRODUTOS,
                 CHAVE_PERDAS,
                 CHAVE_CONSUMO_PROPRIO,
+                CHAVE_PREJUIZOS_FILAMENTOS,
                 CHAVE_MOVIMENTACOES,
                 CHAVE_FILAMENTOS,
                 CHAVE_ACESSORIOS,
