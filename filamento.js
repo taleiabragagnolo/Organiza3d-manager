@@ -1661,12 +1661,6 @@ function limparFormularioFilamento() {
             "";
     }
 
-    if (campoFilamentoCartao) {
-
-        campoFilamentoCartao.value =
-            "";
-    }
-
     if (campoFilamentoParcelas) {
 
         campoFilamentoParcelas.value =
