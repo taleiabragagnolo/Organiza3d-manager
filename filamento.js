@@ -895,11 +895,6 @@ const campoFilamentoFormaPagamento =
         "filamento-forma-pagamento"
     );
 
-const campoFilamentoCartao =
-    document.getElementById(
-        "filamento-cartao"
-    );
-
 const campoFilamentoParcelas =
     document.getElementById(
         "filamento-parcelas"
