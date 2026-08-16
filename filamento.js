@@ -1741,18 +1741,6 @@ function atualizarCamposPagamentoFilamento(
         formaPagamento ===
         "Cartão de crédito";
 
-    if (campoFilamentoCartao) {
-
-        campoFilamentoCartao.disabled =
-            !compraNoCredito;
-
-        if (!compraNoCredito) {
-
-            campoFilamentoCartao.value =
-                "";
-        }
-    }
-
     if (campoFilamentoParcelas) {
 
         campoFilamentoParcelas.disabled =
@@ -1849,11 +1837,6 @@ if (botaoSalvarFilamento) {
             const formaPagamento =
                 campoFilamentoFormaPagamento
                     ? campoFilamentoFormaPagamento.value
-                    : "";
-
-            const cartao =
-                campoFilamentoCartao
-                    ? campoFilamentoCartao.value.trim()
                     : "";
 
             const parcelas =
@@ -1953,19 +1936,6 @@ if (botaoSalvarFilamento) {
             if (
                 formaPagamento ===
                     "Cartão de crédito" &&
-                !cartao
-            ) {
-
-                alert(
-                    "Informe qual cartão foi utilizado."
-                );
-
-                return;
-            }
-
-            if (
-                formaPagamento ===
-                    "Cartão de crédito" &&
                 !primeiroVencimento
             ) {
 
@@ -2027,10 +1997,10 @@ if (botaoSalvarFilamento) {
 
                 formaPagamento,
 
-                cartao:
+                                cartao:
                     formaPagamento ===
                         "Cartão de crédito"
-                        ? cartao
+                        ? "Cartão empresarial"
                         : "",
 
                 parcelas:
@@ -2192,12 +2162,6 @@ function (id) {
 
         campoFilamentoFormaPagamento.value =
             filamento.formaPagamento || "";
-    }
-
-    if (campoFilamentoCartao) {
-
-        campoFilamentoCartao.value =
-            filamento.cartao || "";
     }
 
     if (campoFilamentoParcelas) {
