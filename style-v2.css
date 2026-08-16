@@ -1927,7 +1927,8 @@ select {
     }
 }
 /* =========================================================
-   FILAMENTOS — CADASTRO EM DUAS LINHAS
+   /* =========================================================
+   FILAMENTOS — CADASTRO EM TRÊS LINHAS HORIZONTAIS
    ========================================================= */
 
 #aba-filamentos .formulario-filamento-horizontal {
@@ -1937,7 +1938,8 @@ select {
     gap: 14px !important;
     width: 100% !important;
     padding: 16px !important;
-    overflow: visible !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
 }
 
 #aba-filamentos
@@ -1945,6 +1947,7 @@ select {
 > .linha {
     display: grid !important;
     width: 100% !important;
+    min-width: 950px !important;
     gap: 10px !important;
     align-items: end !important;
 }
@@ -1960,7 +1963,18 @@ select {
 .formulario-filamento-horizontal
 > .linha-filamento-valores {
     grid-template-columns:
-        repeat(5, minmax(0, 1fr))
+        repeat(5, minmax(0, 1fr)) !important;
+}
+
+#aba-filamentos
+.formulario-filamento-horizontal
+> .linha-filamento-pagamento {
+    grid-template-columns:
+        minmax(140px, 1.2fr)
+        minmax(120px, 1fr)
+        minmax(75px, 0.55fr)
+        minmax(135px, 1fr)
+        minmax(110px, 0.8fr)
         auto !important;
 }
 
@@ -2011,27 +2025,23 @@ select {
     white-space: nowrap !important;
 }
 
-/* Ajuste para celular */
+/* Mantém as três linhas horizontais em telas menores */
 
 @media (max-width: 680px) {
 
     #aba-filamentos
     .formulario-filamento-horizontal
-    > .linha-filamento-principal,
-
-    #aba-filamentos
-    .formulario-filamento-horizontal
-    > .linha-filamento-valores {
-        grid-template-columns: 1fr !important;
+    > .linha {
+        min-width: 950px !important;
     }
 
     #aba-filamentos .acoes-filamento {
-        width: 100% !important;
+        width: auto !important;
     }
 
     #salvar-filamento,
     #limpar-formulario-filamento {
-        flex: 1 1 50% !important;
+        flex: 0 0 auto !important;
     }
 }
 /* =========================================================

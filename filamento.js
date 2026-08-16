@@ -1684,11 +1684,15 @@ function limparFormularioFilamento() {
             "";
     }
 
-    if (campoFilamentoSituacaoPagamento) {
+        if (campoFilamentoSituacaoPagamento) {
 
         campoFilamentoSituacaoPagamento.value =
             "Pago";
     }
+
+    atualizarCamposPagamentoFilamento(
+        false
+    );
 
     filamentoEmEdicaoId = null;
 
@@ -1732,6 +1736,80 @@ if (campoFilamentoPesoRestante) {
     campoFilamentoPesoRestante.addEventListener(
         "input",
         atualizarCalculosFormularioFilamento
+    );
+}
+
+function atualizarCamposPagamentoFilamento(
+    alterarSituacao
+) {
+
+    const formaPagamento =
+        campoFilamentoFormaPagamento
+            ? campoFilamentoFormaPagamento.value
+            : "";
+
+    const compraNoCredito =
+        formaPagamento ===
+        "Cartão de crédito";
+
+    if (campoFilamentoCartao) {
+
+        campoFilamentoCartao.disabled =
+            !compraNoCredito;
+
+        if (!compraNoCredito) {
+
+            campoFilamentoCartao.value =
+                "";
+        }
+    }
+
+    if (campoFilamentoParcelas) {
+
+        campoFilamentoParcelas.disabled =
+            !compraNoCredito;
+
+        if (!compraNoCredito) {
+
+            campoFilamentoParcelas.value =
+                1;
+        }
+    }
+
+    if (campoFilamentoPrimeiroVencimento) {
+
+        campoFilamentoPrimeiroVencimento.disabled =
+            !compraNoCredito;
+
+        if (!compraNoCredito) {
+
+            campoFilamentoPrimeiroVencimento.value =
+                "";
+        }
+    }
+
+    if (
+        alterarSituacao &&
+        campoFilamentoSituacaoPagamento
+    ) {
+
+        campoFilamentoSituacaoPagamento.value =
+            compraNoCredito
+                ? "Pendente"
+                : "Pago";
+    }
+}
+
+if (campoFilamentoFormaPagamento) {
+
+    campoFilamentoFormaPagamento.addEventListener(
+        "change",
+        function () {
+
+            atualizarCamposPagamentoFilamento(
+                true
+            );
+        }
     );
 }
 
@@ -2024,8 +2102,19 @@ if (botaoSalvarFilamento) {
                 );
             }
 
-           const estavaEditando =
+          const estavaEditando =
     filamentoEmEdicaoId !== null;
+
+if (
+    typeof sincronizarCompraFilamentoFinanceiro ===
+    "function"
+) {
+
+    objeto.lancamentosFinanceirosIds =
+        sincronizarCompraFilamentoFinanceiro(
+            objeto
+        );
+}
 
 salvarFilamentos();
 
@@ -2141,7 +2230,11 @@ function (id) {
             "Pago";
     }
 
-    atualizarCalculosFormularioFilamento();
+        atualizarCalculosFormularioFilamento();
+
+    atualizarCamposPagamentoFilamento(
+        false
+    );
 
     botaoSalvarFilamento.textContent =
         "Salvar Alterações";
@@ -2414,13 +2507,44 @@ function (id) {
 window.excluirFilamento =
 function (id) {
 
-    if (
-        !confirm(
-            "Deseja excluir este filamento?"
-        )
-    ) {
+    const filamento =
+        filamentos.find(
+            function (item) {
+
+                return item.id === id;
+            }
+        );
+
+    if (!filamento) {
+
+        alert(
+            "Filamento não encontrado."
+        );
 
         return;
+    }
+
+    const confirmar =
+        confirm(
+            "Deseja excluir este filamento?\n\n" +
+            "A despesa financeira vinculada a esta compra " +
+            "também será excluída."
+        );
+
+    if (!confirmar) {
+
+        return;
+    }
+
+    if (
+        typeof sincronizarCompraFilamentoFinanceiro ===
+        "function"
+    ) {
+
+        sincronizarCompraFilamentoFinanceiro({
+            ...filamento,
+            valor: 0
+        });
     }
 
     filamentos =
@@ -2428,7 +2552,6 @@ function (id) {
             function (item) {
 
                 return item.id !== id;
-
             }
         );
 
@@ -2451,7 +2574,6 @@ function (id) {
 
         atualizarRelatorios();
     }
-
 };
 
 
