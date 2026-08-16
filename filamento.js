@@ -890,6 +890,31 @@ const campoFilamentoObservacoes =
         "filamento-observacoes"
     );
 
+const campoFilamentoFormaPagamento =
+    document.getElementById(
+        "filamento-forma-pagamento"
+    );
+
+const campoFilamentoCartao =
+    document.getElementById(
+        "filamento-cartao"
+    );
+
+const campoFilamentoParcelas =
+    document.getElementById(
+        "filamento-parcelas"
+    );
+
+const campoFilamentoPrimeiroVencimento =
+    document.getElementById(
+        "filamento-primeiro-vencimento"
+    );
+
+const campoFilamentoSituacaoPagamento =
+    document.getElementById(
+        "filamento-situacao-pagamento"
+    );
+
 
 // =========================
 // SALVAMENTO
@@ -1314,6 +1339,45 @@ function normalizarFilamentosAntigos() {
                         filamento.observacoes ||
                         "",
 
+                    formaPagamento:
+                        filamento.formaPagamento ||
+                        "",
+
+                    cartao:
+                        filamento.cartao ||
+                        "",
+
+                    parcelas:
+                        Math.max(
+                            1,
+                            Number(
+                                filamento.parcelas ||
+                                1
+                            )
+                        ),
+
+                    primeiroVencimento:
+                        filamento.primeiroVencimento ||
+                        "",
+
+                    situacaoPagamento:
+                        filamento.situacaoPagamento ||
+                        "",
+
+                    lancamentosFinanceirosIds:
+                        Array.isArray(
+                            filamento.lancamentosFinanceirosIds
+                        )
+                            ? filamento.lancamentosFinanceirosIds
+                            : (
+                                filamento.lancamentoFinanceiroId
+                                    ? [
+                                        filamento
+                                            .lancamentoFinanceiroId
+                                    ]
+                                    : []
+                            ),
+
                     status:
                         definirStatusFilamento(
                             pesoInicial,
@@ -1590,10 +1654,40 @@ function limparFormularioFilamento() {
             "Novo";
     }
 
-    if (campoFilamentoObservacoes) {
+        if (campoFilamentoObservacoes) {
 
         campoFilamentoObservacoes.value =
             "";
+    }
+
+    if (campoFilamentoFormaPagamento) {
+
+        campoFilamentoFormaPagamento.value =
+            "";
+    }
+
+    if (campoFilamentoCartao) {
+
+        campoFilamentoCartao.value =
+            "";
+    }
+
+    if (campoFilamentoParcelas) {
+
+        campoFilamentoParcelas.value =
+            1;
+    }
+
+    if (campoFilamentoPrimeiroVencimento) {
+
+        campoFilamentoPrimeiroVencimento.value =
+            "";
+    }
+
+    if (campoFilamentoSituacaoPagamento) {
+
+        campoFilamentoSituacaoPagamento.value =
+            "Pago";
     }
 
     filamentoEmEdicaoId = null;
@@ -1682,8 +1776,36 @@ if (botaoSalvarFilamento) {
             const fornecedor =
                 campoFilamentoFornecedor.value.trim();
 
-            const observacoes =
+                        const observacoes =
                 campoFilamentoObservacoes.value.trim();
+
+            const formaPagamento =
+                campoFilamentoFormaPagamento
+                    ? campoFilamentoFormaPagamento.value
+                    : "";
+
+            const cartao =
+                campoFilamentoCartao
+                    ? campoFilamentoCartao.value.trim()
+                    : "";
+
+            const parcelas =
+                campoFilamentoParcelas
+                    ? Number(
+                        campoFilamentoParcelas.value ||
+                        1
+                    )
+                    : 1;
+
+            const primeiroVencimento =
+                campoFilamentoPrimeiroVencimento
+                    ? campoFilamentoPrimeiroVencimento.value
+                    : "";
+
+            const situacaoPagamento =
+                campoFilamentoSituacaoPagamento
+                    ? campoFilamentoSituacaoPagamento.value
+                    : "Pago";
 
             if (!material) {
 
@@ -1728,13 +1850,60 @@ if (botaoSalvarFilamento) {
                 return;
             }
 
-            if (
+                        if (
                 Number.isNaN(valor) ||
                 valor < 0
             ) {
 
                 alert(
                     "Valor inválido."
+                );
+
+                return;
+            }
+
+            if (!formaPagamento) {
+
+                alert(
+                    "Selecione a forma de pagamento."
+                );
+
+                return;
+            }
+
+            if (
+                !Number.isInteger(parcelas) ||
+                parcelas < 1
+            ) {
+
+                alert(
+                    "Informe uma quantidade válida de parcelas."
+                );
+
+                return;
+            }
+
+            if (
+                formaPagamento ===
+                    "Cartão de crédito" &&
+                !cartao
+            ) {
+
+                alert(
+                    "Informe qual cartão foi utilizado."
+                );
+
+                return;
+            }
+
+            if (
+                formaPagamento ===
+                    "Cartão de crédito" &&
+                !primeiroVencimento
+            ) {
+
+                alert(
+                    "Informe o primeiro vencimento da compra."
                 );
 
                 return;
@@ -1751,6 +1920,19 @@ if (botaoSalvarFilamento) {
                     pesoInicial,
                     pesoRestante
                 );
+
+                        const filamentoAnterior =
+                filamentoEmEdicaoId !== null
+                    ? filamentos.find(
+                        function (item) {
+
+                            return (
+                                item.id ===
+                                filamentoEmEdicaoId
+                            );
+                        }
+                    )
+                    : null;
 
             const objeto = {
 
@@ -1775,6 +1957,38 @@ if (botaoSalvarFilamento) {
                 dataCompra,
 
                 fornecedor,
+
+                formaPagamento,
+
+                cartao:
+                    formaPagamento ===
+                        "Cartão de crédito"
+                        ? cartao
+                        : "",
+
+                parcelas:
+                    formaPagamento ===
+                        "Cartão de crédito"
+                        ? parcelas
+                        : 1,
+
+                primeiroVencimento:
+                    formaPagamento ===
+                        "Cartão de crédito"
+                        ? primeiroVencimento
+                        : "",
+
+                situacaoPagamento,
+
+                lancamentosFinanceirosIds:
+                    filamentoAnterior &&
+                    Array.isArray(
+                        filamentoAnterior
+                            .lancamentosFinanceirosIds
+                    )
+                        ? filamentoAnterior
+                            .lancamentosFinanceirosIds
+                        : [],
 
                 status,
 
@@ -1893,8 +2107,39 @@ function (id) {
     campoFilamentoFornecedor.value =
         filamento.fornecedor;
 
-    campoFilamentoObservacoes.value =
-        filamento.observacoes;
+        campoFilamentoObservacoes.value =
+        filamento.observacoes || "";
+
+    if (campoFilamentoFormaPagamento) {
+
+        campoFilamentoFormaPagamento.value =
+            filamento.formaPagamento || "";
+    }
+
+    if (campoFilamentoCartao) {
+
+        campoFilamentoCartao.value =
+            filamento.cartao || "";
+    }
+
+    if (campoFilamentoParcelas) {
+
+        campoFilamentoParcelas.value =
+            filamento.parcelas || 1;
+    }
+
+    if (campoFilamentoPrimeiroVencimento) {
+
+        campoFilamentoPrimeiroVencimento.value =
+            filamento.primeiroVencimento || "";
+    }
+
+    if (campoFilamentoSituacaoPagamento) {
+
+        campoFilamentoSituacaoPagamento.value =
+            filamento.situacaoPagamento ||
+            "Pago";
+    }
 
     atualizarCalculosFormularioFilamento();
 

@@ -3487,8 +3487,8 @@
                 readonly>
         </div>
 
-        <div class="campo campo-filamento-valor">
-            <label for="filamento-valor">Valor pago</label>
+                <div class="campo campo-filamento-valor">
+            <label for="filamento-valor">Valor da compra</label>
             <input
                 type="number"
                 id="filamento-valor"
@@ -3503,6 +3503,80 @@
                 type="text"
                 id="filamento-observacoes"
                 placeholder="Observações">
+        </div>
+
+    </div>
+
+    <!-- LINHA 3: PAGAMENTO -->
+
+    <div class="linha linha-filamento-pagamento">
+
+        <div class="campo campo-filamento-forma-pagamento">
+            <label for="filamento-forma-pagamento">
+                Pagamento
+            </label>
+
+            <select id="filamento-forma-pagamento">
+                <option value="">Selecione</option>
+                <option value="Pix">Pix</option>
+                <option value="Dinheiro">Dinheiro</option>
+                <option value="Cartão de débito">
+                    Cartão de débito
+                </option>
+                <option value="Cartão de crédito">
+                    Cartão de crédito
+                </option>
+                <option value="Transferência">
+                    Transferência
+                </option>
+                <option value="Boleto">Boleto</option>
+                <option value="Outro">Outro</option>
+            </select>
+        </div>
+
+        <div class="campo campo-filamento-cartao">
+            <label for="filamento-cartao">
+                Cartão
+            </label>
+
+            <input
+                type="text"
+                id="filamento-cartao"
+                placeholder="Ex.: Empresarial">
+        </div>
+
+        <div class="campo campo-filamento-parcelas">
+            <label for="filamento-parcelas">
+                Parcelas
+            </label>
+
+            <input
+                type="number"
+                id="filamento-parcelas"
+                min="1"
+                step="1"
+                value="1">
+        </div>
+
+        <div class="campo campo-filamento-vencimento">
+            <label for="filamento-primeiro-vencimento">
+                1º vencimento
+            </label>
+
+            <input
+                type="date"
+                id="filamento-primeiro-vencimento">
+        </div>
+
+        <div class="campo campo-filamento-situacao">
+            <label for="filamento-situacao-pagamento">
+                Situação
+            </label>
+
+            <select id="filamento-situacao-pagamento">
+                <option value="Pago">Pago</option>
+                <option value="Pendente">Pendente</option>
+            </select>
         </div>
 
         <div class="acoes-filamento">

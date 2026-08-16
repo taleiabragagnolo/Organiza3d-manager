@@ -138,6 +138,315 @@ function salvarLancamentosFinanceiros() {
     );
 }
 
+function calcularVencimentoParcelaFinanceiro(
+    primeiroVencimento,
+    mesesAdicionar
+) {
+    if (!primeiroVencimento) {
+        return "";
+    }
+
+    const partes =
+        primeiroVencimento.split("-");
+
+    if (partes.length !== 3) {
+        return primeiroVencimento;
+    }
+
+    const ano =
+        Number(partes[0]);
+
+    const mes =
+        Number(partes[1]) - 1;
+
+    const dia =
+        Number(partes[2]);
+
+    const primeiroDiaDoMes =
+        new Date(
+            ano,
+            mes + mesesAdicionar,
+            1
+        );
+
+    const ultimoDiaDoMes =
+        new Date(
+            primeiroDiaDoMes.getFullYear(),
+            primeiroDiaDoMes.getMonth() + 1,
+            0
+        ).getDate();
+
+    const diaAjustado =
+        Math.min(
+            dia,
+            ultimoDiaDoMes
+        );
+
+    const dataParcela =
+        new Date(
+            primeiroDiaDoMes.getFullYear(),
+            primeiroDiaDoMes.getMonth(),
+            diaAjustado
+        );
+
+    const anoFinal =
+        dataParcela.getFullYear();
+
+    const mesFinal =
+        String(
+            dataParcela.getMonth() + 1
+        ).padStart(2, "0");
+
+    const diaFinal =
+        String(
+            dataParcela.getDate()
+        ).padStart(2, "0");
+
+    return (
+        `${anoFinal}-` +
+        `${mesFinal}-` +
+        `${diaFinal}`
+    );
+}
+
+window.sincronizarCompraFilamentoFinanceiro =
+function (filamento) {
+
+    if (!filamento || !filamento.id) {
+        return [];
+    }
+
+    const idsAnteriores =
+        Array.isArray(
+            filamento.lancamentosFinanceirosIds
+        )
+            ? filamento.lancamentosFinanceirosIds
+            : [];
+
+    lancamentosFinanceiros =
+        lancamentosFinanceiros.filter(
+            function (lancamento) {
+
+                const idEstaVinculado =
+                    idsAnteriores.some(
+                        function (id) {
+
+                            return (
+                                String(id) ===
+                                String(lancamento.id)
+                            );
+                        }
+                    );
+
+                const pertenceAoFilamento =
+                    lancamento.origem ===
+                        "Filamento" &&
+                    String(
+                        lancamento.origemId
+                    ) ===
+                    String(
+                        filamento.id
+                    );
+
+                return (
+                    !idEstaVinculado &&
+                    !pertenceAoFilamento
+                );
+            }
+        );
+
+    const valorTotal =
+        Number(
+            filamento.valor || 0
+        );
+
+    if (
+        Number.isNaN(valorTotal) ||
+        valorTotal <= 0
+    ) {
+        salvarLancamentosFinanceiros();
+        mostrarLancamentosFinanceiros();
+
+        return [];
+    }
+
+    const formaPagamento =
+        filamento.formaPagamento || "";
+
+    const compraNoCredito =
+        formaPagamento ===
+        "Cartão de crédito";
+
+    const totalParcelas =
+        compraNoCredito
+            ? Math.max(
+                1,
+                Number(
+                    filamento.parcelas || 1
+                )
+            )
+            : 1;
+
+    const situacaoInformada =
+        filamento.situacaoPagamento ||
+        (
+            compraNoCredito
+                ? "Pendente"
+                : "Pago"
+        );
+
+    const valorTotalCentavos =
+        Math.round(
+            valorTotal * 100
+        );
+
+    const valorBaseCentavos =
+        Math.floor(
+            valorTotalCentavos /
+            totalParcelas
+        );
+
+    const centavosRestantes =
+        valorTotalCentavos -
+        (
+            valorBaseCentavos *
+            totalParcelas
+        );
+
+    const grupoCompraId =
+        `filamento-${filamento.id}`;
+
+    const novosIds = [];
+
+    for (
+        let indice = 0;
+        indice < totalParcelas;
+        indice += 1
+    ) {
+        const numeroParcela =
+            indice + 1;
+
+        const valorParcelaCentavos =
+            valorBaseCentavos +
+            (
+                indice < centavosRestantes
+                    ? 1
+                    : 0
+            );
+
+        const valorParcela =
+            valorParcelaCentavos / 100;
+
+        const dataVencimento =
+            compraNoCredito
+                ? calcularVencimentoParcelaFinanceiro(
+                    filamento.primeiroVencimento,
+                    indice
+                )
+                : (
+                    filamento.dataCompra ||
+                    obterDataHojeFinanceiro()
+                );
+
+        const parcelaPaga =
+            situacaoInformada ===
+            "Pago";
+
+        const idLancamento =
+            Date.now() +
+            indice +
+            Math.floor(
+                Math.random() * 1000
+            );
+
+        novosIds.push(
+            idLancamento
+        );
+
+        lancamentosFinanceiros.push({
+            id:
+                idLancamento,
+
+            tipo:
+                "Despesa",
+
+            categoria:
+                "Filamento",
+
+            descricao:
+                (
+                    `Compra de filamento ` +
+                    `${filamento.material || ""} ` +
+                    `${filamento.cor || ""}` +
+                    (
+                        totalParcelas > 1
+                            ? ` - Parcela ${numeroParcela}/${totalParcelas}`
+                            : ""
+                    )
+                ).trim(),
+
+            valor:
+                valorParcela,
+
+            data:
+                filamento.dataCompra ||
+                obterDataHojeFinanceiro(),
+
+            dataVencimento:
+                dataVencimento,
+
+            formaPagamento:
+                formaPagamento,
+
+            situacao:
+                parcelaPaga
+                    ? "Pago"
+                    : "Pendente",
+
+            valorPago:
+                parcelaPaga
+                    ? valorParcela
+                    : 0,
+
+            origem:
+                "Filamento",
+
+            origemId:
+                filamento.id,
+
+            grupoCompraId:
+                grupoCompraId,
+
+            parcelaNumero:
+                numeroParcela,
+
+            parcelaTotal:
+                totalParcelas,
+
+            cartao:
+                compraNoCredito
+                    ? filamento.cartao || ""
+                    : "",
+
+            observacoes:
+                filamento.fornecedor
+                    ? (
+                        `Fornecedor: ` +
+                        filamento.fornecedor
+                    )
+                    : "",
+
+            automatico:
+                true
+        });
+    }
+
+    salvarLancamentosFinanceiros();
+    mostrarLancamentosFinanceiros();
+
+    return novosIds;
+};
+
 // =========================
 // DATA
 // =========================
@@ -282,9 +591,43 @@ function normalizarLancamentosFinanceiros() {
                         valorPago,
 
                         
-                        origem:
+                                        origem:
                         lancamento.origem ||
                         "Manual",
+
+                    origemId:
+                        lancamento.origemId ||
+                        null,
+
+                    grupoCompraId:
+                        lancamento.grupoCompraId ||
+                        null,
+
+                    dataVencimento:
+                        lancamento.dataVencimento ||
+                        "",
+
+                    parcelaNumero:
+                        Math.max(
+                            1,
+                            Number(
+                                lancamento.parcelaNumero ||
+                                1
+                            )
+                        ),
+
+                    parcelaTotal:
+                        Math.max(
+                            1,
+                            Number(
+                                lancamento.parcelaTotal ||
+                                1
+                            )
+                        ),
+
+                    cartao:
+                        lancamento.cartao ||
+                        "",
 
                     observacoes:
                         lancamento.observacoes ||
