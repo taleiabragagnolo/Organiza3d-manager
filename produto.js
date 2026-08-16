@@ -3322,7 +3322,125 @@ function iniciarProduto() {
         };
 
     }
-    
+    // ==================================================
+// CARREGAR CUSTOS DA IMPRESSORA NA PRODUÇÃO
+// ==================================================
+
+function carregarDadosImpressoraProduto(
+    substituirValores = false
+) {
+
+    const impressora =
+        encontrarImpressora(
+            campoImpressoraProduto
+                ? campoImpressoraProduto.value
+                : ""
+        );
+
+    if (!impressora) {
+
+        if (substituirValores) {
+
+            if (campoPotenciaProduto) {
+                campoPotenciaProduto.value = "";
+            }
+
+            if (campoTarifaProduto) {
+                campoTarifaProduto.value = "";
+            }
+
+            if (campoCustoHoraProduto) {
+                campoCustoHoraProduto.value = "";
+            }
+
+        }
+
+        atualizarCalculosProduto();
+        return;
+
+    }
+
+    if (
+        campoPotenciaProduto &&
+        (
+            substituirValores ||
+            numeroPositivo(
+                campoPotenciaProduto.value
+            ) <= 0
+        )
+    ) {
+
+        campoPotenciaProduto.value =
+            impressora.potenciaWatts || 0;
+
+    }
+
+    if (
+        campoTarifaProduto &&
+        (
+            substituirValores ||
+            numeroPositivo(
+                campoTarifaProduto.value
+            ) <= 0
+        )
+    ) {
+
+        campoTarifaProduto.value =
+            impressora.tarifaEnergia || 0;
+
+    }
+
+    if (
+        campoCustoHoraProduto &&
+        (
+            substituirValores ||
+            numeroPositivo(
+                campoCustoHoraProduto.value
+            ) <= 0
+        )
+    ) {
+
+        campoCustoHoraProduto.value =
+            impressora.custoHoraImpressora || 0;
+
+    }
+
+    atualizarCalculosProduto();
+
+}
+
+if (campoImpressoraProduto) {
+
+    campoImpressoraProduto.addEventListener(
+        "change",
+        function () {
+
+            carregarDadosImpressoraProduto(
+                true
+            );
+
+        }
+    );
+
+}
+
+[
+    campoHorasProduto,
+    campoMinutosProduto
+].forEach(
+    function (campo) {
+
+        if (campo) {
+
+            campo.addEventListener(
+                "input",
+                atualizarCalculosProduto
+            );
+
+        }
+
+    }
+);
     // ==================================================
     // EVENTOS DO PREÇO SUGERIDO
     // ==================================================
@@ -6591,9 +6709,11 @@ if (campoDataProduto) {
             "aba-produtos-produzidos"
         );
 
-        atualizarCalculosProduto();
+        carregarDadosImpressoraProduto(
+    false
+);
 
-        window.scrollTo({
+window.scrollTo({
             top: 0,
             behavior: "smooth"
         });
