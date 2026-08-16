@@ -2701,14 +2701,54 @@ function iniciarProduto() {
     // CÁLCULO COMPLETO DA PRODUÇÃO
     // ==================================================
 
-     
-    // ==================================================
-    // PARTE 6B
-    // CÁLCULO COMPLETO DA PRODUÇÃO
-    // ==================================================
+        function atualizarCalculosProduto() {
 
-    function atualizarCalculosProduto() {
+        // ==============================================
+        // DADOS ATUAIS DA IMPRESSORA SELECIONADA
+        // ==============================================
 
+        const impressoraSelecionada =
+            encontrarImpressora(
+                campoImpressoraProduto
+                    ? campoImpressoraProduto.value
+                    : ""
+            );
+
+        if (impressoraSelecionada) {
+
+            if (
+                campoPotenciaProduto &&
+                numeroPositivo(
+                    campoPotenciaProduto.value
+                ) <= 0
+            ) {
+                campoPotenciaProduto.value =
+                    impressoraSelecionada.potenciaWatts || 0;
+            }
+
+            if (
+                campoTarifaProduto &&
+                numeroPositivo(
+                    campoTarifaProduto.value
+                ) <= 0
+            ) {
+                campoTarifaProduto.value =
+                    impressoraSelecionada.tarifaEnergia || 0;
+            }
+
+            if (
+                campoCustoHoraProduto &&
+                numeroPositivo(
+                    campoCustoHoraProduto.value
+                ) <= 0
+            ) {
+                campoCustoHoraProduto.value =
+                    impressoraSelecionada.custoHoraImpressora || 0;
+            }
+
+        }
+
+        
         // ==============================================
         // INSUMOS UTILIZADOS
         // ==============================================
