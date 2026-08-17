@@ -6229,20 +6229,83 @@ if (campoDataProduto) {
         }
 
         if (
-            !Array.isArray(produtos) ||
-            produtos.length === 0
-        ) {
+    !Array.isArray(produtos) ||
+    produtos.length === 0
+) {
 
-            listaProdutos.innerHTML =
-                "<p>Nenhum lote produzido cadastrado.</p>";
+    listaProdutos.innerHTML =
+        "<p>Nenhum lote produzido cadastrado.</p>";
 
-            atualizarResumoProdutos();
+    atualizarResumoProdutos();
+
+    return;
+}
+
+
+// ==================================================
+// INATIVAR AUTOMATICAMENTE PRODUTOS SEM ESTOQUE
+// ==================================================
+
+let statusEstoqueAlterado =
+    false;
+
+produtos.forEach(
+    function (produto) {
+
+        const quantidadeDisponivel =
+            numeroPositivo(
+                produto.quantidadeDisponivel
+            );
+
+        if (quantidadeDisponivel <= 0) {
+
+            if (
+                produto.status !== "Inativo" ||
+                produto.inativoPorEstoque !== true
+            ) {
+
+                produto.status =
+                    "Inativo";
+
+                produto.inativoPorEstoque =
+                    true;
+
+                statusEstoqueAlterado =
+                    true;
+
+            }
 
             return;
+
         }
 
+        if (
+            produto.inativoPorEstoque ===
+            true
+        ) {
 
-        const produtosAtivos =
+            produto.status =
+                "Ativo";
+
+            produto.inativoPorEstoque =
+                false;
+
+            statusEstoqueAlterado =
+                true;
+
+        }
+
+    }
+);
+
+if (statusEstoqueAlterado) {
+
+    salvarProdutos();
+
+}
+
+
+const produtosAtivos =
             produtos.filter(
                 function (produto) {
 
