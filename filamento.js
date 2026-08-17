@@ -3117,12 +3117,35 @@ function limparFormularioEmbalagem() {
 
     if (campoEmbalagemObservacoes) {
 
-        campoEmbalagemObservacoes.value =
-            "";
-    }
+    campoEmbalagemObservacoes.value =
+        "";
+}
 
-    embalagemEmEdicaoId = null;
+if (campoEmbalagemFormaPagamento) {
 
+    campoEmbalagemFormaPagamento.value =
+        "";
+}
+
+if (campoEmbalagemParcelas) {
+
+    campoEmbalagemParcelas.value =
+        "1";
+}
+
+if (campoEmbalagemPrimeiroVencimento) {
+
+    campoEmbalagemPrimeiroVencimento.value =
+        "";
+}
+
+if (campoEmbalagemSituacaoPagamento) {
+
+    campoEmbalagemSituacaoPagamento.value =
+        "Pago";
+}
+
+embalagemEmEdicaoId = null;
     if (botaoSalvarEmbalagem) {
 
         botaoSalvarEmbalagem.textContent =
@@ -3201,11 +3224,35 @@ function (id) {
 
     if (campoEmbalagemObservacoes) {
 
-        campoEmbalagemObservacoes.value =
-            embalagem.observacoes || "";
-    }
+    campoEmbalagemObservacoes.value =
+        embalagem.observacoes || "";
+}
 
-    calcularValorUnitarioEmbalagem();
+if (campoEmbalagemFormaPagamento) {
+
+    campoEmbalagemFormaPagamento.value =
+        embalagem.formaPagamento || "";
+}
+
+if (campoEmbalagemParcelas) {
+
+    campoEmbalagemParcelas.value =
+        embalagem.parcelas || 1;
+}
+
+if (campoEmbalagemPrimeiroVencimento) {
+
+    campoEmbalagemPrimeiroVencimento.value =
+        embalagem.primeiroVencimento || "";
+}
+
+if (campoEmbalagemSituacaoPagamento) {
+
+    campoEmbalagemSituacaoPagamento.value =
+        embalagem.situacaoPagamento || "Pago";
+}
+
+calcularValorUnitarioEmbalagem();
 
     if (botaoSalvarEmbalagem) {
 
@@ -3356,9 +3403,31 @@ if (botaoSalvarEmbalagem) {
                 campoEmbalagemFornecedor.value.trim();
 
             const observacoes =
-                campoEmbalagemObservacoes.value.trim();
+    campoEmbalagemObservacoes.value.trim();
 
-            if (!nome) {
+const formaPagamento =
+    campoEmbalagemFormaPagamento
+        ? campoEmbalagemFormaPagamento.value
+        : "";
+
+const parcelas =
+    campoEmbalagemParcelas
+        ? Number(
+            campoEmbalagemParcelas.value || 1
+        )
+        : 1;
+
+const primeiroVencimento =
+    campoEmbalagemPrimeiroVencimento
+        ? campoEmbalagemPrimeiroVencimento.value
+        : "";
+
+const situacaoPagamento =
+    campoEmbalagemSituacaoPagamento
+        ? campoEmbalagemSituacaoPagamento.value
+        : "Pago";
+
+if (!nome) {
 
                 alert(
                     "Informe o nome da embalagem."
@@ -3405,80 +3474,197 @@ if (botaoSalvarEmbalagem) {
             }
 
             if (
-                Number.isNaN(valorCompra) ||
-                valorCompra < 0
-            ) {
+    Number.isNaN(valorCompra) ||
+    valorCompra < 0
+) {
 
-                alert(
-                    "Valor inválido."
+    alert(
+        "Valor inválido."
+    );
+
+    return;
+
+}
+
+if (!formaPagamento) {
+
+    alert(
+        "Selecione a forma de pagamento."
+    );
+
+    return;
+
+}
+
+if (
+    !Number.isInteger(parcelas) ||
+    parcelas < 1
+) {
+
+    alert(
+        "Informe uma quantidade válida de parcelas."
+    );
+
+    return;
+
+}
+
+if (
+    formaPagamento ===
+        "Cartão de crédito" &&
+    !primeiroVencimento
+) {
+
+    alert(
+        "Informe o primeiro vencimento da compra."
+    );
+
+    return;
+
+}
+
+if (
+    typeof sincronizarCompraEmbalagemFinanceiro !==
+    "function"
+) {
+
+    alert(
+        "A integração com o Financeiro não foi carregada. Atualize a página e tente novamente."
+    );
+
+    return;
+
+}
+
+const embalagemAnterior =
+    embalagemEmEdicaoId !== null
+        ? embalagens.find(
+            function (item) {
+
+                return (
+                    item.id ===
+                    embalagemEmEdicaoId
                 );
 
-                return;
+            }
+        )
+        : null;
+
+const objetoEmbalagem = {
+
+    id:
+        embalagemEmEdicaoId ??
+        Date.now(),
+
+    nome:
+        nome,
+
+    categoria:
+        categoria,
+
+    quantidade:
+        quantidade,
+
+    estoqueMinimo:
+        estoqueMinimo,
+
+    valorCompra:
+        valorCompra,
+
+    valorUnitario:
+        valorUnitario,
+
+    dataCompra:
+        dataCompra,
+
+    fornecedor:
+        fornecedor,
+
+    observacoes:
+        observacoes,
+
+    formaPagamento:
+        formaPagamento,
+
+    cartao:
+        formaPagamento ===
+            "Cartão de crédito"
+            ? "Cartão empresarial"
+            : "",
+
+    parcelas:
+        formaPagamento ===
+            "Cartão de crédito"
+            ? parcelas
+            : 1,
+
+    primeiroVencimento:
+        formaPagamento ===
+            "Cartão de crédito"
+            ? primeiroVencimento
+            : "",
+
+    situacaoPagamento:
+        situacaoPagamento,
+
+    lancamentosFinanceirosIds:
+        embalagemAnterior &&
+        Array.isArray(
+            embalagemAnterior
+                .lancamentosFinanceirosIds
+        )
+            ? embalagemAnterior
+                .lancamentosFinanceirosIds
+            : []
+
+};
+
+const estavaEditando =
+    embalagemEmEdicaoId !== null;
+
+if (estavaEditando) {
+
+    const indice =
+        embalagens.findIndex(
+            function (item) {
+
+                return (
+                    item.id ===
+                    embalagemEmEdicaoId
+                );
 
             }
+        );
 
-            const dados = {
+    if (indice === -1) {
 
-                nome,
-                categoria,
-                quantidade,
-                estoqueMinimo,
-                valorCompra,
-                valorUnitario,
-                dataCompra,
-                fornecedor,
-                observacoes
+        alert(
+            "Embalagem não encontrada."
+        );
 
-            };
+        return;
+    }
 
-            const estavaEditando =
-                embalagemEmEdicaoId !== null;
+    embalagens[indice] =
+        objetoEmbalagem;
 
-            if (estavaEditando) {
+} else {
 
-                const indice =
-                    embalagens.findIndex(
-                        function (item) {
+    embalagens.push(
+        objetoEmbalagem
+    );
 
-                            return (
-                                item.id ===
-                                embalagemEmEdicaoId
-                            );
+}
 
-                        }
-                    );
+objetoEmbalagem
+    .lancamentosFinanceirosIds =
+        sincronizarCompraEmbalagemFinanceiro(
+            objetoEmbalagem
+        );
 
-                if (indice >= 0) {
-
-                    embalagens[indice] = {
-
-                        id:
-                            embalagemEmEdicaoId,
-
-                        ...dados
-
-                    };
-
-                }
-
-            } else {
-
-                embalagens.push({
-
-                    id: Date.now(),
-
-                    ...dados
-
-                });
-
-            }
-
-            salvarEmbalagens();
-
-            mostrarEmbalagens();
-
-            limparFormularioEmbalagem();
-
+salvarEmbalagens();
+mostrarEmbalagens();
+limparFormularioEmbalagem();
             if (
                 typeof atualizarDashboardCompleto ===
                 "function"
