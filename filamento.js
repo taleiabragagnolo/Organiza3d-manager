@@ -113,6 +113,26 @@ const campoAcessorioValorUnitario =
         "acessorio-valor-unitario"
     );
 
+const campoAcessorioFormaPagamento =
+    document.getElementById(
+        "acessorio-forma-pagamento"
+    );
+
+const campoAcessorioParcelas =
+    document.getElementById(
+        "acessorio-parcelas"
+    );
+
+const campoAcessorioPrimeiroVencimento =
+    document.getElementById(
+        "acessorio-primeiro-vencimento"
+    );
+
+const campoAcessorioSituacaoPagamento =
+    document.getElementById(
+        "acessorio-situacao-pagamento"
+    );
+
 const botaoSalvarAcessorio =
     document.getElementById(
         "salvar-acessorio"
@@ -383,14 +403,32 @@ function limparFormularioAcessorio() {
         campoObservacoes.value = "";
     }
 
+    if (campoAcessorioFormaPagamento) {
+        campoAcessorioFormaPagamento.value = "";
+    }
+
+    if (campoAcessorioParcelas) {
+        campoAcessorioParcelas.value = "1";
+    }
+
+    if (campoAcessorioPrimeiroVencimento) {
+        campoAcessorioPrimeiroVencimento.value = "";
+    }
+
+    if (campoAcessorioSituacaoPagamento) {
+        campoAcessorioSituacaoPagamento.value =
+            "Pago";
+    }
+
     acessorioEmEdicaoId = null;
 
     if (botaoSalvarAcessorio) {
-
         botaoSalvarAcessorio.textContent =
             "Salvar Acessório";
     }
+
 }
+
 
 window.editarAcessorio = function (id) {
 
@@ -448,6 +486,26 @@ window.editarAcessorio = function (id) {
         "acessorio-observacoes"
     ).value = acessorio.observacoes || "";
 
+    if (campoAcessorioFormaPagamento) {
+        campoAcessorioFormaPagamento.value =
+            acessorio.formaPagamento || "";
+    }
+
+    if (campoAcessorioParcelas) {
+        campoAcessorioParcelas.value =
+            acessorio.parcelas || 1;
+    }
+
+    if (campoAcessorioPrimeiroVencimento) {
+        campoAcessorioPrimeiroVencimento.value =
+            acessorio.primeiroVencimento || "";
+    }
+
+    if (campoAcessorioSituacaoPagamento) {
+        campoAcessorioSituacaoPagamento.value =
+            acessorio.situacaoPagamento || "Pago";
+    }
+
     calcularValorUnitarioAcessorio();
 
     if (botaoSalvarAcessorio) {
@@ -460,10 +518,11 @@ window.editarAcessorio = function (id) {
         "aba-acessorios"
     );
 
-    window.scrollTo({
+     window.scrollTo({
         top: 0,
         behavior: "smooth"
     });
+
 };
 
 window.excluirAcessorio = function (id) {
@@ -595,11 +654,33 @@ if (botaoSalvarAcessorio) {
                 ).value.trim();
 
             const observacoes =
-                document.getElementById(
-                    "acessorio-observacoes"
-                ).value.trim();
+    document.getElementById(
+        "acessorio-observacoes"
+    ).value.trim();
 
-            if (!nome) {
+const formaPagamento =
+    campoAcessorioFormaPagamento
+        ? campoAcessorioFormaPagamento.value
+        : "";
+
+const parcelas =
+    campoAcessorioParcelas
+        ? Number(
+            campoAcessorioParcelas.value || 1
+        )
+        : 1;
+
+const primeiroVencimento =
+    campoAcessorioPrimeiroVencimento
+        ? campoAcessorioPrimeiroVencimento.value
+        : "";
+
+const situacaoPagamento =
+    campoAcessorioSituacaoPagamento
+        ? campoAcessorioSituacaoPagamento.value
+        : "Pago";
+
+if (!nome) {
 
                 alert(
                     "Informe o nome do acessório."
@@ -651,75 +732,201 @@ if (botaoSalvarAcessorio) {
             }
 
             if (
-                Number.isNaN(valorCompra) ||
-                valorCompra < 0
-            ) {
+    Number.isNaN(valorCompra) ||
+    valorCompra < 0
+) {
 
-                alert(
-                    "Informe um valor de compra válido."
+    alert(
+        "Informe um valor de compra válido."
+    );
+
+    return;
+}
+
+if (!formaPagamento) {
+
+    alert(
+        "Selecione a forma de pagamento."
+    );
+
+    return;
+}
+
+if (
+    !Number.isInteger(parcelas) ||
+    parcelas < 1
+) {
+
+    alert(
+        "Informe uma quantidade válida de parcelas."
+    );
+
+    return;
+}
+
+if (
+    formaPagamento ===
+        "Cartão de crédito" &&
+    !primeiroVencimento
+) {
+
+    alert(
+        "Informe o primeiro vencimento da compra."
+    );
+
+    return;
+}
+
+if (
+    typeof sincronizarCompraAcessorioFinanceiro !==
+    "function"
+) {
+
+    alert(
+        "A integração com o Financeiro não foi carregada. Atualize a página e tente novamente."
+    );
+
+    return;
+}
+
+const acessorioAnterior =
+    acessorioEmEdicaoId !== null
+        ? acessorios.find(
+            function (item) {
+
+                return (
+                    item.id ===
+                    acessorioEmEdicaoId
                 );
 
-                return;
             }
+        )
+        : null;
 
-            const dadosAcessorio = {
-                nome: nome,
-                categoria: categoria,
-                quantidade: quantidade,
-                estoqueMinimo: estoqueMinimo,
-                unidadeCompra: unidadeCompra,
-                valorCompra: valorCompra,
-                valorUnitario: valorUnitario,
-                dataCompra: dataCompra,
-                fornecedor: fornecedor,
-                observacoes: observacoes
-            };
+const objetoAcessorio = {
 
-            if (
-                acessorioEmEdicaoId !== null
-            ) {
+    id:
+        acessorioEmEdicaoId ??
+        Date.now(),
 
-                const indice =
-                    acessorios.findIndex(
-                        function (acessorio) {
-                            return acessorio.id ===
-                                acessorioEmEdicaoId;
-                        }
-                    );
+    nome:
+        nome,
 
-                if (indice === -1) {
+    categoria:
+        categoria,
 
-                    alert(
-                        "Acessório não encontrado."
-                    );
+    quantidade:
+        quantidade,
 
-                    return;
-                }
+    estoqueMinimo:
+        estoqueMinimo,
 
-                acessorios[indice] = {
-                    id: acessorioEmEdicaoId,
-                    ...dadosAcessorio
-                };
+    unidadeCompra:
+        unidadeCompra,
 
-                alert(
-                    "Acessório atualizado com sucesso!"
+    valorCompra:
+        valorCompra,
+
+    valorUnitario:
+        valorUnitario,
+
+    dataCompra:
+        dataCompra,
+
+    fornecedor:
+        fornecedor,
+
+    observacoes:
+        observacoes,
+
+    formaPagamento:
+        formaPagamento,
+
+    cartao:
+        formaPagamento ===
+            "Cartão de crédito"
+            ? "Cartão empresarial"
+            : "",
+
+    parcelas:
+        formaPagamento ===
+            "Cartão de crédito"
+            ? parcelas
+            : 1,
+
+    primeiroVencimento:
+        formaPagamento ===
+            "Cartão de crédito"
+            ? primeiroVencimento
+            : "",
+
+    situacaoPagamento:
+        situacaoPagamento,
+
+    lancamentosFinanceirosIds:
+        acessorioAnterior &&
+        Array.isArray(
+            acessorioAnterior
+                .lancamentosFinanceirosIds
+        )
+            ? acessorioAnterior
+                .lancamentosFinanceirosIds
+            : []
+
+};
+
+const estavaEditando =
+    acessorioEmEdicaoId !== null;
+
+if (estavaEditando) {
+
+    const indice =
+        acessorios.findIndex(
+            function (acessorio) {
+
+                return (
+                    acessorio.id ===
+                    acessorioEmEdicaoId
                 );
 
-            } else {
-
-                acessorios.push({
-                    id: Date.now(),
-                    ...dadosAcessorio
-                });
-
-                alert(
-                    "Acessório cadastrado com sucesso!"
-                );
             }
+        );
 
-            salvarAcessorios();
-            mostrarAcessorios();
-            limparFormularioAcessorio();
+    if (indice === -1) {
+
+        alert(
+            "Acessório não encontrado."
+        );
+
+        return;
+    }
+
+    acessorios[indice] =
+        objetoAcessorio;
+
+} else {
+
+    acessorios.push(
+        objetoAcessorio
+    );
+
+}
+
+objetoAcessorio
+    .lancamentosFinanceirosIds =
+        sincronizarCompraAcessorioFinanceiro(
+            objetoAcessorio
+        );
+
+salvarAcessorios();
+mostrarAcessorios();
+limparFormularioAcessorio();
+
+alert(
+    estavaEditando
+        ? "Acessório atualizado com sucesso!"
+        : "Acessório cadastrado com sucesso!"
+);
 
             if (
                 typeof atualizarDashboardCompleto ===
@@ -2631,6 +2838,26 @@ const campoEmbalagemFornecedor =
 const campoEmbalagemObservacoes =
     document.getElementById(
         "embalagem-observacoes"
+    );
+
+const campoEmbalagemFormaPagamento =
+    document.getElementById(
+        "embalagem-forma-pagamento"
+    );
+
+const campoEmbalagemParcelas =
+    document.getElementById(
+        "embalagem-parcelas"
+    );
+
+const campoEmbalagemPrimeiroVencimento =
+    document.getElementById(
+        "embalagem-primeiro-vencimento"
+    );
+
+const campoEmbalagemSituacaoPagamento =
+    document.getElementById(
+        "embalagem-situacao-pagamento"
     );
 
 const botaoSalvarEmbalagem =

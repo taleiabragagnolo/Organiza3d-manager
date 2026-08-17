@@ -448,6 +448,340 @@ function (filamento) {
 };
 
 // =========================
+// SINCRONIZAR COMPRA DE INSUMO
+// ACESSÓRIOS E EMBALAGENS
+// =========================
+
+function sincronizarCompraInsumoFinanceiro(
+    item,
+    configuracao
+) {
+
+    if (
+        !item ||
+        !item.id ||
+        !configuracao
+    ) {
+        return [];
+    }
+
+    const origem =
+        configuracao.origem;
+
+    const categoria =
+        configuracao.categoria;
+
+    const descricaoCompra =
+        configuracao.descricaoCompra;
+
+    const prefixoGrupo =
+        configuracao.prefixoGrupo;
+
+    const idsAnteriores =
+        Array.isArray(
+            item.lancamentosFinanceirosIds
+        )
+            ? item.lancamentosFinanceirosIds
+            : [];
+
+    // Remove somente lançamentos automáticos
+    // anteriormente vinculados a este cadastro.
+    lancamentosFinanceiros =
+        lancamentosFinanceiros.filter(
+            function (lancamento) {
+
+                const idEstaVinculado =
+                    idsAnteriores.some(
+                        function (id) {
+
+                            return (
+                                String(id) ===
+                                String(lancamento.id)
+                            );
+
+                        }
+                    );
+
+                const pertenceAoItem =
+                    lancamento.origem ===
+                        origem &&
+                    String(
+                        lancamento.origemId
+                    ) ===
+                    String(
+                        item.id
+                    ) &&
+                    lancamento.automatico ===
+                        true;
+
+                return (
+                    !idEstaVinculado &&
+                    !pertenceAoItem
+                );
+
+            }
+        );
+
+    const valorTotal =
+        Number(
+            item.valorCompra || 0
+        );
+
+    if (
+        Number.isNaN(valorTotal) ||
+        valorTotal <= 0
+    ) {
+
+        salvarLancamentosFinanceiros();
+        mostrarLancamentosFinanceiros();
+
+        return [];
+
+    }
+
+    const formaPagamento =
+        item.formaPagamento || "";
+
+    const compraNoCredito =
+        formaPagamento ===
+        "Cartão de crédito";
+
+    const totalParcelas =
+        compraNoCredito
+            ? Math.max(
+                1,
+                Number(
+                    item.parcelas || 1
+                )
+            )
+            : 1;
+
+    const situacaoInformada =
+        item.situacaoPagamento ||
+        (
+            compraNoCredito
+                ? "Pendente"
+                : "Pago"
+        );
+
+    const valorTotalCentavos =
+        Math.round(
+            valorTotal * 100
+        );
+
+    const valorBaseCentavos =
+        Math.floor(
+            valorTotalCentavos /
+            totalParcelas
+        );
+
+    const centavosRestantes =
+        valorTotalCentavos -
+        (
+            valorBaseCentavos *
+            totalParcelas
+        );
+
+    const grupoCompraId =
+        `${prefixoGrupo}-${item.id}`;
+
+    const novosIds = [];
+
+    for (
+        let indice = 0;
+        indice < totalParcelas;
+        indice += 1
+    ) {
+
+        const numeroParcela =
+            indice + 1;
+
+        const valorParcelaCentavos =
+            valorBaseCentavos +
+            (
+                indice < centavosRestantes
+                    ? 1
+                    : 0
+            );
+
+        const valorParcela =
+            valorParcelaCentavos / 100;
+
+        const dataVencimento =
+            compraNoCredito
+                ? calcularVencimentoParcelaFinanceiro(
+                    item.primeiroVencimento,
+                    indice
+                )
+                : (
+                    item.dataCompra ||
+                    obterDataHojeFinanceiro()
+                );
+
+        const parcelaPaga =
+            situacaoInformada ===
+            "Pago";
+
+        const idLancamento =
+            Date.now() +
+            indice +
+            Math.floor(
+                Math.random() * 1000
+            );
+
+        novosIds.push(
+            idLancamento
+        );
+
+        lancamentosFinanceiros.push({
+
+            id:
+                idLancamento,
+
+            tipo:
+                "Despesa",
+
+            categoria:
+                categoria,
+
+            descricao:
+                (
+                    `${descricaoCompra} ` +
+                    `${item.nome || ""}` +
+                    (
+                        totalParcelas > 1
+                            ? (
+                                ` - Parcela ` +
+                                `${numeroParcela}/` +
+                                `${totalParcelas}`
+                            )
+                            : ""
+                    )
+                ).trim(),
+
+            valor:
+                valorParcela,
+
+            data:
+                item.dataCompra ||
+                obterDataHojeFinanceiro(),
+
+            dataVencimento:
+                dataVencimento,
+
+            formaPagamento:
+                formaPagamento,
+
+            situacao:
+                parcelaPaga
+                    ? "Pago"
+                    : "Pendente",
+
+            valorPago:
+                parcelaPaga
+                    ? valorParcela
+                    : 0,
+
+            origem:
+                origem,
+
+            origemId:
+                item.id,
+
+            grupoCompraId:
+                grupoCompraId,
+
+            parcelaNumero:
+                numeroParcela,
+
+            parcelaTotal:
+                totalParcelas,
+
+            cartao:
+                compraNoCredito
+                    ? (
+                        item.cartao ||
+                        "Cartão empresarial"
+                    )
+                    : "",
+
+            observacoes:
+                item.fornecedor
+                    ? (
+                        `Fornecedor: ` +
+                        item.fornecedor
+                    )
+                    : "",
+
+            automatico:
+                true
+
+        });
+
+    }
+
+    salvarLancamentosFinanceiros();
+    mostrarLancamentosFinanceiros();
+
+    return novosIds;
+
+}
+
+
+// =========================
+// COMPRA DE ACESSÓRIO
+// =========================
+
+window.sincronizarCompraAcessorioFinanceiro =
+function (acessorio) {
+
+    return sincronizarCompraInsumoFinanceiro(
+        acessorio,
+        {
+            origem:
+                "Acessório",
+
+            categoria:
+                "Acessório",
+
+            descricaoCompra:
+                "Compra de acessório",
+
+            prefixoGrupo:
+                "acessorio"
+        }
+    );
+
+};
+
+
+// =========================
+// COMPRA DE EMBALAGEM
+// =========================
+
+window.sincronizarCompraEmbalagemFinanceiro =
+function (embalagem) {
+
+    return sincronizarCompraInsumoFinanceiro(
+        embalagem,
+        {
+            origem:
+                "Embalagem",
+
+            categoria:
+                "Embalagem",
+
+            descricaoCompra:
+                "Compra de embalagem",
+
+            prefixoGrupo:
+                "embalagem"
+        }
+    );
+
+};
+
+// =========================
 // DATA
 // =========================
 

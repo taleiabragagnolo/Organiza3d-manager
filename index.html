@@ -3836,18 +3836,91 @@
 
 </div>
 
-<button
-    id="salvar-acessorio"
-    class="botao-principal"
-    type="button">
-    Salvar
-</button>
+<div class="linha linha-filamento-pagamento">
 
-<button
-    id="limpar-formulario-acessorio"
-    type="button">
-    Limpar
-</button>
+    <div class="campo campo-filamento-forma-pagamento">
+
+        <label for="acessorio-forma-pagamento">
+            Pagamento
+        </label>
+
+        <select id="acessorio-forma-pagamento">
+            <option value="">Selecione</option>
+            <option value="Pix">Pix</option>
+            <option value="Dinheiro">Dinheiro</option>
+            <option value="Cartão de débito">
+                Cartão de débito
+            </option>
+            <option value="Cartão de crédito">
+                Cartão de crédito
+            </option>
+            <option value="Transferência">
+                Transferência
+            </option>
+            <option value="Boleto">Boleto</option>
+            <option value="Outro">Outro</option>
+        </select>
+
+    </div>
+
+    <div class="campo campo-filamento-parcelas">
+
+        <label for="acessorio-parcelas">
+            Parcelas
+        </label>
+
+        <input
+            type="number"
+            id="acessorio-parcelas"
+            min="1"
+            step="1"
+            value="1">
+
+    </div>
+
+    <div class="campo campo-filamento-vencimento">
+
+        <label for="acessorio-primeiro-vencimento">
+            1º vencimento
+        </label>
+
+        <input
+            type="date"
+            id="acessorio-primeiro-vencimento">
+
+    </div>
+
+    <div class="campo campo-filamento-situacao">
+
+        <label for="acessorio-situacao-pagamento">
+            Situação
+        </label>
+
+        <select id="acessorio-situacao-pagamento">
+            <option value="Pago">Pago</option>
+            <option value="Pendente">Pendente</option>
+        </select>
+
+    </div>
+
+    <div class="acoes-filamento">
+
+        <button
+            id="salvar-acessorio"
+            class="botao-principal"
+            type="button">
+            Salvar
+        </button>
+
+        <button
+            id="limpar-formulario-acessorio"
+            type="button">
+            Limpar
+        </button>
+
+    </div>
+
+</div>
 
 </div>
 
@@ -4086,18 +4159,91 @@
 
 </div>
 
-<button
-    id="salvar-embalagem"
-    class="botao-principal"
-    type="button">
-    Salvar 
-</button>
+<div class="linha linha-filamento-pagamento">
 
-<button
-    id="limpar-formulario-embalagem"
-    type="button">
-    Limpar 
-</button>
+    <div class="campo campo-filamento-forma-pagamento">
+
+        <label for="embalagem-forma-pagamento">
+            Pagamento
+        </label>
+
+        <select id="embalagem-forma-pagamento">
+            <option value="">Selecione</option>
+            <option value="Pix">Pix</option>
+            <option value="Dinheiro">Dinheiro</option>
+            <option value="Cartão de débito">
+                Cartão de débito
+            </option>
+            <option value="Cartão de crédito">
+                Cartão de crédito
+            </option>
+            <option value="Transferência">
+                Transferência
+            </option>
+            <option value="Boleto">Boleto</option>
+            <option value="Outro">Outro</option>
+        </select>
+
+    </div>
+
+    <div class="campo campo-filamento-parcelas">
+
+        <label for="embalagem-parcelas">
+            Parcelas
+        </label>
+
+        <input
+            type="number"
+            id="embalagem-parcelas"
+            min="1"
+            step="1"
+            value="1">
+
+    </div>
+
+    <div class="campo campo-filamento-vencimento">
+
+        <label for="embalagem-primeiro-vencimento">
+            1º vencimento
+        </label>
+
+        <input
+            type="date"
+            id="embalagem-primeiro-vencimento">
+
+    </div>
+
+    <div class="campo campo-filamento-situacao">
+
+        <label for="embalagem-situacao-pagamento">
+            Situação
+        </label>
+
+        <select id="embalagem-situacao-pagamento">
+            <option value="Pago">Pago</option>
+            <option value="Pendente">Pendente</option>
+        </select>
+
+    </div>
+
+    <div class="acoes-filamento">
+
+        <button
+            id="salvar-embalagem"
+            class="botao-principal"
+            type="button">
+            Salvar
+        </button>
+
+        <button
+            id="limpar-formulario-embalagem"
+            type="button">
+            Limpar
+        </button>
+
+    </div>
+
+</div>
 
 </div>
 
