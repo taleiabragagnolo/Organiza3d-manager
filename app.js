@@ -12,9 +12,39 @@
 
 document.addEventListener(
     "DOMContentLoaded",
-    function () {
+    async function () {
 
-        iniciarAplicacao();
+        try {
+
+            if (
+                typeof iniciarSincronizacao ===
+                "function"
+            ) {
+
+                const acessoAutorizado =
+                    await iniciarSincronizacao();
+
+                if (!acessoAutorizado) {
+                    return;
+                }
+
+            }
+
+            iniciarAplicacao();
+
+        } catch (erro) {
+
+            console.error(
+                "Erro ao iniciar o Organiza 3D:",
+                erro
+            );
+
+            alert(
+                "Não foi possível iniciar o sistema. " +
+                "Verifique sua conexão e tente novamente."
+            );
+
+        }
 
     }
 );
