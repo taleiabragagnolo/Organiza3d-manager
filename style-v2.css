@@ -370,6 +370,24 @@ button:disabled {
     line-height: 1.1;
 }
 
+.card.card-resultado-positivo {
+    border-top-color: #2f7d4a;
+    background: #edf7f0;
+}
+
+.card.card-resultado-positivo strong {
+    color: #24653b;
+}
+
+.card.card-resultado-negativo {
+    border-top-color: #b44343;
+    background: #fff0f0;
+}
+
+.card.card-resultado-negativo strong {
+    color: #a22f2f;
+}
+
 /* 6. FORMULÁRIOS HORIZONTAIS */
 
 .formulario {
@@ -2068,12 +2086,12 @@ select {
     grid-column: span 2 !important;
 }
 
-/* C. insumos | Perdas/Consumo | % Falhas */
+/* Custo real | falhas 10% | consumo interno 3% | proteção 13% */
 
 #produto .linha-rateio-producao {
     display: grid !important;
     grid-template-columns:
-        repeat(3, minmax(120px, 1fr)) !important;
+        repeat(4, minmax(120px, 1fr)) !important;
     grid-column: 1 / -1 !important;
     gap: 10px !important;
     width: 100% !important;
