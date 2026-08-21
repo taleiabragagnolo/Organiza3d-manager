@@ -60,8 +60,7 @@ configurarSaidaOrganiza();
     await sincronizarDadosIniciais();
 
     instalarSincronizacaoAutomatica();
-    configurarSaidaOrganiza();
-
+    
     organizaSincronizacaoAtiva = true;
 
     return true;
