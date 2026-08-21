@@ -74,6 +74,34 @@
 
     let listaVendas = null;
 
+    let campoBuscaHistoricoVenda = null;
+
+    let painelDetalhesVenda = null;
+
+    let tituloDetalhesVenda = null;
+
+    let resumoDetalhesVenda = null;
+
+    let produtosDetalhesVenda = null;
+
+    let formularioReceberVenda = null;
+
+    let campoReceberVendaSaldo = null;
+
+    let campoReceberVendaValor = null;
+
+    let campoReceberVendaData = null;
+
+    let campoReceberVendaForma = null;
+
+    let campoReceberVendaObservacao = null;
+
+    let botaoConfirmarRecebimentoVenda = null;
+
+    let botaoFecharDetalhesVenda = null;
+
+    let vendaDetalhadaId = null;
+
     let menuVendas = null;
 
     let resumoTotalVendas = null;
@@ -766,17 +794,17 @@
 
             <div class="campo">
 
-                <label>
-                    Ação
-                </label>
+    <label>
+        Ação
+    </label>
 
-                <button
-                    type="button"
-                    class="botao-excluir remover-item-venda">
-                    Remover
-                </button>
+    <button
+        type="button"
+        class="botao-excluir remover-item-venda">
+        Remover
+    </button>
 
-            </div>
+</div>
         `;
 
         return item;
@@ -2791,7 +2819,329 @@
         }
 
     }
+// ==================================================
+// CONSULTAR HISTÓRICO DA VENDA
+// ==================================================
 
+function normalizarBuscaHistoricoVenda(
+    valor
+) {
+
+    return String(
+        valor || ""
+    )
+        .normalize("NFD")
+        .replace(
+            /[\u0300-\u036f]/g,
+            ""
+        )
+        .toLowerCase()
+        .trim();
+
+}
+
+function fecharPainelDetalhesVenda() {
+
+    vendaDetalhadaId = null;
+
+    if (painelDetalhesVenda) {
+        painelDetalhesVenda.hidden = true;
+    }
+
+    if (formularioReceberVenda) {
+        formularioReceberVenda.hidden = true;
+    }
+
+}
+
+function abrirPainelDetalhesVenda(
+    vendaId
+) {
+
+    const venda =
+        vendas.find(
+            function (item) {
+
+                return String(
+                    item.id
+                ) === String(
+                    vendaId
+                );
+
+            }
+        );
+
+    if (
+        !venda ||
+        !painelDetalhesVenda
+    ) {
+
+        alert(
+            "Não foi possível localizar essa venda."
+        );
+
+        return;
+
+    }
+
+    vendaDetalhadaId =
+        String(
+            venda.id
+        );
+
+    const valorPago =
+        numeroPositivoVenda(
+            venda.valorPago
+        );
+
+    const valorPendente =
+        Math.max(
+            0,
+            numeroPositivoVenda(
+                venda.total
+            ) - valorPago
+        );
+
+    if (tituloDetalhesVenda) {
+
+        tituloDetalhesVenda.textContent =
+            "Detalhes da venda #" +
+            venda.id;
+
+    }
+
+    if (resumoDetalhesVenda) {
+
+        resumoDetalhesVenda.innerHTML = `
+
+            <div class="linha">
+
+                <div class="campo">
+                    <label>Data</label>
+                    <strong>
+                        ${formatarDataVenda(
+                            venda.data
+                        )}
+                    </strong>
+                </div>
+
+                <div class="campo">
+                    <label>Cliente</label>
+                    <strong>
+                        ${escaparTextoVenda(
+                            venda.clienteNome ||
+                            "Não vinculado"
+                        )}
+                    </strong>
+                </div>
+
+                <div class="campo">
+                    <label>Total</label>
+                    <strong>
+                        ${formatarDinheiroVenda(
+                            venda.total
+                        )}
+                    </strong>
+                </div>
+
+                <div class="campo">
+                    <label>Pago</label>
+                    <strong>
+                        ${formatarDinheiroVenda(
+                            valorPago
+                        )}
+                    </strong>
+                </div>
+
+                <div class="campo">
+                    <label>Pendente</label>
+                    <strong>
+                        ${formatarDinheiroVenda(
+                            valorPendente
+                        )}
+                    </strong>
+                </div>
+
+                <div class="campo">
+                    <label>Status</label>
+                    <strong>
+                        ${escaparTextoVenda(
+                            venda.situacaoPagamento ||
+                            (
+                                valorPendente > 0
+                                    ? "Pendente"
+                                    : "Pago"
+                            )
+                        )}
+                    </strong>
+                </div>
+
+            </div>
+        `;
+
+    }
+
+    const itens =
+        Array.isArray(
+            venda.itens
+        )
+            ? venda.itens
+            : [];
+
+    if (produtosDetalhesVenda) {
+
+        if (itens.length === 0) {
+
+            produtosDetalhesVenda.innerHTML =
+                "<p>Nenhum produto registrado nesta venda.</p>";
+
+        } else {
+
+            produtosDetalhesVenda.innerHTML =
+                itens.map(
+                    function (item) {
+
+                        const quantidade =
+                            numeroPositivoVenda(
+                                item.quantidade
+                            );
+
+                        const valorUnitario =
+                            numeroPositivoVenda(
+                                item.valorUnitario
+                            );
+
+                        const totalItem =
+                            numeroPositivoVenda(
+                                item.total
+                            ) ||
+                            (
+                                quantidade *
+                                valorUnitario
+                            );
+
+                        const ehBrinde =
+                            item.brinde === true ||
+                            item.brinde === "Sim";
+
+                        return `
+
+                            <div class="linha">
+
+                                <div class="campo campo-completo">
+                                    <label>Produto</label>
+                                    <strong>
+                                        ${escaparTextoVenda(
+                                            item.nome ||
+                                            item.produtoNome ||
+                                            "Produto sem nome"
+                                        )}
+                                    </strong>
+                                </div>
+
+                                <div class="campo">
+                                    <label>Quantidade</label>
+                                    <strong>
+                                        ${quantidade}
+                                    </strong>
+                                </div>
+
+                                <div class="campo">
+                                    <label>Valor unitário</label>
+                                    <strong>
+                                        ${formatarDinheiroVenda(
+                                            valorUnitario
+                                        )}
+                                    </strong>
+                                </div>
+
+                                <div class="campo">
+                                    <label>Total</label>
+                                    <strong>
+                                        ${formatarDinheiroVenda(
+                                            totalItem
+                                        )}
+                                    </strong>
+                                </div>
+
+                                <div class="campo">
+                                    <label>Brinde</label>
+                                    <strong>
+                                        ${ehBrinde
+                                            ? "Sim"
+                                            : "Não"}
+                                    </strong>
+                                </div>
+
+                            </div>
+                        `;
+
+                    }
+                )
+                .join("");
+
+        }
+
+    }
+
+    if (formularioReceberVenda) {
+
+        formularioReceberVenda.hidden =
+            valorPendente <= 0;
+
+    }
+
+    if (campoReceberVendaSaldo) {
+
+        campoReceberVendaSaldo.value =
+            formatarDinheiroVenda(
+                valorPendente
+            );
+
+    }
+
+    if (campoReceberVendaValor) {
+
+        campoReceberVendaValor.value =
+            valorPendente > 0
+                ? valorPendente.toFixed(2)
+                : "";
+
+        campoReceberVendaValor.max =
+            valorPendente.toFixed(2);
+
+    }
+
+    if (campoReceberVendaData) {
+
+        campoReceberVendaData.value =
+            dataHojeVenda();
+
+    }
+
+    if (campoReceberVendaForma) {
+
+        campoReceberVendaForma.value =
+            "";
+
+    }
+
+    if (campoReceberVendaObservacao) {
+
+        campoReceberVendaObservacao.value =
+            "";
+
+    }
+
+    painelDetalhesVenda.hidden =
+        false;
+
+    painelDetalhesVenda.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+
+}
     // ==================================================
     // MOSTRAR VENDAS - FORMATO HORIZONTAL
     // ==================================================
@@ -2816,8 +3166,53 @@
         }
 
 
-        const vendasOrdenadas =
-            [...vendas].sort(
+        const termoBusca =
+    normalizarBuscaHistoricoVenda(
+        campoBuscaHistoricoVenda
+            ? campoBuscaHistoricoVenda.value
+            : ""
+    );
+
+const vendasFiltradas =
+    vendas.filter(
+        function (venda) {
+
+            if (!termoBusca) {
+                return true;
+            }
+
+            const textoVenda =
+                normalizarBuscaHistoricoVenda(
+                    [
+                        venda.id,
+                        venda.clienteNome,
+                        venda.data,
+                        formatarDataVenda(
+                            venda.data
+                        )
+                    ].join(" ")
+                );
+
+            return textoVenda.includes(
+                termoBusca
+            );
+
+        }
+    );
+
+if (vendasFiltradas.length === 0) {
+
+    listaVendas.innerHTML =
+        "<p>Nenhuma venda encontrada para esta busca.</p>";
+
+    atualizarResumoVenda();
+
+    return;
+
+}
+
+const vendasOrdenadas =
+    [...vendasFiltradas].sort(
                 function (a, b) {
 
                     const dataA =
@@ -2873,14 +3268,14 @@
                             <div class="venda-tabela-linha">
 
                                 <div
-                                    class="venda-coluna venda-coluna-id"
-                                    data-titulo="Venda">
+                            class="venda-coluna venda-coluna-id"
+                            data-titulo="Venda">
 
-                                    #${escaparTextoVenda(
-                                        venda.id
-                                    )}
+                             #${escaparTextoVenda(
+                                venda.id
+                              )}
 
-                                </div>
+                            </div>
 
 
                                 <div
@@ -2987,15 +3382,32 @@
 
 
                                 <div
-                                    class="venda-coluna"
-                                    data-titulo="Pagamento">
+    class="venda-coluna"
+    data-titulo="Status">
 
-                                    ${escaparTextoVenda(
-                                        venda.formaPagamento ||
-                                        "Não informado"
-                                    )}
+    ${escaparTextoVenda(
+        venda.situacaoPagamento ||
+        (
+            numeroPositivoVenda(
+                venda.valorPendente
+            ) > 0
+                ? "Pendente"
+                : "Pago"
+        )
+    )}
 
-                                </div>
+</div>
+
+<div
+    class="venda-coluna"
+    data-titulo="Pagamento">
+
+    ${escaparTextoVenda(
+        venda.formaPagamento ||
+        "Não informado"
+    )}
+
+</div>
 
 
                                 <div
@@ -3003,15 +3415,46 @@
                                     data-titulo="Ações">
 
                                     <button
-                                        type="button"
-                                        class="botao-excluir estornar-venda"
-                                        data-venda-id="${escaparTextoVenda(
-                                            venda.id
-                                        )}">
+    type="button"
+    class="ver-detalhes-venda"
+    data-venda-id="${escaparTextoVenda(
+        venda.id
+    )}">
 
-                                        Estornar
+    Ver produtos
 
-                                    </button>
+</button>
+
+${
+    numeroPositivoVenda(
+        venda.valorPendente
+    ) > 0
+        ? `
+
+            <button
+                type="button"
+                class="receber-saldo-venda"
+                data-venda-id="${escaparTextoVenda(
+                    venda.id
+                )}">
+
+                Receber saldo
+
+            </button>
+        `
+        : ""
+}
+
+<button
+    type="button"
+    class="botao-excluir estornar-venda"
+    data-venda-id="${escaparTextoVenda(
+        venda.id
+    )}">
+
+    Estornar
+
+</button>
 
                                 </div>
 
@@ -3039,6 +3482,7 @@
                     <div>Total</div>
                     <div>Pago</div>
                     <div>Pendente</div>
+                    <div>Status</div>
                     <div>Pagamento</div>
                     <div>Ações</div>
 

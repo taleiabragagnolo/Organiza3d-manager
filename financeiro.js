@@ -933,6 +933,9 @@ function normalizarLancamentosFinanceiros() {
                         lancamento.origemId ||
                         null,
 
+                    vendaId:
+                        lancamento.vendaId ||
+                        null,
                     grupoCompraId:
                         lancamento.grupoCompraId ||
                         null,
@@ -1640,7 +1643,38 @@ window.excluirLancamentoFinanceiro =
         salvarLancamentosFinanceiros();
         mostrarLancamentosFinanceiros();
     };
+// =========================
+// ATUALIZAR APÓS RECEBIMENTO DE VENDA
+// =========================
 
+window.recarregarFinanceiro =
+    function () {
+
+        try {
+
+            lancamentosFinanceiros =
+                JSON.parse(
+                    localStorage.getItem(
+                        "organiza3d_financeiro"
+                    )
+                ) || [];
+
+        } catch (erro) {
+
+            console.error(
+                "Não foi possível atualizar o Financeiro.",
+                erro
+            );
+
+            lancamentosFinanceiros = [];
+
+        }
+
+        normalizarLancamentosFinanceiros();
+        mostrarLancamentosFinanceiros();
+
+    };
+    
 // =========================
 // FORMULÁRIO INICIAL
 // =========================

@@ -553,7 +553,25 @@
 
     </div>
 
-    <h3>Vendas registradas</h3>
+    <h3>Histórico de vendas</h3>
+
+<div class="linha">
+
+    <div class="campo campo-completo">
+
+        <label for="buscar-venda-historico">
+            Localizar venda
+        </label>
+
+        <input
+            type="search"
+            id="buscar-venda-historico"
+            placeholder="Digite o número da venda, cliente ou data"
+            autocomplete="off">
+
+    </div>
+
+</div>
 
     <div id="lista-vendas">
 
@@ -562,7 +580,165 @@
         </p>
 
     </div>
+<div
+    id="painel-detalhes-venda"
+    class="formulario"
+    hidden>
 
+    <div class="linha">
+
+        <div class="campo campo-completo">
+
+            <h3 id="titulo-detalhes-venda">
+                Detalhes da venda
+            </h3>
+
+        </div>
+
+        <div class="campo">
+
+            <button
+                type="button"
+                id="fechar-detalhes-venda">
+                Fechar
+            </button>
+
+        </div>
+
+    </div>
+
+    <div id="resumo-detalhes-venda"></div>
+
+    <h3>Produtos da venda</h3>
+
+    <div id="produtos-detalhes-venda">
+
+        <p>
+            Nenhuma venda selecionada.
+        </p>
+
+    </div>
+
+    <div
+        id="formulario-receber-venda"
+        hidden>
+
+        <h3>Receber saldo pendente</h3>
+
+        <div class="linha">
+
+            <div class="campo">
+
+                <label for="receber-venda-saldo">
+                    Saldo pendente
+                </label>
+
+                <input
+                    type="text"
+                    id="receber-venda-saldo"
+                    readonly>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="receber-venda-valor">
+                    Valor recebido agora
+                </label>
+
+                <input
+                    type="number"
+                    id="receber-venda-valor"
+                    min="0.01"
+                    step="0.01">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="receber-venda-data">
+                    Data do recebimento
+                </label>
+
+                <input
+                    type="date"
+                    id="receber-venda-data">
+
+            </div>
+
+            <div class="campo">
+
+                <label for="receber-venda-forma">
+                    Forma de pagamento
+                </label>
+
+                <select id="receber-venda-forma">
+
+                    <option value="">
+                        Selecione
+                    </option>
+
+                    <option value="Dinheiro">
+                        Dinheiro
+                    </option>
+
+                    <option value="Pix">
+                        Pix
+                    </option>
+
+                    <option value="Cartão de débito">
+                        Cartão de débito
+                    </option>
+
+                    <option value="Cartão de crédito">
+                        Cartão de crédito
+                    </option>
+
+                    <option value="Transferência">
+                        Transferência
+                    </option>
+
+                    <option value="Outro">
+                        Outro
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="campo">
+
+                <label for="receber-venda-observacao">
+                    Observação
+                </label>
+
+                <input
+                    type="text"
+                    id="receber-venda-observacao"
+                    placeholder="Opcional">
+
+            </div>
+
+            <div class="campo">
+
+                <label>
+                    &nbsp;
+                </label>
+
+                <button
+                    type="button"
+                    id="confirmar-recebimento-venda"
+                    class="botao-principal">
+                    Confirmar recebimento
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 </section>
 
 
