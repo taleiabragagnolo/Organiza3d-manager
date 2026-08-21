@@ -36,6 +36,7 @@ async function iniciarSincronizacao() {
             ORGANIZA_SUPABASE_URL,
             ORGANIZA_SUPABASE_CHAVE
         );
+configurarSaidaOrganiza();
 
     let resultadoSessao =
         await organizaClienteSupabase.auth.getSession();
