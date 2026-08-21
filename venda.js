@@ -199,7 +199,70 @@
             document.getElementById(
                 "lista-vendas"
             );
+campoBuscaHistoricoVenda =
+    document.getElementById(
+        "buscar-venda-historico"
+    );
 
+painelDetalhesVenda =
+    document.getElementById(
+        "painel-detalhes-venda"
+    );
+
+tituloDetalhesVenda =
+    document.getElementById(
+        "titulo-detalhes-venda"
+    );
+
+resumoDetalhesVenda =
+    document.getElementById(
+        "resumo-detalhes-venda"
+    );
+
+produtosDetalhesVenda =
+    document.getElementById(
+        "produtos-detalhes-venda"
+    );
+
+formularioReceberVenda =
+    document.getElementById(
+        "formulario-receber-venda"
+    );
+
+campoReceberVendaSaldo =
+    document.getElementById(
+        "receber-venda-saldo"
+    );
+
+campoReceberVendaValor =
+    document.getElementById(
+        "receber-venda-valor"
+    );
+
+campoReceberVendaData =
+    document.getElementById(
+        "receber-venda-data"
+    );
+
+campoReceberVendaForma =
+    document.getElementById(
+        "receber-venda-forma"
+    );
+
+campoReceberVendaObservacao =
+    document.getElementById(
+        "receber-venda-observacao"
+    );
+
+botaoConfirmarRecebimentoVenda =
+    document.getElementById(
+        "confirmar-recebimento-venda"
+    );
+
+botaoFecharDetalhesVenda =
+    document.getElementById(
+        "fechar-detalhes-venda"
+    );
         menuVendas =
             document.querySelector(
                 '[data-pagina="vendas"]'
