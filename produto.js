@@ -39,8 +39,22 @@ function iniciarProduto() {
     const CHAVE_IMPRESSORAS =
         "organiza3d_impressoras";
 
-    const CHAVE_CLIENTES =
+     const CHAVE_CLIENTES =
         "organiza3d_cliente";
+
+    // ==================================================
+    // PERCENTUAIS FIXOS DE PROTEÇÃO
+    // ==================================================
+
+    const PERCENTUAL_FALHAS =
+        10;
+
+    const PERCENTUAL_CONSUMO_INTERNO =
+        3;
+
+    const PERCENTUAL_PROTECAO_TOTAL =
+        PERCENTUAL_FALHAS +
+        PERCENTUAL_CONSUMO_INTERNO;
 
     // ==================================================
     // FUNÇÕES AUXILIARES
@@ -2286,9 +2300,29 @@ function iniciarProduto() {
             "produto-percentual-rateio"
         );
 
-    const campoCustoRateioProduto =
+     const campoCustoRateioProduto =
         document.getElementById(
             "produto-custo-rateio"
+        );
+
+    const campoPercentualFalhasProduto =
+        document.getElementById(
+            "produto-percentual-falhas"
+        );
+
+    const campoCustoFalhasProduto =
+        document.getElementById(
+            "produto-custo-falhas"
+        );
+
+    const campoPercentualConsumoInternoProduto =
+        document.getElementById(
+            "produto-percentual-consumo-interno"
+        );
+
+    const campoCustoConsumoInternoProduto =
+        document.getElementById(
+            "produto-custo-consumo-interno"
         );
 
     const campoLucroDesejadoProduto =
@@ -2380,44 +2414,13 @@ function iniciarProduto() {
                 0
             );
 
-        const totalPerdasConsumo =
+                const totalFalhas =
             custoPecasComFalha +
-            custoConsumoProprio +
             custoFalhasFilamento;
 
-        const custoDiretoProducoes =
-            produtos.reduce(
-                function (
-                    total,
-                    produto
-                ) {
-
-                    const custoDireto =
-                        produto.custoDiretoProducao !==
-                        undefined
-                            ? numeroPositivo(
-                                produto.custoDiretoProducao
-                            )
-                            : numeroPositivo(
-                                produto.custoTotalProducao
-                            );
-
-                    return (
-                        total +
-                        custoDireto
-                    );
-
-                },
-                0
-            );
-
-        const percentualRateio =
-            custoDiretoProducoes > 0
-                ? (
-                    totalPerdasConsumo /
-                    custoDiretoProducoes
-                ) * 100
-                : 0;
+        const totalPerdasConsumo =
+            totalFalhas +
+            custoConsumoProprio;
 
         return {
 
@@ -2430,14 +2433,20 @@ function iniciarProduto() {
             custoFalhasFilamento:
                 custoFalhasFilamento,
 
+            totalFalhas:
+                totalFalhas,
+
             totalPerdasConsumo:
                 totalPerdasConsumo,
 
-            custoDiretoProducoes:
-                custoDiretoProducoes,
+            percentualFalhas:
+                PERCENTUAL_FALHAS,
+
+            percentualConsumoInterno:
+                PERCENTUAL_CONSUMO_INTERNO,
 
             percentualRateio:
-                percentualRateio
+                PERCENTUAL_PROTECAO_TOTAL
 
         };
 
@@ -2875,12 +2884,23 @@ function iniciarProduto() {
         const resumoRateio =
             calcularRateioPerdasProduto();
 
-        const custoRateio =
+                const custoRateioFalhas =
             custoDiretoProducao *
             (
-                resumoRateio.percentualRateio /
+                resumoRateio.percentualFalhas /
                 100
             );
+
+        const custoRateioConsumoInterno =
+            custoDiretoProducao *
+            (
+                resumoRateio.percentualConsumoInterno /
+                100
+            );
+
+        const custoRateio =
+            custoRateioFalhas +
+            custoRateioConsumoInterno;
 
         const custoTotalProducao =
             custoDiretoProducao +
@@ -3097,12 +3117,11 @@ function iniciarProduto() {
 
         }
 
-        if (campoTotalPerdasConsumoProduto) {
+               if (campoTotalPerdasConsumoProduto) {
 
             campoTotalPerdasConsumoProduto.value =
                 dinheiro(
-                    resumoRateio
-                        .totalPerdasConsumo
+                    custoRateio
                 );
 
         }
@@ -3119,11 +3138,51 @@ function iniciarProduto() {
 
         }
 
-        if (campoCustoRateioProduto) {
+                if (campoCustoRateioProduto) {
 
             campoCustoRateioProduto.value =
                 dinheiro(
                     custoRateio
+                );
+
+        }
+
+        if (campoPercentualFalhasProduto) {
+
+            campoPercentualFalhasProduto.value =
+                numeroFormatado(
+                    resumoRateio.percentualFalhas,
+                    2
+                ) +
+                "%";
+
+        }
+
+        if (campoCustoFalhasProduto) {
+
+            campoCustoFalhasProduto.value =
+                dinheiro(
+                    custoRateioFalhas
+                );
+
+        }
+
+        if (campoPercentualConsumoInternoProduto) {
+
+            campoPercentualConsumoInternoProduto.value =
+                numeroFormatado(
+                    resumoRateio.percentualConsumoInterno,
+                    2
+                ) +
+                "%";
+
+        }
+
+        if (campoCustoConsumoInternoProduto) {
+
+            campoCustoConsumoInternoProduto.value =
+                dinheiro(
+                    custoRateioConsumoInterno
                 );
 
         }
@@ -3296,9 +3355,23 @@ function iniciarProduto() {
                 resumoRateio
                     .totalPerdasConsumo,
 
-            percentualRateio:
+                        percentualRateio:
                 resumoRateio
                     .percentualRateio,
+
+            percentualFalhas:
+                resumoRateio
+                    .percentualFalhas,
+
+            percentualConsumoInterno:
+                resumoRateio
+                    .percentualConsumoInterno,
+
+            custoRateioFalhas:
+                custoRateioFalhas,
+
+            custoRateioConsumoInterno:
+                custoRateioConsumoInterno,
 
             custoRateio:
                 custoRateio,
@@ -4680,8 +4753,23 @@ dataProducao:
             totalPerdasConsumo:
                 calculos.totalPerdasConsumo,
 
-            percentualRateio:
+                        percentualRateio:
                 calculos.percentualRateio,
+
+            percentualFalhas:
+                calculos.percentualFalhas,
+
+            percentualConsumoInterno:
+                calculos.percentualConsumoInterno,
+
+            custoRateioFalhas:
+                calculos.custoRateioFalhas,
+
+            custoRateioConsumoInterno:
+                calculos.custoRateioConsumoInterno,
+
+            versaoRateio:
+                "fixo-10-3-v1",
 
             custoRateio:
                 calculos.custoRateio,
