@@ -2881,20 +2881,49 @@ function iniciarProduto() {
         // RATEIO DE PERDAS E CONSUMO INTERNO
         // ==============================================
 
-        const resumoRateio =
+                const resumoRateio =
             calcularRateioPerdasProduto();
 
-                const custoRateioFalhas =
+        const categoriaAtual =
+            String(
+                campoCategoriaProduto
+                    ? campoCategoriaProduto.value
+                    : ""
+            )
+                .trim()
+                .toLowerCase();
+
+        const produtoEhPecaTecnica =
+            categoriaAtual ===
+                "peça técnica" ||
+            categoriaAtual ===
+                "peca tecnica";
+
+        const percentualFalhasAplicado =
+            produtoEhPecaTecnica
+                ? 0
+                : resumoRateio.percentualFalhas;
+
+        const percentualConsumoInternoAplicado =
+            produtoEhPecaTecnica
+                ? 0
+                : resumoRateio.percentualConsumoInterno;
+
+        const percentualRateioAplicado =
+            percentualFalhasAplicado +
+            percentualConsumoInternoAplicado;
+
+        const custoRateioFalhas =
             custoDiretoProducao *
             (
-                resumoRateio.percentualFalhas /
+                percentualFalhasAplicado /
                 100
             );
 
         const custoRateioConsumoInterno =
             custoDiretoProducao *
             (
-                resumoRateio.percentualConsumoInterno /
+                percentualConsumoInternoAplicado /
                 100
             );
 
@@ -3130,15 +3159,14 @@ function iniciarProduto() {
 
             campoPercentualRateioProduto.value =
                 numeroFormatado(
-                    resumoRateio
-                        .percentualRateio,
+                    percentualRateioAplicado,
                     2
                 ) +
                 "%";
 
         }
 
-                if (campoCustoRateioProduto) {
+        if (campoCustoRateioProduto) {
 
             campoCustoRateioProduto.value =
                 dinheiro(
@@ -3147,11 +3175,11 @@ function iniciarProduto() {
 
         }
 
-        if (campoPercentualFalhasProduto) {
+                if (campoPercentualFalhasProduto) {
 
             campoPercentualFalhasProduto.value =
                 numeroFormatado(
-                    resumoRateio.percentualFalhas,
+                    percentualFalhasAplicado,
                     2
                 ) +
                 "%";
@@ -3167,11 +3195,11 @@ function iniciarProduto() {
 
         }
 
-        if (campoPercentualConsumoInternoProduto) {
+                if (campoPercentualConsumoInternoProduto) {
 
             campoPercentualConsumoInternoProduto.value =
                 numeroFormatado(
-                    resumoRateio.percentualConsumoInterno,
+                    percentualConsumoInternoAplicado,
                     2
                 ) +
                 "%";
@@ -3355,17 +3383,14 @@ function iniciarProduto() {
                 resumoRateio
                     .totalPerdasConsumo,
 
-                        percentualRateio:
-                resumoRateio
-                    .percentualRateio,
+            percentualRateio:
+                percentualRateioAplicado,
 
             percentualFalhas:
-                resumoRateio
-                    .percentualFalhas,
+                percentualFalhasAplicado,
 
             percentualConsumoInterno:
-                resumoRateio
-                    .percentualConsumoInterno,
+                percentualConsumoInternoAplicado,
 
             custoRateioFalhas:
                 custoRateioFalhas,

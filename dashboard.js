@@ -174,7 +174,7 @@
 
     }
 
-    function definirDinheiroDashboard(
+        function definirDinheiroDashboard(
         id,
         valor
     ) {
@@ -184,6 +184,51 @@
             dinheiroDashboard(
                 valor
             )
+        );
+
+    }
+
+    function definirResultadoDashboard(
+        id,
+        valor
+    ) {
+
+        const elemento =
+            document.getElementById(
+                id
+            );
+
+        if (!elemento) {
+
+            return;
+
+        }
+
+        const card =
+            elemento.closest(
+                ".card"
+            );
+
+        elemento.textContent =
+            dinheiroDashboard(
+                valor
+            );
+
+        if (!card) {
+
+            return;
+
+        }
+
+        card.classList.remove(
+            "card-resultado-positivo",
+            "card-resultado-negativo"
+        );
+
+        card.classList.add(
+            numeroDashboard(valor) >= 0
+                ? "card-resultado-positivo"
+                : "card-resultado-negativo"
         );
 
     }
@@ -260,6 +305,10 @@
 
         let unidadesSemCusto = 0;
 
+        let valorDestinadoFalhas = 0;
+
+        let valorDestinadoConsumoInterno = 0;
+
         const produtosPorId =
             new Map();
 
@@ -331,10 +380,19 @@
                                 )
                             ) || null;
 
+                                                const vendaComNovoRateio =
+                            Object.prototype
+                                .hasOwnProperty
+                                .call(
+                                    item,
+                                    "custoUnitarioReal"
+                                );
+
                         let custoUnitario =
                             numeroPositivoDashboard(
-                                item
-                                    .custoUnitarioProducao
+                                vendaComNovoRateio
+                                    ? item.custoUnitarioReal
+                                    : item.custoUnitarioProducao
                             );
 
                         if (
@@ -344,9 +402,25 @@
 
                             custoUnitario =
                                 numeroPositivoDashboard(
-                                    produto.custoUnitario ??
-                                    produto.custoUnitarioDireto ??
-                                    0
+                                    vendaComNovoRateio
+                                        ? produto.custoUnitarioDireto
+                                        : (
+                                            produto.custoUnitario ??
+                                            produto.custoUnitarioDireto ??
+                                            0
+                                        )
+                                );
+
+                        }
+
+                        if (
+                            custoUnitario <= 0 &&
+                            vendaComNovoRateio
+                        ) {
+
+                            custoUnitario =
+                                numeroPositivoDashboard(
+                                    item.custoUnitarioProducao
                                 );
 
                         }
@@ -369,10 +443,20 @@
                             brindes +=
                                 quantidade;
 
-                        } else {
+                                                } else {
 
                             unidadesVendidas +=
                                 quantidade;
+
+                            valorDestinadoFalhas +=
+                                numeroPositivoDashboard(
+                                    item.valorFalhasTotal
+                                );
+
+                            valorDestinadoConsumoInterno +=
+                                numeroPositivoDashboard(
+                                    item.valorConsumoInternoTotal
+                                );
 
                         }
 
@@ -382,11 +466,20 @@
             }
         );
 
-        const ticketMedio =
+                const ticketMedio =
             vendas.length > 0
                 ? faturamento /
                     vendas.length
                 : 0;
+
+        const lucroBruto =
+            faturamentoProdutos -
+            custoProdutosVendidos;
+
+        const lucroDisponivelAposRateios =
+            lucroBruto -
+            valorDestinadoFalhas -
+            valorDestinadoConsumoInterno;
 
         return {
 
@@ -414,8 +507,20 @@
             ticketMedio:
                 ticketMedio,
 
-            unidadesSemCusto:
-                unidadesSemCusto
+                        unidadesSemCusto:
+                unidadesSemCusto,
+
+            lucroBruto:
+                lucroBruto,
+
+            valorDestinadoFalhas:
+                valorDestinadoFalhas,
+
+            valorDestinadoConsumoInterno:
+                valorDestinadoConsumoInterno,
+
+            lucroDisponivelAposRateios:
+                lucroDisponivelAposRateios
 
         };
 
@@ -568,7 +673,7 @@
     // CONSUMO PRÓPRIO
     // ==================================================
 
-    function calcularConsumoProprioDashboard(
+        function calcularConsumoProprioDashboard(
         consumos
     ) {
 
@@ -582,6 +687,29 @@
                     total +
                     numeroPositivoDashboard(
                         consumo.quantidade
+                    )
+                );
+
+            },
+            0
+        );
+
+    }
+
+    function calcularValorConsumoProprioDashboard(
+        consumos
+    ) {
+
+        return consumos.reduce(
+            function (
+                total,
+                consumo
+            ) {
+
+                return (
+                    total +
+                    numeroPositivoDashboard(
+                        consumo.custoTotal
                     )
                 );
 
@@ -660,7 +788,8 @@
 
                 return (
                     total +
-                    numeroPositivoDashboard(
+                                        numeroPositivoDashboard(
+                        produto.custoDiretoProducao ??
                         produto.custoTotalProducao
                     )
                 );
@@ -1166,12 +1295,16 @@
                 financeiro
             );
 
-        const resultadoDisponivel =
+                const resultadoDisponivel =
             resumoFinanceiro.saldo -
             resumoVendas
                 .custoProdutosVendidos -
             resumoVendas
-                .fretesClientes;
+                .fretesClientes -
+            resumoVendas
+                .valorDestinadoFalhas -
+            resumoVendas
+                .valorDestinadoConsumoInterno;
 
         const resumoProdutos =
             calcularProdutosDashboard(
@@ -1188,13 +1321,17 @@
                 impressoras
             );
 
-        const totalConsumoProprio =
+                const totalConsumoProprio =
             calcularConsumoProprioDashboard(
                 consumosProprios
             );
 
-        
-                  const totalPerdas =
+        const valorConsumoProprio =
+            calcularValorConsumoProprioDashboard(
+                consumosProprios
+            );
+
+        const totalPerdas =
             calcularPerdasDashboard(
                 perdas
             );
@@ -1218,13 +1355,48 @@
                 produtos
             );
 
-        const percentualFalhas =
+                const percentualFalhas =
             custoProducoes > 0
                 ? (
                     valorPerdas /
                     custoProducoes
                 ) * 100
                 : 0;
+
+        const saldoFalhasRecuperar =
+            Math.max(
+                0,
+                valorPerdas -
+                resumoVendas.valorDestinadoFalhas
+            );
+
+        const reservaFalhas =
+            Math.max(
+                0,
+                resumoVendas.valorDestinadoFalhas -
+                valorPerdas
+            );
+
+        const saldoConsumoRecuperar =
+            Math.max(
+                0,
+                valorConsumoProprio -
+                resumoVendas
+                    .valorDestinadoConsumoInterno
+            );
+
+        const reservaConsumoInterno =
+            Math.max(
+                0,
+                resumoVendas
+                    .valorDestinadoConsumoInterno -
+                valorConsumoProprio
+            );
+
+        const resultadoRealAcumulado =
+            resumoVendas.lucroBruto -
+            valorPerdas -
+            valorConsumoProprio;
 
         const valorMateriaPrima =
             calcularMateriaPrimaDashboard(
@@ -1257,10 +1429,37 @@
             resumoFinanceiro.saldo
         );
 
-        definirDinheiroDashboard(
+                definirDinheiroDashboard(
             "dashboard-custo-produtos-vendidos",
             resumoVendas
                 .custoProdutosVendidos
+        );
+
+        definirDinheiroDashboard(
+            "dashboard-lucro-bruto-vendas",
+            resumoVendas.lucroBruto
+        );
+
+        definirDinheiroDashboard(
+            "dashboard-destinado-falhas",
+            resumoVendas.valorDestinadoFalhas
+        );
+
+        definirDinheiroDashboard(
+            "dashboard-destinado-consumo-interno",
+            resumoVendas
+                .valorDestinadoConsumoInterno
+        );
+
+        definirDinheiroDashboard(
+            "dashboard-lucro-disponivel-rateios",
+            resumoVendas
+                .lucroDisponivelAposRateios
+        );
+
+        definirResultadoDashboard(
+            "dashboard-resultado-real-acumulado",
+            resultadoRealAcumulado
         );
 
         definirDinheiroDashboard(
@@ -1357,9 +1556,24 @@
             valorMateriaPrima
         );
 
-        definirDinheiroDashboard(
+                definirDinheiroDashboard(
             "dashboard-valor-perdas",
             valorPerdas
+        );
+
+        definirDinheiroDashboard(
+            "dashboard-falhas-recuperadas",
+            resumoVendas.valorDestinadoFalhas
+        );
+
+        definirDinheiroDashboard(
+            "dashboard-saldo-falhas-recuperar",
+            saldoFalhasRecuperar
+        );
+
+        definirDinheiroDashboard(
+            "dashboard-reserva-falhas",
+            reservaFalhas
         );
 
         definirTextoDashboard(
@@ -1368,6 +1582,27 @@
                 percentualFalhas,
                 2
             ) + "%"
+        );
+
+        definirDinheiroDashboard(
+            "dashboard-valor-consumo-interno",
+            valorConsumoProprio
+        );
+
+        definirDinheiroDashboard(
+            "dashboard-consumo-recuperado",
+            resumoVendas
+                .valorDestinadoConsumoInterno
+        );
+
+        definirDinheiroDashboard(
+            "dashboard-saldo-consumo-recuperar",
+            saldoConsumoRecuperar
+        );
+
+        definirDinheiroDashboard(
+            "dashboard-reserva-consumo-interno",
+            reservaConsumoInterno
         );
 
         definirTextoDashboard(
