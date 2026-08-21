@@ -39,10 +39,19 @@ document.addEventListener(
                 erro
             );
 
-            alert(
-                "Não foi possível iniciar o sistema. " +
-                "Verifique sua conexão e tente novamente."
-            );
+            const detalheErro =
+    erro && erro.message
+        ? erro.message
+        : String(
+            erro ||
+            "Erro desconhecido"
+        );
+
+alert(
+    "Não foi possível iniciar o sistema.\n\n" +
+    "Detalhe: " +
+    detalheErro
+);
 
         }
 
