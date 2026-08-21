@@ -949,7 +949,7 @@ textarea:disabled {
     grid-template-columns:
         130px
         95px
-        minmax(150px, 1.3fr)
+        minmax(160px, 1.3fr)
         85px
         100px
         100px
@@ -957,11 +957,12 @@ textarea:disabled {
         100px
         100px
         105px
-        110px
-        100px;
+        90px
+        120px
+        300px;
     gap: 10px;
     align-items: center;
-    min-width: 1180px;
+    min-width: 1580px;
 }
 
 .venda-tabela-cabecalho {
@@ -1015,15 +1016,188 @@ textarea:disabled {
 
 .venda-coluna-acoes {
     display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
     justify-content: flex-start;
+    gap: 7px;
 }
 
-.venda-coluna-acoes .estornar-venda {
+.venda-coluna-acoes button,
+.venda-coluna-acoes .estornar-venda,
+.venda-coluna-acoes .ver-detalhes-venda,
+.venda-coluna-acoes .receber-saldo-venda {
     width: auto;
-    min-width: 78px;
+    min-width: max-content;
     margin: 0;
     padding: 7px 10px;
     white-space: nowrap;
+}
+
+.venda-coluna-acoes .ver-detalhes-venda {
+    background: var(--verde-700);
+    color: white;
+}
+
+.venda-coluna-acoes .receber-saldo-venda {
+    background: var(--cobre-600);
+    color: white;
+}
+/* Pesquisa do histórico */
+
+#vendas .linha:has(#buscar-venda-historico) {
+    display: flex;
+    width: 100%;
+    margin: 12px 0 16px;
+}
+
+#vendas .linha:has(#buscar-venda-historico) .campo {
+    flex: 1 1 100%;
+    width: 100%;
+}
+
+#buscar-venda-historico {
+    width: 100%;
+    max-width: none;
+}
+
+/* Mantém os painéis ocultos até serem abertos */
+
+#painel-detalhes-venda[hidden],
+#formulario-receber-venda[hidden] {
+    display: none !important;
+}
+/* Recebimento em uma linha horizontal */
+
+#formulario-receber-venda {
+    width: 100%;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--borda);
+    overflow-x: auto;
+}
+
+#formulario-receber-venda > .linha {
+    display: grid;
+    grid-template-columns:
+        130px
+        150px
+        155px
+        180px
+        minmax(190px, 1fr)
+        190px;
+    gap: 12px;
+    align-items: end;
+    min-width: 1080px;
+}
+
+#formulario-receber-venda .campo {
+    display: flex;
+    flex-direction: column;
+    grid-column: auto;
+    width: auto;
+    min-width: 0;
+}
+
+#formulario-receber-venda input,
+#formulario-receber-venda select,
+#confirmar-recebimento-venda {
+    width: 100%;
+    max-width: none;
+    height: 42px;
+    margin: 0;
+}
+/* Painel de detalhes da venda */
+
+#painel-detalhes-venda {
+    display: block;
+    width: 100%;
+    margin-top: 22px;
+    padding: 20px 22px;
+}
+
+#painel-detalhes-venda > .linha {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+}
+
+#painel-detalhes-venda
+> .linha
+> .campo-completo {
+    flex: 1 1 auto;
+}
+
+#painel-detalhes-venda
+#fechar-detalhes-venda {
+    width: auto;
+    min-width: 100px;
+    margin: 0;
+}
+
+/* Resumo horizontal da venda */
+
+#resumo-detalhes-venda {
+    width: 100%;
+    overflow-x: auto;
+}
+
+#resumo-detalhes-venda .linha {
+    display: grid;
+    grid-template-columns:
+        110px
+        minmax(180px, 1fr)
+        120px
+        120px
+        120px
+        110px;
+    gap: 12px;
+    min-width: 850px;
+    margin: 14px 0;
+    padding: 14px;
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    background: var(--pedra-100);
+}
+
+#resumo-detalhes-venda .campo {
+    display: flex;
+    flex-direction: column;
+    grid-column: auto;
+    min-width: 0;
+}
+
+/* Produtos em linhas horizontais */
+
+#produtos-detalhes-venda {
+    width: 100%;
+    overflow-x: auto;
+}
+
+#produtos-detalhes-venda .linha {
+    display: grid;
+    grid-template-columns:
+        minmax(230px, 1fr)
+        110px
+        130px
+        130px
+        90px;
+    gap: 12px;
+    align-items: center;
+    min-width: 820px;
+    margin-bottom: 8px;
+    padding: 12px 14px;
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    background: var(--neutro-50);
+}
+
+#produtos-detalhes-venda .campo {
+    display: flex;
+    flex-direction: column;
+    grid-column: auto;
+    min-width: 0;
 }
 
 /* Responsividade de Vendas */

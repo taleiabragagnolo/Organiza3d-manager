@@ -3142,6 +3142,330 @@ function abrirPainelDetalhesVenda(
     });
 
 }
+// ==================================================
+// RECEBER SALDO PENDENTE
+// ==================================================
+
+function confirmarRecebimentoVenda() {
+
+    const venda =
+        vendas.find(
+            item =>
+                String(item.id) ===
+                String(vendaDetalhadaId)
+        );
+
+    if (!venda) {
+        alert("Venda não localizada.");
+        return;
+    }
+
+    const total =
+        numeroPositivoVenda(
+            venda.total
+        );
+
+    const pagoAnterior =
+        numeroPositivoVenda(
+            venda.valorPago
+        );
+
+    const pendente =
+        Math.max(
+            0,
+            total - pagoAnterior
+        );
+
+    const valor =
+        Number(
+            campoReceberVendaValor
+                ? campoReceberVendaValor.value
+                : 0
+        );
+
+    const data =
+        campoReceberVendaData
+            ? campoReceberVendaData.value
+            : "";
+
+    const forma =
+        campoReceberVendaForma
+            ? campoReceberVendaForma.value
+            : "";
+
+    const observacao =
+        campoReceberVendaObservacao
+            ? campoReceberVendaObservacao
+                .value
+                .trim()
+            : "";
+
+    if (
+        !Number.isFinite(valor) ||
+        valor <= 0
+    ) {
+        alert("Informe um valor recebido válido.");
+        return;
+    }
+
+    if (
+        Math.round(valor * 100) >
+        Math.round(pendente * 100)
+    ) {
+        alert(
+            "O valor não pode ser maior que o saldo pendente."
+        );
+        return;
+    }
+
+    if (!data) {
+        alert("Informe a data do recebimento.");
+        return;
+    }
+
+    if (!forma) {
+        alert("Selecione a forma de pagamento.");
+        return;
+    }
+
+    if (
+        !confirm(
+            "Confirma o recebimento de " +
+            formatarDinheiroVenda(valor) +
+            " da venda #" +
+            venda.id +
+            "?"
+        )
+    ) {
+        return;
+    }
+
+    const vendasAntes =
+        localStorage.getItem(
+            CHAVE_VENDAS
+        );
+
+    const financeiroAntes =
+        localStorage.getItem(
+            CHAVE_FINANCEIRO
+        );
+
+    try {
+
+        const novoPago =
+            Math.min(
+                total,
+                pagoAnterior + valor
+            );
+
+        const novoPendente =
+            Math.max(
+                0,
+                total - novoPago
+            );
+
+        const novaSituacao =
+            novoPendente <= 0
+                ? "Pago"
+                : "Parcial";
+
+        venda.valorPago =
+            novoPago;
+
+        venda.valorPendente =
+            novoPendente;
+
+        venda.situacaoPagamento =
+            novaSituacao;
+
+        if (
+            !Array.isArray(
+                venda.recebimentos
+            )
+        ) {
+            venda.recebimentos = [];
+        }
+
+        venda.recebimentos.push({
+            id: criarIdVenda(),
+            data: data,
+            valor: valor,
+            formaPagamento: forma,
+            observacao: observacao,
+            registradoEm:
+                new Date().toISOString()
+        });
+
+        venda.atualizadoEm =
+            new Date().toISOString();
+
+        let financeiro = [];
+
+        try {
+            financeiro =
+                JSON.parse(
+                    localStorage.getItem(
+                        CHAVE_FINANCEIRO
+                    )
+                ) || [];
+        } catch (erro) {
+            financeiro = [];
+        }
+
+        let lancamento =
+            financeiro.find(
+                function (item) {
+
+                    return (
+                        String(
+                            item.vendaId || ""
+                        ) ===
+                        String(venda.id) ||
+                        String(
+                            item.descricao || ""
+                        ).includes(
+                            "Venda #" + venda.id
+                        )
+                    );
+
+                }
+            );
+
+        if (!lancamento) {
+
+            lancamento = {
+                id: criarIdVenda(),
+                tipo: "Entrada",
+                categoria:
+                    "Venda de produtos",
+                descricao:
+                    "Venda #" +
+                    venda.id +
+                    " — Cliente: " +
+                    (
+                        venda.clienteNome ||
+                        "Não vinculado"
+                    ),
+                valor: total,
+                data: venda.data,
+                formaPagamento: forma,
+                situacao: novaSituacao,
+                valorPago: novoPago,
+                origem: "Vendas",
+                automatico: true,
+                vendaId: venda.id,
+                observacoes:
+                    "Lançamento automático da venda."
+            };
+
+            financeiro.push(
+                lancamento
+            );
+
+        } else {
+
+            lancamento.valor =
+                total;
+
+            lancamento.valorPago =
+                novoPago;
+
+            lancamento.situacao =
+                novaSituacao;
+
+            lancamento.vendaId =
+                venda.id;
+
+            if (
+                !lancamento
+                    .formaPagamento
+            ) {
+                lancamento
+                    .formaPagamento =
+                    forma;
+            }
+
+        }
+
+        salvarListaVenda(
+            CHAVE_VENDAS,
+            vendas
+        );
+
+        salvarListaVenda(
+            CHAVE_FINANCEIRO,
+            financeiro
+        );
+
+        lancamentosFinanceirosVenda =
+            financeiro;
+
+        if (
+            typeof window
+                .recarregarFinanceiro ===
+            "function"
+        ) {
+            window.recarregarFinanceiro();
+        }
+
+        if (
+            typeof window
+                .atualizarDashboardCompleto ===
+            "function"
+        ) {
+            window.atualizarDashboardCompleto();
+        }
+
+        mostrarVendas();
+
+        abrirPainelDetalhesVenda(
+            venda.id
+        );
+
+        alert(
+            "Recebimento registrado com sucesso.\n\n" +
+            "Pago: " +
+            formatarDinheiroVenda(
+                novoPago
+            ) +
+            "\nPendente: " +
+            formatarDinheiroVenda(
+                novoPendente
+            ) +
+            "\nStatus: " +
+            novaSituacao
+        );
+
+    } catch (erro) {
+
+        if (vendasAntes !== null) {
+            localStorage.setItem(
+                CHAVE_VENDAS,
+                vendasAntes
+            );
+        }
+
+        if (financeiroAntes !== null) {
+            localStorage.setItem(
+                CHAVE_FINANCEIRO,
+                financeiroAntes
+            );
+        }
+
+        carregarDadosVenda();
+
+        console.error(
+            "Erro ao receber a venda:",
+            erro
+        );
+
+        alert(
+            "O recebimento não foi registrado. Os dados anteriores foram restaurados."
+        );
+
+    }
+
+}
     // ==================================================
     // MOSTRAR VENDAS - FORMATO HORIZONTAL
     // ==================================================
