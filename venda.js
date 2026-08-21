@@ -1558,7 +1558,7 @@
                             "Sim"
                         : false;
 
-                const valorUnitario =
+                                const valorUnitario =
                     brinde
                         ? 0
                         : numeroPositivoVenda(
@@ -1566,6 +1566,35 @@
                                 ? campoValor.value
                                 : 0
                         );
+
+                const custoUnitarioReal =
+                    numeroPositivoVenda(
+                        produto.custoUnitarioDireto ??
+                        produto.custoUnitario ??
+                        0
+                    );
+
+                const percentualFalhas =
+                    numeroPositivoVenda(
+                        produto.percentualFalhas ??
+                        10
+                    );
+
+                const percentualConsumoInterno =
+                    numeroPositivoVenda(
+                        produto.percentualConsumoInterno ??
+                        3
+                    );
+
+                const valorFalhasUnitario =
+                    custoUnitarioReal *
+                    percentualFalhas /
+                    100;
+
+                const valorConsumoInternoUnitario =
+                    custoUnitarioReal *
+                    percentualConsumoInterno /
+                    100;
 
                 itensVenda.push({
 
@@ -1582,12 +1611,45 @@
                                         valorUnitario:
                         valorUnitario,
 
-                    custoUnitarioProducao:
+                                        custoUnitarioProducao:
                         numeroPositivoVenda(
                             produto.custoUnitario ??
                             produto.custoUnitarioDireto ??
                             0
                         ),
+
+                    custoUnitarioReal:
+                        custoUnitarioReal,
+
+                    custoUnitarioAjustado:
+                        numeroPositivoVenda(
+                            produto.custoUnitario ??
+                            (
+                                custoUnitarioReal +
+                                valorFalhasUnitario +
+                                valorConsumoInternoUnitario
+                            )
+                        ),
+
+                    percentualFalhas:
+                        percentualFalhas,
+
+                    percentualConsumoInterno:
+                        percentualConsumoInterno,
+
+                    valorFalhasUnitario:
+                        valorFalhasUnitario,
+
+                    valorConsumoInternoUnitario:
+                        valorConsumoInternoUnitario,
+
+                    valorFalhasTotal:
+                        valorFalhasUnitario *
+                        quantidade,
+
+                    valorConsumoInternoTotal:
+                        valorConsumoInternoUnitario *
+                        quantidade,
 
                     brinde:
                         brinde,
