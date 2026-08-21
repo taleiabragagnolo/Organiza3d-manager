@@ -2086,12 +2086,12 @@ select {
     grid-column: span 2 !important;
 }
 
-/* Custo real | falhas 10% | consumo interno 3% | proteção 13% */
+/* Custo real | proteção em dinheiro | proteção percentual */
 
 #produto .linha-rateio-producao {
     display: grid !important;
     grid-template-columns:
-        repeat(4, minmax(120px, 1fr)) !important;
+        repeat(3, minmax(120px, 1fr)) !important;
     grid-column: 1 / -1 !important;
     gap: 10px !important;
     width: 100% !important;
@@ -2122,6 +2122,18 @@ select {
 
 #produto .campo-rateio-produto:has(
     #produto-custo-rateio
+),
+#produto .campo-rateio-produto:has(
+    #produto-percentual-falhas
+),
+#produto .campo-rateio-produto:has(
+    #produto-custo-falhas
+),
+#produto .campo-rateio-produto:has(
+    #produto-percentual-consumo-interno
+),
+#produto .campo-rateio-produto:has(
+    #produto-custo-consumo-interno
 ) {
     display: none !important;
 }
