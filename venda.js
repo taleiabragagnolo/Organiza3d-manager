@@ -6,7 +6,7 @@
 
 "use strict";
 
-(function () 
+(function () {
 
     // ==================================================
     // CHAVES DO LOCALSTORAGE
