@@ -6,7 +6,7 @@
 
 "use strict";
 
-(function () {
+(function () 
 
     // ==================================================
     // CHAVES DO LOCALSTORAGE
@@ -3699,35 +3699,108 @@ ${
 
                 if (listaVendas) {
 
-            listaVendas.addEventListener(
-                "click",
-                function (evento) {
+    listaVendas.addEventListener(
+        "click",
+        function (evento) {
 
-                    const botao =
-                        evento.target.closest(
-                            ".estornar-venda"
-                        );
+            const botaoDetalhes =
+                evento.target.closest(
+                    ".ver-detalhes-venda"
+                );
 
-                    if (!botao) {
+            if (botaoDetalhes) {
 
-                        return;
+                abrirPainelDetalhesVenda(
+                    botaoDetalhes.getAttribute(
+                        "data-venda-id"
+                    )
+                );
 
-                    }
+                return;
 
-                    const vendaId =
-                        botao.getAttribute(
-                            "data-venda-id"
-                        );
+            }
 
-                    estornarVenda(
-                        vendaId
-                    );
+            const botaoReceber =
+                evento.target.closest(
+                    ".receber-saldo-venda"
+                );
+
+            if (botaoReceber) {
+
+                abrirPainelDetalhesVenda(
+                    botaoReceber.getAttribute(
+                        "data-venda-id"
+                    )
+                );
+
+                if (
+                    campoReceberVendaValor
+                ) {
+
+                    campoReceberVendaValor
+                        .focus();
+
+                    campoReceberVendaValor
+                        .select();
 
                 }
-            );
 
-        }
-        
+                return;
+
+            }
+
+            const botaoEstornar =
+                evento.target.closest(
+                    ".estornar-venda"
+                );
+
+            if (!botaoEstornar) {
+                return;
+            }
+const vendaId =
+    botaoEstornar.getAttribute(
+        "data-venda-id"
+    );
+
+estornarVenda(
+    vendaId
+);
+
+}
+);
+
+}
+        if (campoBuscaHistoricoVenda) {
+
+    campoBuscaHistoricoVenda
+        .addEventListener(
+            "input",
+            mostrarVendas
+        );
+
+}
+
+if (
+    botaoConfirmarRecebimentoVenda
+) {
+
+    botaoConfirmarRecebimentoVenda
+        .addEventListener(
+            "click",
+            confirmarRecebimentoVenda
+        );
+
+}
+
+if (botaoFecharDetalhesVenda) {
+
+    botaoFecharDetalhesVenda
+        .addEventListener(
+            "click",
+            fecharPainelDetalhesVenda
+        );
+
+}
         if (botaoAdicionarItemVenda) {
 
             botaoAdicionarItemVenda
