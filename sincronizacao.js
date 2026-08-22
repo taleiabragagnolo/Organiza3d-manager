@@ -244,6 +244,140 @@ function mostrarLoginOrganiza() {
 // PRIMEIRA SINCRONIZACAO
 // ======================================================
 
+function liberarEspacoLocalSincronizacao() {
+
+    const chavesParaRemover = [];
+
+    for (
+        let indice = 0;
+        indice < localStorage.length;
+        indice++
+    ) {
+
+        const chave =
+            localStorage.key(indice);
+
+        if (
+            chave &&
+            String(chave)
+                .toLowerCase()
+                .startsWith("backup_")
+        ) {
+
+            chavesParaRemover.push(
+                chave
+            );
+
+        }
+
+    }
+
+    chavesParaRemover.forEach(
+        function (chave) {
+
+            localStorage.removeItem(
+                chave
+            );
+
+        }
+    );
+
+}
+
+function gravarDadoInicialSincronizado(
+    chave,
+    valor
+) {
+
+    try {
+
+        localStorage.setItem(
+            chave,
+            valor
+        );
+
+    } catch (
+        function liberarEspacoParaSincronizacao() {
+
+    const chavesParaRemover = [];
+
+    for (
+        let indice = 0;
+        indice < localStorage.length;
+        indice++
+    ) {
+
+        const chave =
+            localStorage.key(indice);
+
+        if (
+            chave &&
+            String(chave)
+                .toLowerCase()
+                .startsWith("backup_")
+        ) {
+
+            chavesParaRemover.push(
+                chave
+            );
+
+        }
+
+    }
+
+    chavesParaRemover.forEach(
+        function (chave) {
+
+            localStorage.removeItem(
+                chave
+            );
+
+        }
+    );
+
+}
+
+function gravarDadoRecebido(
+    chave,
+    valor
+) {
+
+    try {
+
+        localStorage.setItem(
+            chave,
+            valor
+        );
+
+    } catch (erro) {
+
+        const excedeuLimite =
+            erro &&
+            (
+                erro.name ===
+                    "QuotaExceededError" ||
+                String(
+                    erro.message || ""
+                )
+                    .toLowerCase()
+                    .includes("quota")
+            );
+
+        if (!excedeuLimite) {
+            throw erro;
+        }
+
+        liberarEspacoParaSincronizacao();
+
+        localStorage.setItem(
+            chave,
+            valor
+        );
+
+    }
+
+}
+
 async function sincronizarDadosIniciais() {
 
     const resultado =
@@ -262,15 +396,45 @@ async function sincronizarDadosIniciais() {
         return;
     }
 
-    organizaAlterandoLocalmente = true;
+    const dispositivoIOS =
+    /iPad|iPhone|iPod/i.test(
+        navigator.userAgent
+    ) ||
+    (
+        navigator.platform ===
+            "MacIntel" &&
+        navigator.maxTouchPoints > 1
+    );
 
-    try {
-        dadosNuvem.forEach(function (registro) {
-            localStorage.setItem(
-                registro.chave,
-                registro.valor === null ? "" : registro.valor
-            );
-        });
+if (dispositivoIOS) {
+
+    liberarEspacoParaSincronizacao();
+
+}
+
+organizaAlterandoLocalmente = true;
+
+try {
+    dadosNuvem.forEach(
+    function (registro) {
+
+        if (
+            !chavePodeSincronizar(
+                registro.chave
+            )
+        ) {
+            return;
+        }
+
+        gravarDadoRecebido(
+            registro.chave,
+            registro.valor === null
+                ? ""
+                : registro.valor
+        );
+
+    }
+);
     } finally {
         organizaAlterandoLocalmente = false;
     }
@@ -363,9 +527,13 @@ function chavePodeSincronizar(chave) {
         return false;
     }
 
-    const texto = String(chave).toLowerCase();
+    const texto =
+        String(chave)
+            .toLowerCase();
 
-    return !texto.startsWith("sb-");
+    return texto.startsWith(
+        "organiza3d_"
+    );
 }
 
 function agendarEnvioChave(chave, valor) {
