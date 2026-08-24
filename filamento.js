@@ -199,8 +199,112 @@ function salvarAcessorios() {
 
 function mostrarAcessorios() {
 
+    atualizarResumoAcessorios();
+
     if (!listaAcessorios) {
-        return;
+
+    function atualizarResumoAcessorios() {
+
+    const campoTotal =
+        document.getElementById(
+            "acessorios-total-itens"
+        );
+
+    const campoQuantidade =
+        document.getElementById(
+            "acessorios-quantidade-estoque"
+        );
+
+    const campoEstoqueBaixo =
+        document.getElementById(
+            "acessorios-estoque-baixo"
+        );
+
+    const campoValorEstoque =
+        document.getElementById(
+            "acessorios-valor-estoque"
+        );
+
+    const quantidadeTotal =
+        acessorios.reduce(
+            function (total, acessorio) {
+
+                return total +
+                    Number(
+                        acessorio.quantidade || 0
+                    );
+            },
+            0
+        );
+
+    const totalEstoqueBaixo =
+        acessorios.filter(
+            function (acessorio) {
+
+                const quantidade =
+                    Number(
+                        acessorio.quantidade || 0
+                    );
+
+                const estoqueMinimo =
+                    Number(
+                        acessorio.estoqueMinimo || 0
+                    );
+
+                return (
+                    estoqueMinimo > 0 &&
+                    quantidade <= estoqueMinimo
+                );
+            }
+        ).length;
+
+    const valorEstoque =
+        acessorios.reduce(
+            function (total, acessorio) {
+
+                const quantidade =
+                    Number(
+                        acessorio.quantidade || 0
+                    );
+
+                const valorUnitario =
+                    Number(
+                        acessorio.valorUnitario || 0
+                    );
+
+                return total +
+                    (quantidade * valorUnitario);
+            },
+            0
+        );
+
+    if (campoTotal) {
+        campoTotal.textContent =
+            acessorios.length;
+    }
+
+    if (campoQuantidade) {
+        campoQuantidade.textContent =
+            quantidadeTotal;
+    }
+
+    if (campoEstoqueBaixo) {
+        campoEstoqueBaixo.textContent =
+            totalEstoqueBaixo;
+    }
+
+    if (campoValorEstoque) {
+        campoValorEstoque.textContent =
+            valorEstoque.toLocaleString(
+                "pt-BR",
+                {
+                    style: "currency",
+                    currency: "BRL"
+                }
+            );
+    }
+}
+            return;
     }
 
     if (acessorios.length === 0) {
@@ -1331,7 +1435,10 @@ function atualizarResumoFilamentos() {
         document.getElementById(
             "filamentos-peso-disponivel"
         );
-
+    const campoValorEstoque =
+        document.getElementById(
+            "filamentos-valor-estoque"
+    );
     const totalNovos =
         filamentos.filter(
             function (filamento) {
@@ -1398,6 +1505,51 @@ function atualizarResumoFilamentos() {
         },
         0
     );
+    const valorEstoque =
+        filamentos.reduce(
+            function (total, filamento) {
+
+            if (
+                filamento.status === "Inativo" ||
+                filamento.status === "Finalizado"
+            ) {
+                return total;
+            }
+
+            const pesoInicial =
+                Number(
+                    filamento.pesoInicial || 0
+                );
+
+            const pesoRestante =
+                Number(
+                    filamento.pesoRestante || 0
+                );
+
+            const valorRolo =
+                Number(
+                    filamento.valor ||
+                    filamento.valorPago ||
+                    0
+                );
+
+            if (
+                pesoInicial <= 0 ||
+                pesoRestante <= 0 ||
+                valorRolo <= 0
+            ) {
+                return total;
+            }
+
+            const valorRestante =
+                valorRolo *
+                (pesoRestante / pesoInicial);
+
+            return total + valorRestante;
+
+        },
+        0
+    );
 
     if (campoTotal) {
 
@@ -1438,7 +1590,19 @@ function atualizarResumoFilamentos() {
                     maximumFractionDigits: 1
                 }
             )} g`;
-    }
+ 
+        }
+        if (campoValorEstoque) {
+
+    campoValorEstoque.textContent =
+        valorEstoque.toLocaleString(
+            "pt-BR",
+            {
+                style: "currency",
+                currency: "BRL"
+            }
+        );
+}
 }
 
 
@@ -2928,8 +3092,111 @@ function calcularValorUnitarioEmbalagem() {
 // =========================
 // LISTAGEM DAS EMBALAGENS
 // =========================
+function atualizarResumoEmbalagens() {
+
+    const campoTotal =
+        document.getElementById(
+            "embalagens-total-itens"
+        );
+
+    const campoQuantidade =
+        document.getElementById(
+            "embalagens-quantidade-estoque"
+        );
+
+    const campoEstoqueBaixo =
+        document.getElementById(
+            "embalagens-estoque-baixo"
+        );
+
+    const campoValorEstoque =
+        document.getElementById(
+            "embalagens-valor-estoque"
+        );
+
+    const quantidadeTotal =
+        embalagens.reduce(
+            function (total, embalagem) {
+
+                return total +
+                    Number(
+                        embalagem.quantidade || 0
+                    );
+            },
+            0
+        );
+
+    const totalEstoqueBaixo =
+        embalagens.filter(
+            function (embalagem) {
+
+                const quantidade =
+                    Number(
+                        embalagem.quantidade || 0
+                    );
+
+                const estoqueMinimo =
+                    Number(
+                        embalagem.estoqueMinimo || 0
+                    );
+
+                return (
+                    estoqueMinimo > 0 &&
+                    quantidade <= estoqueMinimo
+                );
+            }
+        ).length;
+
+    const valorEstoque =
+        embalagens.reduce(
+            function (total, embalagem) {
+
+                const quantidade =
+                    Number(
+                        embalagem.quantidade || 0
+                    );
+
+                const valorUnitario =
+                    Number(
+                        embalagem.valorUnitario || 0
+                    );
+
+                return total +
+                    (quantidade * valorUnitario);
+            },
+            0
+        );
+
+    if (campoTotal) {
+        campoTotal.textContent =
+            embalagens.length;
+    }
+
+    if (campoQuantidade) {
+        campoQuantidade.textContent =
+            quantidadeTotal;
+    }
+
+    if (campoEstoqueBaixo) {
+        campoEstoqueBaixo.textContent =
+            totalEstoqueBaixo;
+    }
+
+    if (campoValorEstoque) {
+        campoValorEstoque.textContent =
+            valorEstoque.toLocaleString(
+                "pt-BR",
+                {
+                    style: "currency",
+                    currency: "BRL"
+                }
+            );
+    }
+}
 
 function mostrarEmbalagens() {
+
+    atualizarResumoEmbalagens();
 
     if (!listaEmbalagens) {
         return;
