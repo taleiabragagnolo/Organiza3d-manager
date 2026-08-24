@@ -296,7 +296,17 @@ function gravarDadoInicialSincronizado(
             valor
         );
 
-    } catch (
+       } catch (erro) {
+
+        console.warn(
+            "Não foi possível gravar o dado inicial sincronizado:",
+            chave,
+            erro
+        );
+
+    }
+
+}
         function liberarEspacoParaSincronizacao() {
 
     const chavesParaRemover = [];
