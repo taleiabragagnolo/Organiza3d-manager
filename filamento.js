@@ -197,13 +197,7 @@ function salvarAcessorios() {
     );
 }
 
-function mostrarAcessorios() {
-
-    atualizarResumoAcessorios();
-
-    if (!listaAcessorios) {
-
-    function atualizarResumoAcessorios() {
+function atualizarResumoAcessorios() {
 
     const campoTotal =
         document.getElementById(
@@ -304,7 +298,13 @@ function mostrarAcessorios() {
             );
     }
 }
-            return;
+
+function mostrarAcessorios() {
+
+    atualizarResumoAcessorios();
+
+    if (!listaAcessorios) {
+        return;
     }
 
     if (acessorios.length === 0) {
