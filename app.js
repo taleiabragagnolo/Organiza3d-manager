@@ -54,6 +54,8 @@ function iniciarAplicacao() {
 
     iniciarModulos();
 
+    iniciarBackup();
+
     abrirPaginaInicial();
 
 }
@@ -239,5 +241,112 @@ function abrirPaginaInicial() {
         paginaVendas.classList.add("ativa");
 
     }
+
+}
+// ======================================================
+// BACKUP LOCAL
+// ======================================================
+
+function iniciarBackup() {
+
+    const botaoBackup =
+        document.getElementById(
+            "botao-backup"
+        );
+
+    if (!botaoBackup) {
+        return;
+    }
+
+    botaoBackup.addEventListener(
+        "click",
+        function () {
+
+            const dadosBackup = {};
+
+            for (
+                let indice = 0;
+                indice < localStorage.length;
+                indice++
+            ) {
+
+                const chave =
+                    localStorage.key(indice);
+
+                if (
+                    chave &&
+                    chave.startsWith(
+                        "organiza3d_"
+                    )
+                ) {
+
+                    dadosBackup[chave] =
+                        localStorage.getItem(
+                            chave
+                        );
+
+                }
+
+            }
+
+            const backup = {
+                sistema:
+                    "Organiza 3D Manager",
+                criadoEm:
+                    new Date().toISOString(),
+                dados:
+                    dadosBackup
+            };
+
+            const arquivo =
+                new Blob(
+                    [
+                        JSON.stringify(
+                            backup,
+                            null,
+                            2
+                        )
+                    ],
+                    {
+                        type:
+                            "application/json"
+                    }
+                );
+
+            const endereco =
+                URL.createObjectURL(
+                    arquivo
+                );
+
+            const link =
+                document.createElement(
+                    "a"
+                );
+
+            link.href = endereco;
+
+            link.download =
+                "backup-organiza3d-" +
+                hoje() +
+                ".json";
+
+            document.body.appendChild(
+                link
+            );
+
+            link.click();
+
+            link.remove();
+
+            URL.revokeObjectURL(
+                endereco
+            );
+
+            alert(
+                "Backup baixado com sucesso."
+            );
+
+        }
+    );
 
 }
