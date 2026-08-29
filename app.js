@@ -12,23 +12,9 @@
 
 document.addEventListener(
     "DOMContentLoaded",
-    async function () {
+    function () {
 
         try {
-
-            if (
-                typeof iniciarSincronizacao ===
-                "function"
-            ) {
-
-                const acessoAutorizado =
-                    await iniciarSincronizacao();
-
-                if (!acessoAutorizado) {
-                    return;
-                }
-
-            }
 
             iniciarAplicacao();
 
@@ -40,18 +26,18 @@ document.addEventListener(
             );
 
             const detalheErro =
-    erro && erro.message
-        ? erro.message
-        : String(
-            erro ||
-            "Erro desconhecido"
-        );
+                erro && erro.message
+                    ? erro.message
+                    : String(
+                        erro ||
+                        "Erro desconhecido"
+                    );
 
-alert(
-    "Não foi possível iniciar o sistema.\n\n" +
-    "Detalhe: " +
-    detalheErro
-);
+            alert(
+                "Não foi possível iniciar o sistema.\n\n" +
+                "Detalhe: " +
+                detalheErro
+            );
 
         }
 
