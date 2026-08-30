@@ -1233,7 +1233,40 @@ function salvarFilamentos() {
         JSON.stringify(filamentos)
     );
 }
+function recarregarFilamentosArmazenados() {
 
+    try {
+
+        const dados =
+            JSON.parse(
+                localStorage.getItem(
+                    "organiza3d_filamentos"
+                )
+            );
+
+        filamentos =
+            Array.isArray(dados)
+                ? dados
+                : [];
+
+        return true;
+
+    } catch (erro) {
+
+        console.error(
+            "Não foi possível atualizar os filamentos armazenados.",
+            erro
+        );
+
+        alert(
+            "Não foi possível atualizar os filamentos. Nenhuma alteração foi realizada."
+        );
+
+        return false;
+
+    }
+
+}
 
 // =========================
 // CÁLCULOS
@@ -2171,6 +2204,13 @@ if (botaoSalvarFilamento) {
     botaoSalvarFilamento.addEventListener(
         "click",
         function () {
+    if (
+    !recarregarFilamentosArmazenados()
+            ) {
+
+                return;
+
+            }
 
             const fabricante =
                 campoFilamentoFabricante.value.trim();
@@ -2486,6 +2526,13 @@ alert(
 window.editarFilamento =
 function (id) {
 
+        if (
+        !recarregarFilamentosArmazenados()
+    ) {
+
+        return;
+
+    }
     const filamento =
         filamentos.find(
             function (item) {
@@ -2573,6 +2620,13 @@ function (id) {
 window.registrarConsumoFilamento =
 function (id) {
 
+        if (
+        !recarregarFilamentosArmazenados()
+    ) {
+
+        return;
+
+    }
     const filamento =
         filamentos.find(
             function (item) {
@@ -2831,6 +2885,13 @@ function (id) {
 window.excluirFilamento =
 function (id) {
 
+        if (
+        !recarregarFilamentosArmazenados()
+    ) {
+
+        return;
+
+    }
     const filamento =
         filamentos.find(
             function (item) {
