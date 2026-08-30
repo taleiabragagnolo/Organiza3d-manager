@@ -9009,7 +9009,8 @@ produtos =
                     <th>Descrição</th>
 
                     <th>Status</th>
-
+                    
+                    <th>Ações</th>
                 </tr>
 
             </thead>
@@ -9089,7 +9090,16 @@ produtos =
                                             "Em uso"
                                         )}
                                     </td>
-
+<td>
+    <button
+        type="button"
+        class="botao-estornar-consumo"
+        data-consumo-id="${textoSeguro(
+            consumo.id
+        )}">
+        Estornar
+    </button>
+</td>
                                 </tr>
                             `;
 
@@ -9105,11 +9115,203 @@ produtos =
     atualizarResumoConsumoProprio();
 
 }
+// ==================================================
+// ESTORNAR CONSUMO PRÓPRIO
+// ==================================================
 
+function estornarConsumoProprio(
+    consumoId
+) {
+
+    const indiceConsumo =
+        consumosProprios.findIndex(
+            function (consumo) {
+
+                return String(consumo.id) ===
+                    String(consumoId);
+
+            }
+        );
+
+    if (indiceConsumo === -1) {
+
+        alert(
+            "Registro de consumo próprio não encontrado."
+        );
+
+        return;
+
+    }
+
+    const consumo =
+        consumosProprios[
+            indiceConsumo
+        ];
+
+    const produto =
+        produtos.find(
+            function (item) {
+
+                return String(item.id) ===
+                    String(
+                        consumo.produtoId
+                    );
+
+            }
+        );
+
+    if (!produto) {
+
+        alert(
+            "O produto relacionado a este consumo não foi encontrado. Nenhuma alteração foi realizada."
+        );
+
+        return;
+
+    }
+
+    const quantidade =
+        numeroPositivo(
+            consumo.quantidade
+        );
+
+    const confirmar =
+        confirm(
+            "Deseja estornar este consumo próprio?\n\n" +
+            "Produto: " +
+            (
+                consumo.produtoNome ||
+                "Produto não informado"
+            ) +
+            "\nQuantidade que voltará ao estoque: " +
+            quantidade
+        );
+
+    if (!confirmar) {
+        return;
+    }
+
+    const quantidadeAnterior =
+        numeroPositivo(
+            produto.quantidadeDisponivel
+        );
+
+    produto.quantidadeDisponivel =
+        quantidadeAnterior +
+        quantidade;
+
+    const quantidadePosterior =
+        produto.quantidadeDisponivel;
+
+    consumosProprios.splice(
+        indiceConsumo,
+        1
+    );
+
+    salvarProdutos();
+
+    salvarConsumosProprios();
+
+    registrarMovimentacaoSaida({
+
+        data:
+            dataHoje(),
+
+        tipo:
+            "Entrada por estorno de consumo próprio",
+
+        produtoId:
+            produto.id,
+
+        produto:
+            produto.nome,
+
+        lote:
+            "",
+
+        quantidade:
+            quantidade,
+
+        quantidadeAnterior:
+            quantidadeAnterior,
+
+        quantidadePosterior:
+            quantidadePosterior,
+
+        custoUnitario:
+            consumo.custoUnitario,
+
+        custoTotal:
+            consumo.custoTotal,
+
+        observacoes:
+            "Estorno do consumo próprio registrado em " +
+            (
+                consumo.data ||
+                "data não informada"
+            )
+
+    });
+
+    mostrarConsumosProprios();
+
+    atualizarResumoConsumoProprio();
+
+    mostrarProdutos();
+
+    atualizarResumoProdutos();
+
+    preencherSelectLotesPerda();
+
+    preencherSelectLotesConsumoProprio();
+
+    if (
+        typeof atualizarDashboardCompleto ===
+        "function"
+    ) {
+
+        atualizarDashboardCompleto();
+
+    }
+
+    alert(
+        "Consumo próprio estornado com sucesso. A quantidade voltou ao estoque."
+    );
+
+}
     // ==================================================
     // EVENTOS DOS BOTÕES DO CONSUMO PRÓPRIO
     // ==================================================
+if (listaConsumoProprio) {
 
+    listaConsumoProprio.addEventListener(
+        "click",
+        function (evento) {
+
+            const botao =
+                evento.target.closest(
+                    ".botao-estornar-consumo"
+                );
+
+            if (!botao) {
+                return;
+            }
+
+            const consumoId =
+                botao.dataset.consumoId;
+
+            if (!consumoId) {
+                return;
+            }
+
+            estornarConsumoProprio(
+                consumoId
+            );
+
+        }
+    );
+
+}
     if (botaoSalvarConsumoProprio) {
 
         botaoSalvarConsumoProprio
