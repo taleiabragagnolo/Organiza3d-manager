@@ -4866,8 +4866,85 @@ dataProducao:
     // SALVAR PRODUÇÃO
     // ==================================================
 
-    function salvarProdutoProduzido() {
+     // Atualiza o saldo pela diferença da produção.
+    function calcularDisponivelEdicao(produtoAnterior, produto) {
 
+        const diferencaProducao =
+            numeroPositivo(produto.quantidadeProduzida) -
+            numeroPositivo(produtoAnterior.quantidadeProduzida);
+
+        if (diferencaProducao !== 0) {
+            return (
+                numeroPositivo(produtoAnterior.quantidadeDisponivel) +
+                diferencaProducao
+            );
+        }
+
+        return numeroPositivo(produto.quantidadeDisponivel);
+
+    }
+
+    // Registra a alteração do estoque no histórico.
+    function registrarMovimentacaoEdicao(produtoAnterior, produto) {
+
+        const anterior =
+            numeroPositivo(produtoAnterior.quantidadeDisponivel);
+
+        const posterior =
+            numeroPositivo(produto.quantidadeDisponivel);
+
+        const diferenca = posterior - anterior;
+
+        if (diferenca === 0) {
+            return;
+        }
+
+        const alterouProducao =
+            numeroPositivo(produto.quantidadeProduzida) !==
+            numeroPositivo(produtoAnterior.quantidadeProduzida);
+
+        movimentacoes.push({
+
+            id: criarId(),
+
+            data: new Date().toISOString().slice(0, 10),
+
+            tipo:
+                alterouProducao && diferenca > 0
+                    ? "Entrada por produção"
+                    : "Ajuste de estoque por edição",
+
+            produtoId: produto.id,
+
+            produto: produto.nome,
+
+            quantidade: Math.abs(diferenca),
+
+            quantidadeAnterior: anterior,
+
+            quantidadePosterior: posterior,
+
+            custoUnitario: produto.custoUnitario,
+
+            custoTotal:
+                Math.abs(diferenca) *
+                numeroPositivo(produto.custoUnitario),
+
+            observacoes:
+                alterouProducao
+                    ? "Ajuste pela diferença da quantidade produzida."
+                    : "Correção da quantidade disponível no formulário.",
+
+            criadoEm: new Date().toISOString()
+
+        });
+
+        salvarMovimentacoes();
+
+    }
+
+    function salvarProdutoProduzido() {
+        
         recarregarDadosDeApoio();
 
         const calculos =
@@ -4945,6 +5022,32 @@ if (editando) {
 
     }
 
+        produto.quantidadeDisponivel =
+        calcularDisponivelEdicao(
+            produtoAnterior,
+            produto
+        );
+
+    if (
+        produto.quantidadeDisponivel < 0 ||
+        produto.quantidadeDisponivel >
+            numeroPositivo(produto.quantidadeProduzida)
+    ) {
+
+        alert(
+            "A quantidade disponível deve ficar entre zero " +
+            "e a quantidade produzida. Verifique as saídas " +
+            "já registradas antes de reduzir a produção."
+        );
+
+        return;
+
+    }
+
+    produto.valorTotalEstoque =
+        produto.quantidadeDisponivel *
+        numeroPositivo(produto.precoVenda);
+
     const ajusteRealizado =
         ajustarInsumosEdicao(
             produtoAnterior,
@@ -4961,8 +5064,13 @@ if (editando) {
         produtoAnterior.criadoEm ||
         produto.criadoEm;
 
-    produtos[indice] =
+        produtos[indice] =
         produto;
+
+    registrarMovimentacaoEdicao(
+        produtoAnterior,
+        produto
+    );
 
 } else {
 
