@@ -4602,13 +4602,40 @@ function validarDadosProduto(
 
     }
 
-    if (
+        if (
         calculos.horasDecimais <= 0
     ) {
 
         alert(
             "Informe o tempo de impressão."
         );
+
+        return false;
+
+    }
+
+    const precoInformado =
+        campoPrecoVendaProduto
+            ? String(
+                campoPrecoVendaProduto.value ||
+                ""
+            ).trim()
+            : "";
+
+    if (
+        !precoInformado ||
+        calculos.precoVenda <= 0
+    ) {
+
+        alert(
+            "Informe o preço de venda do produto. O preço deve ser maior que zero."
+        );
+
+        if (campoPrecoVendaProduto) {
+
+            campoPrecoVendaProduto.focus();
+
+        }
 
         return false;
 
