@@ -2102,336 +2102,95 @@ botaoFecharDetalhesVenda =
     // BAIXAR ESTOQUE
     // ==================================================
 
-    function baixarEstoqueVenda(
-    venda
-) {
-
-    const textoOriginal =
-        localStorage.getItem(
-            CHAVE_PRODUTOS
-        );
+    function baixarEstoqueVenda(venda) {
+    const textoOriginal = localStorage.getItem(CHAVE_PRODUTOS);
 
     try {
+        const produtosAtuais = JSON.parse(textoOriginal || "[]");
 
-        const produtosAtuais =
-            JSON.parse(
-                textoOriginal || "[]"
-            );
-
-        if (
-            !Array.isArray(
-                produtosAtuais
-            )
-        ) {
-
-            alert(
-                "Não foi possível carregar o estoque atual. A venda não foi registrada."
-            );
-
+        if (!Array.isArray(produtosAtuais)) {
+            alert("Não foi possível carregar o estoque atual.");
             return false;
-
         }
 
-        // Soma quantidades quando o mesmo produto
-        // aparece mais de uma vez na venda.
+        // Agrupa e soma quantidades por ID de produto
         const quantidadesPorProduto = {};
 
-        venda.itens.forEach(
-            function (itemVenda) {
+        venda.itens.forEach(function (itemVenda) {
+            const produtoId = String(itemVenda.produtoId).trim();
+            const quantidade = numeroPositivoVenda(itemVenda.quantidade);
 
-                const produtoId =
-                    String(
-                        itemVenda.produtoId
-                    );
-
-                const quantidade =
-                    numeroPositivoVenda(
-                        itemVenda.quantidade
-                    );
-
-                if (
-                    !quantidadesPorProduto[
-                        produtoId
-                    ]
-                ) {
-
-                    quantidadesPorProduto[
-                        produtoId
-                    ] = 0;
-
-                }
-
-                quantidadesPorProduto[
-                    produtoId
-                ] += quantidade;
-
+            if (!quantidadesPorProduto[produtoId]) {
+                quantidadesPorProduto[produtoId] = 0;
             }
-        );
+            quantidadesPorProduto[produtoId] += quantidade;
+        });
 
         const baixasPreparadas = [];
+        const idsProdutos = Object.keys(quantidadesPorProduto);
 
-        const idsProdutos =
-            Object.keys(
-                quantidadesPorProduto
-            );
-
-        // Confere todos os produtos antes
-        // de alterar qualquer quantidade.
-        for (
-            const produtoId of
-            idsProdutos
-        ) {
-
-            const produto =
-                produtosAtuais.find(
-                    function (
-                        itemProduto
-                    ) {
-
-                        return String(
-                            itemProduto.id
-                        ) ===
-                        String(
-                            produtoId
-                        );
-
-                    }
-                );
+        for (const produtoId of idsProdutos) {
+            // Comparação flexível limpando espaços e garantindo tipo String
+            const produto = produtosAtuais.find(function (itemProduto) {
+                return String(itemProduto.id).trim() === produtoId;
+            });
 
             if (!produto) {
-
+                console.warn("Produto ID " + produtoId + " não encontrado no estoque.");
                 alert(
-                    "O produto de código " +
-                    produtoId +
-                    " não foi encontrado no estoque atual.\n\n" +
-                    "A venda não foi registrada e nenhuma baixa foi realizada."
-                );
-
-                return false;
-
-            }
-
-            const quantidadeAtual =
-                numeroPositivoVenda(
-                    produto
-                        .quantidadeDisponivel
-                );
-
-            const quantidadeBaixar =
-                numeroPositivoVenda(
-                    quantidadesPorProduto[
-                        produtoId
-                    ]
-                );
-
-            if (
-                quantidadeBaixar <= 0
-            ) {
-
-                alert(
-                    'A quantidade informada para "' +
-                    (
-                        produto.nome ||
-                        "Produto sem nome"
-                    ) +
-                    '" é inválida.\n\n' +
+                    "O produto de código " + produtoId + " não foi localizado no estoque.\n\n" +
                     "A venda não foi registrada."
                 );
-
                 return false;
-
             }
 
-            if (
-                quantidadeBaixar >
-                quantidadeAtual
-            ) {
+            const quantidadeAtual = numeroPositivoVenda(produto.quantidadeDisponivel);
+            const quantidadeBaixar = numeroPositivoVenda(quantidadesPorProduto[produtoId]);
 
-                alert(
-                    'Estoque insuficiente para "' +
-                    (
-                        produto.nome ||
-                        "Produto sem nome"
-                    ) +
-                    '".\n\n' +
-                    "Disponível: " +
-                    quantidadeAtual +
-                    "\nQuantidade da venda: " +
-                    quantidadeBaixar +
-                    "\n\nA venda não foi registrada."
-                );
-
+            if (quantidadeBaixar <= 0) {
+                alert("Quantidade inválida para o produto: " + produto.nome);
                 return false;
+            }
 
+            if (quantidadeBaixar > quantidadeAtual) {
+                alert(
+                    'Estoque insuficiente para "' + (produto.nome || "Produto") + '".\n' +
+                    'Disponível: ' + quantidadeAtual + ' | Solicitado: ' + quantidadeBaixar
+                );
+                return false;
             }
 
             baixasPreparadas.push({
-
-                produto:
-                    produto,
-
-                quantidadeAnterior:
-                    quantidadeAtual,
-
-                quantidadeBaixar:
-                    quantidadeBaixar,
-
-                quantidadeFinal:
-                    quantidadeAtual -
-                    quantidadeBaixar
-
+                produto: produto,
+                quantidadeFinal: quantidadeAtual - quantidadeBaixar
             });
-
         }
 
-        // Executa as baixas somente depois
-        // de todas as conferências.
-        baixasPreparadas.forEach(
-            function (
-                baixa
-            ) {
-
-                const produto =
-                    baixa.produto;
-
-                produto.quantidadeDisponivel =
-                    baixa.quantidadeFinal;
-
-                produto.valorTotalEstoque =
-                    Number(
-                        (
-                            baixa.quantidadeFinal *
-                            numeroPositivoVenda(
-                                produto.precoVenda
-                            )
-                        ).toFixed(
-                            2
-                        )
-                    );
-
-                produto.status =
-                    baixa.quantidadeFinal > 0
-                        ? "Ativo"
-                        : "Inativo";
-
-                produto.atualizadoEm =
-                    new Date()
-                        .toISOString();
-
-            }
-        );
-
-        salvarListaVenda(
-            CHAVE_PRODUTOS,
-            produtosAtuais
-        );
-
-        // Relê o localStorage e confirma
-        // se todas as baixas foram gravadas.
-        const produtosConfirmados =
-            lerListaVenda(
-                CHAVE_PRODUTOS
+        // Aplica as baixas no estoque
+        baixasPreparadas.forEach(function (baixa) {
+            const produto = baixa.produto;
+            produto.quantidadeDisponivel = baixa.quantidadeFinal;
+            produto.valorTotalEstoque = Number(
+                (baixa.quantidadeFinal * numeroPositivoVenda(produto.precoVenda)).toFixed(2)
             );
+            produto.status = baixa.quantidadeFinal > 0 ? "Ativo" : "Inativo";
+            produto.atualizadoEm = new Date().toISOString();
+        });
 
-        const baixaConfirmada =
-            baixasPreparadas.every(
-                function (
-                    baixa
-                ) {
-
-                    const produtoGravado =
-                        produtosConfirmados.find(
-                            function (
-                                itemProduto
-                            ) {
-
-                                return String(
-                                    itemProduto.id
-                                ) ===
-                                    String(
-                                        baixa
-                                            .produto
-                                            .id
-                                    );
-
-                            }
-                        );
-
-                    return (
-                        produtoGravado &&
-                        numeroPositivoVenda(
-                            produtoGravado
-                                .quantidadeDisponivel
-                        ) ===
-                            baixa
-                                .quantidadeFinal
-                    );
-
-                }
-            );
-
-        if (
-            !baixaConfirmada
-        ) {
-
-            if (
-                textoOriginal !==
-                null
-            ) {
-
-                localStorage.setItem(
-                    CHAVE_PRODUTOS,
-                    textoOriginal
-                );
-
-            }
-
-            alert(
-                "A baixa do estoque não pôde ser confirmada.\n\n" +
-                "O estoque anterior foi restaurado e a venda não foi registrada."
-            );
-
-            return false;
-
-        }
-
-        // Atualiza a lista usada pelo módulo
-        // com os valores realmente gravados.
-        produtosVenda =
-            produtosConfirmados;
+        // Salva no LocalStorage
+        salvarListaVenda(CHAVE_PRODUTOS, produtosAtuais);
+        produtosVenda = produtosAtuais;
 
         return true;
 
-    } catch (
-        erro
-    ) {
-
-        if (
-            textoOriginal !==
-            null
-        ) {
-
-            localStorage.setItem(
-                CHAVE_PRODUTOS,
-                textoOriginal
-            );
-
+    } catch (erro) {
+        if (textoOriginal !== null) {
+            localStorage.setItem(CHAVE_PRODUTOS, textoOriginal);
         }
-
-        console.error(
-            "Erro ao baixar o estoque da venda:",
-            erro
-        );
-
-        alert(
-            "Ocorreu um erro ao baixar o estoque.\n\n" +
-            "Nenhum produto foi alterado e a venda não foi registrada."
-        );
-
+        console.error("Erro ao baixar o estoque da venda:", erro);
+        alert("Ocorreu um erro ao processar a baixa no estoque.");
         return false;
-
     }
-
 }
 
     // ==================================================
