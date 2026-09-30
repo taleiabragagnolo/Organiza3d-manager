@@ -511,10 +511,15 @@ function iniciarProduto() {
             "lista-embalagens-produto"
         );
 
-    const campoImpressoraProduto =
-        document.getElementById(
-            "produto-impressora-utilizada"
-        );
+    const listaImpressorasProduto =
+    document.getElementById(
+        "lista-impressoras-produto"
+    );
+
+const botaoAdicionarImpressoraProduto =
+    document.getElementById(
+        "adicionar-impressora-produto"
+    );
 
     const botaoAdicionarFilamentoProduto =
         document.getElementById(
@@ -1248,6 +1253,340 @@ function iniciarProduto() {
 
         
     }
+
+// ==================================================
+// LINHAS DE IMPRESSORAS — PRODUÇÃO
+// ==================================================
+
+function criarLinhaImpressoraProduto(dados = {}) {
+
+    const linha =
+        document.createElement("div");
+
+    linha.className =
+        "linha item-impressora-produto";
+
+    linha.innerHTML = `
+
+        <div class="campo">
+
+            <label>Impressora</label>
+
+            <select class="produto-impressora-select">
+
+                <option value="">
+                    Selecione a impressora
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="campo">
+
+            <label>Horas</label>
+
+            <input
+                type="number"
+                class="produto-impressora-horas"
+                min="0"
+                step="1"
+                placeholder="0">
+
+        </div>
+
+        <div class="campo">
+
+            <label>Minutos</label>
+
+            <input
+                type="number"
+                class="produto-impressora-minutos"
+                min="0"
+                max="59"
+                step="1"
+                placeholder="0">
+
+        </div>
+
+        <div class="campo">
+
+            <label>&nbsp;</label>
+
+            <button
+                type="button"
+                class="botao-excluir remover-impressora-produto">
+                Remover
+            </button>
+
+        </div>
+
+    `;
+
+    const select =
+        linha.querySelector(
+            ".produto-impressora-select"
+        );
+
+    const campoHoras =
+        linha.querySelector(
+            ".produto-impressora-horas"
+        );
+
+    const campoMinutos =
+        linha.querySelector(
+            ".produto-impressora-minutos"
+        );
+
+    const botaoRemover =
+        linha.querySelector(
+            ".remover-impressora-produto"
+        );
+
+    preencherSelectImpressoras(
+        select,
+        dados.impressoraId || ""
+    );
+
+    campoHoras.value =
+        dados.horas ?? "";
+
+    campoMinutos.value =
+        dados.minutos ?? "";
+
+    select.addEventListener(
+        "change",
+        atualizarCalculosProduto
+    );
+
+    campoHoras.addEventListener(
+        "input",
+        atualizarCalculosProduto
+    );
+
+    campoMinutos.addEventListener(
+        "input",
+        atualizarCalculosProduto
+    );
+
+    botaoRemover.addEventListener(
+        "click",
+        function () {
+
+            linha.remove();
+
+            garantirLinhaImpressoraProduto();
+
+            atualizarCalculosProduto();
+
+        }
+    );
+
+    return linha;
+
+}
+
+
+function adicionarLinhaImpressoraProduto(
+    dados = {}
+) {
+
+    if (!listaImpressorasProduto) {
+        return;
+    }
+
+    listaImpressorasProduto.appendChild(
+        criarLinhaImpressoraProduto(
+            dados
+        )
+    );
+
+}
+
+
+function garantirLinhaImpressoraProduto() {
+
+    if (!listaImpressorasProduto) {
+        return;
+    }
+
+    const quantidadeLinhas =
+        listaImpressorasProduto
+            .querySelectorAll(
+                ".item-impressora-produto"
+            )
+            .length;
+
+    if (quantidadeLinhas === 0) {
+
+        adicionarLinhaImpressoraProduto();
+
+    }
+
+}
+
+
+function limparLinhasImpressorasProduto(
+    lista = []
+) {
+
+    if (!listaImpressorasProduto) {
+        return;
+    }
+
+    listaImpressorasProduto.innerHTML = "";
+
+    if (
+        Array.isArray(lista) &&
+        lista.length > 0
+    ) {
+
+        lista.forEach(
+            function (item) {
+
+                adicionarLinhaImpressoraProduto(
+                    item
+                );
+
+            }
+        );
+
+    } else {
+
+        adicionarLinhaImpressoraProduto();
+
+    }
+
+}
+
+
+function obterImpressorasProduto() {
+
+    const resultado = [];
+
+    if (!listaImpressorasProduto) {
+        return resultado;
+    }
+
+    listaImpressorasProduto
+        .querySelectorAll(
+            ".item-impressora-produto"
+        )
+        .forEach(
+            function (linha) {
+
+                const select =
+                    linha.querySelector(
+                        ".produto-impressora-select"
+                    );
+
+                const campoHoras =
+                    linha.querySelector(
+                        ".produto-impressora-horas"
+                    );
+
+                const campoMinutos =
+                    linha.querySelector(
+                        ".produto-impressora-minutos"
+                    );
+
+                const impressora =
+                    encontrarImpressora(
+                        select
+                            ? select.value
+                            : ""
+                    );
+
+                const horas =
+                    numeroPositivo(
+                        campoHoras
+                            ? campoHoras.value
+                            : 0
+                    );
+
+                let minutos =
+                    numeroPositivo(
+                        campoMinutos
+                            ? campoMinutos.value
+                            : 0
+                    );
+
+                if (minutos > 59) {
+                    minutos = 59;
+                }
+
+                const horasDecimais =
+                    horas +
+                    minutos / 60;
+
+                if (
+                    impressora &&
+                    horasDecimais > 0
+                ) {
+
+                    resultado.push({
+
+                        impressoraId:
+                            impressora.id,
+
+                        impressoraNome:
+                            textoImpressora(
+                                impressora
+                            ),
+
+                        horas:
+                            horas,
+
+                        minutos:
+                            minutos,
+
+                        horasDecimais:
+                            horasDecimais,
+
+                        potenciaWatts:
+                            numeroPositivo(
+                                impressora.potenciaWatts
+                            ),
+
+                        tarifaEnergia:
+                            numeroPositivo(
+                                impressora.tarifaEnergia
+                            ),
+
+                        custoHoraImpressora:
+                            numeroPositivo(
+                                impressora.custoHoraImpressora
+                            )
+
+                    });
+
+                }
+
+            }
+        );
+
+    return resultado;
+
+}
+
+
+// ==================================================
+// BOTÃO — ADICIONAR IMPRESSORA
+// ==================================================
+
+if (botaoAdicionarImpressoraProduto) {
+
+    botaoAdicionarImpressoraProduto
+        .addEventListener(
+            "click",
+            function () {
+
+                adicionarLinhaImpressoraProduto();
+
+            }
+        );
+
+}
     // ==================================================
     // LINHA DE FILAMENTO — PRODUÇÃO
     // ==================================================
@@ -2712,51 +3051,57 @@ function iniciarProduto() {
 
         function atualizarCalculosProduto() {
 
-        // ==============================================
-        // DADOS ATUAIS DA IMPRESSORA SELECIONADA
-        // ==============================================
+// ==============================================
+// IMPRESSORAS UTILIZADAS NA PRODUÇÃO
+// ==============================================
 
-        const impressoraSelecionada =
-            encontrarImpressora(
-                campoImpressoraProduto
-                    ? campoImpressoraProduto.value
-                    : ""
+const impressorasUsadas =
+    obterImpressorasProduto();
+
+let horasTotaisImpressoras = 0;
+let consumoTotalKwh = 0;
+let custoTotalEnergia = 0;
+let custoTotalMaquinas = 0;
+
+impressorasUsadas.forEach(
+    function (item) {
+
+        const energiaImpressora =
+            calcularEnergia(
+                item.potenciaWatts,
+                item.horasDecimais,
+                item.tarifaEnergia
             );
 
-        if (impressoraSelecionada) {
+        const custoMaquinaImpressora =
+            calcularCustoMaquina(
+                item.horasDecimais,
+                item.custoHoraImpressora
+            );
 
-            if (
-                campoPotenciaProduto &&
-                numeroPositivo(
-                    campoPotenciaProduto.value
-                ) <= 0
-            ) {
-                campoPotenciaProduto.value =
-                    impressoraSelecionada.potenciaWatts || 0;
-            }
+        item.consumoKwh =
+            energiaImpressora.consumoKwh;
 
-            if (
-                campoTarifaProduto &&
-                numeroPositivo(
-                    campoTarifaProduto.value
-                ) <= 0
-            ) {
-                campoTarifaProduto.value =
-                    impressoraSelecionada.tarifaEnergia || 0;
-            }
+        item.custoEnergia =
+            energiaImpressora.custoEnergia;
 
-            if (
-                campoCustoHoraProduto &&
-                numeroPositivo(
-                    campoCustoHoraProduto.value
-                ) <= 0
-            ) {
-                campoCustoHoraProduto.value =
-                    impressoraSelecionada.custoHoraImpressora || 0;
-            }
+        item.custoMaquina =
+            custoMaquinaImpressora.custoTotal;
 
-        }
+        horasTotaisImpressoras +=
+            item.horasDecimais;
 
+        consumoTotalKwh +=
+            energiaImpressora.consumoKwh;
+
+        custoTotalEnergia +=
+            energiaImpressora.custoEnergia;
+
+        custoTotalMaquinas +=
+            custoMaquinaImpressora.custoTotal;
+
+    }
+);
         
         // ==============================================
         // INSUMOS UTILIZADOS
@@ -2819,34 +3164,57 @@ function iniciarProduto() {
                 "quantidade"
             );
 
-        // ==============================================
-        // TEMPO DE IMPRESSÃO
-        // ==============================================
+// ==============================================
+// TOTAIS DAS IMPRESSORAS
+// ==============================================
 
-        const tempo =
-            calcularTempoDecimal(
-                campoHorasProduto,
-                campoMinutosProduto
-            );
+const tempo = {
 
-        // ==============================================
-        // ENERGIA
-        // ==============================================
+    horas:
+        Math.floor(
+            horasTotaisImpressoras
+        ),
 
-        const energia =
-            calcularEnergia(
+    minutos:
+        Math.round(
+            (
+                horasTotaisImpressoras -
+                Math.floor(
+                    horasTotaisImpressoras
+                )
+            ) * 60
+        ),
 
-                campoPotenciaProduto
-                    ? campoPotenciaProduto.value
-                    : 0,
+    horasDecimais:
+        horasTotaisImpressoras
 
-                tempo.horasDecimais,
+};
 
-                campoTarifaProduto
-                    ? campoTarifaProduto.value
-                    : 0
+const energia = {
 
-            );
+    consumoKwh:
+        consumoTotalKwh,
+
+    custoEnergia:
+        custoTotalEnergia,
+
+    potenciaWatts:
+        0,
+
+    tarifa:
+        0
+
+};
+
+const maquina = {
+
+    custoPorHora:
+        0,
+
+    custoTotal:
+        custoTotalMaquinas
+
+};
 
         // ==============================================
         // CUSTO DA MÁQUINA
@@ -2863,7 +3231,7 @@ function iniciarProduto() {
 
             );
 
-                // ==============================================
+        // ==============================================
         // CUSTOS DIRETOS DA PRODUÇÃO
         // ==============================================
 
