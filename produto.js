@@ -4372,13 +4372,7 @@ const maquina = {
             return false;
         }
 
-        if (
-            !validarFilamentosProducao(
-                calculos.filamentos
-            )
-        ) {
-            return false;
-        }
+        
 const producaoSomentePorUnidade =
     Array.isArray(calculos.impressorasUsadas) &&
     calculos.impressorasUsadas.length > 0 &&
