@@ -347,6 +347,14 @@ custoHoraImpressora:
         impressora.custoHoraImpressora || 0
     ),
 
+formaCusto:
+    impressora.formaCusto || "hora",
+
+custoUnidadeEquipamento:
+    Number(
+        impressora.custoUnidadeEquipamento || 0
+    ),
+
 status:
     impressora.status || "Ativa",
 
@@ -1115,14 +1123,25 @@ function limparFormularioImpressora() {
     );
 
     definirValorCampoEquipamentos(
-      "custo-hora-impressora",
-      ""
-    );
+    "custo-hora-impressora",
+    ""
+);
 
-    definirValorCampoEquipamentos(
-        "status-impressora",
-        "Ativa"
-    );
+definirValorCampoEquipamentos(
+    "forma-custo-equipamento",
+    "hora"
+);
+
+definirValorCampoEquipamentos(
+    "custo-unidade-equipamento",
+    ""
+);
+
+definirValorCampoEquipamentos(
+    "status-impressora",
+    "Ativa"
+);
+
 
 
     definirValorCampoEquipamentos(
@@ -1214,6 +1233,15 @@ const custoHoraImpressora =
         "custo-hora-impressora"
     );
 
+const formaCustoEquipamento =
+    obterTextoCampoEquipamentos(
+        "forma-custo-equipamento"
+    ) || "hora";
+
+const custoUnidadeEquipamento =
+    obterNumeroCampoEquipamentos(
+        "custo-unidade-equipamento"
+    );
             const status =
                 obterTextoCampoEquipamentos(
                     "status-impressora"
@@ -1369,7 +1397,13 @@ const custoHoraImpressora =
                    tarifaEnergia;
 
                 impressora.custoHoraImpressora =
-                    custoHoraImpressora;
+                   custoHoraImpressora;
+
+                impressora.formaCusto =
+                    formaCustoEquipamento;
+
+                impressora.custoUnidadeEquipamento =
+                    custoUnidadeEquipamento;
 
                 impressora.status = status;
 
@@ -1438,6 +1472,12 @@ const custoHoraImpressora =
 
                     custoHoraImpressora:
                         custoHoraImpressora,
+
+                    formaCusto:
+                        formaCustoEquipamento,
+
+                    custoUnidadeEquipamento:
+                        custoUnidadeEquipamento,
 
                     status:
                         status,
@@ -1604,15 +1644,24 @@ window.editarImpressora = function (id) {
     );
 
     definirValorCampoEquipamentos(
-         "custo-hora-impressora",
-        impressora.custoHoraImpressora || ""
-    );
+    "custo-hora-impressora",
+    impressora.custoHoraImpressora || ""
+);
 
-    definirValorCampoEquipamentos(
-        "status-impressora",
-        impressora.status
-    );
+definirValorCampoEquipamentos(
+    "forma-custo-equipamento",
+    impressora.formaCusto || "hora"
+);
 
+definirValorCampoEquipamentos(
+    "custo-unidade-equipamento",
+    impressora.custoUnidadeEquipamento || ""
+);
+
+definirValorCampoEquipamentos(
+    "status-impressora",
+    impressora.status
+);
 
     definirValorCampoEquipamentos(
         "horas-iniciais-impressora",

@@ -4831,8 +4831,26 @@
 
 <div class="campo">
 
+    <label for="forma-custo-equipamento">
+        Forma de cálculo do equipamento
+    </label>
+
+    <select id="forma-custo-equipamento">
+        <option value="hora">
+            Por hora
+        </option>
+
+        <option value="unidade">
+            Por unidade produzida
+        </option>
+    </select>
+
+</div>
+
+<div class="campo">
+
     <label for="custo-hora-impressora">
-        Custo da impressora por hora
+        Custo do equipamento por hora
     </label>
 
     <input
@@ -4843,7 +4861,26 @@
         placeholder="Ex.: 1,50">
 
     <small>
-        Valor destinado a depreciação, desgaste e manutenção.
+        Para impressoras e equipamentos calculados pelo tempo de utilização.
+    </small>
+
+</div>
+
+<div class="campo">
+
+    <label for="custo-unidade-equipamento">
+        Custo do equipamento por unidade
+    </label>
+
+    <input
+        type="number"
+        id="custo-unidade-equipamento"
+        min="0"
+        step="0.01"
+        placeholder="Ex.: 0,60">
+
+    <small>
+        Para equipamentos calculados por peça produzida, como a máquina de bottons.
     </small>
 
 </div>
