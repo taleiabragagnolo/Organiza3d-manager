@@ -3082,6 +3082,12 @@ if (botaoAdicionarImpressoraProduto) {
 
         function atualizarCalculosProduto() {
 
+const quantidadeProduzida =
+    numeroPositivo(
+        campoQuantidadeProduzida
+            ? campoQuantidadeProduzida.value
+            : 0
+    );
 // ==============================================
 // IMPRESSORAS UTILIZADAS NA PRODUÇÃO
 // ==============================================
@@ -3340,13 +3346,6 @@ const maquina = {
         // ==============================================
         // QUANTIDADE E CUSTOS UNITÁRIOS
         // ==============================================
-
-        const quantidadeProduzida =
-            numeroPositivo(
-                campoQuantidadeProduzida
-                    ? campoQuantidadeProduzida.value
-                    : 0
-            );
 
         const custoUnitarioDireto =
             quantidadeProduzida > 0
