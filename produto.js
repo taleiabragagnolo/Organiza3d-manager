@@ -4937,7 +4937,6 @@ function validarDadosProduto(calculos) {
     return true;
 }
 
-}
 
     // ==================================================
     // CRIAR OBJETO DO PRODUTO
@@ -10193,11 +10192,15 @@ window.recuperarHorasProdutosExistentes =
     // LINHAS INICIAIS
     // ==================================================
 
-    limparLinhasFilamentosProduto();
+        limparLinhasImpressorasProduto();
 
-    limparLinhasAcessoriosProduto();
+        limparLinhasImpressorasProduto();
 
-    limparLinhasEmbalagensProduto();
+        limparLinhasFilamentosProduto();
+
+        limparLinhasAcessoriosProduto();
+
+        limparLinhasEmbalagensProduto();
 
     // ==================================================
     // EXPOR ATUALIZAÇÃO PARA OUTROS MÓDULOS
