@@ -10255,3 +10255,4 @@ window.recuperarHorasProdutosExistentes =
     abrirAba(
         "aba-produtos-produzidos"
     );
+}
