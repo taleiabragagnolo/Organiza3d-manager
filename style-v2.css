@@ -2518,3 +2518,43 @@ select {
         width: 100% !important;
     }
 }
+/* ==================================================
+   IMPRESSORAS UTILIZADAS — PRODUÇÃO
+   ================================================== */
+
+#lista-impressoras-produto {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#lista-impressoras-produto .item-impressora-produto {
+    display: grid;
+    grid-template-columns: minmax(280px, 2fr) 110px 110px 120px;
+    gap: 12px;
+    align-items: end;
+    width: 100%;
+}
+
+#lista-impressoras-produto .item-impressora-produto .campo {
+    margin: 0;
+    min-width: 0;
+}
+
+#lista-impressoras-produto .item-impressora-produto select,
+#lista-impressoras-produto .item-impressora-produto input,
+#lista-impressoras-produto .item-impressora-produto button {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#lista-impressoras-produto .item-impressora-produto .remover-impressora-produto {
+    white-space: nowrap;
+}
+
+/* Em telas pequenas, volta para vertical */
+@media (max-width: 700px) {
+    #lista-impressoras-produto .item-impressora-produto {
+        grid-template-columns: 1fr;
+    }
+}
