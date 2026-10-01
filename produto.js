@@ -1547,12 +1547,9 @@ function obterImpressorasProduto() {
                     horas +
                     minutos / 60;
 
-                if (
-                    impressora &&
-                    horasDecimais > 0
-                ) {
+               if (impressora) {
 
-                    resultado.push({
+    resultado.push({
 
                         impressoraId:
                             impressora.id,
@@ -1584,8 +1581,14 @@ function obterImpressorasProduto() {
                         custoHoraImpressora:
                             numeroPositivo(
                                 impressora.custoHoraImpressora
-                            )
+                            ),
+                        formaCusto:
+                            impressora.formaCusto || "hora",
 
+                        custoUnidadeEquipamento:
+                            numeroPositivo(
+                        impressora.custoUnidadeEquipamento
+                            ),
                     });
 
                 }
@@ -3086,6 +3089,7 @@ if (botaoAdicionarImpressoraProduto) {
 const impressorasUsadas =
     obterImpressorasProduto();
 
+
 let horasTotaisImpressoras = 0;
 let consumoTotalKwh = 0;
 let custoTotalEnergia = 0;
@@ -3101,11 +3105,28 @@ impressorasUsadas.forEach(
                 item.tarifaEnergia
             );
 
-        const custoMaquinaImpressora =
-            calcularCustoMaquina(
-                item.horasDecimais,
-                item.custoHoraImpressora
-            );
+            let custoMaquinaImpressora;
+
+if (item.formaCusto === "unidade") {
+
+    custoMaquinaImpressora = {
+        custoPorHora: 0,
+        custoTotal:
+            quantidadeProduzida *
+            numeroPositivo(
+                item.custoUnidadeEquipamento
+            )
+    };
+
+} else {
+
+    custoMaquinaImpressora =
+        calcularCustoMaquina(
+            item.horasDecimais,
+            item.custoHoraImpressora
+        );
+
+}
 
         item.consumoKwh =
             energiaImpressora.consumoKwh;
