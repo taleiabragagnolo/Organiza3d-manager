@@ -4374,9 +4374,9 @@ const maquina = {
 
         
 const producaoSomentePorUnidade =
-    Array.isArray(calculos.impressorasUsadas) &&
-    calculos.impressorasUsadas.length > 0 &&
-    calculos.impressorasUsadas.every(
+    Array.isArray(calculos.impressoras) &&
+    calculos.impressoras.length > 0 &&
+    calculos.impressoras.every(
         (item) => item.formaCusto === "unidade"
     );
 
