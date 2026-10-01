@@ -2522,39 +2522,62 @@ select {
    IMPRESSORAS UTILIZADAS — PRODUÇÃO
    ================================================== */
 
+/* O bloco das impressoras ocupa toda a largura */
+#produto .campo-impressora-produto {
+    grid-column: 1 / -1 !important;
+    width: 100%;
+}
+
+/* Lista das impressoras */
 #lista-impressoras-produto {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
 }
 
+/* Cada impressora fica em UMA linha */
 #lista-impressoras-produto .item-impressora-produto {
-    display: grid;
-    grid-template-columns: minmax(280px, 2fr) 110px 110px 120px;
-    gap: 12px;
-    align-items: end;
-    width: 100%;
+    display: grid !important;
+    grid-template-columns:
+        minmax(280px, 1fr)
+        120px
+        120px
+        120px !important;
+
+    gap: 12px !important;
+    align-items: end !important;
+    width: 100% !important;
 }
 
-#lista-impressoras-produto .item-impressora-produto .campo {
-    margin: 0;
-    min-width: 0;
+/* MUITO IMPORTANTE:
+   cancela o grid-column: span 3 padrão do aplicativo */
+#lista-impressoras-produto .item-impressora-produto > .campo {
+    grid-column: auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
 }
 
-#lista-impressoras-produto .item-impressora-produto select,
-#lista-impressoras-produto .item-impressora-produto input,
-#lista-impressoras-produto .item-impressora-produto button {
-    width: 100%;
-    box-sizing: border-box;
+/* Campos */
+#lista-impressoras-produto select,
+#lista-impressoras-produto input,
+#lista-impressoras-produto button {
+    width: 100% !important;
 }
 
-#lista-impressoras-produto .item-impressora-produto .remover-impressora-produto {
-    white-space: nowrap;
+/* Botão adicionar */
+#adicionar-impressora-produto {
+    margin-top: 10px;
+    width: auto !important;
+    min-width: 190px;
 }
 
-/* Em telas pequenas, volta para vertical */
+/* Celular */
 @media (max-width: 700px) {
+
     #lista-impressoras-produto .item-impressora-produto {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
     }
+
 }
