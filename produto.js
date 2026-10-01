@@ -1172,12 +1172,40 @@ const botaoAdicionarImpressoraProduto =
 
         recarregarDadosDeApoio();
 
-        preencherSelectImpressoras(
-            campoImpressoraProduto,
-            campoImpressoraProduto
-                ? campoImpressoraProduto.value
-                : ""
+        // ==============================================
+// ATUALIZAR IMPRESSORAS DAS LINHAS DA PRODUÇÃO
+// ==============================================
+
+if (listaImpressorasProduto) {
+
+    listaImpressorasProduto
+        .querySelectorAll(
+            ".item-impressora-produto"
+        )
+        .forEach(
+            function (linha) {
+
+                const select =
+                    linha.querySelector(
+                        ".produto-impressora-select"
+                    );
+
+                if (!select) {
+                    return;
+                }
+
+                const valorAtual =
+                    select.value;
+
+                preencherSelectImpressoras(
+                    select,
+                    valorAtual
+                );
+
+            }
         );
+
+}
 
         
             // Atualizar filamentos da produção
@@ -3115,7 +3143,7 @@ impressorasUsadas.forEach(
 
         const embalagensUsadas =
             obterEmbalagensProduto();
-
+        
         // ==============================================
         // TOTAIS DOS FILAMENTOS
         // ==============================================
@@ -3216,21 +3244,7 @@ const maquina = {
 
 };
 
-        // ==============================================
-        // CUSTO DA MÁQUINA
-        // ==============================================
-
-        const maquina =
-            calcularCustoMaquina(
-
-                tempo.horasDecimais,
-
-                campoCustoHoraProduto
-                    ? campoCustoHoraProduto.value
-                    : 0
-
-            );
-
+       
         // ==============================================
         // CUSTOS DIRETOS DA PRODUÇÃO
         // ==============================================
@@ -3720,6 +3734,9 @@ const maquina = {
             embalagens:
                 embalagensUsadas,
 
+            impressoras:
+                impressorasUsadas,
+
             custoFilamentos:
                 custoFilamentos,
 
@@ -3828,13 +3845,10 @@ const maquina = {
         };
 
     }
-    // ==================================================
+ // ==================================================
 // CARREGAR CUSTOS DA IMPRESSORA NA PRODUÇÃO
 // ==================================================
 
-function carregarDadosImpressoraProduto(
-    substituirValores = false
-) {
 
     const impressora =
         encontrarImpressora(
@@ -3915,20 +3929,6 @@ function carregarDadosImpressoraProduto(
 
 }
 
-if (campoImpressoraProduto) {
-
-    campoImpressoraProduto.addEventListener(
-        "change",
-        function () {
-
-            carregarDadosImpressoraProduto(
-                true
-            );
-
-        }
-    );
-
-}
 
 [
     campoHorasProduto,
@@ -4913,11 +4913,6 @@ function validarDadosProduto(
             ? campoDataProduto.value
             : "";
 
-    const impressoraId =
-        campoImpressoraProduto
-            ? campoImpressoraProduto.value
-            : "";
-
     if (!nome) {
 
         alert(
@@ -4960,15 +4955,18 @@ function validarDadosProduto(
 
     }
 
-    if (!impressoraId) {
+    if (
+    !Array.isArray(calculos.impressoras) ||
+    calculos.impressoras.length === 0
+) {
 
-        alert(
-            "Selecione a impressora utilizada."
-        );
+    alert(
+        "Adicione pelo menos uma impressora e informe o tempo utilizado."
+    );
 
-        return false;
+    return false;
 
-    }
+}
 
         if (
         calculos.horasDecimais <= 0
@@ -5021,16 +5019,7 @@ function validarDadosProduto(
         calculos
     ) {
 
-        const impressoraId =
-            campoImpressoraProduto
-                ? campoImpressoraProduto.value
-                : "";
-
-        const impressora =
-            encontrarImpressora(
-                impressoraId
-            );
-
+        
         const quantidadeDisponivelAtual =
             campoQuantidadeDisponivel
                 ? numeroPositivo(
@@ -5125,17 +5114,53 @@ dataProducao:
             custoInsumos:
                 calculos.custoInsumos,
 
-            impressoraId:
-                impressora
-                    ? impressora.id
-                    : impressoraId,
+            impressoras:
+    Array.isArray(
+        calculos.impressoras
+    )
+        ? calculos.impressoras.map(
+            function (item) {
 
-            impressoraNome:
-                impressora
-                    ? textoImpressora(
-                        impressora
-                    )
-                    : "",
+                return {
+
+                    impressoraId:
+                        item.impressoraId,
+
+                    impressoraNome:
+                        item.impressoraNome,
+
+                    horas:
+                        item.horas,
+
+                    minutos:
+                        item.minutos,
+
+                    horasDecimais:
+                        item.horasDecimais,
+
+                    potenciaWatts:
+                        item.potenciaWatts,
+
+                    tarifaEnergia:
+                        item.tarifaEnergia,
+
+                    consumoKwh:
+                        item.consumoKwh,
+
+                    custoEnergia:
+                        item.custoEnergia,
+
+                    custoHoraImpressora:
+                        item.custoHoraImpressora,
+
+                    custoMaquina:
+                        item.custoMaquina
+
+                };
+
+            }
+        )
+        : [],
 
             horas:
                 calculos.horas,
@@ -6218,140 +6243,262 @@ if (editando) {
         );
 
     }
-
     function registrarHorasImpressoraProduto(
-        produto,
-        editando,
-        produtoAnterior = null
+    produto,
+    editando,
+    produtoAnterior = null
+) {
+
+    if (!produto) {
+        return;
+    }
+
+    // ==============================================
+    // NORMALIZAR IMPRESSORAS DO PRODUTO
+    // Compatibilidade com produtos antigos
+    // ==============================================
+
+    function obterListaImpressorasDoProduto(
+        item
     ) {
 
-        if (!produto) {
-            return;
+        if (!item) {
+            return [];
         }
 
-        const horasNovas =
-            numeroPositivo(
-                produto.horasDecimais
-            );
-
-        // ==============================================
-        // NOVA PRODUÇÃO
-        // ==============================================
-
-        if (!editando) {
-
-            adicionarHorasProducao(
-                produto.impressoraId,
-                horasNovas,
-                produto
-            );
-
-            return;
-
-        }
-
-        // ==============================================
-        // EDIÇÃO
-        // ==============================================
-
-        if (!produtoAnterior) {
-
-            console.warn(
-                "Não foi possível localizar os dados anteriores da produção."
-            );
-
-            return;
-
-        }
-
-        const horasAnteriores =
-            numeroPositivo(
-                produtoAnterior.horasDecimais
-            );
-
-        const impressoraAnteriorId =
-            String(
-                produtoAnterior.impressoraId ||
-                ""
-            );
-
-        const impressoraNovaId =
-            String(
-                produto.impressoraId ||
-                ""
-            );
-
-        // ==============================================
-        // MESMA IMPRESSORA
-        // ==============================================
-
+        // Novo formato
         if (
-            impressoraAnteriorId ===
-            impressoraNovaId
+            Array.isArray(item.impressoras) &&
+            item.impressoras.length > 0
         ) {
 
-            const diferencaHoras =
-                horasNovas -
-                horasAnteriores;
+            return item.impressoras
+                .map(
+                    function (impressora) {
 
-            if (diferencaHoras > 0) {
+                        return {
 
-                adicionarHorasProducao(
-                    produto.impressoraId,
-                    diferencaHoras,
-                    produto
+                            impressoraId:
+                                String(
+                                    impressora.impressoraId ||
+                                    ""
+                                ),
+
+                            horasDecimais:
+                                numeroPositivo(
+                                    impressora.horasDecimais
+                                )
+
+                        };
+
+                    }
+                )
+                .filter(
+                    function (impressora) {
+
+                        return (
+                            impressora.impressoraId &&
+                            impressora.horasDecimais > 0
+                        );
+
+                    }
                 );
 
-            } else if (
-                diferencaHoras < 0
-            ) {
+        }
 
-                removerHorasProducao(
-                    produto.impressoraId,
-                    Math.abs(
-                        diferencaHoras
-                    ),
+        // Formato antigo:
+        // uma única impressora
+        const impressoraIdAntiga =
+            String(
+                item.impressoraId ||
+                ""
+            );
+
+        const horasAntigas =
+            numeroPositivo(
+                item.horasDecimais
+            );
+
+        if (
+            impressoraIdAntiga &&
+            horasAntigas > 0
+        ) {
+
+            return [
+                {
+                    impressoraId:
+                        impressoraIdAntiga,
+
+                    horasDecimais:
+                        horasAntigas
+                }
+            ];
+
+        }
+
+        return [];
+
+    }
+
+
+    // ==============================================
+    // SOMAR HORAS POR IMPRESSORA
+    // ==============================================
+
+    function montarMapaHoras(
+        lista
+    ) {
+
+        const mapa = {};
+
+        lista.forEach(
+            function (item) {
+
+                const id =
+                    String(
+                        item.impressoraId ||
+                        ""
+                    );
+
+                if (!id) {
+                    return;
+                }
+
+                if (!mapa[id]) {
+                    mapa[id] = 0;
+                }
+
+                mapa[id] +=
+                    numeroPositivo(
+                        item.horasDecimais
+                    );
+
+            }
+        );
+
+        return mapa;
+
+    }
+
+
+    const listaNova =
+        obterListaImpressorasDoProduto(
+            produto
+        );
+
+    // ==============================================
+    // NOVA PRODUÇÃO
+    // ==============================================
+
+    if (!editando) {
+
+        listaNova.forEach(
+            function (item) {
+
+                adicionarHorasProducao(
+                    item.impressoraId,
+                    item.horasDecimais,
                     produto
                 );
 
             }
+        );
 
-            return;
+        return;
+    }
 
-        }
 
-        // ==============================================
-        // TROCOU DE IMPRESSORA
-        // ==============================================
+    // ==============================================
+    // EDIÇÃO
+    // ==============================================
 
-        if (
-            impressoraAnteriorId &&
-            horasAnteriores > 0
-        ) {
+    if (!produtoAnterior) {
 
-            removerHorasProducao(
-                produtoAnterior.impressoraId,
-                horasAnteriores,
-                produtoAnterior
-            );
+        console.warn(
+            "Não foi possível localizar os dados anteriores da produção."
+        );
 
-        }
-
-        if (
-            impressoraNovaId &&
-            horasNovas > 0
-        ) {
-
-            adicionarHorasProducao(
-                produto.impressoraId,
-                horasNovas,
-                produto
-            );
-
-        }
+        return;
 
     }
-   
+
+    const listaAnterior =
+        obterListaImpressorasDoProduto(
+            produtoAnterior
+        );
+
+    const mapaAnterior =
+        montarMapaHoras(
+            listaAnterior
+        );
+
+    const mapaNovo =
+        montarMapaHoras(
+            listaNova
+        );
+
+    const ids =
+        new Set([
+            ...Object.keys(
+                mapaAnterior
+            ),
+            ...Object.keys(
+                mapaNovo
+            )
+        ]);
+
+
+    // ==============================================
+    // AJUSTAR DIFERENÇA DE HORAS POR IMPRESSORA
+    // ==============================================
+
+    ids.forEach(
+        function (impressoraId) {
+
+            const horasAnteriores =
+                numeroPositivo(
+                    mapaAnterior[
+                        impressoraId
+                    ]
+                );
+
+            const horasNovas =
+                numeroPositivo(
+                    mapaNovo[
+                        impressoraId
+                    ]
+                );
+
+            const diferenca =
+                horasNovas -
+                horasAnteriores;
+
+            if (diferenca > 0) {
+
+                adicionarHorasProducao(
+                    impressoraId,
+                    diferenca,
+                    produto
+                );
+
+            } else if (
+                diferenca < 0
+            ) {
+
+                removerHorasProducao(
+                    impressoraId,
+                    Math.abs(
+                        diferenca
+                    ),
+                    produtoAnterior
+                );
+
+            }
+
+        }
+    );
+
+}
     // ==================================================
     // LIMPEZA, RESUMO E LISTAGEM DOS PRODUTOS
     // ==================================================
@@ -6511,9 +6658,7 @@ if (campoDataProduto) {
             campoObservacoesProduto.value = "";
         }
 
-        if (campoImpressoraProduto) {
-            campoImpressoraProduto.value = "";
-        }
+        limparLinhasImpressorasProduto();
 
         if (campoHorasProduto) {
             campoHorasProduto.value = "";
@@ -7336,21 +7481,111 @@ if (campoDataProduto) {
 
         }
 
-        preencherSelectImpressoras(
+        // ==============================================
+// CARREGAR IMPRESSORAS DA PRODUÇÃO
+// ==============================================
 
-            campoImpressoraProduto,
+let impressorasParaEditar = [];
 
-            produto.impressoraId ||
-            ""
+// Novo formato — várias impressoras
+if (
+    Array.isArray(produto.impressoras) &&
+    produto.impressoras.length > 0
+) {
 
+    impressorasParaEditar =
+        produto.impressoras.map(
+            function (item) {
+
+                let horas =
+                    numeroPositivo(
+                        item.horas
+                    );
+
+                let minutos =
+                    numeroPositivo(
+                        item.minutos
+                    );
+
+                // Compatibilidade caso existam
+                // somente horas decimais
+                if (
+                    horas === 0 &&
+                    minutos === 0 &&
+                    numeroPositivo(
+                        item.horasDecimais
+                    ) > 0
+                ) {
+
+                    const horasDecimais =
+                        numeroPositivo(
+                            item.horasDecimais
+                        );
+
+                    horas =
+                        Math.floor(
+                            horasDecimais
+                        );
+
+                    minutos =
+                        Math.round(
+                            (
+                                horasDecimais -
+                                horas
+                            ) * 60
+                        );
+
+                }
+
+                return {
+
+                    impressoraId:
+                        item.impressoraId ||
+                        "",
+
+                    horas:
+                        horas,
+
+                    minutos:
+                        minutos
+
+                };
+
+            }
         );
 
-        if (campoHorasProduto) {
+} else if (
+    produto.impressoraId
+) {
 
-            campoHorasProduto.value =
-                produto.horas || "";
+    // ==========================================
+    // PRODUTO ANTIGO — UMA ÚNICA IMPRESSORA
+    // ==========================================
 
+    impressorasParaEditar = [
+        {
+            impressoraId:
+                produto.impressoraId,
+
+            horas:
+                numeroPositivo(
+                    produto.horas
+                ),
+
+            minutos:
+                numeroPositivo(
+                    produto.minutos
+                )
         }
+    ];
+
+}
+
+limparLinhasImpressorasProduto(
+    impressorasParaEditar
+);
+
+        
 
         if (campoMinutosProduto) {
 
@@ -7428,9 +7663,7 @@ if (campoDataProduto) {
             "aba-produtos-produzidos"
         );
 
-        carregarDadosImpressoraProduto(
-    false
-);
+        
 
 window.scrollTo({
             top: 0,
