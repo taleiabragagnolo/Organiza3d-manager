@@ -4350,64 +4350,70 @@ const maquina = {
     // VALIDAR TODO O ESTOQUE DA PRODUÇÃO
     // ==================================================
 
-    function validarEstoqueProducao(
-        calculos
-    ) {
+  function validarEstoqueProducao(calculos) {
 
-        if (!calculos) {
-
-            alert(
-                "Não foi possível calcular os dados da produção."
-            );
-
-            return false;
-
-        }
-
-        if (
-            !validarItensRepetidosProducao(
-                calculos
-            )
-        ) {
-            return false;
-        }
-
-        
-const producaoSomentePorUnidade =
-    Array.isArray(calculos.impressoras) &&
-    calculos.impressoras.length > 0 &&
-    calculos.impressoras.every(
-        (item) => item.formaCusto === "unidade"
-    );
-
-if (
-    !producaoSomentePorUnidade &&
-    !validarFilamentosProducao(
-        calculos.filamentos
-    )
-) {
-    return false;
-}
-        if (
-            !validarAcessoriosProducao(
-                calculos.acessorios
-            )
-        ) {
-            return false;
-        }
-
-        if (
-            !validarEmbalagensProducao(
-                calculos.embalagens
-            )
-        ) {
-            return false;
-        }
-
-        return true;
-
+    if (!calculos) {
+        alert(
+            "Não foi possível calcular os dados da produção."
+        );
+        return false;
     }
-        // ==================================================
+
+    if (
+        !validarItensRepetidosProducao(
+            calculos
+        )
+    ) {
+        return false;
+    }
+
+    // Verifica se TODOS os equipamentos usados
+    // trabalham por unidade, como a Westpress.
+    const producaoSomentePorUnidade =
+        Array.isArray(calculos.impressoras) &&
+        calculos.impressoras.length > 0 &&
+        calculos.impressoras.every(
+            function (item) {
+                return (
+                    String(
+                        item.formaCusto || ""
+                    ).toLowerCase() === "unidade"
+                );
+            }
+        );
+
+    // Filamento só é obrigatório quando houver
+    // equipamento que NÃO seja por unidade.
+    if (
+        !producaoSomentePorUnidade &&
+        !validarFilamentosProducao(
+            calculos.filamentos
+        )
+    ) {
+        return false;
+    }
+
+    // Acessórios continuam sendo validados normalmente.
+    if (
+        !validarAcessoriosProducao(
+            calculos.acessorios
+        )
+    ) {
+        return false;
+    }
+
+    // Embalagens continuam sendo validadas normalmente.
+    if (
+        !validarEmbalagensProducao(
+            calculos.embalagens
+        )
+    ) {
+        return false;
+    }
+
+    return true;
+}
+    // ==================================================
     // PARTE 7B
     // BAIXA DOS INSUMOS DA PRODUÇÃO
     // ==================================================
@@ -4837,9 +4843,7 @@ const campoDataProduto =
 // VALIDAR DADOS PRINCIPAIS
 // ==================================================
 
-function validarDadosProduto(
-    calculos
-) {
+function validarDadosProduto(calculos) {
 
     const nome =
         campoNomeProduto
@@ -4857,83 +4861,61 @@ function validarDadosProduto(
             : "";
 
     if (!nome) {
-
-        alert(
-            "Informe o nome do produto."
-        );
-
+        alert("Informe o nome do produto.");
         return false;
-
     }
 
     if (!categoria) {
-
-        alert(
-            "Selecione a categoria do produto."
-        );
-
+        alert("Selecione a categoria do produto.");
         return false;
-
     }
 
     if (!data) {
-
-        alert(
-            "Informe a data da produção."
-        );
-
+        alert("Informe a data da produção.");
         return false;
-
     }
 
     if (
+        !calculos ||
         calculos.quantidadeProduzida <= 0
     ) {
-
-        alert(
-            "Informe uma quantidade produzida válida."
-        );
-
+        alert("Informe uma quantidade produzida válida.");
         return false;
-
     }
 
     if (
-    !Array.isArray(calculos.impressoras) ||
-    calculos.impressoras.length === 0
-) {
+        !Array.isArray(calculos.impressoras) ||
+        calculos.impressoras.length === 0
+    ) {
+        alert("Adicione pelo menos um equipamento utilizado.");
+        return false;
+    }
 
-    alert(
-        "Adicione pelo menos uma impressora e informe o tempo utilizado."
-    );
+    // Equipamentos como a Westpress trabalham por unidade,
+    // portanto não precisam de horas/minutos.
+    const producaoSomentePorUnidade =
+        calculos.impressoras.every(
+            function (item) {
+                return (
+                    String(
+                        item.formaCusto || ""
+                    ).toLowerCase() === "unidade"
+                );
+            }
+        );
 
-    return false;
-
-}
-
-        const usaSomenteEquipamentoPorUnidade =
-    Array.isArray(calculos.impressorasUsadas) &&
-    calculos.impressorasUsadas.length > 0 &&
-    calculos.impressorasUsadas.every(
-        (item) => item.formaCusto === "unidade"
-    );
-
-if (
-    !usaSomenteEquipamentoPorUnidade &&
-    calculos.horasDecimais <= 0
-) {
-    alert(
-        "Informe o tempo de impressão."
-    );
-
-    return false;
-}
+    if (
+        !producaoSomentePorUnidade &&
+        calculos.horasDecimais <= 0
+    ) {
+        alert("Informe o tempo de impressão.");
+        return false;
+    }
 
     const precoInformado =
         campoPrecoVendaProduto
             ? String(
-                campoPrecoVendaProduto.value ||
-                ""
+                campoPrecoVendaProduto.value || ""
             ).trim()
             : "";
 
@@ -4941,22 +4923,19 @@ if (
         !precoInformado ||
         calculos.precoVenda <= 0
     ) {
-
         alert(
             "Informe o preço de venda do produto. O preço deve ser maior que zero."
         );
 
         if (campoPrecoVendaProduto) {
-
             campoPrecoVendaProduto.focus();
-
         }
 
         return false;
-
     }
 
     return true;
+}
 
 }
 
