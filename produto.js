@@ -4379,7 +4379,21 @@ const maquina = {
         ) {
             return false;
         }
+const producaoSomentePorUnidade =
+    Array.isArray(calculos.impressorasUsadas) &&
+    calculos.impressorasUsadas.length > 0 &&
+    calculos.impressorasUsadas.every(
+        (item) => item.formaCusto === "unidade"
+    );
 
+if (
+    !producaoSomentePorUnidade &&
+    !validarFilamentosProducao(
+        calculos.filamentos
+    )
+) {
+    return false;
+}
         if (
             !validarAcessoriosProducao(
                 calculos.acessorios
@@ -4903,17 +4917,23 @@ function validarDadosProduto(
 
 }
 
-        if (
-        calculos.horasDecimais <= 0
-    ) {
+        const usaSomenteEquipamentoPorUnidade =
+    Array.isArray(calculos.impressorasUsadas) &&
+    calculos.impressorasUsadas.length > 0 &&
+    calculos.impressorasUsadas.every(
+        (item) => item.formaCusto === "unidade"
+    );
 
-        alert(
-            "Informe o tempo de impressão."
-        );
+if (
+    !usaSomenteEquipamentoPorUnidade &&
+    calculos.horasDecimais <= 0
+) {
+    alert(
+        "Informe o tempo de impressão."
+    );
 
-        return false;
-
-    }
+    return false;
+}
 
     const precoInformado =
         campoPrecoVendaProduto
