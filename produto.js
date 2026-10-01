@@ -3244,7 +3244,6 @@ const maquina = {
 
 };
 
-       
         // ==============================================
         // CUSTOS DIRETOS DA PRODUÇÃO
         // ==============================================
@@ -3879,7 +3878,6 @@ const maquina = {
         return;
 
     }
-
     if (
         campoPotenciaProduto &&
         (
