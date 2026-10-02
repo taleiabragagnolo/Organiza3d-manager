@@ -3758,9 +3758,16 @@ ${
             vendas
         );
 
-        registrarFinanceiroVenda(
+                registrarFinanceiroVenda(
             venda
         );
+
+        // Recarrega o estoque no módulo Produtos após a venda.
+        if (
+            typeof window.atualizarModuloProduto === "function"
+        ) {
+            window.atualizarModuloProduto();
+        }
 
         carregarDadosVenda();
 

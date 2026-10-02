@@ -5263,8 +5263,12 @@ dataProducao:
 
     }
 
-    function salvarProdutoProduzido() {
-        
+        function salvarProdutoProduzido() {
+
+        // Usa o estoque atual, incluindo as baixas das vendas.
+        produtos = lerLista(CHAVE_PRODUTOS);
+        movimentacoes = lerLista(CHAVE_MOVIMENTACOES);
+
         recarregarDadosDeApoio();
 
         const calculos =
@@ -5311,6 +5315,30 @@ if (!editando) {
 
     }
 
+}
+if (editando && campoQuantidadeDisponivel) {
+
+    const estoqueAoAbrir =
+        campoQuantidadeDisponivel.dataset.estoqueAoAbrir;
+
+    const estoqueAtual = JSON.stringify([
+        numeroPositivo(produtoAnterior.quantidadeDisponivel),
+        numeroPositivo(produtoAnterior.quantidadeProduzida)
+    ]);
+
+    if (
+        !estoqueAoAbrir ||
+        estoqueAoAbrir !== estoqueAtual
+    ) {
+        alert(
+            "O estoque deste produto mudou enquanto a edição " +
+            "estava aberta. Anote suas alterações e reabra " +
+            "o produto para editar com o saldo atualizado. " +
+            "Esta edição não foi salva."
+        );
+
+        return;
+    }
 }
 
 const produto =
@@ -7320,8 +7348,13 @@ const produtosAtivos =
 
         }
 
-        produtoEmEdicaoId =
-            produto.id;
+        if (campoQuantidadeDisponivel) {
+            campoQuantidadeDisponivel.dataset.estoqueAoAbrir =
+                JSON.stringify([
+                    numeroPositivo(produto.quantidadeDisponivel),
+                    numeroPositivo(produto.quantidadeProduzida)
+                ]);
+        }
 
         if (campoNomeProduto) {
 
