@@ -7347,7 +7347,9 @@ const produtosAtivos =
             return;
 
         }
-
+produtoEmEdicaoId =
+            produto.id;
+            
         if (campoQuantidadeDisponivel) {
             campoQuantidadeDisponivel.dataset.estoqueAoAbrir =
                 JSON.stringify([
