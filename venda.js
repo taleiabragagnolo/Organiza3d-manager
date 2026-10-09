@@ -118,6 +118,592 @@
     // LOCALIZAR ELEMENTOS
     // ==================================================
 
+    // ==================================================
+    // EMBALAGENS UTILIZADAS NA VENDA
+    // ==================================================
+
+    const CHAVE_EMBALAGENS_VENDA =
+        "organiza3d_embalagens";
+
+    let painelEmbalagensVenda = null;
+
+    function lerEmbalagensVenda() {
+
+        const dados = JSON.parse(
+            localStorage.getItem(
+                CHAVE_EMBALAGENS_VENDA
+            ) || "[]"
+        );
+
+        if (!Array.isArray(dados)) {
+            throw new Error(
+                "Cadastro de embalagens inválido."
+            );
+        }
+
+        return dados;
+
+    }
+
+    function preencherSelectEmbalagemVenda(select) {
+
+        const anterior = select.value;
+
+        select.innerHTML =
+            '<option value="">' +
+            'Selecione a embalagem' +
+            '</option>';
+
+        lerEmbalagensVenda().forEach(
+            function (embalagem) {
+
+                const option =
+                    document.createElement("option");
+
+                option.value =
+                    String(embalagem.id);
+
+                option.textContent =
+                    (embalagem.nome || "Embalagem") +
+                    " — estoque: " +
+                    numeroPositivoVenda(
+                        embalagem.quantidade
+                    ) +
+                    " — custo: " +
+                    formatarDinheiroVenda(
+                        numeroPositivoVenda(
+                            embalagem.valorUnitario
+                        )
+                    );
+
+                select.appendChild(option);
+
+            }
+        );
+
+        select.value = anterior;
+
+    }
+
+    function iniciarEmbalagensVenda() {
+
+        if (
+            painelEmbalagensVenda ||
+            !listaItensVenda
+        ) {
+            return;
+        }
+
+        painelEmbalagensVenda =
+            document.createElement("fieldset");
+
+        painelEmbalagensVenda.id =
+            "venda-embalagens";
+                   
+        painelEmbalagensVenda.addEventListener(
+            "input",
+            calcularTotaisVenda
+        );
+
+        painelEmbalagensVenda.addEventListener(
+            "change",
+            calcularTotaisVenda
+        );
+
+        painelEmbalagensVenda.innerHTML = `
+            <legend>Embalagens da venda</legend>
+
+            <p>
+                Selecione as sacolas ou caixas
+                cadastradas em Embalagens.
+            </p>
+
+            <div class="lista-embalagens-venda"></div>
+
+            <button
+                type="button"
+                class="adicionar-embalagem-venda"
+            >
+                Adicionar sacola ou caixa
+            </button>
+
+            <p class="resumo-embalagens-venda"></p>
+        `;
+
+        listaItensVenda.parentNode.insertBefore(
+            painelEmbalagensVenda,
+            listaItensVenda.nextSibling
+        );
+
+        painelEmbalagensVenda
+            .querySelector(
+                ".adicionar-embalagem-venda"
+            )
+            .addEventListener(
+                "click",
+                adicionarEmbalagemVenda
+            );
+
+    }
+
+    function adicionarEmbalagemVenda() {
+
+        const linha =
+            document.createElement("div");
+
+        linha.className =
+            "linha embalagem-venda";
+
+        linha.innerHTML = `
+            <div class="campo">
+                <label>
+                    Embalagem
+
+                    <select
+                        class="embalagem-venda-id"
+                    ></select>
+                </label>
+            </div>
+
+            <div class="campo">
+                <label>
+                    Quantidade
+
+                    <input
+                        class="embalagem-venda-quantidade"
+                        type="number"
+                        min="1"
+                        step="1"
+                        value="1"
+                    >
+                </label>
+            </div>
+
+            <div class="campo">
+                <label>
+                    Valor total a cobrar pela
+                    embalagem (R$)
+
+                    <input
+                        class="embalagem-venda-cobranca"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value="0"
+                    >
+                </label>
+            </div>
+
+            <button type="button">
+                Remover embalagem
+            </button>
+        `;
+
+        preencherSelectEmbalagemVenda(
+            linha.querySelector("select")
+        );
+
+        linha
+            .querySelector("button")
+            .addEventListener(
+                "click",
+                                function () {
+                    linha.remove();
+                    calcularTotaisVenda();
+                }
+            );
+
+        painelEmbalagensVenda
+            .querySelector(
+                ".lista-embalagens-venda"
+            )
+            .appendChild(linha);
+             calcularTotaisVenda();
+    }
+    function obterEmbalagensVenda(validar) {
+
+        if (!painelEmbalagensVenda) {
+            return [];
+        }
+
+        const cadastro = lerEmbalagensVenda();
+
+        const quantidadesUtilizadas = new Map();
+
+        const linhas =
+            painelEmbalagensVenda.querySelectorAll(
+                ".embalagem-venda"
+            );
+
+        return Array.from(linhas).map(
+            function (linha) {
+
+                const id =
+                    linha.querySelector("select").value;
+
+                const embalagem = cadastro.find(
+                    function (item) {
+                        return String(item.id) === id;
+                    }
+                );
+
+                const campoQuantidade =
+                    linha.querySelector(
+                        ".embalagem-venda-quantidade"
+                    );
+
+                const campoCobranca =
+                    linha.querySelector(
+                        ".embalagem-venda-cobranca"
+                    );
+
+                const quantidade =
+                    campoQuantidade.valueAsNumber;
+
+                const valorCobrado =
+                    campoCobranca.value.trim() === ""
+                        ? 0
+                        : campoCobranca.valueAsNumber;
+
+                if (validar) {
+
+                    if (!embalagem) {
+                        throw new Error(
+                            "Selecione a embalagem ou " +
+                            "remova a linha vazia."
+                        );
+                    }
+
+                    if (
+                        !Number.isInteger(quantidade) ||
+                        quantidade < 1
+                    ) {
+                        throw new Error(
+                            "A quantidade de embalagens " +
+                            "deve ser inteira e maior que zero."
+                        );
+                    }
+
+                    if (
+                        !Number.isFinite(valorCobrado) ||
+                        valorCobrado < 0
+                    ) {
+                        throw new Error(
+                            "O valor cobrado pela embalagem " +
+                            "deve ser zero ou positivo."
+                        );
+                    }
+
+                    const quantidadeTotal =
+                        (
+                            quantidadesUtilizadas.get(id) ||
+                            0
+                        ) + quantidade;
+
+                    quantidadesUtilizadas.set(
+                        id,
+                        quantidadeTotal
+                    );
+
+                    if (
+                        quantidadeTotal >
+                        numeroPositivoVenda(
+                            embalagem.quantidade
+                        )
+                    ) {
+                        throw new Error(
+                            "Estoque insuficiente de " +
+                            embalagem.nome + "."
+                        );
+                    }
+
+                }
+
+                const quantidadeCalculo =
+                    Number.isInteger(quantidade) &&
+                    quantidade > 0
+                        ? quantidade
+                        : 0;
+
+                const cobrancaCalculo =
+                    embalagem &&
+                    Number.isFinite(valorCobrado) &&
+                    valorCobrado >= 0
+                        ? valorCobrado
+                        : 0;
+
+                const custoUnitario =
+                    embalagem
+                        ? numeroPositivoVenda(
+                            embalagem.valorUnitario
+                        )
+                        : 0;
+
+                return {
+                    embalagemId: id,
+
+                    nome: embalagem
+                        ? embalagem.nome
+                        : "",
+
+                    quantidade: quantidadeCalculo,
+
+                    custoUnitario: custoUnitario,
+
+                    custoTotal:
+                        custoUnitario *
+                        quantidadeCalculo,
+
+                    valorCobrado: cobrancaCalculo
+                };
+
+            }
+        );
+
+    }
+
+    function valorCobradoEmbalagensVenda() {
+
+        return obterEmbalagensVenda(false).reduce(
+            function (total, embalagem) {
+                return total + embalagem.valorCobrado;
+            },
+            0
+        );
+
+    }
+
+    function atualizarResumoEmbalagensVenda() {
+
+        if (!painelEmbalagensVenda) {
+            return;
+        }
+
+        const custoTotal =
+            obterEmbalagensVenda(false).reduce(
+                function (total, embalagem) {
+                    return total + embalagem.custoTotal;
+                },
+                0
+            );
+
+        painelEmbalagensVenda.querySelector(
+            ".resumo-embalagens-venda"
+        ).textContent =
+            "Custo das embalagens: " +
+            formatarDinheiroVenda(custoTotal) +
+            " | Cobrado do cliente: " +
+            formatarDinheiroVenda(
+                valorCobradoEmbalagensVenda()
+            );
+
+    }
+    function sincronizarEmbalagensVenda() {
+
+        if (typeof embalagens !== "undefined") {
+            embalagens = lerEmbalagensVenda();
+        }
+
+        if (
+            typeof mostrarEmbalagens === "function"
+        ) {
+            mostrarEmbalagens();
+        }
+
+    }
+
+    function movimentarEmbalagensVenda(
+        venda,
+        devolver
+    ) {
+
+        if (
+            !Array.isArray(venda.embalagens) ||
+            venda.embalagens.length === 0
+        ) {
+            return;
+        }
+
+        const cadastro = lerEmbalagensVenda();
+
+        venda.embalagens.forEach(
+            function (item) {
+
+                const embalagem = cadastro.find(
+                    function (registro) {
+
+                        return String(registro.id) ===
+                            String(item.embalagemId);
+
+                    }
+                );
+
+                if (!embalagem) {
+
+                    throw new Error(
+                        "A embalagem " +
+                        item.nome +
+                        " não está mais cadastrada."
+                    );
+
+                }
+
+                const quantidade =
+                    Number(item.quantidade);
+
+                if (
+                    !Number.isInteger(quantidade) ||
+                    quantidade < 1
+                ) {
+
+                    throw new Error(
+                        "Quantidade inválida de embalagens."
+                    );
+
+                }
+
+                const saldo =
+                    numeroPositivoVenda(
+                        embalagem.quantidade
+                    ) +
+                    (
+                        devolver
+                            ? quantidade
+                            : -quantidade
+                    );
+
+                if (saldo < 0) {
+
+                    throw new Error(
+                        "Estoque insuficiente de " +
+                        embalagem.nome + "."
+                    );
+
+                }
+
+                embalagem.quantidade = saldo;
+
+            }
+        );
+
+        salvarListaVenda(
+            CHAVE_EMBALAGENS_VENDA,
+            cadastro
+        );
+
+        sincronizarEmbalagensVenda();
+
+    }
+
+    function executarMovimentoVenda(acao) {
+
+        const chaves = [
+            CHAVE_VENDAS,
+            CHAVE_PRODUTOS,
+            CHAVE_FINANCEIRO,
+            CHAVE_EMBALAGENS_VENDA
+        ];
+
+        const anteriores = chaves.map(
+            function (chave) {
+                return localStorage.getItem(chave);
+            }
+        );
+
+        try {
+
+            acao();
+
+        } catch (erro) {
+
+            let restaurado = false;
+
+            try {
+
+                chaves.forEach(
+                    function (chave, indice) {
+
+                        if (
+                            anteriores[indice] === null
+                        ) {
+
+                            localStorage.removeItem(
+                                chave
+                            );
+
+                        } else {
+
+                            localStorage.setItem(
+                                chave,
+                                anteriores[indice]
+                            );
+
+                        }
+
+                    }
+                );
+
+                restaurado = true;
+
+                carregarDadosVenda();
+
+                sincronizarEmbalagensVenda();
+
+                if (
+                    typeof window.atualizarModuloProduto
+                        === "function"
+                ) {
+                    window.atualizarModuloProduto();
+                }
+
+                mostrarVendas();
+
+                calcularTotaisVenda();
+
+            } catch (erroRestauro) {
+
+                console.error(
+                    "Erro ao restaurar ou atualizar:",
+                    erroRestauro
+                );
+
+            }
+
+            alert(
+                "Não foi possível concluir a operação.\n\n" +
+                erro.message +
+                (
+                    restaurado
+                        ? "\n\nOs dados anteriores foram restaurados."
+                        : "\n\nNão foi possível restaurar todos os dados. Confira o estoque antes de tentar novamente."
+                )
+            );
+
+        }
+
+    }
+
+        function salvarVendaComEmbalagens() {
+
+        try {
+
+            obterEmbalagensVenda(true);
+
+    }
+
+    function estornarVenda(vendaId) {
+
+        executarMovimentoVenda(
+            function () {
+
+                estornarVendaComEmbalagens(
+                    vendaId
+                );
+
+            }
+        );
+
+    }
     function localizarElementosVenda() {
 
         campoClienteVenda =
@@ -1326,7 +1912,7 @@ botaoFecharDetalhesVenda =
     // ==================================================
 
     function calcularTotaisVenda() {
-
+        atualizarResumoEmbalagensVenda();
         if (!listaItensVenda) {
 
             return;
@@ -1420,12 +2006,13 @@ botaoFecharDetalhesVenda =
                     : 0
             );
 
-        const totalFinal =
+                const totalFinal =
             Math.max(
                 0,
                 subtotal -
                 desconto +
-                frete
+                frete +
+                valorCobradoEmbalagensVenda()
             );
 
         const valorPago =
@@ -1536,12 +2123,13 @@ botaoFecharDetalhesVenda =
                     : 0
             );
 
-        const total =
+                const total =
             Math.max(
                 0,
                 subtotal -
                 desconto +
-                frete
+                frete +
+                valorCobradoEmbalagensVenda()
             );
 
         const valorPago =
@@ -1915,7 +2503,20 @@ botaoFecharDetalhesVenda =
 
         const totais =
             obterTotaisVenda();
+       
+        const embalagensDaVenda =
+            obterEmbalagensVenda(true);
 
+        const custoTotalEmbalagens =
+            embalagensDaVenda.reduce(
+                function (total, embalagem) {
+
+                    return total +
+                        embalagem.custoTotal;
+
+                },
+                0
+            );
         if (
             totais.desconto >
             (
@@ -2055,8 +2656,17 @@ botaoFecharDetalhesVenda =
                     )
                     : "Não vinculado",
 
-            itens:
+                        itens:
                 obterItensVenda(),
+
+            embalagens:
+                embalagensDaVenda,
+
+            custoEmbalagens:
+                custoTotalEmbalagens,
+
+            valorEmbalagens:
+                valorCobradoEmbalagensVenda(),
 
             subtotal:
                 totais.subtotal,
@@ -2350,7 +2960,7 @@ botaoFecharDetalhesVenda =
     // ESTORNAR VENDA
     // ==================================================
 
-        function estornarVenda(
+        function estornarVendaComEmbalagens(
         vendaId
     ) {
 
@@ -2389,6 +2999,10 @@ botaoFecharDetalhesVenda =
             return;
 
         }
+        movimentarEmbalagensVenda(
+            venda,
+            true
+        );
 
         // ==============================================
         // DEVOLVER PRODUTOS AO ESTOQUE
@@ -2874,7 +3488,59 @@ function abrirPainelDetalhesVenda(
         `;
 
     }
+    if (
+        resumoDetalhesVenda &&
+        Array.isArray(venda.embalagens) &&
+        venda.embalagens.length > 0
+    ) {
 
+        const descricaoEmbalagens =
+            venda.embalagens.map(
+                function (embalagem) {
+
+                    return escaparTextoVenda(
+                        embalagem.nome || "Embalagem"
+                    ) +
+                    " × " +
+                    numeroPositivoVenda(
+                        embalagem.quantidade
+                    );
+
+                }
+            ).join(", ");
+
+        resumoDetalhesVenda.innerHTML += `
+            <div class="linha">
+
+                <div class="campo">
+                    <label>Embalagens utilizadas</label>
+                    <strong>
+                        ${descricaoEmbalagens}
+                    </strong>
+                </div>
+
+                <div class="campo">
+                    <label>Custo das embalagens</label>
+                    <strong>
+                        ${formatarDinheiroVenda(
+                            venda.custoEmbalagens || 0
+                        )}
+                    </strong>
+                </div>
+
+                <div class="campo">
+                    <label>Cobrado pelas embalagens</label>
+                    <strong>
+                        ${formatarDinheiroVenda(
+                            venda.valorEmbalagens || 0
+                        )}
+                    </strong>
+                </div>
+
+            </div>
+        `;
+
+    }
     const itens =
         Array.isArray(
             venda.itens
@@ -3722,6 +4388,13 @@ ${
 
     function limparFormularioVenda() {
 
+        if (painelEmbalagensVenda) {
+
+            painelEmbalagensVenda.querySelector(
+                ".lista-embalagens-venda"
+            ).innerHTML = "";
+
+        }
         if (campoClienteVenda) {
 
             campoClienteVenda.value =
@@ -3796,7 +4469,17 @@ ${
     // ==================================================
 
     function salvarVenda() {
+        try {
 
+            obterEmbalagensVenda(true);
+
+        } catch (erro) {
+
+            alert(erro.message);
+
+            return;
+
+        }
         if (
             !validarVenda()
         ) {
@@ -3820,6 +4503,10 @@ ${
     return;
 
 }
+        movimentarEmbalagensVenda(
+            venda,
+            false
+        );
 
         vendas.push(
             venda
@@ -3886,7 +4573,17 @@ ${
     // ==================================================
 
     function atualizarTelaVenda() {
+        if (painelEmbalagensVenda) {
 
+            painelEmbalagensVenda
+                .querySelectorAll(
+                    ".embalagem-venda-id"
+                )
+                .forEach(
+                    preencherSelectEmbalagemVenda
+                );
+
+        }
         carregarDadosVenda();
 
         carregarClientesVenda();
@@ -4147,6 +4844,8 @@ if (botaoFecharDetalhesVenda) {
                     dataHojeVenda();
 
             }
+
+                        iniciarEmbalagensVenda();
 
             configurarItensExistentesVenda();
 
