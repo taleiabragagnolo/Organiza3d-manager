@@ -683,11 +683,11 @@
 
     }
 
-        function salvarVendaComEmbalagens() {
+     function salvarVenda() {
 
-        try {
-
-            obterEmbalagensVenda(true);
+        executarMovimentoVenda(
+            salvarVendaComEmbalagens
+        );
 
     }
 
@@ -2504,19 +2504,7 @@ botaoFecharDetalhesVenda =
         const totais =
             obterTotaisVenda();
        
-        const embalagensDaVenda =
-            obterEmbalagensVenda(true);
-
-        const custoTotalEmbalagens =
-            embalagensDaVenda.reduce(
-                function (total, embalagem) {
-
-                    return total +
-                        embalagem.custoTotal;
-
-                },
-                0
-            );
+       
         if (
             totais.desconto >
             (
@@ -2632,7 +2620,19 @@ botaoFecharDetalhesVenda =
 
         const totais =
             obterTotaisVenda();
+ const embalagensDaVenda =
+            obterEmbalagensVenda(true);
 
+        const custoTotalEmbalagens =
+            embalagensDaVenda.reduce(
+                function (total, embalagem) {
+
+                    return total +
+                        embalagem.custoTotal;
+
+                },
+                0
+            );
         return {
 
             id:
@@ -4468,7 +4468,7 @@ ${
     // SALVAR VENDA
     // ==================================================
 
-    function salvarVenda() {
+       function salvarVendaComEmbalagens() {
         try {
 
             obterEmbalagensVenda(true);
