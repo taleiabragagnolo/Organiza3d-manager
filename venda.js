@@ -2102,93 +2102,165 @@ botaoFecharDetalhesVenda =
     // BAIXAR ESTOQUE
     // ==================================================
 
+    
     function baixarEstoqueVenda(venda) {
-    const textoOriginal = localStorage.getItem(CHAVE_PRODUTOS);
+
+    const chaveMovimentos =
+        "organiza3d_movimentacoes_produtos";
+
+    const originais = [
+        [CHAVE_PRODUTOS, localStorage.getItem(CHAVE_PRODUTOS)],
+        [chaveMovimentos, localStorage.getItem(chaveMovimentos)]
+    ];
+
+    let gravacaoIniciada = false;
 
     try {
-        const produtosAtuais = JSON.parse(textoOriginal || "[]");
+        const produtosAtuais =
+            JSON.parse(originais[0][1] || "[]");
 
-        if (!Array.isArray(produtosAtuais)) {
-            alert("Não foi possível carregar o estoque atual.");
-            return false;
+        const movimentos =
+            JSON.parse(originais[1][1] || "[]");
+
+        if (
+            !Array.isArray(produtosAtuais) ||
+            !Array.isArray(movimentos)
+        ) {
+            throw new Error("Os dados do estoque estão inválidos.");
         }
 
-        // Agrupa e soma quantidades por ID de produto
-        const quantidadesPorProduto = {};
-
-        venda.itens.forEach(function (itemVenda) {
-            const produtoId = String(itemVenda.produtoId).trim();
-            const quantidade = numeroPositivoVenda(itemVenda.quantidade);
-
-            if (!quantidadesPorProduto[produtoId]) {
-                quantidadesPorProduto[produtoId] = 0;
-            }
-            quantidadesPorProduto[produtoId] += quantidade;
-        });
-
-        const baixasPreparadas = [];
-        const idsProdutos = Object.keys(quantidadesPorProduto);
-
-        for (const produtoId of idsProdutos) {
-            // Comparação flexível limpando espaços e garantindo tipo String
-            const produto = produtosAtuais.find(function (itemProduto) {
-                return String(itemProduto.id).trim() === produtoId;
-            });
-
-            if (!produto) {
-                console.warn("Produto ID " + produtoId + " não encontrado no estoque.");
-                alert(
-                    "O produto de código " + produtoId + " não foi localizado no estoque.\n\n" +
-                    "A venda não foi registrada."
-                );
-                return false;
-            }
-
-            const quantidadeAtual = numeroPositivoVenda(produto.quantidadeDisponivel);
-            const quantidadeBaixar = numeroPositivoVenda(quantidadesPorProduto[produtoId]);
-
-            if (quantidadeBaixar <= 0) {
-                alert("Quantidade inválida para o produto: " + produto.nome);
-                return false;
-            }
-
-            if (quantidadeBaixar > quantidadeAtual) {
-                alert(
-                    'Estoque insuficiente para "' + (produto.nome || "Produto") + '".\n' +
-                    'Disponível: ' + quantidadeAtual + ' | Solicitado: ' + quantidadeBaixar
-                );
-                return false;
-            }
-
-            baixasPreparadas.push({
-                produto: produto,
-                quantidadeFinal: quantidadeAtual - quantidadeBaixar
-            });
+        if (
+            !venda.id ||
+            !Array.isArray(venda.itens) ||
+            venda.itens.length === 0
+        ) {
+            throw new Error("A venda não possui identificação ou itens válidos.");
         }
 
-        // Aplica as baixas no estoque
-        baixasPreparadas.forEach(function (baixa) {
-            const produto = baixa.produto;
-            produto.quantidadeDisponivel = baixa.quantidadeFinal;
-            produto.valorTotalEstoque = Number(
-                (baixa.quantidadeFinal * numeroPositivoVenda(produto.precoVenda)).toFixed(2)
+        const jaRegistrada = movimentos.some(function (movimento) {
+            return (
+                movimento.tipo === "Saída por venda" &&
+                String(movimento.vendaId) === String(venda.id)
             );
-            produto.status = baixa.quantidadeFinal > 0 ? "Ativo" : "Inativo";
-            produto.atualizadoEm = new Date().toISOString();
         });
 
-        // Salva no LocalStorage
+        if (jaRegistrada) {
+            throw new Error(
+                "Esta venda já possui uma baixa registrada. " +
+                "Nenhuma nova baixa foi feita."
+            );
+        }
+
+        const quantidades = new Map();
+
+        venda.itens.forEach(function (item) {
+            const id = String(item.produtoId).trim();
+            const quantidade = numeroVenda(item.quantidade);
+
+            if (!Number.isFinite(quantidade) || quantidade <= 0) {
+                throw new Error("Quantidade inválida em um item da venda.");
+            }
+
+            quantidades.set(
+                id,
+                (quantidades.get(id) || 0) + quantidade
+            );
+        });
+
+        const agora = new Date().toISOString();
+
+        quantidades.forEach(function (quantidade, id) {
+
+            const encontrados = produtosAtuais.filter(function (produto) {
+                return String(produto.id).trim() === id;
+            });
+
+            if (encontrados.length !== 1) {
+                throw new Error(
+                    "Produto ausente ou duplicado no estoque: " + id
+                );
+            }
+
+            const produto = encontrados[0];
+            const anterior = numeroVenda(produto.quantidadeDisponivel);
+
+            if (anterior < quantidade) {
+                throw new Error(
+                    'Estoque insuficiente para "' + produto.nome +
+                    '". Disponível: ' + anterior +
+                    ". Solicitado: " + quantidade
+                );
+            }
+
+            const posterior = anterior - quantidade;
+            const custoUnitario =
+                numeroPositivoVenda(produto.custoUnitario);
+
+            produto.quantidadeDisponivel = posterior;
+            produto.valorTotalEstoque = Number(
+                (
+                    posterior *
+                    numeroPositivoVenda(produto.precoVenda)
+                ).toFixed(2)
+            );
+            produto.status = posterior > 0 ? "Ativo" : "Inativo";
+            produto.atualizadoEm = agora;
+
+            movimentos.push({
+                id: "venda-" + venda.id + "-produto-" + id,
+                data: venda.data,
+                tipo: "Saída por venda",
+                vendaId: venda.id,
+                produtoId: produto.id,
+                produto: produto.nome,
+                quantidade: quantidade,
+                quantidadeAnterior: anterior,
+                quantidadePosterior: posterior,
+                custoUnitario: custoUnitario,
+                custoTotal: quantidade * custoUnitario,
+                observacoes:
+                    "Venda #" + venda.id +
+                    " — Cliente: " +
+                    (venda.clienteNome || "Não vinculado"),
+                criadoEm: agora
+            });
+        });
+
+        gravacaoIniciada = true;
+
         salvarListaVenda(CHAVE_PRODUTOS, produtosAtuais);
+        salvarListaVenda(chaveMovimentos, movimentos);
+
         produtosVenda = produtosAtuais;
 
         return true;
 
     } catch (erro) {
-        if (textoOriginal !== null) {
-            localStorage.setItem(CHAVE_PRODUTOS, textoOriginal);
+
+        if (gravacaoIniciada) {
+            try {
+                originais.forEach(function ([chave, original]) {
+                    if (original === null) {
+                        localStorage.removeItem(chave);
+                    } else {
+                        localStorage.setItem(chave, original);
+                    }
+                });
+            } catch (erroRestauracao) {
+                console.error(
+                    "Falha ao restaurar os dados anteriores:",
+                    erroRestauracao
+                );
+                alert(
+                    "Não foi possível restaurar os dados anteriores. " +
+                    "Confira o estoque antes de tentar novamente."
+                );
+            }
         }
-        console.error("Erro ao baixar o estoque da venda:", erro);
-        alert("Ocorreu um erro ao processar a baixa no estoque.");
+
+        console.error("Erro na baixa da venda:", erro);
+        alert(erro.message);
+
         return false;
     }
 }

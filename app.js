@@ -54,7 +54,9 @@ function iniciarAplicacao() {
 
     iniciarModulos();
 
-    iniciarBackup();
+     iniciarBackup();
+
+    iniciarImportacaoBackup();
 
     abrirPaginaInicial();
 
@@ -349,4 +351,208 @@ function iniciarBackup() {
         }
     );
 
+}
+// ======================================================
+// IMPORTAR BACKUP LOCAL
+// ======================================================
+
+function iniciarImportacaoBackup() {
+
+    const botao =
+        document.getElementById("botao-importar-backup");
+
+    const campoArquivo =
+        document.getElementById("arquivo-importar-backup");
+
+    if (!botao || !campoArquivo) return;
+
+    botao.addEventListener("click", function () {
+        campoArquivo.value = "";
+        campoArquivo.click();
+    });
+
+    campoArquivo.addEventListener("change", function () {
+
+        const arquivo = campoArquivo.files[0];
+
+        if (!arquivo) return;
+
+        botao.disabled = true;
+
+        const leitor = new FileReader();
+
+        leitor.onerror = function () {
+            botao.disabled = false;
+            alert("Não foi possível ler o arquivo selecionado.");
+        };
+
+        leitor.onload = function () {
+
+            let anteriores = null;
+            let gravacaoIniciada = false;
+
+            function listarChavesSistema() {
+                const chaves = [];
+
+                for (let i = 0; i < localStorage.length; i++) {
+                    const chave = localStorage.key(i);
+
+                    if (chave && chave.startsWith("organiza3d_")) {
+                        chaves.push(chave);
+                    }
+                }
+
+                return chaves;
+            }
+
+            try {
+                const backup =
+                    JSON.parse(String(leitor.result));
+
+                if (
+                    !backup ||
+                    backup.sistema !== "Organiza 3D Manager" ||
+                    !backup.dados ||
+                    typeof backup.dados !== "object" ||
+                    Array.isArray(backup.dados)
+                ) {
+                    throw new Error(
+                        "O arquivo não é um backup válido do Organiza 3D."
+                    );
+                }
+
+                const entradas = Object.entries(backup.dados);
+
+                if (entradas.length === 0) {
+                    throw new Error("O backup está vazio.");
+                }
+
+                // Confere todo o arquivo antes de alterar o sistema.
+                entradas.forEach(function ([chave, valor]) {
+
+                    if (
+                        !chave.startsWith("organiza3d_") ||
+                        typeof valor !== "string"
+                    ) {
+                        throw new Error(
+                            "Formato inválido no backup: " + chave
+                        );
+                    }
+
+                    JSON.parse(valor);
+                });
+
+                if (
+                    !Object.prototype.hasOwnProperty.call(
+                        backup.dados,
+                        "organiza3d_produtos_produzidos"
+                    ) ||
+                    !Object.prototype.hasOwnProperty.call(
+                        backup.dados,
+                        "organiza3d_vendas"
+                    )
+                ) {
+                    throw new Error(
+                        "O backup não contém os dados de Produtos e Vendas."
+                    );
+                }
+
+                const dataBackup =
+                    new Date(backup.criadoEm);
+
+                const dataTexto =
+                    Number.isNaN(dataBackup.getTime())
+                        ? "Data não informada"
+                        : dataBackup.toLocaleString("pt-BR");
+
+                const confirmado = confirm(
+                    "Importar o backup de " + dataTexto + "?\n\n" +
+                    "Os dados do Organiza 3D neste aparelho serão " +
+                    "substituídos pelos dados do arquivo.\n\n" +
+                    "Essa operação não junta os dados dos aparelhos."
+                );
+
+                if (!confirmado) return;
+
+                anteriores = new Map(
+                    listarChavesSistema().map(function (chave) {
+                        return [chave, localStorage.getItem(chave)];
+                    })
+                );
+
+                gravacaoIniciada = true;
+
+                // Remove apenas dados do Organiza 3D.
+                listarChavesSistema().forEach(function (chave) {
+                    localStorage.removeItem(chave);
+                });
+
+                entradas.forEach(function ([chave, valor]) {
+                    localStorage.setItem(chave, valor);
+                });
+
+                // Confirma que todos os valores foram gravados.
+                entradas.forEach(function ([chave, valor]) {
+                    if (localStorage.getItem(chave) !== valor) {
+                        throw new Error(
+                            "Não foi possível gravar: " + chave
+                        );
+                    }
+                });
+
+            } catch (erro) {
+
+                if (gravacaoIniciada && anteriores) {
+                    try {
+                        listarChavesSistema().forEach(function (chave) {
+                            localStorage.removeItem(chave);
+                        });
+
+                        anteriores.forEach(function (valor, chave) {
+                            localStorage.setItem(chave, valor);
+                        });
+
+                    } catch (erroRestauracao) {
+                        console.error(erroRestauracao);
+
+                        alert(
+                            "A importação falhou e não foi possível " +
+                            "restaurar todos os dados anteriores. " +
+                            "Guarde o arquivo de backup e não faça " +
+                            "novos lançamentos até conferir o sistema."
+                        );
+
+                        return;
+                    }
+                }
+
+                console.error("Erro ao importar backup:", erro);
+
+                alert(
+                    "O backup não foi importado.\n\n" +
+                    erro.message +
+                    (
+                        gravacaoIniciada
+                            ? "\n\nOs dados anteriores foram restaurados."
+                            : ""
+                    )
+                );
+
+                return;
+
+            } finally {
+                botao.disabled = false;
+                campoArquivo.value = "";
+            }
+
+            alert(
+                "Backup importado com sucesso! " +
+                "O aplicativo será recarregado."
+            );
+
+            window.location.reload();
+        };
+
+        leitor.readAsText(arquivo);
+    });
 }
